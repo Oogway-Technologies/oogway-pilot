@@ -1,6 +1,5 @@
 import Head from 'next/head';
-import Header from '../components/Header';
-import {auth} from '../firebase';
+// import {auth} from '../firebase';
 // import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Home() {
@@ -12,12 +11,7 @@ export default function Home() {
       <Head>
         <title>Oogway</title>
       </Head>
-
-      <Header />
-      
-      <main>
-        {/* Center */}
-      </main>
+    
     </div>
   )
 }

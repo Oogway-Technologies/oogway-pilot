@@ -5,7 +5,7 @@ function Loading() {
     // ========== TODO: redo according to design ========== //
 
     return (
-        <center style={{display: "grid", placeItems: "center", height: "100vh"}}>
+        <div className="auto-colos-max place-items-center h-screen">
             <div>
                 <img
                     src="https://cdn-icons-png.flaticon.com/512/2395/2395608.png"
@@ -15,7 +15,7 @@ function Loading() {
                 />
                 <Circle color="#3CBC28" size={60} />
             </div>
-        </center>
+        </div>
     )
 }
 
