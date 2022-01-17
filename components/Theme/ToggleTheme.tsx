@@ -14,7 +14,7 @@ const ToggleTheme = () => {
         theme === 'light' ? setEnabled(false) : setEnabled(true);
     }, [])
 
-    // Helper function to 
+    // Helper function to update theme and switch state
     const handleChangeTheme = () => {
         setTheme(theme === 'light' ? 'dark' : 'light')
         setEnabled(!enabled)
