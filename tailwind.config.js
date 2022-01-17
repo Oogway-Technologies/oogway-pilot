@@ -3,6 +3,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: "class",
   theme: {
     screens: {
       sm: "480px",
@@ -29,12 +30,16 @@ module.exports = {
         xxl: "64px",
       },
       colors: {
-        transparent: "transparent",
-        primary: "#7041EE",
-        secondary: "#EA7979",
         black: "#000000",
         white: "#FFFFFF",
+        // Light
+        primary: "#7041EE",
+        secondary: "#EA7979",
+        alert: "#E77C40",
+        error: "#E0232E",
+        success: "#2DC071",
         neutral: {
+          25: "#FCFCFC",
           50: "#F4F4F4",
           100: "#E5E5E5",
           150: "#D8D8D8",
@@ -42,12 +47,18 @@ module.exports = {
           700: "#535353",
           800: "#1A1A1A",
         },
-        error: {
-          50: "#FFA3A3",
-          150: "#FF7A7A",
-          300: "#FF3D3D",
-          500: "#EA0000",
-          600: "#BC0000",
+        // Dark
+        primaryDark: "#7269FF",
+        secondaryDark: "#FB9393",
+        alertDark: "#FB8C4E",
+        error: "#FA3541",
+        success: "#3DDE88",
+        neutralDark: {
+          50: "#E4E6EB",
+          150: "#BFBFBF",
+          300: "#B0B3B8",
+          500: "#242526",
+          600: "#18191A",
         },
       },
     },

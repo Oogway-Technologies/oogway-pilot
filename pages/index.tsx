@@ -1,18 +1,16 @@
 import Head from 'next/head';
 import Header from '../components/Header';
+import { useTheme } from 'next-themes';
 
 export default function Home() {
-  return (
+    const {theme, setTheme} = useTheme()
+
+    return (
     <div className="">
       <Head>
         <title>Oogway</title>
       </Head>
-
-      <Header />
-      
-      <main>
-        {/* Center */}
-      </main>
+    
     </div>
   )
 }
