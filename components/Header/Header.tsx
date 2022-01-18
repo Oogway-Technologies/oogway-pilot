@@ -45,7 +45,7 @@ const Header = () => {
         </div>
         {/* Bottom: Slug */}
         <div className="flex w-full items-center justify-center bg-white dark:bg-neutralDark-500 pb-5 px-3">
-            <NavLinks listStyle="inline-flex space-x-3"/>
+            <NavLinks listStyle="inline-flex"/>
 
         </div>
 

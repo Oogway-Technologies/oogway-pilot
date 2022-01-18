@@ -24,11 +24,13 @@ const NavLinks = ({ links, listStyle }: NavLinksProps) => {
                      * Might need to undo functional approach here an manually enumerate each link.
                      * */
                     return (
+                        
                         <li
                         key={idx}
-                        className={`${router.pathname.split("?")[0] == link.href ? 'text-primary font-bold underline underline-offset-8' : 'text-neutral-700 dark:text-neutralDark-150'} hover:font-bold`}>
+                        className="flex w-16 justify-around"
+                        >
                             <Link href={link.href} passHref> 
-                                <a>{link.text}</a>
+                                <a className={`${router.pathname.split("?")[0] == link.href ? 'text-primary font-bold underline underline-offset-8' : 'text-neutral-700 dark:text-neutralDark-150'} hover:font-bold`}>{link.text}</a>
                             </Link>
                         </li>
                     )
@@ -43,11 +45,11 @@ NavLinks.defaultProps = {
         // TODO: Add as pages created
         {
             href: "/#", // change to /Search when search page created
-            text: "Search Page"
+            text: "Search"
         },
         {
             href: "/social",
-            text: "Social Feed"
+            text: "Feed"
         },
         {
             href: "/#", // change to Friends when created
