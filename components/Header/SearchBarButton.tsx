@@ -1,18 +1,19 @@
-import React from 'react'
+import React, { useState }  from 'react'
 import { Search } from 'react-feather'
 import { UilExchange } from '@iconscout/react-unicons'
 
-interface SearchBarButtonProps {
-    type: string
+interface SearchBarButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    type: 'submit' | 'reset' | 'button' | undefined;
 }
 
 const SearchBarButton = ({ type }: SearchBarButtonProps) => {
     return (
         <button 
+        type={type}
         className="relative items-center inline-flex cursor-pointer 
         align-text-middle h-[38px] w-[74px] rounded-full
         bg-neutral-50 dark:bg-neutralDark-300
-        hover:scale-125 group">
+        hover:">
             <span 
             className="inline-block align-text-middle translate-x-1 
             h-[30px] w-[30px] rounded-full bg-primary text-white transform ring-0">
