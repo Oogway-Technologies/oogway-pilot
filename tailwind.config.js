@@ -28,6 +28,7 @@ module.exports = {
         lg: "24px",
         xl: "32px",
         xxl: "64px",
+        128: "32rem",
       },
       colors: {
         black: "#000000",
@@ -55,8 +56,8 @@ module.exports = {
         success: "#3DDE88",
         neutralDark: {
           50: "#E4E6EB",
-          150: "#BFBFBF",
-          300: "#B0B3B8",
+          150: "#B0B3B8",
+          300: "#3A3B3C",
           500: "#242526",
           600: "#18191A",
         },
