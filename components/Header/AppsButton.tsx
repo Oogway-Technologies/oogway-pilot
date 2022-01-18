@@ -5,9 +5,9 @@ const AppsButton = () => {
     // TODO: Add Hooks / link href
 
     return (
-        <Link href='#'>
-            <UilApps className="hover:text-black active:text-black dark:hover:text-neutralDark-50 
-            dark:active:text-neutralDark-50"/>
+        <Link href='#' passHref>
+            <a><UilApps className="hover:text-black active:text-black dark:hover:text-neutralDark-50 
+            dark:active:text-neutralDark-50"/></a>
         </Link>
     )
 }
