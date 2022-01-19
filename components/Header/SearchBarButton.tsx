@@ -11,20 +11,19 @@ const SearchBarButton = ({ type }: SearchBarButtonProps) => {
         <button 
         type={type}
         className="relative items-center inline-flex cursor-pointer 
-        align-text-middle h-[38px] w-[74px] rounded-full
-        bg-neutral-50 dark:bg-neutralDark-300
-        hover:">
+        align-text-middle h-[23px] w-[47px] md:h-[38px] md:w-[74px] rounded-full
+        bg-neutral-50 dark:bg-neutralDark-300 group">
             <span 
-            className="inline-block align-text-middle translate-x-1 
-            h-[30px] w-[30px] rounded-full bg-primary text-white transform ring-0">
-                <Search className="inline-block my-1 h-5"/>
+            className="inline-block align-text-middle translate-x-0.5 md:translate-x-1 
+            h-[20px] w-[20px] md:h-[30px] md:w-[30px] rounded-full bg-primary text-white transform ring-0">
+                <Search className="my-0.5 -mx-0.5 md:my-1 md:mx-0.5 h-3.5 md:h-5"/>
             </span>
             <span 
-            className="inline-block align-text-middle translate-x-2 
+            className="inline-block align-text-middle translate-x-0.5 md:translate-x-2.5 
             text-neutral-300 group-hover:text-neutral-700 active:text-neutral-700
             dark:text-neutralDark-150 dark:group-hover:text-neutralDark-50 
             dark:active:text-neutralDark-50">
-                <UilExchange color="currentColor"/>
+                <UilExchange className="h-3.5 md:h-5" color="currentColor"/>
             </span>
         </button>
     )

@@ -1,16 +1,14 @@
-import ToggleTheme from "./ToggleTheme";
-import { Avatar } from "@mui/material";
-import { auth } from "../../firebase";
 import Logo from "../Logo"
 import Link from 'next/link'
 import SearchBar from './SearchBar';
-import SettingsButton from './SettingsButton'
 import AppsButton from './AppsButton';
 import NavLinks from './NavLinks';
+import UserDropdown from "./UserDropdown";
+import ToggleTheme from "./ToggleTheme";
 
 const Header = () => {
   return (
-    <div>
+    <div className="shadow-sm shadow-black/10 dark:shadow-white/20">
         {/* Top: Toolbar */}
         <div 
         className='grid grid-cols-2 md:grid-cols-3 gap-y-2 grid-flow-row-dense w-full 
@@ -34,19 +32,15 @@ const Header = () => {
             <div 
             className="flex space-x-2 items-center justify-self-end whitespace-nowrap px-1 md:ml-auto
             text-neutral-700 dark:text-neutralDark-150">
-                <SettingsButton />
-                <AppsButton />
-                <Avatar
-                className='hover:opacity-80 cursor-pointer'
-                src={"https://cdn-icons-png.flaticon.com/512/2395/2395608.png"}
-                onClick={() => auth.signOut()}/>
-                <ToggleTheme />
+                {/* Uncomment Apps when we have hook */}
+                {/* <AppsButton /> */}
+                <UserDropdown />
             </div>
         </div>
-        {/* Bottom: Slug */}
-        <div className="flex w-full items-center justify-center bg-white dark:bg-neutralDark-500 pb-5 px-3">
-            <NavLinks listStyle="inline-flex"/>
 
+        {/* Bottom: Slug */}
+        <div className="flex w-full items-center justify-center bg-white dark:bg-neutralDark-500 px-3">
+            <NavLinks listStyle="inline-flex"/>
         </div>
 
     </div>
