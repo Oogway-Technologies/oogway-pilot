@@ -1,15 +1,27 @@
+import React from 'react'
 import { UilSetting } from '@iconscout/react-unicons'
 import Link from 'next/link'
 
-const SettingsButton = () => {
+interface SettingsButtonProps {
+    hasText: boolean
+}
+
+const SettingsButton: React.FC<SettingsButtonProps> = ({ hasText }) => {
     // TODO: Add Hooks / link href
 
     return (
         <Link href='#' passHref>
-            <a><UilSetting className="hover:text-black active:text-black dark:hover:text-neutralDark-50 
-            dark:active:text-neutralDark-50"/></a>
+            <a className='inline-flex group-hover:text-black active:text-black dark:group-hover:text-neutralDark-50 
+            dark:active:text-neutralDark-50'>
+                <UilSetting className="mx-1"/>
+            {hasText && 'Settings'}
+            </a>
         </Link>
     )
+}
+
+SettingsButton.defaultProps = {
+    hasText: false
 }
 
 export default SettingsButton

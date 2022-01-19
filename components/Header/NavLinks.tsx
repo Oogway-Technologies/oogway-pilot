@@ -27,7 +27,7 @@ const NavLinks = ({ links, listStyle }: NavLinksProps) => {
                         
                         <li key={idx} className="flex w-16 justify-around">
                             <Link href={link.href} passHref> 
-                                <a className={`${router.pathname.split("?")[0] == link.href ? 'text-primary font-bold underline underline-offset-8' : 'text-neutral-700 dark:text-neutralDark-150'} hover:font-bold`}>
+                                <a className={`${router.pathname.split("?")[0] == link.href ? 'text-primary font-bold underline underline-offset-8' : 'text-neutral-700 dark:text-neutralDark-150'} text-xs pt-2 pb-[6px] md:text-base hover:font-bold`}>
                                     {link.text}
                                 </a>
                             </Link>
