@@ -11,7 +11,9 @@ import { useRef } from "react";
 import firebase from "firebase/compat/app";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
+import { useCollection } from "react-firebase-hooks/firestore";
 import CommentsPanel from "../../components/CommentsPanel";
+import { v4 as uuidv4 } from "uuid";
 
 function CommentPage({ post, comments }) {
   const [user] = useAuthState(auth);
@@ -28,6 +30,10 @@ function CommentPage({ post, comments }) {
   const goBack = () => {
     router.back();
   };
+
+  const [commentsSnapshot] = useCollection(
+    db.collection("posts").doc(router.query.id).collection("comments")
+  );
 
   const addComment = (e) => {
     e.preventDefault();
@@ -50,7 +56,8 @@ function CommentPage({ post, comments }) {
       message: inputRef.current.value,
       user: user.email,
       photoURL: user.photoURL,
-      likes: 0,
+      likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
+      commentUID: uuidv4(), // This is used to uniquely identify the comment, e.g., to remove it
     });
 
     // Clear the input
@@ -107,7 +114,10 @@ function CommentPage({ post, comments }) {
         {/* Note: it can be its own component*/}
         <div className="flex items-center p-3">
           <ChatAltIcon className="h-10 w-10 p-2 text-black" />
-          <p className="p-1 text-xs sm:text-base text-black">10 Comments</p>
+          <p className="p-1 text-xs sm:text-base text-black">
+            {commentsSnapshot ? commentsSnapshot.docs.length : "..."}
+            comments
+          </p>
           <ThumbUpIcon className="h-10 w-10 p-2 text-black" />
           <p className="p-1 text-xs sm:text-base text-black">3 Likes</p>
         </div>

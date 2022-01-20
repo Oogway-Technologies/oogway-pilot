@@ -1,9 +1,102 @@
-function Comment({ comment }) {
+import { useEffect, useState } from "react";
+import { db, auth } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollection } from "react-firebase-hooks/firestore";
+
+function Comment({ postId, commentId, comment }) {
+  const [user] = useAuthState(auth);
+  const [numLikes, setNumLikes] = useState(0);
+
+  const avatarURL =
+    "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d";
+
+  // useEffect to bind on document loading the
+  // function that will set the number of likes on
+  // each change of the DB (triggered by onSnapshot)
+  useEffect(() => {
+    db.collection("posts")
+      .doc(postId)
+      .collection("comments")
+      .doc(commentId)
+      .onSnapshot((snapshot) => {
+        // Get the likes map
+        const likesMap = snapshot.data().likes;
+
+        // Count the entries that are True
+        let ctr = 0;
+        for (const [key, value] of Object.entries(likesMap)) {
+          if (value) {
+            ctr += 1;
+          }
+        }
+        setNumLikes(ctr);
+      });
+  }, []);
+
+  const getNumLikes = () => {
+    return numLikes;
+  };
+
+  const addLike = (e) => {
+    e.preventDefault(); // Don't think it is needed
+    db.collection("posts")
+      .doc(postId)
+      .collection("comments")
+      .doc(commentId)
+      .get()
+      .then((doc) => {
+        // Here goes the logic for toggling likes from each user
+        if (doc.exists) {
+          // Get a reference to the comment
+          let tmp = doc.data();
+
+          // Step 1: check if user.uid is in the list
+          if (user.uid in tmp.likes) {
+            // Negate what the user previously did
+            tmp.likes[user.uid] = !tmp.likes[user.uid];
+          } else {
+            // The user liked the comment
+            tmp.likes[user.uid] = true;
+          }
+
+          // Update comment
+          doc.ref.update(tmp);
+        } else {
+          console.log("Error comment not found: " + commentId);
+        }
+      });
+  };
+
   return (
-    <div>
-      {console.log("hi---")}
-      {console.log(comment)}
-      <h1 className="text-red-800">hi</h1>
+    <div className="flex flex-col p-4">
+      <div className="flex items-center">
+        <img
+          className="rounded-full"
+          src={comment.photoURL ? comment.photoUrl : avatarURL}
+          width={40}
+          height={40}
+          alt=""
+        />
+        <h1 className="text-black">{comment.user}</h1>
+      </div>
+
+      <p className="text-black mb-2">{comment.message}</p>
+
+      {/* Likes and other stuff go here */}
+      <h2 className="text-black mb-2">
+        {getNumLikes()}
+        Likes
+      </h2>
+
+      {/* Likes: the user can either LIKE or DISLIKE */}
+      <button
+        className="w-1/5 ml-2 bg-gray-200 p-3 mb-3 rounded-md ring-gray-200 text-sm text-gray-800
+            hover:ring-1 focus:outline-none active:ring-gray-300 hover:shadow-md"
+        onClick={addLike}
+      >
+        Like
+      </button>
+      <hr className="" />
     </div>
   );
 }

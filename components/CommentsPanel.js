@@ -23,7 +23,9 @@ function CommentsPanel({ comments }) {
       return commentsSnapshot.docs.map((comment) => (
         <Comment
           key={comment.id}
-          message={{
+          postId={router.query.id}
+          commentId={comment.id}
+          comment={{
             ...comment.data(),
             timestamp: comment.data().timestamp?.toDate().getTime(),
           }}
@@ -32,7 +34,12 @@ function CommentsPanel({ comments }) {
     } else {
       // Visualize the server-side rendered comments
       return JSON.parse(comments).map((comment) => (
-        <Comment key={comment.id} comment={comment} />
+        <Comment
+          key={comment.id}
+          postId={router.query.id}
+          commentId={comment.id}
+          comment={comment}
+        />
       ));
     }
   };
