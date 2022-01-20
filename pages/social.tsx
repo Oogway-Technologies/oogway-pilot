@@ -1,18 +1,3 @@
-import Head from "next/head";
+import Home from "./index";
 
-
-export default function Social() {
-    // Can use the hook to get user information
-    // const [user] = useAuthState(auth);
-  
-    return (
-      <div className="">
-        <Head>
-          <title>Oogway | Social - Wisdom of the crowd</title>
-        </Head>
-      
-        <h1>This will be the social page</h1>
-      </div>
-    )
-}
-  
+export default Home
