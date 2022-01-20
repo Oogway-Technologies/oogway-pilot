@@ -8,7 +8,7 @@ interface NavLinksProps {
 }
 
 type NavLink = {
-    href: string,
+    href: Array<string>,
     text: string
 }
 
@@ -27,7 +27,7 @@ const NavLinks = ({ links, listStyle }: NavLinksProps) => {
                         
                         <li key={idx} className="flex w-16 justify-around">
                             <Link href={link.href} passHref> 
-                                <a className={`${router.pathname.split("?")[0] == link.href ? 'text-primary font-bold underline underline-offset-8' : 'text-neutral-700 dark:text-neutralDark-150'} text-xs pt-2 pb-[6px] md:text-base hover:font-bold`}>
+                                <a className={`${link.href.includes(router.pathname.split("?")[0]) ? 'text-primary font-bold underline underline-offset-8' : 'text-neutral-700 dark:text-neutralDark-150'} text-xs pt-2 pb-[6px] md:text-base hover:font-bold`}>
                                     {link.text}
                                 </a>
                             </Link>
@@ -43,15 +43,15 @@ NavLinks.defaultProps = {
     links: [
         // TODO: Add as pages created
         {
-            href: "/#", // change to /Search when search page created
+            href: ["/#"], // change to /Search when search page created
             text: "Search"
         },
         {
-            href: "/social",
+            href: ["/social", "/"],
             text: "Feed"
         },
         {
-            href: "/#", // change to Friends when created
+            href: ["/#"], // change to Friends when created
             text: "Friends"
         },
     ],

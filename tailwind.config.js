@@ -33,6 +33,7 @@ module.exports = {
       colors: {
         black: "#000000",
         white: "#FFFFFF",
+        primaryActive: "#5A34BE",
         // Light
         primary: "#7041EE",
         secondary: "#EA7979",

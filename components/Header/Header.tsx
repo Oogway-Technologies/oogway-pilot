@@ -4,7 +4,6 @@ import SearchBar from './SearchBar';
 import AppsButton from './AppsButton';
 import NavLinks from './NavLinks';
 import UserDropdown from "./UserDropdown";
-import ToggleTheme from "./ToggleTheme";
 
 const Header = () => {
   return (
