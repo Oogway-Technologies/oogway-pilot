@@ -31,21 +31,124 @@ const NewPostAPI: React.FC<NewPostAPIProps> = ({ closeModal }) => {
     // Get a reference for the input image
     const filePickerRef = useRef(null);
 
+    // Ref and data for left and right images
+    const [imageToCompareLeft, setImageToCompareLeft] = useState(null);
+    const [imageToCompareRight, setImageToCompareRight] = useState(null);
+    const [textToCompareLeft, setTextToCompareLeft] = useState('');
+    const [textToCompareRight, setTextToCompareRight] = useState('');
+    const filePickerCompareLeftRef = useRef(null);
+    const filePickerCompareRightRef = useRef(null);
+
+    const isComparePost = () => {
+        // Utility function, returns true if it is a compare post,
+        // return false otherwise
+        return (imageToCompareLeft && imageToCompareRight) ||
+        (textToCompareLeft && textToCompareRight) ||
+        (imageToCompareLeft && textToCompareRight) || 
+        (textToCompareLeft && imageToCompareRight);
+    }
+
+    const isMissingDataForComparePost = () => {
+        return (imageToCompareLeft || imageToCompareRight || 
+        textToCompareLeft || textToCompareRight) && (!isComparePost());
+    }
+
+    const addCompareTextToPost = (text, doc) => {
+        var docRef = db.collection("posts").doc(doc.id);
+
+        return db
+        .runTransaction((transaction) => {
+            return transaction.get(docRef).then((doc) => {
+                let tmp = doc.data();
+                let obj = {
+                    type: "text",
+                    value: text,
+                }
+                
+                tmp.compare['objList'].push(obj); 
+                tmp.compare['votesObjMapList'].push({});
+                transaction.update(docRef, tmp);
+
+            })
+        })
+    };
+
+    const addCompareDataToPost = (uploadTask, doc) => {
+        uploadTask.on(
+            "state_change",
+            null,
+            (error) => console.error(error),
+            () => {
+                // When the uploads completes, add the image to the post
+                storage
+                .ref("posts")
+                .child(doc.id)
+                .getDownloadURL()
+                .then((url) => {
+                    var docRef = db.collection("posts").doc(doc.id);
+                    return db
+                    .runTransaction((transaction) => {
+                        return transaction.get(docRef).then((doc) => {
+                            let tmp = doc.data();
+                            
+                            // Create a new object to compare
+                            let obj = {
+                                type: "image",
+                                value: url,
+                            }
+                            tmp.compare['objList'].push(obj);         // Add the object to compare
+                            tmp.compare['votesObjMapList'].push({});  // Add its corresponding voting map.
+                                                                      // Ideally this would be a Set of the 
+                                                                      // users' uid voting for that post, instead
+                                                                      // of a map of <uid, some_data_not_important>
+                                                                      // However, Firebase doesn't support Set datatypes
+                            transaction.update(docRef, tmp);
+                        })
+                    })
+                });
+            }
+        );
+    };
+
     const sendPost = (e) => {
         e.preventDefault();
 
         // If the input is empty, return asap
-        if (!inputRef.current.value) return;
+        if (!inputRef.current.value)
+        {
+            alert("Please, type a message");
+            return;
+        }
 
-        // Get the DB and add a post to the posts collection
+        if (isMissingDataForComparePost() && !isComparePost())
+        {
+            alert("Please, add all the information to creeate a compare post");
+            return;
+        }
+
+        // Prepare the data to add as a post
+        let postData = {
+            message: inputRef.current.value,
+            name: user.name ? user.name : user.email,   // Change this with username or incognito
+            image: user.photoURL,                       // Change this with profile picture or incognito
+            uid: user.uid,                              // uid of the user that created this post
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        }
+
+        if (isComparePost())
+        {
+            // If the current post is a compare post,
+            // add compare post data structure
+            let compareData = {
+                objList: [],          // List of objects to compare
+                votesObjMapList: [],  // List of maps, one for each image in the list
+            };
+            postData["compare"] = compareData;
+        }
+
+        // Add a post to the posts collection
         db.collection("posts")
-            .add({
-                message: inputRef.current.value,
-                name: user.name ? user.name : user.email, // Change this with username or incognito
-                email: user.email,
-                image: user.photoURL, // Change this with profile picture or incognito
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            })
+            .add(postData)
             .then((doc) => {
             // After posting, check if the user has selected and image to post
             if (imageToPost) {
@@ -61,29 +164,88 @@ const NewPostAPI: React.FC<NewPostAPIProps> = ({ closeModal }) => {
 
                 // When the state changes run the following function
                 uploadTask.on(
-                "state_change",
-                null,
-                (error) => console.error(error),
-                () => {
-                    // When the uploads completes.
-                    // Note: ref(`post`).child(doc.id) === `posts/${doc.id}`.
-                    // Note: getDownloadURL() -> get the URL to use on the front-end
-                    storage
-                    .ref("posts")
-                    .child(doc.id)
-                    .getDownloadURL()
-                    .then((url) => {
-                        // Store the URL in the DB as part of the post
-                        db.collection("posts").doc(doc.id).set(
-                        {
-                            postImage: url,
-                        },
-                        { merge: true }
+                    "state_change",
+                    null,
+                    (error) => console.error(error),
+                    () => {
+                        // When the uploads completes.
+                        // Note: ref(`post`).child(doc.id) === `posts/${doc.id}`.
+                        // Note: getDownloadURL() -> get the URL to use on the front-end
+                        storage
+                        .ref("posts")
+                        .child(doc.id)
+                        .getDownloadURL()
+                        .then((url) => {
+                            // Store the URL in the DB as part of the post
+                            db.collection("posts").doc(doc.id).set(
+                            {
+                                postImage: url,
+                            },
+                            { merge: true }
                         ); // Use merge: true! otherwise it replaces the Post!
                     });
                 }
                 );
             }
+            else if (isComparePost())
+            {
+                // This is a compare post
+                if (imageToCompareLeft) {
+                    const uploadTaskLeft = storage
+                    .ref(`posts/${doc.id}`)
+                    .putString(imageToCompareLeft, "data_url");
+
+                    // Add compare data to the post
+                    addCompareDataToPost(uploadTaskLeft, doc);
+    
+                }
+
+                if (imageToCompareRight) {
+                    const uploadTaskRight = storage
+                    .ref(`posts/${doc.id}`)
+                    .putString(imageToCompareRight, "data_url");
+
+
+                    // Add compare data to the post
+                    addCompareDataToPost(uploadTaskRight, doc);
+                }
+
+                if (textToCompareLeft) {
+                    console.log("ADD LEFT TEXT", textToCompareLeft)
+                    addCompareTextToPost(textToCompareLeft, doc);
+                }
+
+                if (textToCompareRight) {
+                    console.log("ADD RIGHT TEXT", textToCompareRight)
+                    addCompareTextToPost(textToCompareRight, doc);
+                }
+
+                removeCompareObjects();
+            }
+
+            // Store the reference to this post to the list of posts
+            // create by the current user.
+            // Why is this needed?
+            // If we don't keep track of this we would need to
+            // scan the entire collection of posts when retrieving
+            // the posts of a given user
+            db.collection("users")
+            .doc(user.uid)
+            .get()
+            .then((userDoc) => {
+            let tmp = userDoc.data();
+
+            if ("posts" in tmp) {
+                tmp.posts.push(doc.id)
+            } else {
+                // Add a new entry
+                tmp["posts"] = [doc.id]
+            }
+
+            userDoc.ref.update(tmp);
+        })
+        .catch((err) => {console.log(err)})
+            
         });
 
         // Clear the input
@@ -91,6 +253,44 @@ const NewPostAPI: React.FC<NewPostAPIProps> = ({ closeModal }) => {
     };
 
     // Helper functions
+    const addImageToCompareLeft = (e) => {
+        const reader = new FileReader();
+        if (e.target.files[0]) {
+            // Read the file
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        // Reader is async, so use onload to attach a function
+        // to set the loaded image from the reader
+        reader.onload = (readerEvent) => {
+            setImageToCompareLeft(readerEvent.target.result);
+            if (targetEvent) {
+            // Reset the event state so the user can reload
+            // the same image twice
+            targetEvent.target.value = "";
+            }
+        };
+    };
+
+    const addImageToCompareRight = (e) => {
+        const reader = new FileReader();
+        if (e.target.files[0]) {
+            // Read the file
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        // Reader is async, so use onload to attach a function
+        // to set the loaded image from the reader
+        reader.onload = (readerEvent) => {
+            setImageToCompareRight(readerEvent.target.result);
+            if (targetEvent) {
+            // Reset the event state so the user can reload
+            // the same image twice
+            targetEvent.target.value = "";
+            }
+        };
+    };
+
     const addImageToPost = (e) => {
         const reader = new FileReader();
         if (e.target.files[0]) {
@@ -109,6 +309,16 @@ const NewPostAPI: React.FC<NewPostAPIProps> = ({ closeModal }) => {
             }
         };
     };
+
+    const removeCompareObjects = () => {
+        setImageToCompareLeft(null);
+        setImageToCompareRight(null);
+        setTextToCompareLeft("");
+        setTextToCompareRight("");
+        if (targetEvent) {
+            targetEvent.target.value = "";
+        }
+    }
 
     const removeImage = () => {
         setImageToPost(null);
@@ -211,6 +421,81 @@ const NewPostAPI: React.FC<NewPostAPIProps> = ({ closeModal }) => {
                 
             </div>
             )}
+
+            {/* DELETE ALL THE FOLLOWING UPLOADS AND KEEP ONLY APIs. THIS IS ONLY FOR TESTING APIs! */}
+            <div className="flex place-content-between p-10">
+                <div>
+                    <button className="text-gray-800 text-sm bg-gray-200 p-3 ring-red-800
+                    rounded-md hover:ring-2 focus:outline-none"
+                    onClick={() => filePickerCompareLeftRef.current.click()}>
+                        Load Image 1
+                    </button>
+                    <input
+                        ref={filePickerCompareLeftRef}
+                        onChange={(e) => {
+                            // Store the event to reset its state later
+                            // and allow the user to load the same image twice
+                            // if needed
+                            setTargetEvent(e);
+                            addImageToCompareLeft(e);
+                        }}
+                        type='file'
+                        hidden
+                    />
+                    <p className="text-xs">{imageToCompareLeft ? "Image left Loaded" : ""}</p>
+                </div>
+            
+                <div>
+                    <button className="text-gray-800 text-sm bg-gray-200 p-3 ring-blue-800
+                    rounded-md hover:ring-2 focus:outline-none"
+                    onClick={() => filePickerCompareRightRef.current.click()}>
+                        Load Image 2
+                    </button>
+                    <input
+                        ref={filePickerCompareRightRef}
+                        onChange={(e) => {
+                            // Store the event to reset its state later
+                            // and allow the user to load the same image twice
+                            // if needed
+                            setTargetEvent(e);
+                            addImageToCompareRight(e);
+                        }}
+                        type='file'
+                        hidden
+                    />
+                    <p className="text-xs">{imageToCompareRight ? "Image right Loaded" : ""}</p>
+                </div>
+            </div>
+
+            <div className="flex place-content-between p-10">
+            <div className='flex flex-col items-center'>
+                    <p className="text-white">Text Left</p>
+                    <input
+                        onChange={(e) => {
+                            setTextToCompareLeft(e.target.value)
+                        }}
+                        value={textToCompareLeft}
+                        className="mt-1 w-2/3 rounded-md"
+                        type='text'
+                    />
+                    <p className="text-xs">{imageToCompareRight ? "Text left Loaded" : ""}</p>
+            </div>
+            <div className='flex flex-col items-center'>
+            <p className="text-white">Text Right</p>
+                    <input
+                    className="mt-1 w-2/3 rounded-md"
+                    type='text'
+                    onChange={(e) => {
+                        setTextToCompareRight(e.target.value)
+                    }}
+                    value={textToCompareRight}
+                    />
+                    <p className="text-xs">{imageToCompareRight ? "Text right Loaded" : ""}</p>
+            </div>
+            </div>
+
+
+
 
             {/* Cancel / Submit buttons */}
             <div className="inline-flex w-full space-x-3 px-2">

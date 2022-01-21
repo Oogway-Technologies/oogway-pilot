@@ -10,7 +10,7 @@ function Comment({ postId, commentId, comment }) {
   const avatarURL =
     "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d";
 
-  // useEffect to bind on document loading the
+  // Use useEffect to bind on document loading the
   // function that will set the number of likes on
   // each change of the DB (triggered by onSnapshot)
   useEffect(() => {
@@ -59,7 +59,10 @@ function Comment({ postId, commentId, comment }) {
             tmp.likes[user.uid] = true;
           }
 
-          // Update comment
+          // Update comment.
+          // Note: a simple update here is fine.
+          // No need for a transaction, since even if a like is lost,
+          // That event is very rare and probably not so much of a pain
           doc.ref.update(tmp);
         } else {
           console.log("Error comment not found: " + commentId);
