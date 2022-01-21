@@ -4,7 +4,7 @@ import firebase from "firebase/compat/app";
 import { auth, db, storage } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import ToolbarButton from './ToolbarButton';
+import Button from '../Utils/Button';
 import { Dialog } from '@headlessui/react';
 import { UilNavigator, UilImagePlus, UilTimesCircle } from '@iconscout/react-unicons'
 
@@ -214,12 +214,12 @@ const NewPostAPI: React.FC<NewPostAPIProps> = ({ closeModal }) => {
 
             {/* Cancel / Submit buttons */}
             <div className="inline-flex w-full space-x-3 px-2">
-                    <ToolbarButton text="Cancel" keepText={true} icon={null}
+                    <Button text="Cancel" keepText={true} icon={null}
                         type='button' 
                         addStyle={cancelButtonStyle}
                         onClick={closeModal}
                     />
-                    <ToolbarButton text="Post" keepText={true} icon={<UilNavigator/>}
+                    <Button text="Post" keepText={true} icon={<UilNavigator/>}
                         type="submit"
                         addStyle={PostButtonStyle}
                         onClick={sendAndClose}/>

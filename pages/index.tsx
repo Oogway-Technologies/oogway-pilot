@@ -14,13 +14,13 @@ export default function Home({ posts }) {
   // const [user] = useAuthState(auth);
 
   return (
-    <div className="">
+    <div className="flex w-full justify-center">
       <Head>
           <title>Oogway | Social - Wisdom of the crowd</title>
       </Head>
-      <main className="flex w-full justify-center">
-        <FeedAPI posts={posts}/>
-      </main>
+
+      <FeedAPI posts={posts}/>
+
     </div>
   )
 }

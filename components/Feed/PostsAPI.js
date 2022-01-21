@@ -1,5 +1,6 @@
 import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
+import PostCard from "./PostCard";
 import PostAPI from "./PostAPI";
 
 function PostsAPI({ posts }) {
@@ -9,10 +10,10 @@ function PostsAPI({ posts }) {
   );
 
   return (
-    <div>
+    <div className='flex flex-col space-y-md'>
       {realtimePosts
         ? realtimePosts?.docs.map((post) => (
-            <PostAPI
+            <PostCard
               key={post.id}
               id={post.id}
               name={post.data().name}
@@ -25,7 +26,7 @@ function PostsAPI({ posts }) {
           ))
         : // Render out the server-side rendered posts
           posts.map((post) => (
-            <PostAPI
+            <PostCard
               key={post.id}
               id={post.id}
               name={post.name}
