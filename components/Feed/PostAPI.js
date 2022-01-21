@@ -1,9 +1,17 @@
 import Image from "next/image";
 import { ChatAltIcon, ShareIcon, ThumbUpIcon } from "@heroicons/react/outline";
+import { useRouter } from "next/router";
 
-function PostAPI({ name, message, email, postImage, image, timestamp }) {
+function PostAPI({ id, name, message, email, postImage, image, timestamp }) {
+  // Use the router to redirect the user to the comments page
+  const router = useRouter();
+
   const avatarURL =
     "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d";
+
+  const enterComments = () => {
+    router.push(`/comments/${id}`);
+  };
 
   return (
     <div className="flex flex-col">
@@ -49,7 +57,7 @@ function PostAPI({ name, message, email, postImage, image, timestamp }) {
           <p className="text-xs sm:text-base">Like</p>
         </div>
 
-        <div className="inputIcon">
+        <div className="inputIcon" onClick={enterComments}>
           <ChatAltIcon className="h-4" />
           <p className="text-xs sm:text-base">Comment</p>
         </div>

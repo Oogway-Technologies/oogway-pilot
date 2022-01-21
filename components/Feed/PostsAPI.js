@@ -14,6 +14,7 @@ function PostsAPI({ posts }) {
         ? realtimePosts?.docs.map((post) => (
             <PostAPI
               key={post.id}
+              id={post.id}
               name={post.data().name}
               message={post.data().message}
               email={post.data().email}
@@ -26,6 +27,7 @@ function PostsAPI({ posts }) {
           posts.map((post) => (
             <PostAPI
               key={post.id}
+              id={post.id}
               name={post.name}
               message={post.message}
               email={post.email}
