@@ -80,35 +80,6 @@ function PostAPI({ id, name, message, email, postImage, image, timestamp }) {
         }
       });
     });
-
-    /*db.collection("posts")
-      .doc(id)
-      .get()
-      .then((doc) => {
-        const postData = doc.data();
-        if (isComparePost(postData)) {
-          // Different scenarios to consider
-          for (var i = 0; i < postData.compare.votesObjMapList.length; i++) {
-            // Case 1: the user voted for an object in the past
-            if (user.uid in postData.compare.votesObjMapList[i]) {
-              // Case 1.a: the user voted again on same object -> nothing to do
-              if (i === objIdx) {
-                return;
-              }
-
-              // Case 1.b: the user voted again on different object -> switch votes
-              delete postData.compare.votesObjMapList[i][user.uid];
-              postData.compare.votesObjMapList[objIdx][user.uid] = true;
-              doc.ref.update(postData);
-              return;
-            }
-          }
-
-          // Case 2: this is the first time for the user voting on this object
-          postData.compare.votesObjMapList[objIdx][user.uid] = true;
-          doc.ref.update(postData);
-        }
-      });*/
   };
 
   return (

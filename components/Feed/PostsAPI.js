@@ -10,12 +10,13 @@ function PostsAPI({ posts }) {
   );
 
   return (
-    <div className='flex flex-col space-y-md'>
+    <div className="flex flex-col space-y-md">
       {realtimePosts
         ? realtimePosts?.docs.map((post) => (
             <PostCard
               key={post.id}
               id={post.id}
+              postOwner={post.data().uid}
               name={post.data().name}
               message={post.data().message}
               email={post.data().email}
@@ -29,6 +30,7 @@ function PostsAPI({ posts }) {
             <PostCard
               key={post.id}
               id={post.id}
+              postOwner={post.uid}
               name={post.name}
               message={post.message}
               email={post.email}

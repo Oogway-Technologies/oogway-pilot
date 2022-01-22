@@ -23,6 +23,7 @@ function CommentsPanel({ comments }) {
       return commentsSnapshot.docs.map((comment) => (
         <Comment
           key={comment.id}
+          commentOwner={"TO BE DONE WHEN COMMENTS ARE UI-AVAILABLE"}
           postId={router.query.id}
           commentId={comment.id}
           comment={{
@@ -36,6 +37,7 @@ function CommentsPanel({ comments }) {
       return JSON.parse(comments).map((comment) => (
         <Comment
           key={comment.id}
+          commentOwner={"TO BE DONE WHEN COMMENTS ARE UI-AVAILABLE"}
           postId={router.query.id}
           commentId={comment.id}
           comment={comment}
