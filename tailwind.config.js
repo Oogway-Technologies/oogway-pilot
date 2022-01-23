@@ -29,6 +29,8 @@ module.exports = {
         xl: "32px",
         xxl: "64px",
         128: "32rem",
+        136: "34rem",
+        144: "40rem",
       },
       colors: {
         black: "#000000",
@@ -65,5 +67,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-font-inter")],
+  plugins: [
+    require("tailwindcss-font-inter"),
+    require("tailwindcss-aria-attributes"),
+  ],
 };
