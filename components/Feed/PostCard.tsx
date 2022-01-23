@@ -9,9 +9,6 @@ import Button from '../Utils/Button';
 
 // === IMPORTS FOR DELETE POST ==== //
 import { XIcon } from "@heroicons/react/solid";
-import { auth } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { db } from "../../firebase";
 // ======== //
 
 // Styling
