@@ -1,7 +1,6 @@
 import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import PostCard from "./PostCard";
-import PostAPI from "./PostAPI";
 
 function PostsAPI({ posts }) {
   // Get real-time connection with DB
