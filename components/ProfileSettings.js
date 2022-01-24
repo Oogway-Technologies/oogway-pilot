@@ -34,7 +34,7 @@ function ProfileSettings({ userProfile }) {
         tmp.name = name ? name : "";
         // TODO -> ADD THE LOGIC TO UPLOAD PICTURE AS PER POST
         // tmp.profilePic = "";
-        tmp.userName = username ? username : "";
+        tmp.username = username ? username : "";
         tmp.allowDM = dm;
 
         doc.ref.update(tmp);
