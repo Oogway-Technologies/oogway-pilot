@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import Button from '../Utils/Button';
 import { UilEstate, UilFire, UilNewspaper, UilQuestionCircle, UilPen } from '@iconscout/react-unicons'
 import Modal from '../Utils/Modal';
-import { Dialog } from '@headlessui/react';
-import NextPostForm from './NextPostForm';
+import NewPostForm from './NewPostForm';
 
 
 const FeedToolbar = () => {
@@ -24,7 +23,7 @@ const FeedToolbar = () => {
     }
 
     //  Button additional styles
-    const leftTabsStyle = "rounded-[20px] p-sm md:px-md md:space-x-2 \
+    const leftTabsStyle = "rounded-[20px] p-sm md:px-md md:space-x-2 border-2 border-solid border-transparent\
         text-neutral-700 dark:text-neutralDark-150 \
         hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
         hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
@@ -72,7 +71,7 @@ const FeedToolbar = () => {
             </div>
         
             <Modal 
-                children={<NextPostForm closeModal={closeModal}/>}
+                children={<NewPostForm closeModal={closeModal}/>}
                 show={isOpen}
                 onClose={closeModal}
             />

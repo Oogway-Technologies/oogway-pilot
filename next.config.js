@@ -4,4 +4,13 @@ module.exports = {
   images: {
     domains: ["firebasestorage.googleapis.com"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/social",
+        destination: "/",
+        permanent: true,
+      },
+    ];
+  },
 };
