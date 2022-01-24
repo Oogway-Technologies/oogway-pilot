@@ -123,6 +123,19 @@ const PostCard: React.FC<PostProps> = ({ postOwner, id, name, message, descripti
         .doc(id)
         .delete()
         .catch((err) => { console.log("Cannot delete post: ", err) });
+
+        // Update the user's posts list
+        db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+            let tmp = doc.data();
+            const index = tmp.posts.indexOf(id);
+            if (index > -1) {
+                tmp.posts.splice(index, 1);
+                doc.ref.update(tmp);
+            }
+        })
     }
 
     const voteOnImage = (objIdx) => {
