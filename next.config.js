@@ -2,7 +2,7 @@
 module.exports = {
   reactStrictMode: false,
   images: {
-    domains: ["firebasestorage.googleapis.com"],
+    domains: ["firebasestorage.googleapis.com", "avatars.dicebear.com"],
   },
   async redirects() {
     return [
