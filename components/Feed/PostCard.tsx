@@ -6,10 +6,8 @@ import { Avatar, Box, Card, CardContent, CardMedia, Typography } from '@mui/mate
 import { UilComment, UilThumbsUp, UilUpload, UilBookmark, UilEllipsisH, UilCircle, UilCheckCircle } from '@iconscout/react-unicons';
 import moment from 'moment';
 import Button from '../Utils/Button';
+import PostOptionsDropdown from './PostOptionsDropdown';
 
-// === IMPORTS FOR DELETE POST ==== //
-import { XIcon } from "@heroicons/react/solid";
-// ======== //
 
 // Styling
 const postCardClass = {
@@ -54,7 +52,7 @@ const bull = (
   );
 
 interface PostProps {
-    postOwner: string,
+    postUid: string,
     id: string,
     name: string,
     message: string,
@@ -66,7 +64,7 @@ interface PostProps {
     timestamp: Date
 };
 
-const PostCard: React.FC<PostProps> = ({ postOwner, id, name, message, description, email, isCompare, postImage, userImage, timestamp }) => {
+const PostCard: React.FC<PostProps> = ({ postUid, id, name, message, description, email, isCompare, postImage, userImage, timestamp }) => {
     // Use the router to redirect the user to the comments page
     const router = useRouter();
     const [user] = useAuthState(auth);
@@ -85,57 +83,42 @@ const PostCard: React.FC<PostProps> = ({ postOwner, id, name, message, descripti
     // setters of number of votes for a comparison
     // post
     useEffect(() => {
+        // Store reference to snapshot
         db.collection("posts")
-        .doc(id)
-        .onSnapshot((snapshot) => {
-            const postData = snapshot.data();
-            if (isComparePost(postData)) {
-                // Add a counter of votes for each object to compare.
-                // Note: this should generally be an array of 2 objects
-                let votesCounter = new Array(
-                    postData.compare.votesObjMapList.length
-                ).fill(0);
-                for (var i = 0; i < votesCounter.length; i++) {
-                    votesCounter[i] = Object.keys(
-                    postData.compare.votesObjMapList[i]
-                    ).length;
+            .doc(id)
+            .onSnapshot((snapshot) => {
+                const postData = snapshot.data();
+                if (postData) { // prevent error on compare post deletion
+                                // Probably not a permanent fix, may want to 
+                                // look at listening only for changes in the children elements
+                                // to avoid issues during post deletion
+                    if (isComparePost(postData)) {
+                        // Add a counter of votes for each object to compare.
+                        // Note: this should generally be an array of 2 objects
+                        let votesCounter = new Array(
+                            postData.compare.votesObjMapList.length
+                        ).fill(0);
+                        for (var i = 0; i < votesCounter.length; i++) {
+                            votesCounter[i] = Object.keys(
+                            postData.compare.votesObjMapList[i]
+                            ).length;
+                        }
+    
+                        // Update the vote counter
+                        setVotesList(votesCounter);
+    
+                        // Add compare data to state
+                        setCompareData(postData.compare.objList);
+                    }
                 }
+            });
 
-                // Update the vote counter
-                setVotesList(votesCounter);
-
-                // Add compare data to state
-                setCompareData(postData.compare.objList);
-            }
-        });
     }, []);
 
     // Event hooks
     // Placeholder for hooks until they are added
     const needsHook = () => {
         alert('This button needs a hook!')
-    }
-
-    // Deletes a post
-    const deletePost = () => {
-        // OPEN A MODAL OR ASK THE USER IF HE/SHE IS SURE TO DELETE THE POST
-        db.collection("posts")
-        .doc(id)
-        .delete()
-        .catch((err) => { console.log("Cannot delete post: ", err) });
-
-        // Update the user's posts list
-        db.collection("users")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-            let tmp = doc.data();
-            const index = tmp.posts.indexOf(id);
-            if (index > -1) {
-                tmp.posts.splice(index, 1);
-                doc.ref.update(tmp);
-            }
-        })
     }
 
     const voteOnImage = (objIdx) => {
@@ -193,6 +176,29 @@ const PostCard: React.FC<PostProps> = ({ postOwner, id, name, message, descripti
         }
     }
 
+    // Deletes a post
+    const deletePost = () => {
+        db.collection("posts")
+        .doc(id)
+        .delete()
+        .catch((err) => { console.log("Cannot delete post: ", err) });
+
+        // Update the user's posts list
+        db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+            let tmp = doc.data();
+            const index = tmp.posts.indexOf(id);
+            if (index > -1) {
+                tmp.posts.splice(index, 1);
+                doc.ref.update(tmp);
+            }
+        })
+
+        return true
+    }
+
     // Sub-components
     // Extract header from the card to simplify JSX
     const PostHeader = (
@@ -243,19 +249,7 @@ const PostCard: React.FC<PostProps> = ({ postOwner, id, name, message, descripti
                     </div>
 
                     {/* More Button */}
-                    <button className="absolute top-sm right-sm text-neutral-700 cursor-pointer">
-                        <UilEllipsisH onClick={needsHook}/>
-                    </button>
-
-                    {/* Show cancel button only for the user owning the post */}
-                    {/* TODO: ADD TO MORE BUTTON DROP DOWN*/}
-                    {user?.uid === postOwner ? (
-                        <XIcon
-                        className="h-7 sm:mr-3 text-gray-500 cursor-pointer 
-                        transition duration-100 transform hover:scale-125"
-                        onClick={deletePost}
-                    />
-                    ) : (null)}
+                    <PostOptionsDropdown postUid={postUid} authorName={name ? name : email} deletePost={deletePost}/>
                 </div>
     }
 

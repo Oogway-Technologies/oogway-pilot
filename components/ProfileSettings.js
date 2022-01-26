@@ -38,10 +38,27 @@ function ProfileSettings({ userProfile }) {
         tmp.allowDM = dm;
 
         doc.ref.update(tmp);
+      });
+
+    // Update user
+    db.collection("users")
+      .doc(userProfile.uid)
+      .get()
+      .then((doc) => {
+        let tmp = doc.data();
+        tmp.name = name + (name && last) ? " " : "" + last;
+        tmp.username = username;
+        // TODO -> ADD THE LOGIC TO UPLOAD PICTURE AS PER POST
+        // tmp.photoURL = "";
+
+        doc.ref.update(tmp);
 
         // After update push the router to the feed
         router.push(`/feed/${userProfile.uid}`);
       });
+
+    // TODO: We should also be updating the auth user profile
+    // user.updateProfile({ ...}).then(())
   };
 
   const cancelAndContinue = (e) => {
@@ -62,87 +79,87 @@ function ProfileSettings({ userProfile }) {
   };
 
   return (
-    <div className="flex flex-col w-full items-center justify-center">
+    <div className='flex flex-col w-full items-center justify-center'>
       <Head>
         <title>Profile settings</title>
       </Head>
-      <h1 className="mt-5">User Profile settings</h1>
-      <div className="flex w-1/2 mt-10 items-center justify-center">
+      <h1 className='mt-5'>User Profile settings</h1>
+      <div className='flex w-1/2 mt-10 items-center justify-center'>
         <Image
-          className="top-0"
+          className='top-0'
           src={userProfile.profilePic}
           height={84}
           width={84}
         />
-        <form className="flex flex-grow flex-col items-center">
+        <form className='flex flex-grow flex-col items-center'>
           <p>Username</p>
           <input
             onChange={(e) => {
               setUsername(e.target.value);
             }}
             value={username}
-            className="flex-grow w-full p-2 ml-5 rounded-md focus:outline-none"
-            type="text"
+            className='flex-grow w-full p-2 ml-5 rounded-md focus:outline-none'
+            type='text'
           />
-          <div className="flex ml-3">
-            <div className="flex flex-col items-center">
-              <p className="mt-3">First name</p>
+          <div className='flex ml-3'>
+            <div className='flex flex-col items-center'>
+              <p className='mt-3'>First name</p>
               <input
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
                 value={name}
-                className="p-2 w-4/5 rounded-md focus:outline-none"
-                type="text"
+                className='p-2 w-4/5 rounded-md focus:outline-none'
+                type='text'
               />
             </div>
-            <div className="flex flex-col items-center">
-              <p className="mt-3">Last name</p>
+            <div className='flex flex-col items-center'>
+              <p className='mt-3'>Last name</p>
               <input
                 onChange={(e) => {
                   setLast(e.target.value);
                 }}
                 value={last}
-                className="p-2 w-4/5 rounded-md focus:outline-none"
-                type="text"
+                className='p-2 w-4/5 rounded-md focus:outline-none'
+                type='text'
               />
             </div>
           </div>
-          <p className="mt-3">Location</p>
+          <p className='mt-3'>Location</p>
           <input
             onChange={(e) => {
               setLocation(e.target.value);
             }}
             value={location}
-            className="flex-grow w-full p-2 ml-5 rounded-md focus:outline-none"
+            className='flex-grow w-full p-2 ml-5 rounded-md focus:outline-none'
             placeholder={"Wonderland"}
-            type="text"
+            type='text'
           />
-          <p className="mt-3">Bio</p>
+          <p className='mt-3'>Bio</p>
           <input
             onChange={(e) => {
               setBio(e.target.value);
             }}
             value={bio}
-            className="flex-grow w-full p-2 ml-5 rounded-md focus:outline-none"
+            className='flex-grow w-full p-2 ml-5 rounded-md focus:outline-none'
             placeholder={"Something about yourself..."}
-            type="text"
+            type='text'
           />
-          <div className="flex items-center">
-            <button className="btn mt-3" onClick={toggleDM}>
+          <div className='flex items-center'>
+            <button className='btn mt-3' onClick={toggleDM}>
               Allow DM
             </button>
             {dm ? (
-              <p className="mt-3 ml-3">DM enabled</p>
+              <p className='mt-3 ml-3'>DM enabled</p>
             ) : (
-              <p className="mt-3 ml-3">DM disabled</p>
+              <p className='mt-3 ml-3'>DM disabled</p>
             )}
           </div>
-          <div className="flex items-center">
-            <button className="btn mt-3 mr-3" onClick={cancelAndContinue}>
+          <div className='flex items-center'>
+            <button className='btn mt-3 mr-3' onClick={cancelAndContinue}>
               Cancel
             </button>
-            <button className="btn mt-3" onClick={saveAndContinue}>
+            <button className='btn mt-3' onClick={saveAndContinue}>
               Save and continue
             </button>
           </div>
