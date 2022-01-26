@@ -479,6 +479,13 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
         setExpanded(!expanded);
     }
 
+    const handleKeyPress = (e) => {
+        // Trigger on enter key
+        if (e.keyCode === 13) {
+            sendAndClose(e);
+        }
+    }
+
     return (
         <div className={postFormStyles.modalDiv}>
             <Dialog.Title as="div" className={postFormStyles.dialogTitle}>
@@ -670,8 +677,9 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                 <Button text="Post" keepText={true} icon={<UilNavigator/>}
                     type="submit"
                     addStyle={postFormStyles.PostButton}
-                    onClick={sendAndClose}/>
-            </div>
+                    onClick={sendAndClose}
+                    onKeyPress={handleKeyPress}/>
+        </div>
         </div>
     );
 };

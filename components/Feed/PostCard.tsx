@@ -83,29 +83,36 @@ const PostCard: React.FC<PostProps> = ({ postUid, id, name, message, description
     // setters of number of votes for a comparison
     // post
     useEffect(() => {
+        // Store reference to snapshot
         db.collection("posts")
-        .doc(id)
-        .onSnapshot((snapshot) => {
-            const postData = snapshot.data();
-            if (isComparePost(postData)) {
-                // Add a counter of votes for each object to compare.
-                // Note: this should generally be an array of 2 objects
-                let votesCounter = new Array(
-                    postData.compare.votesObjMapList.length
-                ).fill(0);
-                for (var i = 0; i < votesCounter.length; i++) {
-                    votesCounter[i] = Object.keys(
-                    postData.compare.votesObjMapList[i]
-                    ).length;
+            .doc(id)
+            .onSnapshot((snapshot) => {
+                const postData = snapshot.data();
+                if (postData) { // prevent error on compare post deletion
+                                // Probably not a permanent fix, may want to 
+                                // look at listening only for changes in the children elements
+                                // to avoid issues during post deletion
+                    if (isComparePost(postData)) {
+                        // Add a counter of votes for each object to compare.
+                        // Note: this should generally be an array of 2 objects
+                        let votesCounter = new Array(
+                            postData.compare.votesObjMapList.length
+                        ).fill(0);
+                        for (var i = 0; i < votesCounter.length; i++) {
+                            votesCounter[i] = Object.keys(
+                            postData.compare.votesObjMapList[i]
+                            ).length;
+                        }
+    
+                        // Update the vote counter
+                        setVotesList(votesCounter);
+    
+                        // Add compare data to state
+                        setCompareData(postData.compare.objList);
+                    }
                 }
+            });
 
-                // Update the vote counter
-                setVotesList(votesCounter);
-
-                // Add compare data to state
-                setCompareData(postData.compare.objList);
-            }
-        });
     }, []);
 
     // Event hooks
