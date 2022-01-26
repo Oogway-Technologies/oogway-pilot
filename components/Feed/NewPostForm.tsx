@@ -231,12 +231,12 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
 
         // Prepare the data to add as a post
         let postData = {
-            message: inputRef.current.value,                    // Leaving field name as message even though UI refers to it as a question
-            description: descriptionRef.current.value,          // Optional description
+            message: inputRef.current.value,                            // Leaving field name as message even though UI refers to it as a question
+            description: descriptionRef.current.value,                  // Optional description
             name: userData.username ? userData.username : user.email,   // Change this with username or incognito
-            image: userData.photoUrl ? userData.photoUUrl : null,                               // Change this with profile picture or incognito
-            uid: user.uid,                                      // uid of the user that created this post
-            isCompare: false,                                   // Explicitly flag whether is compare type
+            image: userData.photoUrl ? userData.photoUUrl : null,       // Change this with profile picture or incognito
+            uid: user.uid,                                              // uid of the user that created this post
+            isCompare: false,                                           // Explicitly flag whether is compare type
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
 
