@@ -13,9 +13,10 @@ import { Collapse } from '@mui/material';
 
 // Form management
 import { useForm } from 'react-hook-form';
-// import FlashErrorMessage from '../Utils/FlashErrorMessage';
 import useTimeout from '../../hooks/useTimeout';
 import { UilExclamationTriangle } from '@iconscout/react-unicons';
+import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { doc } from 'firebase/firestore';
 
 const postFormStyles = {
     modalDiv: 'flex-col bg-white dark:bg-neutralDark-500',
@@ -63,6 +64,7 @@ type NewPostProps = {
 
 const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, descPlaceholder }) => {
     const [user] = useAuthState(auth);
+    const [userData] = useDocumentData(doc(db, "users", user.uid));
 
     // Form management
     const { register, setError, formState: { errors } } = useForm();
@@ -229,12 +231,12 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
 
         // Prepare the data to add as a post
         let postData = {
-            message: inputRef.current.value,            // Leaving field name as message even though UI refers to it as a question
-            description: descriptionRef.current.value,  // Optional description
-            name: user.name ? user.name : user.email,   // Change this with username or incognito
-            image: user.photoURL,                       // Change this with profile picture or incognito
-            uid: user.uid,                              // uid of the user that created this post
-            isCompare: false,                           // Explicitly flag whether is compare type
+            message: inputRef.current.value,                            // Leaving field name as message even though UI refers to it as a question
+            description: descriptionRef.current.value,                  // Optional description
+            name: userData.username ? userData.username : user.email,   // Change this with username or incognito
+            image: userData.photoUrl ? userData.photoUUrl : null,       // Change this with profile picture or incognito
+            uid: user.uid,                                              // uid of the user that created this post
+            isCompare: false,                                           // Explicitly flag whether is compare type
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
 
@@ -477,6 +479,13 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
         setExpanded(!expanded);
     }
 
+    const handleKeyPress = (e) => {
+        // Trigger on enter key
+        if (e.keyCode === 13) {
+            sendAndClose(e);
+        }
+    }
+
     return (
         <div className={postFormStyles.modalDiv}>
             <Dialog.Title as="div" className={postFormStyles.dialogTitle}>
@@ -660,17 +669,18 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
 
             {/* Cancel / Submit buttons */}
             <div className="inline-flex w-full space-x-3 px-2">
-                    <Button text="Cancel" keepText={true} icon={null}
-                        type='button' 
-                        addStyle={postFormStyles.cancelButton}
-                        onClick={closeModal}
-                    />
-                    <Button text="Post" keepText={true} icon={<UilNavigator/>}
-                        type="submit"
-                        addStyle={postFormStyles.PostButton}
-                        onClick={sendAndClose}/>
-                </div>
-            </div>
+                <Button text="Cancel" keepText={true} icon={null}
+                    type='button' 
+                    addStyle={postFormStyles.cancelButton}
+                    onClick={closeModal}
+                />
+                <Button text="Post" keepText={true} icon={<UilNavigator/>}
+                    type="submit"
+                    addStyle={postFormStyles.PostButton}
+                    onClick={sendAndClose}
+                    onKeyPress={handleKeyPress}/>
+        </div>
+        </div>
     );
 };
 
@@ -680,3 +690,7 @@ NewPostForm.defaultProps = {
 }
 
 export default NewPostForm;
+
+function useRecoilState(userProfileState: any): [any, any] {
+    throw new Error('Function not implemented.');
+}

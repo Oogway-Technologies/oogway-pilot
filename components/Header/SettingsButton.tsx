@@ -7,12 +7,16 @@ interface SettingsButtonProps {
 }
 
 const SettingsButton: React.FC<SettingsButtonProps> = ({ hasText }) => {
-    // TODO: Add Hooks / link href
+    const needsHook = () => {
+        alert('This button needs a hook!')
+    }
 
     return (
-        <Link href='#' passHref>
-            <a className='inline-flex group-hover:text-black active:text-black dark:group-hover:text-neutralDark-50 
-            dark:active:text-neutralDark-50'>
+        <Link href='#'  passHref>
+            <a 
+                onClick={needsHook}
+                className='inline-flex group-hover:text-black active:text-black dark:group-hover:text-neutralDark-50 
+                    dark:active:text-neutralDark-50'>
                 <UilSetting className="mx-1"/>
             {hasText && 'Settings'}
             </a>

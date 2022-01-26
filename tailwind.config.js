@@ -55,8 +55,8 @@ module.exports = {
         primaryDark: "#7269FF",
         secondaryDark: "#FB9393",
         alertDark: "#FB8C4E",
-        error: "#FA3541",
-        success: "#3DDE88",
+        errorDark: "#FA3541",
+        successDark: "#3DDE88",
         neutralDark: {
           50: "#E4E6EB",
           150: "#B0B3B8",
