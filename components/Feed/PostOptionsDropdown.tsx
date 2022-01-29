@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
-import Button from '../../Utils/Button';
-import DropdownMenu from '../../Utils/DropdownMenu';
+import Button from '../Utils/Button';
+import DropdownMenu from '../Utils/DropdownMenu';
 import { UilQuestionCircle, UilExclamationCircle, UilBan, UilTrashAlt, UilEllipsisH} from '@iconscout/react-unicons'
-import { auth, db } from '../../../firebase';
-import Modal from '../../Utils/Modal';
+import { auth, db } from '../../firebase';
+import Modal from '../Utils/Modal';
 import { Dialog } from '@headlessui/react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc } from 'firebase/firestore';
-import { postOptionsDropdownStyles } from '../../../styles/feed';
 
+// Styles
+const postOptionsDropdownStyles = {
+    // Dropdown menu
+    menuButtonClass: "absolute top-sm right-sm text-neutral-700 cursor-pointer",
+    menuItemsClass: "absolute right-6 w-auto h-auto mt-2 p-2 origin-top-right \
+        bg-white dark:bg-neutralDark-500 rounded-md shadow-lg \
+        ring-2 ring-primary dark:ring-white ring-opacity-50 focus:outline-none before:font-bold",
+    buttonAddStyle: "items-center space-x-2 px-sm text-neutral-700 dark:text-neutralDark-150 \
+        hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
+        hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark",
+    // Delete post confirmation modal
+    modalDiv: "flex-col bg-white dark:bg-neutralDark-500",
+    modalTitle: "flex px-2 py-md text-lg font-bold  text-neutral-800 dark:text-neutralDark-50",
+    modalCancelButton: "rounded-[20px] p-sm w-full justify-center bg-neutral-150 hover:bg-neutral-300\
+    text-neutral-700 text-sm font-bold",
+    modalConfirmButton: "rounded-[20px] p-sm w-full space-x-2 justify-center bg-alert dark:bg-alertDark\
+    hover:bg-error active:bg-error dark:hover:bg-errorDark \
+    dark:active:bg-errorDark text-white dark:text-white font-bold"
+}
 
 type PostOptionsDropdownProps = {
-    authorUid: string, // Post author id
+    postUid: string, // Post author id
     deletePost:  React.MouseEventHandler<HTMLButtonElement> // Handler function to delete post
     authorName: string, // Post author name
 }
 
-const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid: authorUid, deletePost, authorName }) => {
+const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, deletePost, authorName }) => {
     const [user] = useAuthState(auth);
     const [userData] = useDocumentData(doc(db, "users", user.uid));
     const [isOpen, setIsOpen] = useState(false)
@@ -31,12 +49,12 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid: au
         setIsOpen(false)
     }
 
-    const isUsersOwnPost = (authorUid) => {
-        return user?.uid === authorUid
+    const isUsersOwnPost = (postUid) => {
+        return user?.uid === postUid
     }
 
-    const isUserBlocked = (authorUid) => {
-        return userData?.blockedUsers?.includes(authorUid)
+    const isUserBlocked = (postUid) => {
+        return userData?.blockedUsers?.includes(postUid)
     }
 
     // Handler functions
@@ -45,7 +63,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid: au
 
         // Return early if user already blocked
         console.log(user.posts);
-        if (isUserBlocked(authorUid)) {
+        if (isUserBlocked(postUid)) {
             return
         }
 
@@ -64,10 +82,10 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid: au
             let tmp = userDoc.data();
 
             if ("blockedUsers" in tmp) {
-                tmp.blockedUsers.push(authorUid)
+                tmp.blockedUsers.push(postUid)
             } else {
                 // Create a new array
-                tmp["blockedUsers"] = [authorUid]
+                tmp["blockedUsers"] = [postUid]
             }
 
             userDoc.ref.update(tmp);
@@ -79,7 +97,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid: au
         e.preventDefault();
 
         // Return early if user not blocked
-        if (!isUserBlocked(authorUid)) {
+        if (!isUserBlocked(postUid)) {
             return
         }
 
@@ -90,7 +108,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid: au
         .get()
         .then((userDoc) => {
             let tmp = userDoc.data();
-            const index = tmp.blockedUsers.indexOf(authorUid);
+            const index = tmp.blockedUsers.indexOf(postUid);
             if (index > -1) {
                 tmp.blockedUsers.splice(index, 1);
                 userDoc.ref.update(tmp);
@@ -159,11 +177,11 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid: au
         // a user you've previous blocked froom within their posts. Presumably, you wouldn't see
         // a blocked user's posts...
         <Button 
-            text={`${isUserBlocked(authorUid) ? 'Unblock' : 'Block'} ${authorName}`}
+            text={`${isUserBlocked(postUid) ? 'Unblock' : 'Block'} ${authorName}`}
             keepText={true}
             icon={<UilBan/>}
             type="button"
-            onClick={isUserBlocked(authorUid) ? unblockUser : blockUser}
+            onClick={isUserBlocked(postUid) ? unblockUser : blockUser}
             addStyle={postOptionsDropdownStyles.buttonAddStyle}
         />,
         <Button 
@@ -182,7 +200,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid: au
                 menuButtonClass={postOptionsDropdownStyles.menuButtonClass}
                 menuItemsClass={postOptionsDropdownStyles.menuItemsClass}
                 menuButton={menuButton}
-                menuItems={isUsersOwnPost(authorUid) ? ownPostMenuItems : otherPostMenuItems}
+                menuItems={isUsersOwnPost(postUid) ? ownPostMenuItems : otherPostMenuItems}
             />
             <Modal 
                 children={<ConfirmDeletePost/>}

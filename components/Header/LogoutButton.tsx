@@ -1,7 +1,6 @@
 import React from 'react'
 import { auth } from '../../firebase'
 import { UilSignOutAlt } from '@iconscout/react-unicons'
-import { logoutButtonClass } from '../../styles/header'
 
 interface LogoutButtonProps {
     hasText: boolean
@@ -10,9 +9,10 @@ interface LogoutButtonProps {
 const LogoutButton: React.FC<LogoutButtonProps> = ({ hasText }) => {
     return (
         <a 
-        className={logoutButtonClass.a}
+        className="inline-flex group-hover:text-black active:text-black dark:group-hover:text-neutralDark-50 
+        dark:active:text-neutralDark-50 cursor-pointer" 
         onClick={() => auth.signOut()}>
-            <UilSignOutAlt className={logoutButtonClass.icon}/> 
+            <UilSignOutAlt className="mx-1"/> 
             {hasText && 'Logout'}
         </a>
     )
