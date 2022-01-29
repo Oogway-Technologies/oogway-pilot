@@ -17,7 +17,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = (
     }
 ) => {
   return (
-        <Menu as="div">
+        <Menu as="div" >
         <Menu.Button className={menuButtonClass}>
             {menuButton}
         </Menu.Button>

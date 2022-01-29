@@ -1,13 +1,13 @@
 import React from "react";
-import { feedApiClass } from "../../styles/feed";
 import FeedToolbar from "./FeedToolbar";
-import PostsAPI from "./Post/PostsAPI";
+import PostsAPI from "./PostsAPI";
 
 const FeedAPI = ({ posts }) => {
   return (
-    <div className={feedApiClass.divOuter}>
-      <div className={feedApiClass.divInner}>
+    <div className="flex-grow h-screen pb-44 pt-6 mx-4 xl:mr-40 overflow-y-auto">
+      <div className="space-y-4 mx-auto max-w-md md:max-w-lg lg:max-w-2xl">
         <FeedToolbar/>
+
 
         {/* Posts */}
         <PostsAPI posts={posts} />
