@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 @layer components {
-  .inputIcon {
-    @apply flex items-center space-x-1 hover:bg-gray-100 flex-grow justify-center p-2 rounded-xl cursor-pointer;
-  }
-  .btn {
-    @apply bg-gray-200 p-3 rounded-md ring-gray-200 text-sm text-gray-800 
-    hover:ring-1 focus:outline-none active:ring-gray-300 hover:shadow-md;
+  .buttonText::after {
+    display: block;
+    content: attr(data-text);
+    content: attr(data-text) / "";
+    height: 0;
+    visibility: hidden;
+    font-weight: bold;
   }
 }
