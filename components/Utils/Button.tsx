@@ -17,7 +17,7 @@ const Button: React.FC<ToolbarButtonProps> = ({icon, keepText, text, addStyle, o
         <button
             type={type}
             onClick={onClick}
-            className={"testing inline-flex " + addStyle}>
+            className={"inline-flex " + addStyle}>
             {icon} <a data-text={text} className="buttonText">{(keepText || !isMobile ) && text}</a>
         </button>
         );
