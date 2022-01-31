@@ -70,5 +70,6 @@ module.exports = {
   plugins: [
     require("tailwindcss-font-inter"),
     require("tailwindcss-aria-attributes"),
+    require("tailwind-scrollbar-hide"),
   ],
 };
