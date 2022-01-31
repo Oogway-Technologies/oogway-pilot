@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Avatar, Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { UilComment, UilThumbsUp, UilUpload, UilBookmark, UilEllipsisH, UilCircle, UilCheckCircle } from '@iconscout/react-unicons';
 import moment from 'moment';
 import Button from '../Utils/Button';
 import PostOptionsDropdown from './PostOptionsDropdown';
+
+// Database
+import { auth, db, storage } from "../../firebase";
 
 
 // Styling
@@ -195,6 +197,14 @@ const PostCard: React.FC<PostProps> = ({ postUid, id, name, message, description
                 doc.ref.update(tmp);
             }
         })
+
+        // Delete the post's media, if any
+        storage.ref(`posts/${id}`).listAll().then((listResults) => {
+            const promises = listResults.items.map((item) => {
+                return item.delete();
+            });
+            Promise.all(promises);
+        });
 
         return true
     }
