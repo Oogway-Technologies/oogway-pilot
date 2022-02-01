@@ -1,15 +1,16 @@
 import { useState } from "react";
 import Head from "next/head";
-import { Button } from "@mui/material";
 import styled from "styled-components";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
+import Button from "../../components/Utils/Button";
 
-export default function LoginForm(){
-    const [inputEmail, setInputEmail] = useState("");
-    const [inputPassword, setInputPassword] = useState("");
-    const [inputPasswordRep, setInputPasswordRep] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
+export default function LoginForm() {
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+  const [inputPasswordRep, setInputPasswordRep] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [recoverPW, setRecoverPW] = useState(false);
 
   // Modal helper functions
   const openModal = () => {
@@ -66,70 +67,54 @@ export default function LoginForm(){
   };
 
   return (
-    <Container>
+    <div>
       <Head>
         <title>Login</title>
       </Head>
       <div>
-        <button onClick={openModal}>Login</button>
+        <button type="button" onClick={openModal}>
+          <ModalHeader>Login</ModalHeader>
+        </button>
       </div>
-      <LoginContainer>
-        <Logo src="https://cdn-icons-png.flaticon.com/512/2395/2395608.png" />
-        <SignIn>
-          <InputField
-            value={inputEmail}
-            placeholder="Email"
-            onChange={(e) => setInputEmail(e.target.value)}
-          />
-          <InputField
-            type="password"
-            value={inputPassword}
-            placeholder="Password"
-            onChange={(e) => setInputPassword(e.target.value)}
-          />
-          <InputField
-            type="password"
-            value={inputPasswordRep}
-            placeholder="Repeat Password"
-            onChange={(e) => setInputPasswordRep(e.target.value)}
-          />
-          <CustomSignIn>
-            <CustomLoginButton onClick={createAccount} variant="outlined">
-              New User
-            </CustomLoginButton>
-            <CustomLoginButton onClick={LogIn} variant="outlined">
-              Log in
-            </CustomLoginButton>
-          </CustomSignIn>
-        </SignIn>
-      </LoginContainer>
-    </Container>
+      <SignIn>
+        <InputHeader>email</InputHeader>
+        <InputField
+          value={inputEmail}
+          placeholder="Email"
+          onChange={(e) => setInputEmail(e.target.value)}
+        />
+        <InputHeader>Password</InputHeader>
+        <InputField
+          type="password"
+          value={inputPassword}
+          placeholder="Password"
+          onChange={(e) => setInputPassword(e.target.value)}
+        />
+        <CustomLink onClick={e => {e}}>Forgot your password?</CustomLink>
+        <CustomSignIn>
+          <Button onClick={LogIn} addStyle={cancelButtonStyle} text="Cancel"/>
+          <Button onClick={LogIn} addStyle={loginButtonStyle} text="Login"/>
+        </CustomSignIn>
+      </SignIn>
+      <InputHeader>Don't have an account?&nbsp;<CustomLink onClick={e => {e}}>Sign up</CustomLink></InputHeader>
+    </div>
   );
 }
 
+const loginButtonStyle = "rounded-[20px] p-sm md:px-md md:space-x-2 border-solid border-transparent\
+text-neutral-700 dark:text-neutralDark-150 \
+bg-violet-600 text-white \
+hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold hover:text-black \
+hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
+hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark"
 
-const Container = styled.div`
-  display: grid;
-  place-items: center;
-  height: 100vh;
-  background-color: whitesmoke;
-`;
+const cancelButtonStyle = "rounded-[20px] p-sm md:px-md md:space-x-2 border-solid border-transparent\
+text-neutral-700 dark:text-neutralDark-150 \
+bg-stone-300 text-slate-700 pr-3.5 \
+hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold hover:text-black \
+hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
+hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark"
 
-const LoginContainer = styled.div`
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0px 4px 14px -3px rgba(0, 0, 0, 0.75);
-`;
-
-const Logo = styled.img`
-  height: 200px;
-  width: 200px;
-  margin-bottom: 50px;
-`;
 
 const SignIn = styled.div`
   display: flex;
@@ -138,28 +123,43 @@ const SignIn = styled.div`
   width: 100%;
 `;
 
+const InputHeader = styled.div`
+  outline-width: 0;
+  padding: 2px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: rgb(83,83,83);
+  margin-right: auto;
+  display: flex;
+`;
+
 const InputField = styled.input`
   outline-width: 0;
   padding: 2px;
   margin-bottom: 5px;
-  border-bottom: 1px solid lightgray;
+  border: 1px solid lightgray;
+  border-radius: 5px;
 `;
 
-const CustomLoginButton = styled(Button)`
-  &&& {
-    color: black;
-    border-top: 1px solid whitesmoke;
-    border-bottom: 1px solid whitesmoke;
-    outline-width: 0;
-    border: 1px solid gray;
-    width: 48%;
-    margin: 5px;
-    font-size: xx-small;
-  }
-`;
 
 const CustomSignIn = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  min-height: 50px;
+`;  
+
+const ModalHeader = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
   justify-content: flex-end;
+`;
+
+const CustomLink = styled.div`
+font-size: 12px;
+color: rgb(112, 65, 238);
+cursor: pointer;
+float: right;
 `;
