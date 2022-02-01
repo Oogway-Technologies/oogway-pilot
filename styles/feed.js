@@ -29,6 +29,11 @@ export const feedToolbarClass = {
     dark:active:bg-primaryActive text-white font-bold",
 };
 
+// Posts API
+export const postApiClass = {
+  div: "flex flex-col space-y-md",
+};
+
 // PostCard
 export const postCardClass = {
   card: "flex flex-col px-md pt-md pb-sm rounded-md shadow-sm shadow-black/20 dark:shadow-black/60 \
@@ -37,10 +42,17 @@ export const postCardClass = {
   header:
     "overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 \
       space-x-1 items-center",
+  avatar: "h-[45px] w-[45px] mr-sm",
+  infoDiv: "flex flex-wrap",
   headerLeft: "flex w-11/12 items-center",
   headerRight: "flex w-1/12 justify-end",
+  bullSpan: "hidden lg:flex",
+  commentsP: "inline-flex",
+  commentsSpan: "hidden md:flex md:ml-1",
+  categoryP: "font-bold text-primary",
   leftMobileRowOne: "inline-flex items-center",
-  leftMobileRowTwo: "inline-flex items-center pl-sm sm:pl-0 text-xs md:text-sm",
+  leftMobileRowTwo:
+    "inline-flex items-center pl-sm md:pl-0  text-xs md:text-sm",
   // Body
   body: "flex flex-col ml-xl",
   bodyQuestion:
@@ -66,7 +78,7 @@ export const postCardClass = {
         active:text-primary",
 };
 
-export const postOptionsDropdownStyles = {
+export const postOptionsDropdownClass = {
   // Dropdown menu
   menuButtonClass:
     "inline-flex top-sm right-sm text-neutral-700 cursor-pointer",

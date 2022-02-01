@@ -1,6 +1,6 @@
 import React from "react";
 import FeedToolbar from "./FeedToolbar";
-import PostsAPI from "./PostsAPI";
+import PostsAPI from "./Post/PostsAPI";
 import { feedApiClass } from '../../styles/feed'
 
 const FeedAPI = ({ posts }) => {

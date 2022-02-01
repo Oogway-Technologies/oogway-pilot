@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '../Utils/Button';
 import { UilEstate, UilFire, UilNewspaper, UilQuestionCircle, UilPen } from '@iconscout/react-unicons'
 import Modal from '../Utils/Modal';
-import NewPostForm from './NewPostForm';
+import NewPostForm from './Forms/NewPostForm';
 import { feedToolbarClass } from '../../styles/feed';
 import needsHook from '../../hooks/needsHook';
 

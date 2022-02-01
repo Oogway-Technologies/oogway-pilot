@@ -2,62 +2,25 @@ import React, { useRef, useState, useEffect }  from 'react';
 
 // Database
 import firebase from "firebase/compat/app";
-import { auth, db, storage } from "../../firebase";
+import { auth, db, storage } from "../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 // JSX components
-import Button from '../Utils/Button';
+import Button from '../../Utils/Button';
 import { Dialog } from '@headlessui/react';
 import { UilNavigator, UilImagePlus, UilTimesCircle, UilChart } from '@iconscout/react-unicons'
 import { Collapse } from '@mui/material';
 
 // Form management
 import { useForm } from 'react-hook-form';
-import useTimeout from '../../hooks/useTimeout';
+import useTimeout from '../../../hooks/useTimeout';
 import { UilExclamationTriangle } from '@iconscout/react-unicons';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { doc } from 'firebase/firestore';
+import { postFormClass } from '../../../styles/feed';
 
 // Other and utilities
 import cryptoRandomString from 'crypto-random-string';
-
-const postFormStyles = {
-    modalDiv: 'flex-col bg-white dark:bg-neutralDark-500',
-    dialogTitle: "flex px-2 py-md text-lg font-bold  text-neutral-800 dark:text-neutralDark-50",
-    // Form
-    form: "flex flex-col p-sm space-y-3 lg:w-136",
-    formQuestion: "border-solid border-[1px] border-neutral-300 \
-        focus-within:border-primary focus-visible:border-primary active:border-neutral-300\
-       rounded-[8px]",
-    formQuestionInput: "h-12 bg-transparent w-full max-w-full px-5 focus:outline-none text-sm",
-    formDescription: "border-solid border-[1px] border-neutral-300 \
-        focus-within:border-primary focus-visible:border-primary active:border-neutral-300\
-        alert:border-alert rounded-[8px]",
-    formDescriptionInput: "resize-none w-full h-28 bg-transparent flex-grow py-2 px-5\
-        focus:outline-none text-sm",
-    uploadBar: "inline-flex w-full space-x-3 px-2 pt-md pb-xl",
-    formCompareText: "border-solid border-[1px] border-neutral-300 w-36 lg:w-96 xl:w-96 \
-        focus-within:border-primary focus-visible:border-primary active:border-neutral-300\
-        alert:border-alert rounded-[8px]",
-    formAlert: "inline-flex items-center text-sm text-alert dark:text-alert",
-    // Media
-    previewDiv: "inline-flex px-2 space-x-md",
-    imagePreview: "flex flex-col items-center",
-    image: "flex rounded-[8px] h-20  object-contain",
-    // Button styles
-    cancelButton: "rounded-[20px] p-sm w-full justify-center bg-neutral-150 hover:bg-neutral-300\
-        text-neutral-700 text-sm font-bold",
-    PostButton: "rounded-[20px] p-sm w-full space-x-2 justify-center bg-primary dark:bg-primaryDark\
-        hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive \
-        dark:active:bg-primaryActive text-white font-bold",
-    imageButton: "inline-flex p-sm rounded-[20px] text-neutral-700 dark:text-neutralDark-150 \
-        hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
-        hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
-        hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark",
-    removeImageButton: "flex my-md cursor-pointer text-neutral-700 hover:text-error",
-    compareUpload: "inline-block items-center text-primary dark:text-primaryDark text-sm" 
-}
-
 
 type NewPostProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
@@ -515,18 +478,18 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
     }
 
     return (
-        <div className={postFormStyles.modalDiv}>
-            <Dialog.Title as="div" className={postFormStyles.dialogTitle}>
+        <div className={postFormClass.modalDiv}>
+            <Dialog.Title as="div" className={postFormClass.dialogTitle}>
                 What's your question?
             </Dialog.Title>
 
             {/* Question form */}
-            <form className={postFormStyles.form}>
+            <form className={postFormClass.form}>
 
                 {/* Question: required */}
-                <div className={postFormStyles.formQuestion}>
+                <div className={postFormClass.formQuestion}>
                     <input
-                        className={postFormStyles.formQuestionInput}
+                        className={postFormClass.formQuestionInput}
                         type='text'
                         aria-invalid={errors.question ? "true" : "false"}
                         ref={inputRef}
@@ -539,25 +502,25 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                     <FlashErrorMessage 
                         message={errors.question.message}
                         ms={warningTime}
-                        style={postFormStyles.formAlert}/>
+                        style={postFormClass.formAlert}/>
                 )}
 
                 {/* Description: not required */}
-                <div className={postFormStyles.formDescription}>
+                <div className={postFormClass.formDescription}>
                     <textarea
                         ref={descriptionRef}
                         placeholder={descPlaceholder}
-                        className={postFormStyles.formDescriptionInput}/>
+                        className={postFormClass.formDescriptionInput}/>
                 </div>
             </form>
 
             {/* Upload Image OR compare*/}
-            <div className={postFormStyles.uploadBar}>
+            <div className={postFormClass.uploadBar}>
 
                 {/* Upload Image */}
                 <button 
                     onClick={() => filePickerRef.current.click()} 
-                    className={postFormStyles.imageButton}
+                    className={postFormClass.imageButton}
                 >
                     <UilImagePlus />
                     <input
@@ -571,7 +534,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                 {/* Trigger compare */}
                 <button
                     onClick={handleCompareClick}
-                    className={postFormStyles.imageButton}
+                    className={postFormClass.imageButton}
                     aria-expanded={expanded}
                     aria-label="compare"
                 >
@@ -582,18 +545,18 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
             
             {/* Show preview of the image and click it to remove the image from the post */}
             {(imageToPost || imageToCompareLeft || imageToCompareRight) && (
-                <div className={postFormStyles.previewDiv}>
+                <div className={postFormClass.previewDiv}>
                     {
                         [imageToPost, imageToCompareLeft, imageToCompareRight].map(
                             (img, idx) => {
                             if (img) {
-                                return <div key={idx} className={postFormStyles.imagePreview}>
+                                return <div key={idx} className={postFormClass.imagePreview}>
                                             <img 
-                                                className={postFormStyles.image} 
+                                                className={postFormClass.image} 
                                                 src={img} // Pass image to src
                                                 alt=''/>
                                             <UilTimesCircle 
-                                                className={postFormStyles.removeImageButton} 
+                                                className={postFormClass.removeImageButton} 
                                                 onClick={() => removeImage(idx)} />
                                         </div> 
                             }
@@ -604,20 +567,20 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
 
             
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <div className="flex place-content-between pb-md">
-                <div className={postFormStyles.form}>
+            <div className={postFormClass.imageComparisonDiv}>
+                <div className={postFormClass.form}>
                     {/* Comparision A */}
                     <div className="inline-flex">
                         { imageToCompareLeft ? (
-                            <p className="inline-flex items-center px-md text-neutral-700 dark:text-neutralDark-150">
-                            Option 1: <span className="italic ml-2">image selected</span>
+                            <p className={postFormClass.imageSelectedText}>
+                            Option 1: <span className={postFormClass.imageSelectedSpan}>image selected</span>
                             </p>  
                         ) : (
                             <>
                             {/* Text input A */}
-                            <div className={postFormStyles.formCompareText}>
+                            <div className={postFormClass.formCompareText}>
                                 <input
-                                    className={postFormStyles.formQuestionInput}
+                                    className={postFormClass.formQuestionInput}
                                     type='text'
                                     placeholder='Option 1'
                                     // ref={textCompareLeftRef}
@@ -628,11 +591,11 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                                 />
                             </div>
 
-                            <p className="inline-flex items-center px-md">or</p>
+                            <p className={postFormClass.orText}>or</p>
 
                             {/* Image input A */}
                             <button 
-                                className={postFormStyles.compareUpload}
+                                className={postFormClass.compareUpload}
                                 onClick={() => filePickerCompareLeftRef.current.click()}
                             >
                                 Upload Image
@@ -649,15 +612,15 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                     {/* Option B */}
                     <div className="inline-flex">
                         { imageToCompareRight ? (
-                            <p className="inline-flex items-center px-md text-neutral-700 dark:text-neutralDark-150">
-                            Option 2: <span className="italic ml-2">image selected</span>
+                            <p className={postFormClass.imageSelectedText}>
+                            Option 2: <span className={postFormClass.imageSelectedSpan}>image selected</span>
                             </p>  
                         ) : (
                             <>
-                            <div className={postFormStyles.formCompareText}>
+                            <div className={postFormClass.formCompareText}>
                                 {/* Text input B */}
                                 <input
-                                    className={postFormStyles.formQuestionInput}
+                                    className={postFormClass.formQuestionInput}
                                     // ref={textCompareRightRef}
                                     type='text'
                                     placeholder='Option 2'
@@ -667,11 +630,11 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                                     value={textToCompareRight}
                                 />
                             </div>
-                            <p className="inline-flex items-center px-md">or</p>
+                            <p className={postFormClass.orText}>or</p>
 
                             {/* Image input B */}
                             <button 
-                                className={postFormStyles.compareUpload}
+                                className={postFormClass.compareUpload}
                                 onClick={() => filePickerCompareRightRef.current.click()}
                             >
                                 Upload Image
@@ -689,22 +652,22 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                             <FlashErrorMessage 
                                 message={errors.compare.message}
                                 ms={warningTime}
-                                style={postFormStyles.formAlert}/>
+                                style={postFormClass.formAlert}/>
                         )} 
                 </div>
             </div>
             </Collapse>
 
             {/* Cancel / Submit buttons */}
-            <div className="inline-flex w-full space-x-3 px-2">
+            <div className={postFormClass.cancelSubmitDiv}>
                 <Button text="Cancel" keepText={true} icon={null}
                     type='button' 
-                    addStyle={postFormStyles.cancelButton}
+                    addStyle={postFormClass.cancelButton}
                     onClick={closeModal}
                 />
                 <Button text="Post" keepText={true} icon={<UilNavigator/>}
                     type="submit"
-                    addStyle={postFormStyles.PostButton}
+                    addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}
                     onKeyPress={handleKeyPress}/>
         </div>
@@ -718,7 +681,3 @@ NewPostForm.defaultProps = {
 }
 
 export default NewPostForm;
-
-function useRecoilState(userProfileState: any): [any, any] {
-    throw new Error('Function not implemented.');
-}
