@@ -6,8 +6,27 @@ export const avatarURL =
 
 // Feed API
 export const feedApiClass = {
-  divOuter: "flex-grow h-screen pb-44 pt-6 mx-4 xl:mr-40 overflow-y-auto",
+  divOuter:
+    "flex-grow h-screen pb-44 pt-6 mx-4 xl:mr-40 overflow-y-auto scrollbar-hide",
   divInner: "space-y-4 mx-auto max-w-md md:max-w-lg lg:max-w-2xl",
+};
+
+// Feed toolbar
+export const feedToolbarClass = {
+  div: "grid grid-cols-2",
+  leftDiv: "flex items-center justify-self-start md:mr-auto",
+  rightDiv: "flex items-center justify-self-end md:ml-auto",
+  leftTabButtons:
+    "rounded-[20px] p-sm md:px-md md:space-x-2 border-2 border-solid border-transparent\
+    text-neutral-700 dark:text-neutralDark-150 \
+    hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
+    hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
+    hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark",
+  newPostButton:
+    "rounded-[20px] p-sm md:px-md md:space-x-2 \
+    bg-primary dark:bg-primaryDark hover:bg-primaryActive \
+    active:bg-primaryActive dark:hover:bg-primaryActive \
+    dark:active:bg-primaryActive text-white font-bold",
 };
 
 // PostCard
