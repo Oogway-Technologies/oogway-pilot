@@ -7,10 +7,17 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
     return (
-        <>
-        <Header />
-        <main>{children}</main>
-        </>
+        <div className="flex flex-col min-h-screen max-h-screen overflow-y-hidden">
+        <div className="sticky">
+            <Header />
+        </div>
+        <div className="">
+        <main>
+            {children}
+        </main>
+        </div>
+
+        </div>
         
     )
 }
