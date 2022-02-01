@@ -61,7 +61,7 @@ export const postCardClass = {
   // Media
   voteDiv: "flex px-2 space-x-md",
   voteContainer: "flex flex-col w-full items-center",
-  imageVote: "flex rounded-[8px]  object-contain",
+  imageVote: "flex rounded-[8px]  object-contain cursor-pointer",
   textVote:
     "flex rounded-[8px] border border-solid border-primary p-xl \
         text-sm text-primary dark:text-primaryDark",

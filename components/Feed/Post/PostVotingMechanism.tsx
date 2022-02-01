@@ -95,11 +95,22 @@ const PostVotingMechanism = ({id, compareData, votesList}: PostVotingMechanismPr
                     return <div key={idx} className={postCardClass.voteContainer}>
                             {obj.type == 'image' ? (
                                 <img 
-                                className={postCardClass.imageVote} 
-                                src={obj.value}
-                                alt=''/>
+                                    className={postCardClass.imageVote} 
+                                    src={obj.value}
+                                    onClick={() => {
+                                        voteOnImage(idx);
+                                        updateVoteButton(idx);
+                                    }}
+                                    alt=''
+                                />
                             ) : (
-                                <p className={postCardClass.textVote}>
+                                <p
+                                    className={postCardClass.textVote}
+                                    onClick={() => {
+                                        voteOnImage(idx);
+                                        updateVoteButton(idx);
+                                    }}
+                                >
                                     {obj.value}
                                 </p>
                             )}
