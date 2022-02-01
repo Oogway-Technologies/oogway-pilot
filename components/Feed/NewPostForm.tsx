@@ -18,6 +18,9 @@ import { UilExclamationTriangle } from '@iconscout/react-unicons';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { doc } from 'firebase/firestore';
 
+// Other and utilities
+import cryptoRandomString from 'crypto-random-string';
+
 const postFormStyles = {
     modalDiv: 'flex-col bg-white dark:bg-neutralDark-500',
     dialogTitle: "flex px-2 py-md text-lg font-bold  text-neutral-800 dark:text-neutralDark-50",
@@ -145,13 +148,16 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
         textToCompareLeft || textToCompareRight) && (!isComparePost());
     }
 
-    const addCompareTextToPost = (text, doc) => {
-        var docRef = db.collection("posts").doc(doc.id);
+    const addCompareTextToPostSync = (textList, doc) => {
+        if (textList.length > 0) {
+            let text = textList[0];
 
-        return db
-        .runTransaction((transaction) => {
-            return transaction.get(docRef).then((doc) => {
-                let tmp = doc.data();
+            // Remove the first element (currently being used)
+            textList.shift();
+
+            doc.get()
+            .then((docSnapshot) => {
+                let tmp = docSnapshot.data();
                 let obj = {
                     type: "text",
                     value: text,
@@ -159,47 +165,56 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                 
                 tmp.compare['objList'].push(obj); 
                 tmp.compare['votesObjMapList'].push({});
-                transaction.update(docRef, tmp);
 
+                doc.update(tmp)
+                .then(() => {
+                    // Recursively call the same function for the other
+                    // text to upload when the current upload is done
+                    addCompareTextToPostSync(textList, doc);
+                })
             })
-        })
+
+        }
     };
 
-    const addCompareDataToPost = (uploadTask, doc) => {
-        uploadTask.on(
-            "state_change",
-            null,
-            (error) => console.error(error),
-            () => {
-                // When the uploads completes, add the image to the post
-                storage
-                .ref("posts")
-                .child(doc.id)
-                .getDownloadURL()
-                .then((url) => {
-                    var docRef = db.collection("posts").doc(doc.id);
-                    return db
-                    .runTransaction((transaction) => {
-                        return transaction.get(docRef).then((doc) => {
-                            let tmp = doc.data();
-                            
-                            // Create a new object to compare
+    const addCompareDataToPostSync = (uploadTaskList, doc) => {
+        if (uploadTaskList.length > 0) {
+            let uploadTaskPair = uploadTaskList[0];
+
+            // Remove the first element (currently being used)
+            uploadTaskList.shift();
+
+            uploadTaskPair[0].on(
+                'state_changed',
+                null,
+                (error) => console.log(error),
+                () => {
+                    // When the uploads completes, add the image to the post
+                    storage
+                    .ref(uploadTaskPair[1])
+                    .getDownloadURL()
+                    .then((url) => {
+                        doc.get()
+                        .then((docSnapshot) => {
+                            let tmp = docSnapshot.data();
                             let obj = {
                                 type: "image",
                                 value: url,
                             }
-                            tmp.compare['objList'].push(obj);         // Add the object to compare
-                            tmp.compare['votesObjMapList'].push({});  // Add its corresponding voting map.
-                                                                      // Ideally this would be a Set of the 
-                                                                      // users' uid voting for that post, instead
-                                                                      // of a map of <uid, some_data_not_important>
-                                                                      // However, Firebase doesn't support Set datatypes
-                            transaction.update(docRef, tmp);
+                            
+                            tmp.compare['objList'].push(obj); 
+                            tmp.compare['votesObjMapList'].push({});
+                            doc.update(tmp)
+                            .then(() => {
+                                // Recursively call the same function for the other
+                                // media to upload when the current upload is done
+                                addCompareDataToPostSync(uploadTaskList, doc);
+                            })
                         })
                     })
-                });
-            }
-        );
+                }
+            );
+        }
     };
 
     const sendPost = (e) => {
@@ -296,36 +311,49 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
             else if (isComparePost())
             {
                 // This is a compare post
+                let uploadTaskList = [];
+                let uploadTextList = [];
                 if (imageToCompareLeft) {
+                    const rndName = cryptoRandomString({length: 10});
+                    const mediaAddr = `posts/${doc.id}/${rndName}`;
                     const uploadTaskLeft = storage
-                    .ref(`posts/${doc.id}`)
+                    .ref(mediaAddr)
                     .putString(imageToCompareLeft, "data_url");
 
                     // Add compare data to the post
-                    addCompareDataToPost(uploadTaskLeft, doc);
+                    uploadTaskList.push([uploadTaskLeft, mediaAddr]);
+                    //addCompareDataToPost(uploadTaskLeft, doc);
     
                 }
 
                 if (imageToCompareRight) {
+                    const rndName = cryptoRandomString({length: 10});
+                    const mediaAddr = `posts/${doc.id}/${rndName}`;
                     const uploadTaskRight = storage
-                    .ref(`posts/${doc.id}`)
+                    .ref(mediaAddr)
                     .putString(imageToCompareRight, "data_url");
 
 
                     // Add compare data to the post
-                    addCompareDataToPost(uploadTaskRight, doc);
+                    //addCompareDataToPost(uploadTaskRight, doc);
+                    uploadTaskList.push([uploadTaskRight, mediaAddr]);
                 }
 
                 if (textToCompareLeft) {
-                    console.log("ADD LEFT TEXT", textToCompareLeft)
-                    addCompareTextToPost(textToCompareLeft, doc);
+                    uploadTextList.push(textToCompareLeft);
                 }
 
                 if (textToCompareRight) {
-                    console.log("ADD RIGHT TEXT", textToCompareRight)
-                    addCompareTextToPost(textToCompareRight, doc);
+                    uploadTaskList.push(textToCompareRight);
                 }
 
+                // Upload all media into the post doc
+                addCompareDataToPostSync(uploadTaskList, doc);
+
+                // Upload all text into the post doc
+                addCompareTextToPostSync(uploadTextList, doc);
+
+                // Remove image preview
                 removeCompareObjects();
             }
 
