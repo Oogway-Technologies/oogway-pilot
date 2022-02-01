@@ -4,16 +4,12 @@ import { Button } from "@mui/material";
 import styled from "styled-components";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
-import Modal from "../components/Utils/Modal";
-import LoginForm from "../components/Feed/LoginForm";
 
-function Login() {
-  // ========== TODO: redo according to design ========== //
-
-  const [inputEmail, setInputEmail] = useState("");
-  const [inputPassword, setInputPassword] = useState("");
-  const [inputPasswordRep, setInputPasswordRep] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+export default function LoginForm(){
+    const [inputEmail, setInputEmail] = useState("");
+    const [inputPassword, setInputPassword] = useState("");
+    const [inputPasswordRep, setInputPasswordRep] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
 
   // Modal helper functions
   const openModal = () => {
@@ -107,16 +103,10 @@ function Login() {
           </CustomSignIn>
         </SignIn>
       </LoginContainer>
-      <Modal
-        children={<LoginForm closeModal={closeModal} />}
-        show={isOpen}
-        onClose={closeModal}
-      />
     </Container>
   );
 }
 
-export default Login;
 
 const Container = styled.div`
   display: grid;
