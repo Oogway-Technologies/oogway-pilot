@@ -63,7 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider attribute='class' enableSystem={true}>
-        <Layout >
+        <Layout>
           <RecoilRoot>
             <Component {...pageProps} />
           </RecoilRoot>
