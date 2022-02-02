@@ -1,4 +1,4 @@
-import { Menu, Transition } from '@headlessui/react';
+import { Popover, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 
 type DropdownMenuProps = {
@@ -17,10 +17,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = (
     }
 ) => {
   return (
-        <Menu as="div">
-        <Menu.Button className={menuButtonClass}>
-            {menuButton}
-        </Menu.Button>
+    <Popover as="div" >
+        <Popover.Button className={menuButtonClass}>{menuButton}</Popover.Button>
         <Transition
         as={Fragment}
             enter="transition duration-100 ease-out"
@@ -30,19 +28,19 @@ const DropdownMenu: React.FC<DropdownMenuProps> = (
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
         >
-            <Menu.Items as="ul" className={menuItemsClass}>
-                {menuItems.map(
+            <Popover.Panel as="ul" className={menuItemsClass}>
+            {menuItems.map(
                     (item, idx) => {
                         return (
-                            <Menu.Item key={idx} as="li" className="pt-1 group">
+                            <li key={idx} className="pt-1 group">
                                 {item}
-                            </Menu.Item>
+                            </li>
                         )
                     }
                 )}
-            </Menu.Items>
+            </Popover.Panel>
         </Transition>
-    </Menu>
+    </Popover>
   );
 };
 

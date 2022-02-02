@@ -11,7 +11,7 @@ interface ToolbarButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 };
 
 const Button: React.FC<ToolbarButtonProps> = ({icon, keepText, text, addStyle, onClick, type }) => {
-    const isMobile = useMediaQuery('(max-width: 768px)')
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     return (
         <button
