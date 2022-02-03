@@ -1,39 +1,41 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Modal from "../Utils/Modal";
+// import Modal from "../Utils/Modal";
 import Button from "../../components/Utils/Button";
-
-const createAccount = () => {
-  if (inputEmail && inputPassword && inputPasswordRep) {
-    if (inputPassword === inputPasswordRep) {
-      if (EmailValidator.validate(inputEmail)) {
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(inputEmail, inputPassword)
-          .then((userCredential) => {
-            // Signed in: not much to do here,
-            // redirection happend on state change from the _app
-            const user = userCredential.user;
-          })
-          .catch((error) => {
-            console.log(error);
-            alert(error.message);
-          });
-      } else {
-        alert("Invalid email");
-      }
-    } else {
-      alert("Password don't match!");
-    }
-  } else {
-    alert("Some of the fields are missing!");
-  }
-};
+import firebase from "firebase/compat/app";
+import * as EmailValidator from "email-validator";
 
 export default function SignUpForm({ closeSignupModal }) {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [inputPasswordRep, setInputPasswordRep] = useState("");
+
+  const createAccount = () => {
+    if (inputEmail && inputPassword && inputPasswordRep) {
+      if (inputPassword === inputPasswordRep) {
+        if (EmailValidator.validate(inputEmail)) {
+          firebase
+            .auth()
+            .createUserWithEmailAndPassword(inputEmail, inputPassword)
+            .then((userCredential) => {
+              // Signed in: not much to do here,
+              // redirection happend on state change from the _app
+              const user = userCredential.user;
+            })
+            .catch((error) => {
+              console.log(error);
+              alert(error.message);
+            });
+        } else {
+          alert("Invalid email");
+        }
+      } else {
+        alert("Password don't match!");
+      }
+    } else {
+      alert("Some of the fields are missing!");
+    }
+  };
 
   return (
     <div>
@@ -55,9 +57,9 @@ export default function SignUpForm({ closeSignupModal }) {
       <InputHeader>Repeat Password</InputHeader>
       <InputField
         type="password"
-        value={inputPassword}
+        value={inputPasswordRep}
         placeholder="Repeat Password"
-        onChange={(e) => setInputPassword(e.target.value)}
+        onChange={(e) => setInputPasswordRep(e.target.value)}
       />
       <CustomSignIn>
         <Button

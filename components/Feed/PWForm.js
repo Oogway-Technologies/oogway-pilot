@@ -2,6 +2,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import Button from "../../components/Utils/Button";
 import Modal from "../Utils/Modal";
+import * as EmailValidator from "email-validator";
+
+import firebase from "firebase/compat/app";
 
 export default function PWForm({ closeModal }) {
   const [recoverEmail, setRecoverEmail] = useState("");
@@ -17,12 +20,24 @@ export default function PWForm({ closeModal }) {
     setOpenReset(false);
   };
 
-  const openEmailSent = () => {
-    setShowEmailSent(true);
-  };
-
   const closeEmailSent = () => {
     setShowEmailSent(false);
+  };
+
+  const sendReset = () => {
+    // if (EmailValidator.validate(recoverEmail)) {
+    firebase
+      .auth()
+      .sendPasswordResetEmail(recoverEmail)
+      .then(() => {
+        // setShowEmailSent(true);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+    // }
   };
 
   return (
@@ -45,7 +60,7 @@ export default function PWForm({ closeModal }) {
           text="Cancel"
         />
         <Button
-          onClick={openEmailSent}
+          onClick={sendReset}
           addStyle={loginButtonStyle}
           text="Send Link"
         />
