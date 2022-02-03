@@ -42,7 +42,9 @@ export const postCardClass = {
   header:
     "overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 \
       space-x-1 items-center",
-  avatar: "h-[45px] w-[45px] mr-sm",
+  avatar:
+    "h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25\
+    hover:opacity-80 hover:scale-125",
   infoDiv: "flex flex-wrap",
   headerLeft: "flex w-11/12 items-center",
   headerRight: "flex w-1/12 justify-end",
@@ -51,8 +53,7 @@ export const postCardClass = {
   commentsSpan: "hidden md:flex md:ml-1",
   categoryP: "font-bold text-primary",
   leftMobileRowOne: "inline-flex items-center",
-  leftMobileRowTwo:
-    "inline-flex items-center pl-sm md:pl-0  text-xs md:text-sm",
+  leftMobileRowTwo: "inline-flex items-center ml-sm md:ml  text-xs md:text-sm",
   // Body
   body: "flex flex-col ml-xl",
   bodyQuestion:
@@ -73,7 +74,7 @@ export const postCardClass = {
   // Engagement
   engagementBar: "flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-sm",
   engagementButton:
-    "inline-flex items-center space-x-2 text-neutral-700 dark:text-neutralDark-150 \
+    "items-center space-x-2 text-neutral-700 dark:text-neutralDark-150 \
         hover:text-neutral-800 dark:hover:text-neutralDark-50 focus:text-neutral-800 dark:focus:text-neutralDark-50 \
         active:text-primary",
 };
@@ -155,4 +156,128 @@ export const postFormClass = {
     "flex my-md cursor-pointer text-neutral-700 hover:text-error",
   compareUpload:
     "inline-block items-center text-primary dark:text-primaryDark text-sm",
+};
+
+// Comments
+export const commentsPageClass = {
+  outerDiv: "flex w-full justify-center",
+  innerDiv:
+    "flex-grow h-screen pb-44 pt-6 mx-4 xl:mr-40 overflow-y-auto scrollbar-hide",
+  contentDiv: "space-y-4 mx-auto max-w-md md:max-w-lg lg:max-w-2xl",
+  goBackButton:
+    "rounded-[20px] p-sm space-x-sm text-primary dark:text-primaryDark bg-transparent dark:bg-transparent \
+    hover:text-white dark:hover:text-white hover:bg-primary dark:hover:bg-primaryDark",
+};
+
+export const commentsApiClass = {
+  outerDiv: "mb-md ml-xl",
+  hr: "mt-sm mb-lg text-neutralDark-50",
+  innerDiv: "flex flex-row mb-xl",
+  avatar:
+    "h-[45px] w-[45px] mr-md ring-1 ring-black/25 dark:ring-neutralDark-50/25\
+    hover:opacity-80 hover:scale-125",
+  counter: "mb-sm font-bold text-neutral-700 dark:text-neutralDark-150",
+};
+
+export const commentFormClass = {
+  form: "flex flex-col",
+  body: "inline-flex items-center space-x-md",
+  commentBar:
+    "grid grid-cols-2 rounded-full items-center py-1 px-2 md:px-5 lg:w-96 xl:w-96 \
+    border-solid border-2 border-neutral-50 dark:border-neutralDark-150 \
+    focus-within:border-primary focus-visible:border-primary \
+    dark:focus-within:border-primary dark:focus-visible:border-primary \
+    active:border-neutral-300 dark:active:border-neutralDark-50 \
+    hover:border-neutral-150 dark:hover:border-neutralDark-50",
+  commentInput:
+    "justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white \
+    text-sm md:text-base",
+  imageButton:
+    "p-sm rounded-[20px] justify-self-end text-neutral-700 dark:text-neutralDark-150 \
+    hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
+    hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
+    hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark",
+  submitButton:
+    "rounded-[20px] p-sm md:px-md md:space-x-2 \
+  bg-primary dark:bg-primaryDark hover:bg-primaryActive \
+  active:bg-primaryActive dark:hover:bg-primaryActive \
+  dark:active:bg-primaryActive text-white font-bold",
+  formAlert:
+    "inline-flex pt-sm ml-sm items-center text-sm text-alert dark:text-alert",
+  previewDiv: "inline-flex px-2 pt-sm space-x-md",
+  imagePreview: "flex flex-col items-center",
+  image: "flex rounded-[8px] h-20  object-contain",
+  removeImageButton:
+    "flex my-md cursor-pointer text-neutral-700 hover:text-error",
+};
+
+export const commentClass = {
+  outerDiv: "flex flex-col pt-md pb-sm dark:bg-neutralDark-500",
+  body: "flex flex-col ml-xl mt-sm",
+  bodyDescription:
+    "ml-md px-sm text-neutral-700 dark:text-neutralDark-150 text-sm",
+  media: "flex ml-xl p-md",
+  replyDropdown: "inline-flex items-center ml-[44px] mt-sm",
+};
+
+export const commentEngagementBarClass = {
+  engagementBar: "flex px-md mt-md pb-md ml-xl w-3/5 space-x-md text-sm",
+  engagementButton:
+    "inline-flex items-center space-x-2 text-neutral-700 dark:text-neutralDark-150 \
+        hover:text-neutral-800 dark:hover:text-neutralDark-50 focus:text-neutral-800 dark:focus:text-neutralDark-50 \
+        active:text-primary",
+};
+
+// Replies
+export const repliesApiClass = {
+  outerDiv: "mb-md ml-xl mt-md",
+  loading:
+    "flex flex-row justify-center space-x-sm text-xs text-neutral700 dark:text-neutralDark-150 items-center",
+  loader: "bg-primary dark:bg-primaryDark",
+};
+
+export const replyClass = {
+  outerDiv: "px-md dark:bg-neutralDark-500",
+  innerDiv: "flex flex-row",
+  dividerLeft:
+    "ml-[14px] border-r-2 border-primary/25 dark:border-primaryDark/50",
+  dividerRight: "grow",
+  body: "flex flex-col mt-sm",
+  bodyDescription:
+    "ml-md pl-md pr-sm text-neutral-700 dark:text-neutralDark-150 text-sm",
+};
+
+export const replyFormClass = {
+  form: "flex flex-col",
+  body: "inline-flex items-center space-x-md",
+  avatar:
+    "h-[45px] w-[45px] ring-1 ring-black/25 dark:ring-neutralDark-50/25\
+    hover:opacity-80 hover:scale-125",
+  replyBar:
+    "rounded-full items-center py-1 px-2 md:px-5 lg:w-80 \
+      border-solid border-2 border-neutral-50 dark:border-neutralDark-150 \
+      focus-within:border-primary focus-visible:border-primary \
+      dark:focus-within:border-primary dark:focus-visible:border-primary \
+      active:border-neutral-300 dark:active:border-neutralDark-50 \
+      hover:border-neutral-150 dark:hover:border-neutralDark-50",
+  replyInput:
+    "w-full focus:outline-none border-none bg-transparent text-black dark:text-white \
+      text-sm",
+  submitButton:
+    "rounded-[20px] p-sm md:px-md md:space-x-2 \
+        bg-primary dark:bg-primaryDark hover:bg-primaryActive \
+        active:bg-primaryActive dark:hover:bg-primaryActive \
+        dark:active:bg-primaryActive text-white font-bold",
+  formAlert:
+    "inline-flex pt-sm ml-xxl items-center text-sm text-alert dark:text-alert",
+};
+
+export const replyHeaderClass = {
+  avatar:
+    "h-[30px] w-[30px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25\
+    hover:opacity-80 hover:scale-125",
+};
+
+export const replyEngagementBarClass = {
+  engagementBar: "flex px-md mt-md pb-md ml-md w-3/5 space-x-md text-sm",
 };

@@ -9,7 +9,7 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc } from 'firebase/firestore';
 import { postOptionsDropdownClass } from '../../../styles/feed';
-
+import needsHook from '../../../hooks/needsHook';
 
 type PostOptionsDropdownProps = {
     authorUid: string, // Post author id
@@ -128,10 +128,6 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid, de
                 </div>
             </div>
         )
-    }
-
-    const needsHook = () => {
-        alert('This button needs a hook!')
     }
 
     // Dropdown menu props
