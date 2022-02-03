@@ -4,6 +4,9 @@ import styled from "styled-components";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
 import Button from "../../components/Utils/Button";
+import Modal from '../Utils/Modal';
+import PWForm from './PWForm'
+import SignupForm from './SignupForm'
 
 export default function LoginForm() {
   const [inputEmail, setInputEmail] = useState("");
@@ -11,6 +14,8 @@ export default function LoginForm() {
   const [inputPasswordRep, setInputPasswordRep] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [recoverPW, setRecoverPW] = useState(false);
+  const [pwIsOpen, setPwIsOpen] = useState(false)
+  const [showSignup, setShowSignup] = useState(false)
 
   // Modal helper functions
   const openModal = () => {
@@ -19,34 +24,20 @@ export default function LoginForm() {
 
   const closeModal = () => {
     setIsOpen(false);
+    setRecoverPW(false)
   };
 
-  const createAccount = () => {
-    if (inputEmail && inputPassword && inputPasswordRep) {
-      if (inputPassword === inputPasswordRep) {
-        if (EmailValidator.validate(inputEmail)) {
-          firebase
-            .auth()
-            .createUserWithEmailAndPassword(inputEmail, inputPassword)
-            .then((userCredential) => {
-              // Signed in: not much to do here,
-              // redirection happend on state change from the _app
-              const user = userCredential.user;
-            })
-            .catch((error) => {
-              console.log(error);
-              alert(error.message);
-            });
-        } else {
-          alert("Invalid email");
-        }
-      } else {
-        alert("Password don't match!");
-      }
-    } else {
-      alert("Some of the fields are missing!");
-    }
-  };
+  const openRecoveryPW = () => {
+      setRecoverPW(true)
+  }
+
+  const openSignupModal = () => {
+      setShowSignup(true)
+  }
+
+  const closeSignupModal = () => {
+      setShowSignup(false)
+  }
 
   const LogIn = () => {
     if (inputEmail && inputPassword) {
@@ -90,13 +81,23 @@ export default function LoginForm() {
           placeholder="Password"
           onChange={(e) => setInputPassword(e.target.value)}
         />
-        <CustomLink onClick={e => {e}}>Forgot your password?</CustomLink>
+        <CustomLink onClick={openRecoveryPW}>Forgot your password?</CustomLink>
         <CustomSignIn>
           <Button onClick={LogIn} addStyle={cancelButtonStyle} text="Cancel"/>
           <Button onClick={LogIn} addStyle={loginButtonStyle} text="Login"/>
         </CustomSignIn>
       </SignIn>
-      <InputHeader>Don't have an account?&nbsp;<CustomLink onClick={e => {e}}>Sign up</CustomLink></InputHeader>
+      <InputHeader>Don't have an account?&nbsp;<CustomLink onClick={openSignupModal}>Sign up</CustomLink></InputHeader>
+      <Modal 
+                children={<PWForm closeModal={closeModal}/>}
+                show={recoverPW}
+                onClose={closeModal}
+            />
+                  <Modal
+        children={<SignupForm closeSignupModal={closeSignupModal} />}
+        show={showSignup}
+        onClose={closeSignupModal}
+      />
     </div>
   );
 }
@@ -127,7 +128,7 @@ const InputHeader = styled.div`
   outline-width: 0;
   padding: 2px;
   margin-bottom: 5px;
-  font-size: 12px;
+  font-size: 16px;
   color: rgb(83,83,83);
   margin-right: auto;
   display: flex;
@@ -150,7 +151,7 @@ const CustomSignIn = styled.div`
 `;  
 
 const ModalHeader = styled.div`
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   display: flex;
   align-items: center;
