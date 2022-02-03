@@ -21,36 +21,6 @@ const Reply: React.FC<ReplyProps> = (
         replyId,
         reply 
     }) => {
-  const [numLikes, setNumLikes] = useState(0);
-
-  // Use useEffect to bind on document loading the
-  // function that will set the number of likes on
-  // each change of the DB (triggered by onSnapshot)
-  useEffect(() => {
-    db.collection("posts")
-      .doc(postId)
-      .collection("comments")
-      .doc(commentId)
-      .collection("replies")
-      .doc(replyId)
-      .onSnapshot((snapshot) => {
-        // Get the likes map
-        const likesMap = snapshot.data().likes;
-
-        // Count the entries that are True
-        let ctr = 0;
-        for (const [key, value] of Object.entries(likesMap)) {
-          if (value) {
-            ctr += 1;
-          }
-        }
-        setNumLikes(ctr);
-      });
-  }, []);
-
-  const getNumLikes = () => {
-    return numLikes;
-  };
 
   return (
        <div className={replyClass.outerDiv}>

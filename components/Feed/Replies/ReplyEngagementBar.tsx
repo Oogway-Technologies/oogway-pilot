@@ -11,7 +11,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 type ReplyEngagementBarProps = {
     postId: string,
     commentId: string,
-    replyId: string,
+    replyId: string
 };
 
 const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = (
