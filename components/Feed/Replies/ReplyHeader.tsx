@@ -36,34 +36,37 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = (
     // function that will set the number of likes on
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
-        db.collection("posts")
+        const unsubRef = db.collection("posts")
         .doc(postId)
         .collection("comments")
         .doc(commentId)
         .collection("replies")
         .doc(replyId)
         .onSnapshot((snapshot) => {
-            // Get the likes map
-            const likesMap = snapshot.data().likes;
-    
-            // Count the entries that are True
-            let ctr = 0;
-            for (const [key, value] of Object.entries(likesMap)) {
-            if (value) {
-                ctr += 1;
+            if (snapshot.data()) {
+                // Get the likes map
+                const likesMap = snapshot.data().likes;
+        
+                // Count the entries that are True
+                let ctr = 0;
+                for (const [key, value] of Object.entries(likesMap)) {
+                    if (value) {
+                        ctr += 1;
+                    }
+                }
+                setNumLikes(ctr);
             }
-            }
-            setNumLikes(ctr);
         });
-    }, []);
+
+        return () => unsubRef();
+    }, [postId, commentId, replyId]);
     
     const getNumLikes = () => {
         return numLikes;
     };
 
-    // Deletes a post
-    const deletePost = () => {
-        // OPEN A MODAL OR ASK THE USER IF HE/SHE IS SURE TO DELETE THE POST
+    // Deletes a reply
+    const deleteReply = () => {
         db.collection("posts")
         .doc(postId)
         .collection("comments") // Or whatever the name of the collection is
@@ -72,18 +75,21 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = (
         .doc(replyId)
         .delete()
         .catch((err) => {
-            console.log("Cannot delete post: ", err);
+            console.log("Cannot delete reply: ", err);
         });
 
-        // Update the user's reply list
+        // Update the user's reply map
         db.collection("users")
         .doc(user.uid)
         .get()
         .then((doc) => {
             let tmp = doc.data();
-            tmp.replies.delete(replyId);
+            delete tmp.replies[replyId];
             doc.ref.update(tmp);
         })
+
+        // Return where the user should be routed
+        return `/comments/${postId}`
     };
 
     return (
@@ -119,7 +125,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = (
 
             {/* Right: More Button */}
             <div className={postCardClass.headerRight}>
-                <PostOptionsDropdown authorUid={authorUid} authorName={name ? name : email} deletePost={deletePost}/>
+                <PostOptionsDropdown authorUid={authorUid} authorName={name ? name : email} deletePost={deleteReply}/>
             </div>
         </div>
     );

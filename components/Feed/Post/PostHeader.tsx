@@ -27,30 +27,36 @@ const PostHeader = ({id, userImage, name, authorUid, email, timestamp}: PostHead
     // function that will set the number of likes on
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
-        db.collection("posts")
+        // Save ref for unsubscribing on delete
+        const unsubRef = db.collection("posts")
         .doc(id)
         .onSnapshot((snapshot) => {
-            // Get the likes map
-            const likesMap = snapshot.data().likes;
-    
-            // Count the entries that are True
-            let ctr = 0;
-            for (const [key, value] of Object.entries(likesMap)) {
-            if (value) {
-                ctr += 1;
+            if (snapshot.data()) {
+                // Get the likes map
+                const likesMap = snapshot.data().likes;
+        
+                // Count the entries that are True
+                let ctr = 0;
+                for (const [key, value] of Object.entries(likesMap)) {
+                    if (value) {
+                        ctr += 1;
+                    }
+                }
+                setNumLikes(ctr);
             }
-            }
-            setNumLikes(ctr);
         });
-    }, []);
+
+        return () => unsubRef();
+    }, [id]);
 
     // Track number of comments
     const [commentsSnapshot] = useCollection(
         db.collection("posts").doc(id).collection("comments")
     );
     
-    // Deletes a post
-    const deletePost = () => {
+    const deletePostEntry = () => {
+        // Delete the post entry from the DB.
+        // Note: this post should NOT have any comments
         db.collection("posts")
         .doc(id)
         .delete()
@@ -76,8 +82,38 @@ const PostHeader = ({id, userImage, name, authorUid, email, timestamp}: PostHead
             });
             Promise.all(promises);
         });
+    }
 
-        return true
+    // Deletes a post
+    const deletePost = () => {
+        // Before deleting the post, we need to delete the comments.
+        // Comments is a sub-collection of the post, so we need to
+        // retrieve all comments and delete them first.
+        db.collection("posts")
+        .doc(id)
+        .get()
+        .then((doc) => {
+            // Check if comments exists for this post
+            db.collection("posts")
+            .doc(id)
+            .collection("comments")
+            .get()
+            .then((sub) => {
+                if (sub.docs.length > 0) {
+                    // Comments are present, delete them
+                    sub.forEach((com) => {
+                        com.ref.delete();
+                    })
+                }
+
+                // Proceed to delete the post
+                deletePostEntry();
+            })
+            .catch((err) => { console.log("Cannot delete comments: ", err) });
+        });
+
+        // Return where the user should be routed, if necesary
+        return `/feed/${user.uid}`
     }
 
     const getNumLikes = () => {
@@ -125,7 +161,11 @@ const PostHeader = ({id, userImage, name, authorUid, email, timestamp}: PostHead
 
             {/* Right: More Button */}
             <div className={postCardClass.headerRight}>
-                <PostOptionsDropdown authorUid={authorUid} authorName={name ? name : email} deletePost={deletePost}/>
+                <PostOptionsDropdown 
+                    authorUid={authorUid} 
+                    authorName={name ? name : email} 
+                    deletePost={deletePost}
+                />
             </div>
         </div>
     )

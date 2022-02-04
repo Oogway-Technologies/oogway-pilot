@@ -169,9 +169,9 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({ closeModal, isMobile, p
                         tmp.comments[doc.id] = router.query.id
                     } else {
                         // Add a new entry
-                        let newComment = {};
-                        newComment[doc.id] = router.query.id;
-                        tmp["comments"] = newComment; 
+                        let newComments: Map<string, string> = new Map<string, string>();
+                        newComments.set(doc.id, router.query.id);
+                        tmp["comments"] = newComments; 
                     }
 
                     userDoc.ref.update(tmp);

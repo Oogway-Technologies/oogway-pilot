@@ -44,7 +44,7 @@ export const postCardClass = {
       space-x-1 items-center",
   avatar:
     "h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25\
-    hover:opacity-80 hover:scale-125",
+    hover:opacity-80 hover:scale-125 cursor-pointer",
   infoDiv: "flex flex-col",
   headerLeft: "flex w-11/12 items-center",
   headerRight: "flex w-1/12 justify-end",
@@ -195,7 +195,7 @@ export const commentFormClass = {
   commentTextArea:
     "p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
     text-black dark:text-white text-sm md:text-base",
-    mobileSubmitDiv: "inline-flex justify-between mt-sm",
+  mobileSubmitDiv: "inline-flex justify-between mt-sm",
   imageButton:
     "p-sm rounded-[20px] justify-self-end text-neutral-700 dark:text-neutralDark-150 \
     hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
@@ -277,7 +277,7 @@ export const replyFormClass = {
         dark:active:bg-primaryActive text-white font-bold",
   formAlert:
     "inline-flex pt-sm ml-xxl items-center text-sm text-alert dark:text-alert",
-    formAlertMobile:
+  formAlertMobile:
     "inline-flex pt-sm items-center text-sm text-alert dark:text-alert",
 };
 

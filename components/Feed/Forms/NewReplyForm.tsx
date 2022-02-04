@@ -129,12 +129,12 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({ commentId, closeModal, isMo
                         }
                     } else {
                         // Add a new entry
-                        let newReply = {};
-                        newReply[doc.id] = {
+                        let newReplies: Map<string, object> = new Map<string, object>();
+                        newReplies.set(doc.id, {
                             comment: commentId,
                             post: router.query.id
-                        }
-                        tmp["replies"] = newReply; 
+                        })
+                        tmp["replies"] = newReplies; 
                     }
 
                     userDoc.ref.update(tmp);
