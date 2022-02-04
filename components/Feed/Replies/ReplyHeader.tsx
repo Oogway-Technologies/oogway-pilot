@@ -106,7 +106,6 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = (
 
                     <div className={postCardClass.leftMobileRowTwo}>
                         {/* Number of likes */}
-                        <span className={postCardClass.bullSpan}>{bull}</span>  
                         <p className={postCardClass.commentsP}>{`${getNumLikes() > 0 ? getNumLikes() : "0"}`}
                             <span className={postCardClass.commentsSpan}> Likes</span>
                             <span className={postCardClass.commentsIconSpan}><UilThumbsUp size={14}/></span>

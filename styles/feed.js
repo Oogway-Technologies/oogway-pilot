@@ -45,10 +45,9 @@ export const postCardClass = {
   avatar:
     "h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25\
     hover:opacity-80 hover:scale-125",
-  infoDiv: "flex flex-wrap",
+  infoDiv: "flex flex-col",
   headerLeft: "flex w-11/12 items-center",
   headerRight: "flex w-1/12 justify-end",
-  bullSpan: "hidden lg:flex",
   commentsP: "inline-flex items-center",
   commentsSpan: "hidden md:flex md:ml-1",
   commentsIconSpan: "flex ml-1 md:hidden",

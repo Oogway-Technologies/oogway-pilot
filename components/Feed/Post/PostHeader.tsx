@@ -104,7 +104,6 @@ const PostHeader = ({id, userImage, name, authorUid, email, timestamp}: PostHead
 
                     <div className={postCardClass.leftMobileRowTwo}>
                         {/* Number of replies */}
-                        <span className={postCardClass.bullSpan}>{bull}</span> 
                         <p className={postCardClass.commentsP}>{`${commentsSnapshot ? commentsSnapshot.docs.length : "0"}`}
                             <span className={postCardClass.commentsSpan}> Comments</span>
                             <span className={postCardClass.commentsIconSpan}><UilComment size={14}/></span>
