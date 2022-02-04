@@ -4,7 +4,6 @@ import { db } from "../../../firebase";
 import { useRouter } from "next/router";
 import Reply from './Reply';
 import { repliesApiClass } from '../../../styles/feed';
-import { SpinnerCircular } from 'spinners-react';
 
 type RepliesAPIProps = {
     commentId: string

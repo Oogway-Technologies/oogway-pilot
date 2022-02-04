@@ -15,10 +15,12 @@ import { Avatar } from '@mui/material';
 
 type NewReplyFormProps = {
     commentId: string,
+    closeModal: React.MouseEventHandler<HTMLButtonElement>,
+    isMobile: boolean,
     placeholder: string
 };
 
-const NewReplyForm: React.FC<NewReplyFormProps> = ({ commentId, placeholder }) => {
+const NewReplyForm: React.FC<NewReplyFormProps> = ({ commentId, closeModal, isMobile, placeholder }) => {
     const router = useRouter();
     const [user] = useAuthState(auth);
     const [userProfile] = useDocumentData(doc(db, "profiles", user.uid)) // This needs to be stored in global state eventually
@@ -79,7 +81,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({ commentId, placeholder }) =
                 { type: "required", message: "A reply is required."},
                 { shouldFocus: true }
             )
-            return;
+            return false;
         }
     
         // First of all, update last seen entry for the user
@@ -142,35 +144,55 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({ commentId, placeholder }) =
     
         // Clear the input
         inputRef.current.value = "";
+
+        return true
       };
 
+    const addAndClose = (e) => {
+        e.preventDefault();
+        const success = addReply(e);
+        if (success) {
+            closeModal(e)
+        }
+    }
 
     return (
         <div className={replyFormClass.form}>
             <div className={replyFormClass.body}>
-                <Avatar
+                {!isMobile && <Avatar
                     onClick={needsHook}
                     className={replyFormClass.avatar}
                     src={userProfile?.profilePic ? userProfile.profilePic : avatarURL} 
-                /> 
+                />}
                 <div className={replyFormClass.replyBar}>
                     <form>
+                        {isMobile ?
+                        (
+                        <textarea 
+                            ref={inputRef}
+                            className={replyFormClass.replyTextArea}
+                            placeholder={placeholder}
+                        />
+                        ) : (
                         <input
                             ref={inputRef}
                             className={replyFormClass.replyInput}
                             type="text" 
                             placeholder={placeholder}
                         />
+                        )}
                     </form>
                 </div>
-                <Button 
-                    text="Add"
-                    keepText={false}
-                    icon={<UilCommentPlus/>}
-                    type='submit'
-                    onClick={addReply}
-                    addStyle={replyFormClass.submitButton}
-                />
+                {!isMobile && (
+                    <Button 
+                        text="Add"
+                        keepText={false}
+                        icon={<UilCommentPlus/>}
+                        type='submit'
+                        onClick={addReply}
+                        addStyle={replyFormClass.submitButton}
+                    />
+                )}
             </div>
             {/* Warning message on missing question */}
             <div>
@@ -178,9 +200,21 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({ commentId, placeholder }) =
                     <FlashErrorMessage 
                         message={errors.reply.message}
                         ms={warningTime}
-                        style={replyFormClass.formAlert}/>
+                        style={isMobile ? replyFormClass.formAlertMobile : replyFormClass.formAlert}/>
                 )}
             </div>
+            {isMobile && (
+                <div className="inline-flex mt-sm">
+                <Button 
+                    text="Add"
+                    keepText={false}
+                    icon={<UilCommentPlus/>}
+                    type='submit'
+                    onClick={addAndClose}
+                    addStyle={replyFormClass.submitButton}
+                />
+                </div>
+            )}
             
         </div>
     )

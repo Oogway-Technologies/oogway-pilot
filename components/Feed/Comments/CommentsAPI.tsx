@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCollection, useDocumentData } from "react-firebase-hooks/firestore";
 import { auth, db } from "../../../firebase";
 import { useRouter } from "next/router";
 import Comment from "./Comment";
-import { avatarURL, commentsApiClass } from '../../../styles/feed';
+import { avatarURL, commentFormClass, commentsApiClass } from '../../../styles/feed';
 import { doc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import needsHook from '../../../hooks/needsHook';
-import { Avatar } from '@mui/material';
+import { Avatar, useMediaQuery } from '@mui/material';
 import firebase from 'firebase/compat/app';
 import NewCommentForm from '../Forms/NewCommentForm';
-
+import Button from '../../Utils/Button';
+import { UilCommentPlus } from '@iconscout/react-unicons';
+import Modal from '../../Utils/Modal';
 
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
@@ -18,6 +20,10 @@ type CommentsAPIProps = {
 
 const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
     const router = useRouter();
+    const [isOpen, setIsOpen] = useState(false)
+
+    // Track mobile state
+    const isMobile = useMediaQuery('(max-width: 500px)')
 
     // Retrieve user profile
     const [user] = useAuthState(auth);
@@ -31,6 +37,14 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
         .orderBy("timestamp", "asc")
     );
 
+    // Modal helper functions
+    const openModal = () => {
+        setIsOpen(true)
+    }
+
+    const closeModal = () => {
+        setIsOpen(false)
+    }
 
     const showComments = () => {
         // Check if the snapshot is ready,
@@ -65,6 +79,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
 
 
     return (
+        <>
         <div className={commentsApiClass.outerDiv}>
             <hr className={commentsApiClass.hr}/>
             {/* New Comment Form */}
@@ -74,11 +89,23 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                     className={commentsApiClass.avatar}
                     src={userProfile?.profilePic ? userProfile.profilePic : avatarURL} 
                 /> 
-                <NewCommentForm  
-                    placeholder={userProfile?.name ? 
-                        `What do you think, ${userProfile.name}?` 
-                        : 'What do you think?'}
-                />
+                {isMobile ? (
+                    <Button 
+                        text="Add Comment"
+                        keepText={true}
+                        icon={null}
+                        type='button'
+                        onClick={openModal}
+                        addStyle={commentFormClass.submitButton}
+                    />
+                ) : (
+                    <NewCommentForm  
+                        placeholder={userProfile?.name ? 
+                            `What do you think, ${userProfile.name}?` 
+                            : 'What do you think?'}
+                        isMobile={isMobile}
+                    />
+                )}
             </div>
 
             {/* Comment counter */}
@@ -89,6 +116,21 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
             {/* Post's Comments */}
             {showComments()}     
         </div>
+
+        <Modal 
+            children={
+                <NewCommentForm 
+                    placeholder={userProfile?.name ? 
+                        `What do you think, ${userProfile.name}?` 
+                        : 'What do you think?'}
+                    closeModal={closeModal}
+                    isMobile={isMobile}
+                />
+            }
+            show={isOpen}
+            onClose={closeModal}
+        />
+        </>
     );
 };
 

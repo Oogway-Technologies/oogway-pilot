@@ -192,6 +192,10 @@ export const commentFormClass = {
   commentInput:
     "justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white \
     text-sm md:text-base",
+  commentTextArea:
+    "p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
+    text-black dark:text-white text-sm md:text-base",
+    mobileSubmitDiv: "inline-flex justify-between mt-sm",
   imageButton:
     "p-sm rounded-[20px] justify-self-end text-neutral-700 dark:text-neutralDark-150 \
     hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
@@ -201,7 +205,7 @@ export const commentFormClass = {
     "rounded-[20px] p-sm md:px-md md:space-x-2 \
   bg-primary dark:bg-primaryDark hover:bg-primaryActive \
   active:bg-primaryActive dark:hover:bg-primaryActive \
-  dark:active:bg-primaryActive text-white font-bold",
+  dark:active:bg-primaryActive text-white font-bold items-center",
   formAlert:
     "inline-flex pt-sm ml-sm items-center text-sm text-alert dark:text-alert",
   previewDiv: "inline-flex px-2 pt-sm space-x-md",
@@ -263,6 +267,9 @@ export const replyFormClass = {
   replyInput:
     "w-full focus:outline-none border-none bg-transparent text-black dark:text-white \
       text-sm",
+  replyTextArea:
+    "w-full p-sm flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
+        text-sm",
   submitButton:
     "rounded-[20px] p-sm md:px-md md:space-x-2 \
         bg-primary dark:bg-primaryDark hover:bg-primaryActive \
@@ -270,6 +277,8 @@ export const replyFormClass = {
         dark:active:bg-primaryActive text-white font-bold",
   formAlert:
     "inline-flex pt-sm ml-xxl items-center text-sm text-alert dark:text-alert",
+    formAlertMobile:
+    "inline-flex pt-sm items-center text-sm text-alert dark:text-alert",
 };
 
 export const replyHeaderClass = {

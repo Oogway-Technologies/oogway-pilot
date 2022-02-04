@@ -11,10 +11,12 @@ import { avatarURL, commentFormClass } from '../../../styles/feed';
 import Button from '../../Utils/Button';
 
 type NewCommentFormProps = {
+    closeModal: React.MouseEventHandler<HTMLButtonElement>,
+    isMobile: boolean,
     placeholder: string
 };
 
-const NewCommentForm: React.FC<NewCommentFormProps> = ({ placeholder }) => {
+const NewCommentForm: React.FC<NewCommentFormProps> = ({ closeModal, isMobile, placeholder }) => {
     const router = useRouter();
     const [user] = useAuthState(auth);
 
@@ -78,7 +80,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({ placeholder }) => {
                 { type: "required", message: "A comment is required."},
                 { shouldFocus: true }
             )
-            return; // Whether to sendPost or not
+            return false; // Whether to addComment or not
         }
     
         // First of all, update last seen entry for the user
@@ -179,6 +181,8 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({ placeholder }) => {
     
         // Clear the input
         inputRef.current.value = "";
+
+        return true // Return true on a successful submission
       };
 
     const addImageToPost = (e) => {
@@ -210,20 +214,75 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({ placeholder }) => {
         addImageToPost(e);
     }
 
+    const addAndClose = (e) => {
+        e.preventDefault();
+        const success = addComment(e);
+        if (success) {
+            closeModal(e);
+        }
+    }
+
 
     return (
         <div className={commentFormClass.form}>
             <div className={commentFormClass.body}>
                 <div className={commentFormClass.commentBar}>
                     <form>
+                        {isMobile ? 
+                        (
+                        <textarea 
+                            ref={inputRef}
+                            className={commentFormClass.commentTextArea}
+                            placeholder={placeholder}
+                        />
+                        ) : (
                         <input
                             ref={inputRef}
                             className={commentFormClass.commentInput}
                             type="text" 
                             placeholder={placeholder}
                         />
+                        )}
+                        
                     </form>
-                    {/* Upload Image */}
+                    {/* Image upload */}
+                    {!isMobile && (
+                        <button 
+                            onClick={() => filePickerRef.current.click()} 
+                            className={commentFormClass.imageButton}
+                        >
+                            <UilImagePlus />
+                            <input
+                                ref={filePickerRef}
+                                onChange={handleImageUpload}
+                                type='file'
+                                hidden
+                            />
+                        </button>
+                    )}
+                </div>
+                {!isMobile && (
+                    <Button 
+                        text="Add"
+                        keepText={false}
+                        icon={<UilCommentPlus/>}
+                        type='submit'
+                        onClick={addComment}
+                        addStyle={commentFormClass.submitButton}
+                    />
+                )}      
+            </div>
+            {/* Warning message on missing question */}
+            <div>
+                {errors.comment && errors.comment.type === 'required' && (
+                    <FlashErrorMessage 
+                        message={errors.comment.message}
+                        ms={warningTime}
+                        style={commentFormClass.formAlert}/>
+                )}
+            </div>
+            {isMobile && (
+                <div className={commentFormClass.mobileSubmitDiv}>
                     <button 
                         onClick={() => filePickerRef.current.click()} 
                         className={commentFormClass.imageButton}
@@ -236,26 +295,16 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({ placeholder }) => {
                             hidden
                         />
                     </button>
+                    <Button 
+                        text="Add"
+                        keepText={false}
+                        icon={<UilCommentPlus/>}
+                        type='submit'
+                        onClick={addAndClose}
+                        addStyle={commentFormClass.submitButton}
+                    />
                 </div>
-                <Button 
-                    text="Add"
-                    keepText={false}
-                    icon={<UilCommentPlus/>}
-                    type='submit'
-                    onClick={addComment}
-                    addStyle={commentFormClass.submitButton}
-                />
-            </div>
-            {/* Warning message on missing question */}
-            <div>
-                {errors.comment && errors.comment.type === 'required' && (
-                    <FlashErrorMessage 
-                        message={errors.comment.message}
-                        ms={warningTime}
-                        style={commentFormClass.formAlert}/>
-                )}
-            </div>
-            
+            )}
             
             {/* Show preview of the image and click it to remove the image from the post */}
             {imageToPost && (
