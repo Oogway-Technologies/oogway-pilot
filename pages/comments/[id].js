@@ -33,6 +33,7 @@ function CommentPage({ post, comments }) {
 
   const [commentsSnapshot] = useCollection(
     db.collection("posts").doc(router.query.id).collection("comments")
+    //db.collection("comments").doc(router.query.id).collection("comments")
   );
 
   const addComment = (e) => {
@@ -114,10 +115,10 @@ function CommentPage({ post, comments }) {
         {/* Note: it can be its own component*/}
         <div className="flex items-center p-3">
           <ChatAltIcon className="h-10 w-10 p-2 text-black" />
-          <p className="p-1 text-xs sm:text-base text-black">
-            {commentsSnapshot ? commentsSnapshot.docs.length : "..."}
-            comments
-          </p>
+
+          <span className="p-1 text-xs sm:text-base text-black">
+            {commentsSnapshot ? commentsSnapshot.docs.length : "..."} Comments
+          </span>
           <ThumbUpIcon className="h-10 w-10 p-2 text-black" />
           <p className="p-1 text-xs sm:text-base text-black">3 Likes</p>
         </div>
@@ -154,11 +155,12 @@ export default CommentPage;
 
 // Prefetch the data prepared by the server
 export async function getServerSideProps(context) {
-  // Two things to prepare here:
-  // 1. prepare the post (clone from what it is coming from);
-  // 2. prepare the comments
+  // Two things to prepare:
+  // 1. prepare the post: this is going to be used to visualize post info on comments page
+  // 2. prepare the comments: this is the actual list of current comments to the post
   // Get the reference to the post this comments are for
   const ref = db.collection("posts").doc(context.query.id);
+  // const ref = db.collection("comments").doc(context.query.id);
 
   // Prepare the post on the server
   // timestamp: JSON.parse(safeJsonStringify(postRes.data().timestamp))

@@ -9,6 +9,7 @@ import PostOptionsDropdown from './PostOptionsDropdown';
 
 // Database
 import { auth, db, storage } from "../../firebase";
+import { QuerySnapshot } from 'firebase/firestore';
 
 
 // Styling
@@ -178,8 +179,9 @@ const PostCard: React.FC<PostProps> = ({ postUid, id, name, message, description
         }
     }
 
-    // Deletes a post
-    const deletePost = () => {
+    const deletePostEntry = () => {
+        // Delete the post entry from the DB.
+        // Note: this post should NOT have any comments
         db.collection("posts")
         .doc(id)
         .delete()
@@ -196,7 +198,7 @@ const PostCard: React.FC<PostProps> = ({ postUid, id, name, message, description
                 tmp.posts.splice(index, 1);
                 doc.ref.update(tmp);
             }
-        })
+        });
 
         // Delete the post's media, if any
         storage.ref(`posts/${id}`).listAll().then((listResults) => {
@@ -205,8 +207,32 @@ const PostCard: React.FC<PostProps> = ({ postUid, id, name, message, description
             });
             Promise.all(promises);
         });
+    };
 
-        return true
+    // Deletes a post
+    const deletePost = () => {
+        // Before deleting the post, we need to delete the comments.
+        // Comments is a sub-collection of the post, so we need to
+        // retrieve all comments and delete them first.
+        db
+        .collection("posts")
+        .doc(id)
+        .get()
+        .then((doc) => {
+            // Check if comments exists for this post
+            db.collection("posts").doc(id).collection("comments").get().then((sub) => {
+                if (sub.docs.length > 0) {
+                    // Comments are present, delete them
+                    sub.forEach((com) => {
+                        com.ref.delete();
+                    })
+                }
+
+                // Proceed to delete the post
+                deletePostEntry();
+            })
+            .catch((err) => { console.log("Cannot delete comments: ", err) });
+        });
     }
 
     // Sub-components
