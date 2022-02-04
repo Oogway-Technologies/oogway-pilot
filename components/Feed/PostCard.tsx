@@ -225,10 +225,10 @@ const PostCard: React.FC<PostProps> = ({ postUid, id, name, message, description
                         {/* Avatar */}
                         <Avatar
                             onClick={needsHook}
-                            className="h-[45px] w-[45px]" 
+                            className="h-[45px] w-[45px] cursor-pointer" 
                             src={userImage ? userImage : avatarURL} 
                         />
-                        
+
                         {/* User Name */}
                         <span className="pl-sm">{name ? name : email}</span>
                     </div>

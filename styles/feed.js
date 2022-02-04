@@ -42,7 +42,7 @@ export const postCardClass = {
   header:
     "overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 \
       space-x-1 items-center",
-  avatar: "h-[45px] w-[45px] mr-sm",
+  avatar: "h-[45px] w-[45px] mr-sm cursor-pointer",
   infoDiv: "flex flex-wrap",
   headerLeft: "flex w-11/12 items-center",
   headerRight: "flex w-1/12 justify-end",
