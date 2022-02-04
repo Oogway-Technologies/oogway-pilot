@@ -215,6 +215,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
             image: userData.photoUrl ? userData.photoUUrl : null,       // Change this with profile picture or incognito
             uid: user.uid,                                              // uid of the user that created this post
             isCompare: false,                                           // Explicitly flag whether is compare type
+            likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
 
