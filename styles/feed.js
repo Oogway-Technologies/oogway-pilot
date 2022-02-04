@@ -84,9 +84,8 @@ export const postOptionsDropdownClass = {
   menuButtonClass:
     "inline-flex top-sm right-sm text-neutral-700 cursor-pointer",
   menuItemsClass:
-    "fixed right-0 w-auto h-auto mt-2 p-2 origin-top-left \
-            bg-white dark:bg-neutralDark-500 rounded-md shadow-lg \
-            ring-2 ring-primary dark:ring-white ring-opacity-50 focus:outline-none before:font-bold",
+    "w-auto h-auto mt-2 p-2 bg-white dark:bg-neutralDark-500 rounded-md shadow-lg \
+    ring-2 ring-primary dark:ring-white ring-opacity-50 focus:outline-none before:font-bold",
   buttonAddStyle:
     "items-center space-x-2 px-sm text-neutral-700 dark:text-neutralDark-150 \
             hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \

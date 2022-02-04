@@ -26,6 +26,7 @@
     "react-feather": "^2.0.9",
     "react-firebase-hooks": "^4.0.2",
     "react-hook-form": "^7.25.0",
+    "react-popper": "^2.2.5",
     "recoil": "^0.5.2",
     "safe-json-stringify": "^1.2.0",
     "spinners-react": "^1.0.6",
