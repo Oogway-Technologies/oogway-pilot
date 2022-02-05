@@ -4,9 +4,9 @@ import styled from "styled-components";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
 import Button from "../../components/Utils/Button";
-import Modal from '../Utils/Modal';
-import PWForm from './PWForm'
-import SignupForm from './SignupForm'
+import Modal from "../Utils/Modal";
+import PWForm from "./PWForm";
+import SignupForm from "./SignupForm";
 
 export default function LoginForm() {
   const [inputEmail, setInputEmail] = useState("");
@@ -14,8 +14,9 @@ export default function LoginForm() {
   const [inputPasswordRep, setInputPasswordRep] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [recoverPW, setRecoverPW] = useState(false);
-  const [pwIsOpen, setPwIsOpen] = useState(false)
-  const [showSignup, setShowSignup] = useState(false)
+  const [pwIsOpen, setPwIsOpen] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Modal helper functions
   const openModal = () => {
@@ -24,20 +25,20 @@ export default function LoginForm() {
 
   const closeModal = () => {
     setIsOpen(false);
-    setRecoverPW(false)
+    setRecoverPW(false);
   };
 
   const openRecoveryPW = () => {
-      setRecoverPW(true)
-  }
+    setRecoverPW(true);
+  };
 
   const openSignupModal = () => {
-      setShowSignup(true)
-  }
+    setShowSignup(true);
+  };
 
   const closeSignupModal = () => {
-      setShowSignup(false)
-  }
+    setShowSignup(false);
+  };
 
   const LogIn = () => {
     if (inputEmail && inputPassword) {
@@ -75,25 +76,33 @@ export default function LoginForm() {
           onChange={(e) => setInputEmail(e.target.value)}
         />
         <InputHeader>Password</InputHeader>
-        <InputField
-          type="password"
-          value={inputPassword}
-          placeholder="Password"
-          onChange={(e) => setInputPassword(e.target.value)}
-        />
+        <div className="relative">
+          <InputField
+            type={showPassword ? "text" : "password"}
+            value={inputPassword}
+            placeholder="Password"
+            onChange={(e) => setInputPassword(e.target.value)}
+          />
+          <label onClick={() => setShowPassword(!showPassword)} className="">
+            {showPassword ? "hide" : "show"}
+          </label>
+        </div>
         <CustomLink onClick={openRecoveryPW}>Forgot your password?</CustomLink>
         <CustomSignIn>
-          <Button onClick={LogIn} addStyle={cancelButtonStyle} text="Cancel"/>
-          <Button onClick={LogIn} addStyle={loginButtonStyle} text="Login"/>
+          <Button onClick={LogIn} addStyle={cancelButtonStyle} text="Cancel" />
+          <Button onClick={LogIn} addStyle={loginButtonStyle} text="Login" />
         </CustomSignIn>
       </SignIn>
-      <InputHeader>Don't have an account?&nbsp;<CustomLink onClick={openSignupModal}>Sign up</CustomLink></InputHeader>
-      <Modal 
-                children={<PWForm closeModal={closeModal}/>}
-                show={recoverPW}
-                onClose={closeModal}
-            />
-                  <Modal
+      <InputHeader>
+        Don't have an account?&nbsp;
+        <CustomLink onClick={openSignupModal}>Sign up</CustomLink>
+      </InputHeader>
+      <Modal
+        children={<PWForm closeModal={closeModal} />}
+        show={recoverPW}
+        onClose={closeModal}
+      />
+      <Modal
         children={<SignupForm closeSignupModal={closeSignupModal} />}
         show={showSignup}
         onClose={closeSignupModal}
@@ -118,7 +127,6 @@ hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold hove
 hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
 hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark";
 
-
 const SignIn = styled.div`
   display: flex;
   flex-direction: column;
@@ -126,6 +134,10 @@ const SignIn = styled.div`
   width: 100%;
 `;
 
+const passwordStyle =
+  "absolute transition-all left-4 top-1 text-gray-600\
+text-sm peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base\
+peer-placeholder-shown:top-4 pointer-events-none";
 
 const InputHeader = styled.div`
   outline-width: 0;
