@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
-// import Modal from "../Utils/Modal";
 import Button from "../../components/Utils/Button";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
+import ShowPW from "./ShowPW";
+import HidePW from "./HidePW";
 
 export default function SignUpForm({ closeSignupModal }) {
   const [inputEmail, setInputEmail] = useState("");
@@ -42,22 +43,33 @@ export default function SignUpForm({ closeSignupModal }) {
     <div>
       <ModalHeader>Sign Up</ModalHeader>
       <div>Create an account below.</div>
-      <InputHeader>email</InputHeader>
+      <InputHeader>Email</InputHeader>
       <InputField
         value={inputEmail}
         placeholder="Email"
         onChange={(e) => setInputEmail(e.target.value)}
       />
+      <InputHeader>Password</InputHeader>
       <div className="relative">
-        <InputHeader>Password</InputHeader>
         <InputField
           type={showPassword ? "text" : "password"}
           value={inputPassword}
           placeholder="Password"
           onChange={(e) => setInputPassword(e.target.value)}
         />
-        <label onClick={() => setShowPassword(!showPassword)} className="">
-          {showPassword ? "hide" : "show"}
+        <label
+          onClick={() => setShowPassword(!showPassword)}
+          className="showPW"
+        >
+          {showPassword ? (
+            <div className="w-7">
+              <HidePW fill="currentColor" />
+            </div>
+          ) : (
+            <div className="w-7">
+              <ShowPW fill="currentColor" />
+            </div>
+          )}
         </label>
       </div>
       <InputHeader>Repeat Password</InputHeader>
@@ -68,8 +80,19 @@ export default function SignUpForm({ closeSignupModal }) {
           placeholder="Repeat Password"
           onChange={(e) => setInputPasswordRep(e.target.value)}
         />
-        <label onClick={() => setShowPassword(!showPassword)} className="">
-          {showPassword ? "hide" : "show"}
+        <label
+          onClick={() => setShowPassword(!showPassword)}
+          className="showPW"
+        >
+          {showPassword ? (
+            <div className="w-7">
+              <HidePW fill="currentColor" />
+            </div>
+          ) : (
+            <div className="w-7">
+              <ShowPW fill="currentColor" />
+            </div>
+          )}
         </label>
       </div>
       <CustomSignIn>
@@ -125,7 +148,8 @@ const InputField = styled.input`
   margin-bottom: 5px;
   border: 1px solid lightgray;
   border-radius: 5px;
-  width: 100%;
+  width: 550px;
+  height: 40px;
 `;
 
 const CustomSignIn = styled.div`

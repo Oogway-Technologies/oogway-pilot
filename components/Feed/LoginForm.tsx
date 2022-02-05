@@ -7,6 +7,8 @@ import Button from "../../components/Utils/Button";
 import Modal from "../Utils/Modal";
 import PWForm from "./PWForm";
 import SignupForm from "./SignupForm";
+import ShowPW from "./ShowPW";
+import HidePW from "./HidePW";
 
 export default function LoginForm() {
   const [inputEmail, setInputEmail] = useState("");
@@ -69,7 +71,7 @@ export default function LoginForm() {
         </button>
       </div>
       <SignIn>
-        <InputHeader>email</InputHeader>
+        <InputHeader>Email</InputHeader>
         <InputField
           value={inputEmail}
           placeholder="Email"
@@ -83,8 +85,19 @@ export default function LoginForm() {
             placeholder="Password"
             onChange={(e) => setInputPassword(e.target.value)}
           />
-          <label onClick={() => setShowPassword(!showPassword)} className="">
-            {showPassword ? "hide" : "show"}
+          <label
+            onClick={() => setShowPassword(!showPassword)}
+            className="showPW"
+          >
+            {showPassword ? (
+              <div className="w-7">
+                <HidePW fill="currentColor" />
+              </div>
+            ) : (
+              <div className="w-7">
+                <ShowPW fill="currentColor" />
+              </div>
+            )}
           </label>
         </div>
         <CustomLink onClick={openRecoveryPW}>Forgot your password?</CustomLink>
@@ -134,11 +147,6 @@ const SignIn = styled.div`
   width: 100%;
 `;
 
-const passwordStyle =
-  "absolute transition-all left-4 top-1 text-gray-600\
-text-sm peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base\
-peer-placeholder-shown:top-4 pointer-events-none";
-
 const InputHeader = styled.div`
   outline-width: 0;
   padding: 2px;
@@ -156,7 +164,8 @@ const InputField = styled.input`
   margin-bottom: 5px;
   border: 1px solid lightgray;
   border-radius: 5px;
-  width: 100%;
+  width: 550px;
+  height: 40px;
 `;
 
 const CustomSignIn = styled.div`
