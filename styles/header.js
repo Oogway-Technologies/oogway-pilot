@@ -78,10 +78,12 @@ export const navLinksClass = {
 };
 
 export const userDropdownClass = {
-  avatar: "hover:opacity-80 hover:scale-125 md:h-12 md:w-12 cursor-pointer",
+  avatar:
+    "hover:opacity-80 hover:scale-125 md:h-12 md:w-12 cursor-pointer \
+    ring-1 ring-black/25 dark:ring-neutralDark-50/25",
   menuButtonClass: "inline-flex font-medium bg-transparent",
   menuItemsClass:
-    "absolute right-6 w-48 h-auto mt-2 p-2 origin-top-right \
+    "w-48 h-auto mt-2 p-2 \
           bg-white dark:bg-neutralDark-500 divide-y divide-neutral-300 \
           dark:divide-neutralDark-300 rounded-md shadow-lg \
           ring-2 ring-primary dark:ring-white ring-opacity-50 \

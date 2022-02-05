@@ -26,6 +26,8 @@ function PostsAPI({ posts }) {
                 timestamp={post.data().timestamp}
                 userImage={post.data().image}
                 postImage={post.data().postImage}
+                comments={null}
+                isCommentThread={false}
                 />
             ))
             : // Render out the server-side rendered posts
@@ -42,6 +44,8 @@ function PostsAPI({ posts }) {
                 timestamp={post.timestamp}
                 userImage={post.image}
                 postImage={post.postImage}
+                comments={null}
+                isCommentThread={false}
                 />
             ))}
         </div>

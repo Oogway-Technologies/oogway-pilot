@@ -5,7 +5,7 @@ import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import PostEngagementBar from './PostEngagementBar';
 import PostHeader from './PostHeader';
 import PostVotingMechanism from './PostVotingMechanism';
-
+import CommentsAPI from '../Comments/CommentsAPI';
 
 interface PostProps {
     authorUid: string,
@@ -17,7 +17,9 @@ interface PostProps {
     isCompare: boolean,
     userImage: string | null,
     postImage: string | null
-    timestamp: Date
+    timestamp: Date,
+    isCommentThread: boolean,
+    comments:  null | any // Should be json object
 };
 
 const PostCard: React.FC<PostProps> = (
@@ -31,7 +33,9 @@ const PostCard: React.FC<PostProps> = (
         isCompare,
         postImage,
         userImage,
-        timestamp 
+        timestamp,
+        isCommentThread,
+        comments
     }) => {
 
     // Track state for voting mechanism
@@ -104,6 +108,8 @@ const PostCard: React.FC<PostProps> = (
             <PostEngagementBar id={id}/>
 
             {/* Comments */}
+            {/* Note: pass the server-rendered comments to the panel */}
+            {isCommentThread && <CommentsAPI comments={comments}/>}
         </Card>
     );
 };

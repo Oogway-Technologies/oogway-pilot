@@ -9,7 +9,8 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc } from 'firebase/firestore';
 import { postOptionsDropdownClass } from '../../../styles/feed';
-
+import needsHook from '../../../hooks/needsHook';
+import { useRouter } from 'next/router';
 
 type PostOptionsDropdownProps = {
     authorUid: string, // Post author id
@@ -20,6 +21,10 @@ type PostOptionsDropdownProps = {
 const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid, deletePost, authorName }) => {
     const [user] = useAuthState(auth);
     const [userData] = useDocumentData(doc(db, "users", user.uid));
+    
+    const router = useRouter();
+
+    // Modal state
     const [isOpen, setIsOpen] = useState(false)
 
     // Helper Functions
@@ -101,8 +106,13 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid, de
 
     const deleteAndClose = (e) => {
         e.preventDefault();
-        deletePost(e);
+        const nextRoute = deletePost(e);
         closeModal();
+
+        // Reroute user back to homepage if not already there
+        if (router.pathname !== nextRoute) {
+            router.push(nextRoute);
+        }
     }
 
     // Confirm delete post modal component
@@ -128,10 +138,6 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid, de
                 </div>
             </div>
         )
-    }
-
-    const needsHook = () => {
-        alert('This button needs a hook!')
     }
 
     // Dropdown menu props

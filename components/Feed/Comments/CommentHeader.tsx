@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import needsHook from '../../../hooks/needsHook';
-import { auth, db, storage } from '../../../firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import PostOptionsDropdown from './PostOptionsDropdown';
-import { Avatar } from '@mui/material';
-import { postCardClass, avatarURL } from '../../../styles/feed';
-import bull from '../../Utils/Bullet';
 import Timestamp from '../../Utils/Timestamp';
+import React, { useEffect, useState } from 'react';
+import needsHook from '../../../hooks/needsHook';
+import { avatarURL, postCardClass } from '../../../styles/feed';
+import bull from '../../Utils/Bullet';
+import PostOptionsDropdown from '../Post/PostOptionsDropdown';
+import { auth, db, storage } from '../../../firebase';
+import { Avatar } from '@mui/material';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { UilComment, UilThumbsUp } from '@iconscout/react-unicons'
+import { UilCornerUpLeftAlt, UilThumbsUp } from '@iconscout/react-unicons';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-type PostHeaderProps = {
-    id: string,
+type CommentHeaderProps = {
+    postId: string,
+    commentId: string,
     authorUid: string,
     userImage: string | null,
     name: string | null,
@@ -19,22 +20,23 @@ type PostHeaderProps = {
     timestamp: Date | null
 };
 
-const PostHeader = ({id, userImage, name, authorUid, email, timestamp}: PostHeaderProps) => {
+const CommentHeader = ({postId, commentId, userImage, name, authorUid, email, timestamp}: CommentHeaderProps) => {
     const [user] = useAuthState(auth);
     const [numLikes, setNumLikes] = useState(0);
-    
+
     // Use useEffect to bind on document loading the
     // function that will set the number of likes on
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
-        // Save ref for unsubscribing on delete
         const unsubRef = db.collection("posts")
-        .doc(id)
+        .doc(postId)
+        .collection("comments")
+        .doc(commentId)
         .onSnapshot((snapshot) => {
             if (snapshot.data()) {
                 // Get the likes map
                 const likesMap = snapshot.data().likes;
-        
+                    
                 // Count the entries that are True
                 let ctr = 0;
                 for (const [key, value] of Object.entries(likesMap)) {
@@ -46,84 +48,95 @@ const PostHeader = ({id, userImage, name, authorUid, email, timestamp}: PostHead
             }
         });
 
+        // Clean up function
         return () => unsubRef();
-    }, [id]);
+    }, [commentId, postId]);
 
     // Track number of comments
-    const [commentsSnapshot] = useCollection(
-        db.collection("posts").doc(id).collection("comments")
+    const [repliesSnapshot] = useCollection(
+        db.collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .doc(commentId)
+        .collection("replies")
     );
-    
-    const deletePostEntry = () => {
-        // Delete the post entry from the DB.
-        // Note: this post should NOT have any comments
-        db.collection("posts")
-        .doc(id)
-        .delete()
-        .catch((err) => { console.log("Cannot delete post: ", err) });
-
-        // Update the user's posts list
-        db.collection("users")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-            let tmp = doc.data();
-            const index = tmp.posts.indexOf(id);
-            if (index > -1) {
-                tmp.posts.splice(index, 1);
-                doc.ref.update(tmp);
-            }
-        })
-
-        // Delete the post's media, if any
-        storage.ref(`posts/${id}`).listAll().then((listResults) => {
-            const promises = listResults.items.map((item) => {
-                return item.delete();
-            });
-            Promise.all(promises);
-        });
-    }
-
-    // Deletes a post
-    const deletePost = () => {
-        // Before deleting the post, we need to delete the comments.
-        // Comments is a sub-collection of the post, so we need to
-        // retrieve all comments and delete them first.
-        db.collection("posts")
-        .doc(id)
-        .get()
-        .then((doc) => {
-            // Check if comments exists for this post
-            db.collection("posts")
-            .doc(id)
-            .collection("comments")
-            .get()
-            .then((sub) => {
-                if (sub.docs.length > 0) {
-                    // Comments are present, delete them
-                    sub.forEach((com) => {
-                        com.ref.delete();
-                    })
-                }
-
-                // Proceed to delete the post
-                deletePostEntry();
-            })
-            .catch((err) => { console.log("Cannot delete comments: ", err) });
-        });
-
-        // Return where the user should be routed, if necesary
-        return `/feed/${user.uid}`
-    }
 
     const getNumLikes = () => {
         return numLikes;
     };
 
+    // Deletes a post
+    const deleteCommentEntry = () => {
+        db.collection("posts")
+        .doc(postId)
+        .collection("comments") // Or whatever the name of the collection is
+        .doc(commentId)
+        .delete()
+        .catch((err) => {
+            console.log("Cannot delete post: ", err);
+        });
+
+        // Update the user's comment map
+        db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+            let tmp = doc.data();
+            console.log(tmp.comments);
+            delete tmp.comments[commentId];
+            doc.ref.update(tmp);
+        })
+
+        // Delete the comment's media, if any
+        storage.ref(`posts/${commentId}`).listAll().then((listResults) => {
+            const promises = listResults.items.map((item) => {
+                return item.delete();
+            });
+            Promise.all(promises);
+        });
+
+    };
+
+    // Deletes a comment
+    const deleteComment = () => {
+        // Before deleting the comment, we need to delete the replies.
+        // Replies is a sub-collection of the comment, so we need to
+        // retrieve all replies and delete them first.
+        db.collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .doc(commentId)
+        .get()
+        .then((doc) => {
+            // Check if comments exists for this post
+            db.collection("posts")
+            .doc(postId)
+            .collection("comments")
+            .doc(commentId)
+            .collection("replies")
+            .get()
+            .then((sub) => {
+                if (sub.docs.length > 0) {
+                    // Replies are present, delete them
+                    sub.forEach((reply) => {
+                        reply.ref.delete();
+                    })
+                }
+
+                // Proceed to delete the post
+                deleteCommentEntry();
+            })
+            .catch((err) => { console.log("Cannot delete comments: ", err) });
+        });
+
+        // Return where the user should be routed
+        return `/comments/${postId}`
+    }
+
     return (
         <div className={postCardClass.header}>
-            {/* Left content */}
-            <div className={postCardClass.headerLeft}>
+             {/* Left content */}
+             <div className={postCardClass.headerLeft}>
                 {/* Avatar */}
                 <Avatar
                         onClick={needsHook}
@@ -140,20 +153,18 @@ const PostHeader = ({id, userImage, name, authorUid, email, timestamp}: PostHead
 
                     <div className={postCardClass.leftMobileRowTwo}>
                         {/* Number of replies */}
-                        <p className={postCardClass.commentsP}>{`${commentsSnapshot ? commentsSnapshot.docs.length : "0"}`}
-                            <span className={postCardClass.commentsSpan}> Comments</span>
-                            <span className={postCardClass.commentsIconSpan}><UilComment size={14}/></span>
+                        <p className={postCardClass.commentsP}>{`${repliesSnapshot ? repliesSnapshot.docs.length : "0"}`}
+                            <span className={postCardClass.commentsSpan}> Replies</span>
+                            <span className={postCardClass.commentsIconSpan}><UilCornerUpLeftAlt size={14}/></span>
                         </p>
                         {/* Number of likes */}
-                        {bull} 
+                        {bull}
                         <p className={postCardClass.commentsP}>{`${getNumLikes() > 0 ? getNumLikes() : "0"}`}
                             <span className={postCardClass.commentsSpan}> Likes</span>
                             <span className={postCardClass.commentsIconSpan}><UilThumbsUp size={14}/></span>
                         </p>
-                        {/* TODO: interpolate post category below */}
-                        {bull} <p className={postCardClass.categoryP}>Education</p>
-                        {bull}
                         {/* Time stamp */}
+                        {bull}
                         <Timestamp timestamp={timestamp} />
                     </div>
                 </div>
@@ -161,14 +172,10 @@ const PostHeader = ({id, userImage, name, authorUid, email, timestamp}: PostHead
 
             {/* Right: More Button */}
             <div className={postCardClass.headerRight}>
-                <PostOptionsDropdown 
-                    authorUid={authorUid} 
-                    authorName={name ? name : email} 
-                    deletePost={deletePost}
-                />
+                <PostOptionsDropdown authorUid={authorUid} authorName={name ? name : email} deletePost={deleteComment}/>
             </div>
         </div>
-    )
+    );
 };
 
-export default PostHeader;
+export default CommentHeader;

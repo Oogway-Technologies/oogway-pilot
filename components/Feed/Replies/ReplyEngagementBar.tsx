@@ -1,32 +1,35 @@
 import React from 'react';
-import { postCardClass } from '../../../styles/feed';
+import { commentEngagementBarClass, replyEngagementBarClass } from '../../../styles/feed';
 import Button from '../../Utils/Button';
 import needsHook from '../../../hooks/needsHook';
-import { useRouter } from 'next/router';
-import {UilComment, UilThumbsUp, UilUpload, UilBookmark} from '@iconscout/react-unicons'
+import { UilThumbsUp, UilUpload, UilBookmark } from '@iconscout/react-unicons'
 import { auth, db } from '../../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 
-type PostEngagementBarProps = {
-    id: string
+
+type ReplyEngagementBarProps = {
+    postId: string,
+    commentId: string,
+    replyId: string
 };
 
-const PostEngagementBar = ({ id }: PostEngagementBarProps) => {
+const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = (
+    { 
+        postId,
+        commentId,
+        replyId
+    }) => {
     const [user] = useAuthState(auth);
-
-    // Use the router to redirect the user to the comments page
-    const router = useRouter();
-    
-    // Hooks
-    const enterComments = () => {
-        router.push(`/comments/${id}`);
-    };
 
     const addLike = (e) => {
         e.preventDefault(); // Don't think it is needed
         db.collection("posts")
-          .doc(id)
+          .doc(postId)
+          .collection("comments")
+          .doc(commentId)
+          .collection("replies")
+          .doc(replyId)
           .get()
           .then((doc) => {
             // Here goes the logic for toggling likes from each user
@@ -49,18 +52,13 @@ const PostEngagementBar = ({ id }: PostEngagementBarProps) => {
               // That event is very rare and probably not so much of a pain
               doc.ref.update(tmp);
             } else {
-              console.log("Error post not found: " + id);
+              console.log("Error comment not found: " + commentId);
             }
-        });
-    };
+          });
+      };
 
     // Items
     const engagementItems = [
-        {
-            icon: <UilComment/>,
-            text: 'Comments',
-            onClick: enterComments
-        },
         {
             icon: <UilThumbsUp/>,
             text: 'Like',
@@ -78,12 +76,12 @@ const PostEngagementBar = ({ id }: PostEngagementBarProps) => {
         // },
     ]
 
-    return <div className={postCardClass.engagementBar}>
+    return <div className={replyEngagementBarClass.engagementBar}>
                 {
                     engagementItems.map((item, idx) => (
                         <Button
                             key={idx}
-                            addStyle={postCardClass.engagementButton}
+                            addStyle={commentEngagementBarClass.engagementButton}
                             type='button'
                             onClick={item.onClick}
                             icon={item.icon}
@@ -95,4 +93,4 @@ const PostEngagementBar = ({ id }: PostEngagementBarProps) => {
         </div>
 };
 
-export default PostEngagementBar;
+export default ReplyEngagementBar;

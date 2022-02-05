@@ -21,6 +21,7 @@ import { postFormClass } from '../../../styles/feed';
 
 // Other and utilities
 import cryptoRandomString from 'crypto-random-string';
+import preventDefaultOnEnter from '../../../hooks/preventDefaultOnEnter';
 
 type NewPostProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
@@ -215,6 +216,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
             image: userData.photoUrl ? userData.photoUUrl : null,       // Change this with profile picture or incognito
             uid: user.uid,                                              // uid of the user that created this post
             isCompare: false,                                           // Explicitly flag whether is compare type
+            likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
 
@@ -494,6 +496,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                         aria-invalid={errors.question ? "true" : "false"}
                         ref={inputRef}
                         placeholder={questPlaceholder}
+                        onKeyPress={preventDefaultOnEnter}
                     />
                 </div>
 
@@ -510,7 +513,8 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                     <textarea
                         ref={descriptionRef}
                         placeholder={descPlaceholder}
-                        className={postFormClass.formDescriptionInput}/>
+                        className={postFormClass.formDescriptionInput}
+                        onKeyPress={preventDefaultOnEnter}/>
                 </div>
             </form>
 
@@ -527,6 +531,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                         ref={filePickerRef}
                         onChange={handleImageUpload}
                         type='file'
+                        onKeyPress={preventDefaultOnEnter}
                         hidden
                     />
                 </button>
@@ -583,7 +588,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                                     className={postFormClass.formQuestionInput}
                                     type='text'
                                     placeholder='Option 1'
-                                    // ref={textCompareLeftRef}
+                                    onKeyPress={preventDefaultOnEnter}
                                     onChange={(e) => {
                                         setTextToCompareLeft(e.target.value)
                                     }}
@@ -603,6 +608,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                                     ref={filePickerCompareLeftRef}
                                     onChange={handleCompareLeftUpload}
                                     type='file'
+                                    onKeyPress={preventDefaultOnEnter}
                                     hidden
                                 />
                             </button>
@@ -624,6 +630,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                                     // ref={textCompareRightRef}
                                     type='text'
                                     placeholder='Option 2'
+                                    onKeyPress={preventDefaultOnEnter}
                                     onChange={(e) => {
                                         setTextToCompareRight(e.target.value)
                                     }}
@@ -642,6 +649,7 @@ const NewPostForm: React.FC<NewPostProps> = ({ closeModal, questPlaceholder, des
                                     ref={filePickerCompareRightRef}
                                     onChange={handleCompareRightUpload}
                                     type='file'
+                                    onKeyPress={preventDefaultOnEnter}
                                     hidden
                                 />
                             </button>
