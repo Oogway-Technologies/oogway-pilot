@@ -161,11 +161,11 @@ export const postFormClass = {
 export const commentsPageClass = {
   outerDiv: "flex w-full justify-center",
   innerDiv:
-    "flex-grow h-screen pb-44 pt-6 mx-4 xl:mr-40 overflow-y-auto scrollbar-hide",
-  contentDiv: "space-y-4 mx-auto max-w-md md:max-w-lg lg:max-w-2xl",
+    "flex-grow h-screen pb-44 mx-4 xl:mr-40 overflow-y-auto justify-between",
+  contentDiv: "mx-auto max-w-md md:max-w-lg lg:max-w-2xl spa",
   goBackButton:
     "rounded-[20px] p-sm space-x-sm text-primary dark:text-primaryDark bg-transparent dark:bg-transparent \
-    hover:text-white dark:hover:text-white hover:bg-primary dark:hover:bg-primaryDark",
+    hover:text-white dark:hover:text-white hover:bg-primary dark:hover:bg-primaryDark font-semibold text-lg items-center",
 };
 
 export const commentsApiClass = {
