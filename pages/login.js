@@ -5,7 +5,7 @@ import styled from "styled-components";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
 import Modal from "../components/Utils/Modal";
-import LoginForm from "../components/Feed/LoginForm";
+import LoginForm from "../components/Login/LoginForm";
 
 function Login() {
   // ========== TODO: redo according to design ========== //

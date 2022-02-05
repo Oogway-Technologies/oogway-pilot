@@ -3,20 +3,19 @@ import Head from "next/head";
 import styled from "styled-components";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
-import Button from "../../components/Utils/Button";
+import Button from "../Utils/Button";
 import Modal from "../Utils/Modal";
-import PWForm from "../Login/PWForm";
-import SignupForm from "../Login/SignupForm";
-import ShowPW from "../Login/ShowPW";
-import HidePW from "../Login/HidePW";
+import PWForm from "./PWForm";
+import SignupForm from "./SignupForm";
+import ShowPW from "./ShowPW";
+import HidePW from "./HidePW";
 
-export default function LoginForm() {
+export default function LoginForm({ closeModal }) {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [inputPasswordRep, setInputPasswordRep] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [recoverPW, setRecoverPW] = useState(false);
-  const [pwIsOpen, setPwIsOpen] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -25,13 +24,12 @@ export default function LoginForm() {
     setIsOpen(true);
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
-    setRecoverPW(false);
-  };
-
   const openRecoveryPW = () => {
     setRecoverPW(true);
+  };
+
+  const closeRecoveryPW = () => {
+    setRecoverPW(false);
   };
 
   const openSignupModal = () => {
@@ -102,7 +100,11 @@ export default function LoginForm() {
         </div>
         <CustomLink onClick={openRecoveryPW}>Forgot your password?</CustomLink>
         <CustomSignIn>
-          <Button onClick={LogIn} addStyle={cancelButtonStyle} text="Cancel" />
+          <Button
+            onClick={closeModal}
+            addStyle={cancelButtonStyle}
+            text="Cancel"
+          />
           <Button onClick={LogIn} addStyle={loginButtonStyle} text="Login" />
         </CustomSignIn>
       </SignIn>
@@ -111,9 +113,9 @@ export default function LoginForm() {
         <CustomLink onClick={openSignupModal}>Sign up</CustomLink>
       </InputHeader>
       <Modal
-        children={<PWForm closeModal={closeModal} />}
+        children={<PWForm closeModal={closeRecoveryPW} />}
         show={recoverPW}
-        onClose={closeModal}
+        onClose={closeRecoveryPW}
       />
       <Modal
         children={<SignupForm closeSignupModal={closeSignupModal} />}
