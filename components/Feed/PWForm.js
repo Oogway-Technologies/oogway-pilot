@@ -65,7 +65,7 @@ export default function PWForm({ closeModal }) {
         We'll send you a link to set a new password. Please enter the Email you
         signed up with.
       </TextDisplay>
-      <InputHeader>email</InputHeader>
+      <InputHeader>Email</InputHeader>
       <InputField
         value={recoverEmail}
         placeholder="Email"
@@ -145,6 +145,7 @@ const InputField = styled.input`
   border: 1px solid lightgray;
   border-radius: 5px;
   width: 100%;
+  height: 40px;
 `;
 
 const CustomSignIn = styled.div`
