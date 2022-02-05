@@ -5,10 +5,10 @@ import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
 import Button from "../../components/Utils/Button";
 import Modal from "../Utils/Modal";
-import PWForm from "./PWForm";
-import SignupForm from "./SignupForm";
-import ShowPW from "./ShowPW";
-import HidePW from "./HidePW";
+import PWForm from "../Login/PWForm";
+import SignupForm from "../Login/SignupForm";
+import ShowPW from "../Login/ShowPW";
+import HidePW from "../Login/HidePW";
 
 export default function LoginForm() {
   const [inputEmail, setInputEmail] = useState("");

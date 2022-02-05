@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Button from "../../components/Utils/Button";
+import Button from "../Utils/Button";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
 import ShowPW from "./ShowPW";
