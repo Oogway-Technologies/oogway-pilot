@@ -12,6 +12,7 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 import needsHook from "../../../hooks/needsHook";
 import { doc } from "firebase/firestore";
 import { Avatar } from '@mui/material';
+import preventDefaultOnEnter from '../../../hooks/preventDefaultOnEnter';
 
 type NewReplyFormProps = {
     commentId: string,
@@ -172,6 +173,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({ commentId, closeModal, isMo
                             ref={inputRef}
                             className={replyFormClass.replyTextArea}
                             placeholder={placeholder}
+                            onKeyPress={preventDefaultOnEnter}
                         />
                         ) : (
                         <input
@@ -179,6 +181,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({ commentId, closeModal, isMo
                             className={replyFormClass.replyInput}
                             type="text" 
                             placeholder={placeholder}
+                            onKeyPress={preventDefaultOnEnter}
                         />
                         )}
                     </form>

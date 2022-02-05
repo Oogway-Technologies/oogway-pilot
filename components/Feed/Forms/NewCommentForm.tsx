@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import firebase from 'firebase/compat/app';
 import { avatarURL, commentFormClass } from '../../../styles/feed';
 import Button from '../../Utils/Button';
+import preventDefaultOnEnter from '../../../hooks/preventDefaultOnEnter';
 
 type NewCommentFormProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>,
@@ -234,6 +235,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({ closeModal, isMobile, p
                             ref={inputRef}
                             className={commentFormClass.commentTextArea}
                             placeholder={placeholder}
+                            onKeyPress={preventDefaultOnEnter}
                         />
                         ) : (
                         <input
@@ -241,6 +243,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({ closeModal, isMobile, p
                             className={commentFormClass.commentInput}
                             type="text" 
                             placeholder={placeholder}
+                            onKeyPress={preventDefaultOnEnter}
                         />
                         )}
                         
@@ -292,6 +295,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({ closeModal, isMobile, p
                             ref={filePickerRef}
                             onChange={handleImageUpload}
                             type='file'
+                            onKeyPress={preventDefaultOnEnter}
                             hidden
                         />
                     </button>

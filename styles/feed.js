@@ -182,15 +182,15 @@ export const commentFormClass = {
   form: "flex flex-col",
   body: "inline-flex items-center space-x-md",
   commentBar:
-    "grid grid-cols-2 rounded-full items-center py-1 px-2 md:px-5 lg:w-96 xl:w-96 \
+    "inline-flex rounded-full items-center py-1 px-2 md:px-5 lg:w-96 xl:w-96 \
     border-solid border-2 border-neutral-50 dark:border-neutralDark-150 \
     focus-within:border-primary focus-visible:border-primary \
     dark:focus-within:border-primary dark:focus-visible:border-primary \
     active:border-neutral-300 dark:active:border-neutralDark-50 \
     hover:border-neutral-150 dark:hover:border-neutralDark-50",
   commentInput:
-    "justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white \
-    text-sm md:text-base",
+    "md:w-52 lg:w-80 justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white \
+    text-sm lg:text-base",
   commentTextArea:
     "p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
     text-black dark:text-white text-sm md:text-base",

@@ -1,4 +1,4 @@
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import FeedToolbar from "../../components/Feed/FeedToolbar";
@@ -6,14 +6,17 @@ import PostCard from "../../components/Feed/Post/Post";
 import Button from "../../components/Utils/Button";
 import { UilArrowCircleLeft } from '@iconscout/react-unicons'
 import { commentsPageClass } from "../../styles/feed";
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 
 function CommentPage({ post, comments }) {
+    const [user] = useAuthState(auth);
+
   // Use the router to go back on the stack
   const router = useRouter();
 
   const goBack = () => {
-    router.back();
+    router.push(`/feed/${user.uid}`);
   };
 
   return (

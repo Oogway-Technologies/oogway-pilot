@@ -48,7 +48,7 @@ function Comment({ commentOwner, postId, commentId, comment }) {
             </div>
             
             {/* Media */}
-            {comment.image && <div className={commentClass.media}><CardMedia component="img" src={comment.image}/></div>}
+            {comment.postImage && <div className={commentClass.media}><CardMedia component="img" src={comment.postImage}/></div>}
 
             {/* Engagement */}
             <CommentEngagementBar 
