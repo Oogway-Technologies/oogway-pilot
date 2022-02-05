@@ -61,10 +61,10 @@ export default function PWForm({ closeModal }) {
   return (
     <div>
       <ModalHeader>Forgot Password</ModalHeader>
-      <div>
+      <TextDisplay>
         We'll send you a link to set a new password. Please enter the Email you
         signed up with.
-      </div>
+      </TextDisplay>
       <InputHeader>email</InputHeader>
       <InputField
         value={recoverEmail}
@@ -115,6 +115,10 @@ const InputHeader = styled.div`
   color: rgb(83, 83, 83);
   margin-right: auto;
   display: flex;
+`;
+
+const TextDisplay = styled.div`
+  max-width: 550px;
 `;
 
 const RecoveryNotification = styled.div`

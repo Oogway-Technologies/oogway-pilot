@@ -9,6 +9,7 @@ export default function SignUpForm({ closeSignupModal }) {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [inputPasswordRep, setInputPasswordRep] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const createAccount = () => {
     if (inputEmail && inputPassword && inputPasswordRep) {
@@ -47,20 +48,30 @@ export default function SignUpForm({ closeSignupModal }) {
         placeholder="Email"
         onChange={(e) => setInputEmail(e.target.value)}
       />
-      <InputHeader>Password</InputHeader>
-      <InputField
-        type="password"
-        value={inputPassword}
-        placeholder="Password"
-        onChange={(e) => setInputPassword(e.target.value)}
-      />
+      <div className="relative">
+        <InputHeader>Password</InputHeader>
+        <InputField
+          type={showPassword ? "text" : "password"}
+          value={inputPassword}
+          placeholder="Password"
+          onChange={(e) => setInputPassword(e.target.value)}
+        />
+        <label onClick={() => setShowPassword(!showPassword)} className="">
+          {showPassword ? "hide" : "show"}
+        </label>
+      </div>
       <InputHeader>Repeat Password</InputHeader>
-      <InputField
-        type="password"
-        value={inputPasswordRep}
-        placeholder="Repeat Password"
-        onChange={(e) => setInputPasswordRep(e.target.value)}
-      />
+      <div className="relative">
+        <InputField
+          type={showPassword ? "text" : "password"}
+          value={inputPasswordRep}
+          placeholder="Repeat Password"
+          onChange={(e) => setInputPasswordRep(e.target.value)}
+        />
+        <label onClick={() => setShowPassword(!showPassword)} className="">
+          {showPassword ? "hide" : "show"}
+        </label>
+      </div>
       <CustomSignIn>
         <Button
           onClick={closeSignupModal}
@@ -97,16 +108,10 @@ hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold hove
 hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
 hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark";
 
-const SignIn = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-  width: 100%;
-`;
-
 const InputHeader = styled.div`
   outline-width: 0;
   padding: 2px;
+  margin-top: 10px;
   margin-bottom: 5px;
   font-size: 16px;
   color: rgb(83, 83, 83);
@@ -120,6 +125,7 @@ const InputField = styled.input`
   margin-bottom: 5px;
   border: 1px solid lightgray;
   border-radius: 5px;
+  width: 100%;
 `;
 
 const CustomSignIn = styled.div`
@@ -130,15 +136,17 @@ const CustomSignIn = styled.div`
 `;
 
 const ModalHeader = styled.div`
+  padding-top: 10px;
+  padding-bottom: 10px;
   font-size: 24px;
   font-weight: bold;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 `;
 
 const CustomLink = styled.div`
-  font-size: 12px;
+  font-size: 16px;
   color: rgb(112, 65, 238);
   cursor: pointer;
   float: right;
