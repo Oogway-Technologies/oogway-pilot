@@ -1,7 +1,6 @@
 import { auth, db } from "../../firebase";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import FeedToolbar from "../../components/Feed/FeedToolbar";
 import PostCard from "../../components/Feed/Post/Post";
 import Button from "../../components/Utils/Button";
 import { UilArrowCircleLeft } from '@iconscout/react-unicons'
@@ -26,18 +25,19 @@ function CommentPage({ post, comments }) {
         </Head>
         <div className={commentsPageClass.innerDiv}>
             <div className={commentsPageClass.contentDiv}>
-            <FeedToolbar/>
-
-            {/* Go Back */}
-            <Button 
-                text="Back" 
-                keepText={true} 
-                icon={<UilArrowCircleLeft/>} 
-                type='button'
-                onClick={goBack}
-                addStyle={commentsPageClass.goBackButton}
-            />
-
+              {/* Go Back */}
+              <div className="flex items-center sticky top-0 backdrop-blur-md bg-gray/30 p-3 z-40 hover:shadow-sm mb-1">
+                <Button 
+                    text="Back" 
+                    keepText={false}
+                    forceNoText = { false }
+                    icon={<UilArrowCircleLeft/>} 
+                    type='button'
+                    onClick={goBack}
+                    addStyle={commentsPageClass.goBackButton}
+                />
+              </div>
+            
             {/* Post w/ comments
             Pass Comments API to the PostCard as props */}
             <PostCard
