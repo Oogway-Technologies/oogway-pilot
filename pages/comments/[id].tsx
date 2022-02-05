@@ -23,10 +23,10 @@ function CommentPage({ post, comments }) {
         <Head>
             <title>{`Comments | ${post.message}`}</title>
         </Head>
-        <div className={commentsPageClass.innerDiv}>
-            <div className={commentsPageClass.contentDiv}>
-              {/* Go Back */}
-              <div className="flex items-center sticky top-0 backdrop-blur-md bg-gray/30 p-3 z-40 hover:shadow-sm mb-1">
+
+        {/* Go Back */}
+        <div className={commentsPageClass.toolbarDiv}>
+            <div className={commentsPageClass.backButtonDiv}>
                 <Button 
                     text="Back" 
                     keepText={false}
@@ -36,10 +36,13 @@ function CommentPage({ post, comments }) {
                     onClick={goBack}
                     addStyle={commentsPageClass.goBackButton}
                 />
-              </div>
-            
-            {/* Post w/ comments
-            Pass Comments API to the PostCard as props */}
+            </div>
+        </div>
+
+        {/* Scrolling content */}
+        <div className={commentsPageClass.innerDiv}>
+            <div className={commentsPageClass.contentDiv}>
+            {/* Post w/ comments */}
             <PostCard
                 id={post.id}
                 authorUid={post.uid}

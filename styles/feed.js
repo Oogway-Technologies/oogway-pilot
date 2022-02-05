@@ -6,9 +6,10 @@ export const avatarURL =
 
 // Feed API
 export const feedApiClass = {
-  divOuter:
-    "flex-grow h-screen pb-44 pt-6 mx-4 xl:mr-40 overflow-y-auto scrollbar-hide",
-  divInner: "space-y-4 mx-auto max-w-md md:max-w-lg lg:max-w-2xl",
+  toolbarDiv: "flex-grow",
+  feedToolbar: "items-center my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl",
+  innerDiv: "flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide",
+  contentDiv: "space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl",
 };
 
 // Feed toolbar
@@ -27,11 +28,6 @@ export const feedToolbarClass = {
     bg-primary dark:bg-primaryDark hover:bg-primaryActive \
     active:bg-primaryActive dark:hover:bg-primaryActive \
     dark:active:bg-primaryActive text-white font-bold",
-};
-
-// Posts API
-export const postApiClass = {
-  div: "flex flex-col space-y-md",
 };
 
 // PostCard
@@ -159,10 +155,11 @@ export const postFormClass = {
 
 // Comments
 export const commentsPageClass = {
-  outerDiv: "flex w-full justify-center",
-  innerDiv:
-    "flex-grow h-screen pb-44 mx-4 xl:mr-40 overflow-y-auto justify-between",
-  contentDiv: "mx-auto max-w-md md:max-w-lg lg:max-w-2xl spa",
+  outerDiv: "flex flex-col w-full justify-center",
+  toolbarDiv: "flex-grow",
+  backButtonDiv: "items-center my-md mx-auto max-w-md md:max-w-lg lg:max-w-2xl",
+  innerDiv: "flex-grow h-screen pb-60 xl:mr-40 overflow-y-auto scrollbar-hide",
+  contentDiv: "mx-auto max-w-md md:max-w-lg lg:max-w-2xl",
   goBackButton:
     "rounded-[20px] p-sm space-x-sm text-primary dark:text-primaryDark bg-transparent dark:bg-transparent \
     hover:text-white dark:hover:text-white hover:bg-primary dark:hover:bg-primaryDark font-semibold text-lg items-center",
