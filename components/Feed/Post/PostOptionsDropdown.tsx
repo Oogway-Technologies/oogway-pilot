@@ -1,43 +1,30 @@
 import React, { useState } from 'react';
-import Button from '../Utils/Button';
-import DropdownMenu from '../Utils/DropdownMenu';
+import Button from '../../Utils/Button';
+import DropdownMenu from '../../Utils/DropdownMenu';
 import { UilQuestionCircle, UilExclamationCircle, UilBan, UilTrashAlt, UilEllipsisH} from '@iconscout/react-unicons'
-import { auth, db } from '../../firebase';
-import Modal from '../Utils/Modal';
+import { auth, db } from '../../../firebase';
+import Modal from '../../Utils/Modal';
 import { Dialog } from '@headlessui/react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc } from 'firebase/firestore';
-
-// Styles
-const postOptionsDropdownStyles = {
-    // Dropdown menu
-    menuButtonClass: "absolute top-sm right-sm text-neutral-700 cursor-pointer",
-    menuItemsClass: "absolute right-6 w-auto h-auto mt-2 p-2 origin-top-right \
-        bg-white dark:bg-neutralDark-500 rounded-md shadow-lg \
-        ring-2 ring-primary dark:ring-white ring-opacity-50 focus:outline-none before:font-bold",
-    buttonAddStyle: "items-center space-x-2 px-sm text-neutral-700 dark:text-neutralDark-150 \
-        hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
-        hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark",
-    // Delete post confirmation modal
-    modalDiv: "flex-col bg-white dark:bg-neutralDark-500",
-    modalTitle: "flex px-2 py-md text-lg font-bold  text-neutral-800 dark:text-neutralDark-50",
-    modalCancelButton: "rounded-[20px] p-sm w-full justify-center bg-neutral-150 hover:bg-neutral-300\
-    text-neutral-700 text-sm font-bold",
-    modalConfirmButton: "rounded-[20px] p-sm w-full space-x-2 justify-center bg-alert dark:bg-alertDark\
-    hover:bg-error active:bg-error dark:hover:bg-errorDark \
-    dark:active:bg-errorDark text-white dark:text-white font-bold"
-}
+import { postOptionsDropdownClass } from '../../../styles/feed';
+import needsHook from '../../../hooks/needsHook';
+import { useRouter } from 'next/router';
 
 type PostOptionsDropdownProps = {
-    postUid: string, // Post author id
+    authorUid: string, // Post author id
     deletePost:  React.MouseEventHandler<HTMLButtonElement> // Handler function to delete post
     authorName: string, // Post author name
 }
 
-const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, deletePost, authorName }) => {
+const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid, deletePost, authorName }) => {
     const [user] = useAuthState(auth);
     const [userData] = useDocumentData(doc(db, "users", user.uid));
+    
+    const router = useRouter();
+
+    // Modal state
     const [isOpen, setIsOpen] = useState(false)
 
     // Helper Functions
@@ -49,12 +36,12 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
         setIsOpen(false)
     }
 
-    const isUsersOwnPost = (postUid) => {
-        return user?.uid === postUid
+    const isUsersOwnPost = (authorUid) => {
+        return user?.uid === authorUid
     }
 
-    const isUserBlocked = (postUid) => {
-        return userData?.blockedUsers?.includes(postUid)
+    const isUserBlocked = (authorUid) => {
+        return userData?.blockedUsers?.includes(authorUid)
     }
 
     // Handler functions
@@ -63,7 +50,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
 
         // Return early if user already blocked
         console.log(user.posts);
-        if (isUserBlocked(postUid)) {
+        if (isUserBlocked(authorUid)) {
             return
         }
 
@@ -82,10 +69,10 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
             let tmp = userDoc.data();
 
             if ("blockedUsers" in tmp) {
-                tmp.blockedUsers.push(postUid)
+                tmp.blockedUsers.push(authorUid)
             } else {
                 // Create a new array
-                tmp["blockedUsers"] = [postUid]
+                tmp["blockedUsers"] = [authorUid]
             }
 
             userDoc.ref.update(tmp);
@@ -97,7 +84,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
         e.preventDefault();
 
         // Return early if user not blocked
-        if (!isUserBlocked(postUid)) {
+        if (!isUserBlocked(authorUid)) {
             return
         }
 
@@ -108,7 +95,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
         .get()
         .then((userDoc) => {
             let tmp = userDoc.data();
-            const index = tmp.blockedUsers.indexOf(postUid);
+            const index = tmp.blockedUsers.indexOf(authorUid);
             if (index > -1) {
                 tmp.blockedUsers.splice(index, 1);
                 userDoc.ref.update(tmp);
@@ -119,16 +106,21 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
 
     const deleteAndClose = (e) => {
         e.preventDefault();
-        deletePost(e);
+        const nextRoute = deletePost(e);
         closeModal();
+
+        // Reroute user back to homepage if not already there
+        if (router.pathname !== nextRoute) {
+            router.push(nextRoute);
+        }
     }
 
     // Confirm delete post modal component
     const ConfirmDeletePost = () => {
 
         return (
-            <div className={postOptionsDropdownStyles.modalDiv}>
-                <Dialog.Title as="div" className={postOptionsDropdownStyles.modalTitle}>
+            <div className={postOptionsDropdownClass.modalDiv}>
+                <Dialog.Title as="div" className={postOptionsDropdownClass.modalTitle}>
                     Are you sure you want to delete your post? It will be gone forever.
                 </Dialog.Title>
                 
@@ -136,20 +128,16 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
                 <div className="inline-flex w-full space-x-3 px-2">
                     <Button text="No" keepText={true} icon={null}
                         type='button' 
-                        addStyle={postOptionsDropdownStyles.modalCancelButton}
+                        addStyle={postOptionsDropdownClass.modalCancelButton}
                         onClick={closeModal}
                     />
                     <Button text="Yes, delete" keepText={true} icon={<UilTrashAlt/>}
                         type="submit"
-                        addStyle={postOptionsDropdownStyles.modalConfirmButton}
+                        addStyle={postOptionsDropdownClass.modalConfirmButton}
                         onClick={deleteAndClose}/>
                 </div>
             </div>
         )
-    }
-
-    const needsHook = () => {
-        alert('This button needs a hook!')
     }
 
     // Dropdown menu props
@@ -161,7 +149,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
             icon={<UilTrashAlt/>}
             type="button"
             onClick={openModal}
-            addStyle={postOptionsDropdownStyles.buttonAddStyle}
+            addStyle={postOptionsDropdownClass.buttonAddStyle}
         />
     ]
     const otherPostMenuItems = [
@@ -171,18 +159,18 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
             icon={<UilQuestionCircle/>}
             type="button"
             onClick={needsHook}
-            addStyle={postOptionsDropdownStyles.buttonAddStyle}
+            addStyle={postOptionsDropdownClass.buttonAddStyle}
         />,
         // TODO: Get more input on business logic. Does not make sense to be able to unblock 
         // a user you've previous blocked froom within their posts. Presumably, you wouldn't see
         // a blocked user's posts...
         <Button 
-            text={`${isUserBlocked(postUid) ? 'Unblock' : 'Block'} ${authorName}`}
+            text={`${isUserBlocked(authorUid) ? 'Unblock' : 'Block'} ${authorName}`}
             keepText={true}
             icon={<UilBan/>}
             type="button"
-            onClick={isUserBlocked(postUid) ? unblockUser : blockUser}
-            addStyle={postOptionsDropdownStyles.buttonAddStyle}
+            onClick={isUserBlocked(authorUid) ? unblockUser : blockUser}
+            addStyle={postOptionsDropdownClass.buttonAddStyle}
         />,
         <Button 
             text="Report"
@@ -190,17 +178,17 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ postUid, dele
             icon={<UilExclamationCircle/>}
             type="button"
             onClick={needsHook}
-            addStyle={postOptionsDropdownStyles.buttonAddStyle}
+            addStyle={postOptionsDropdownClass.buttonAddStyle}
         />
     ]
 
     return (
             <>
             <DropdownMenu 
-                menuButtonClass={postOptionsDropdownStyles.menuButtonClass}
-                menuItemsClass={postOptionsDropdownStyles.menuItemsClass}
+                menuButtonClass={postOptionsDropdownClass.menuButtonClass}
+                menuItemsClass={postOptionsDropdownClass.menuItemsClass}
                 menuButton={menuButton}
-                menuItems={isUsersOwnPost(postUid) ? ownPostMenuItems : otherPostMenuItems}
+                menuItems={isUsersOwnPost(authorUid) ? ownPostMenuItems : otherPostMenuItems}
             />
             <Modal 
                 children={<ConfirmDeletePost/>}

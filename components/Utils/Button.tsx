@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface ToolbarButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     icon: any,
@@ -11,20 +11,21 @@ interface ToolbarButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 };
 
 const Button: React.FC<ToolbarButtonProps> = ({icon, keepText, text, addStyle, onClick, type }) => {
-    const isMobile = useMediaQuery('(max-width: 768px)')
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     return (
         <button
             type={type}
             onClick={onClick}
             className={"inline-flex " + addStyle}>
-            {icon} <a data-text={text} className="buttonText">{(keepText || !isMobile ) && text}</a>
+            {icon} <a data-text={(keepText || !isMobile ) ? text : null} className="buttonText">{(keepText || !isMobile ) && text}</a>
         </button>
         );
     };
 
 Button.defaultProps = {
     keepText: false,
+    isActive: false,
     text: '',
     addStyle: '',
     type: 'button'

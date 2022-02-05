@@ -2,6 +2,7 @@ import Reaact, { useState, useEffect } from 'react';
 import { Switch } from '@headlessui/react';
 import { Moon } from 'react-feather';
 import { useTheme } from 'next-themes';
+import { toggleThemeClass } from '../../styles/header';
 
 interface ToggleThemeProps {
     hasText: boolean
@@ -24,8 +25,7 @@ const ToggleTheme: React.FC<ToggleThemeProps> = ({ hasText }) => {
 
     return (
         <a 
-        className="inline-flex group-hover:text-black active:text-black dark:group-hover:text-neutralDark-50 
-        dark:active:text-neutralDark-50 cursor-pointer" 
+        className={toggleThemeClass.a} 
         onClick={handleChangeTheme}>
             {hasText && <><Moon className='mx-1'/> Night Mode</> }
             <Switch

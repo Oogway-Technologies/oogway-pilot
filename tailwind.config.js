@@ -2,6 +2,7 @@ module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./styles/*.js",
   ],
   darkMode: "class",
   theme: {
@@ -70,5 +71,6 @@ module.exports = {
   plugins: [
     require("tailwindcss-font-inter"),
     require("tailwindcss-aria-attributes"),
+    require("tailwind-scrollbar-hide"),
   ],
 };
