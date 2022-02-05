@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Button from "../../components/Utils/Button";
+import Button from "../Utils/Button";
 import Modal from "../Utils/Modal";
 import * as EmailValidator from "email-validator";
 
