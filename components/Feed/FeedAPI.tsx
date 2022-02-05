@@ -5,15 +5,20 @@ import { feedApiClass } from '../../styles/feed'
 
 const FeedAPI = ({ posts }) => {
   return (
-    <div className={feedApiClass.divOuter}>
-      <div className={feedApiClass.divInner}>
-        <FeedToolbar/>
+    <>
+        <div className={feedApiClass.toolbarDiv}>
+            <div className={feedApiClass.feedToolbar}>
+            <FeedToolbar/>
+            </div>
+        </div>
 
-
-        {/* Posts */}
-        <PostsAPI posts={posts} />
-      </div>
-    </div>
+        <div className={feedApiClass.innerDiv}>
+            {/* Posts */}
+            <div className={feedApiClass.contentDiv}>
+                <PostsAPI posts={posts} />
+            </div>
+        </div>
+    </>
   );
 }
 

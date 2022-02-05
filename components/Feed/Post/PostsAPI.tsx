@@ -11,7 +11,7 @@ function PostsAPI({ posts }) {
     );
 
     return (
-        <div className={postApiClass.div}>
+        <>
         {realtimePosts
             ? realtimePosts?.docs.map((post) => (
                 <PostCard
@@ -48,7 +48,7 @@ function PostsAPI({ posts }) {
                 isCommentThread={false}
                 />
             ))}
-        </div>
+        </>
     );
 }
 

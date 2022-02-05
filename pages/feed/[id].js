@@ -15,7 +15,7 @@ function Feed({ posts, profile }) {
   }
 
   return (
-    <div className="flex w-full justify-center">
+    <div className='flex flex-col w-full justify-center'>
       <Head>
         <title>Oogway | Social - Wisdom of the crowd</title>
       </Head>
