@@ -5,7 +5,7 @@ import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
 import ShowPW from "./assets/ShowPW";
 import HidePW from "./assets/HidePW";
-import { loginButtonStyle, cancelButtonStyle } from "../../styles/login";
+import { loginButtons, loginDivs, loginInputs } from "../../styles/login";
 
 export default function SignUpForm({ closeSignupModal }) {
   const [inputEmail, setInputEmail] = useState("");
@@ -42,17 +42,19 @@ export default function SignUpForm({ closeSignupModal }) {
 
   return (
     <div>
-      <ModalHeader>Sign Up</ModalHeader>
+      <div className={loginDivs.modalHeader}>Sign Up</div>
       <div>Create an account below.</div>
-      <InputHeader>Email</InputHeader>
-      <InputField
+      <div className={loginInputs.inputHeader}>Email</div>
+      <input
+        className={loginInputs.inputField}
         value={inputEmail}
         placeholder="Email"
         onChange={(e) => setInputEmail(e.target.value)}
       />
-      <InputHeader>Password</InputHeader>
+      <div className={loginInputs.inputHeader}>Password</div>
       <div className="relative">
-        <InputField
+        <input
+          className={loginInputs.inputField}
           type={showPassword ? "text" : "password"}
           value={inputPassword}
           placeholder="Password"
@@ -73,9 +75,10 @@ export default function SignUpForm({ closeSignupModal }) {
           )}
         </label>
       </div>
-      <InputHeader>Repeat Password</InputHeader>
+      <div className={loginInputs.inputHeader}>Repeat Password</div>
       <div className="relative">
-        <InputField
+        <input
+          className={loginInputs.inputField}
           type={showPassword ? "text" : "password"}
           value={inputPasswordRep}
           placeholder="Repeat Password"
@@ -96,67 +99,24 @@ export default function SignUpForm({ closeSignupModal }) {
           )}
         </label>
       </div>
-      <CustomSignIn>
+      <div className={loginDivs.customSignIn}>
         <Button
           onClick={closeSignupModal}
-          addStyle={cancelButtonStyle}
+          addStyle={loginButtons.cancelButtonStyle}
           text="Cancel"
         />
         <Button
           onClick={createAccount}
-          addStyle={loginButtonStyle}
+          addStyle={loginButtons.loginButtonStyle}
           text="Login"
         />
-      </CustomSignIn>
-      <InputHeader>
+      </div>
+      <div className={loginInputs.inputHeader}>
         Have an account?&nbsp;
-        <CustomLink onClick={(e) => e}>Login</CustomLink>
-      </InputHeader>
+        <div className={loginDivs.customLink} onClick={(e) => e}>
+          Login
+        </div>
+      </div>
     </div>
   );
 }
-
-const InputHeader = styled.div`
-  outline-width: 0;
-  padding: 2px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  font-size: 16px;
-  color: rgb(83, 83, 83);
-  margin-right: auto;
-  display: flex;
-`;
-
-const InputField = styled.input`
-  outline-width: 0;
-  padding: 2px;
-  margin-bottom: 5px;
-  border: 1px solid lightgray;
-  border-radius: 5px;
-  width: 550px;
-  height: 40px;
-`;
-
-const CustomSignIn = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 50px;
-`;
-
-const ModalHeader = styled.div`
-  padding-top: 10px;
-  padding-bottom: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-const CustomLink = styled.div`
-  font-size: 16px;
-  color: rgb(112, 65, 238);
-  cursor: pointer;
-  float: right;
-`;
