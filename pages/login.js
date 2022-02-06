@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Head from "next/head";
-import styled from "styled-components";
 import Modal from "../components/Utils/Modal";
 import LoginForm from "../components/Login/LoginForm";
 import { loginDivs } from "../styles/login";
@@ -27,7 +26,7 @@ function Login() {
       </div>
       <img
         className={loginDivs.logo}
-        src="https://cdn-icons-png.flaticon.com/512/2395/2395608.png"
+        src='https://cdn-icons-png.flaticon.com/512/2395/2395608.png'
       />
       <Modal
         children={<LoginForm closeModal={closeModal} />}
