@@ -1,13 +1,11 @@
 import { useState } from "react";
 import Head from "next/head";
-import styled from "styled-components";
 import firebase from "firebase/compat/app";
 import Button from "../Utils/Button";
 import Modal from "../Utils/Modal";
 import PWForm from "./PWForm";
 import SignupForm from "./SignupForm";
-import ShowPW from "./assets/ShowPW";
-import HidePW from "./assets/HidePW";
+import { UilEye, UilEyeSlash } from '@iconscout/react-unicons';
 import { loginButtons, loginDivs, loginInputs } from "../../styles/login";
 
 export default function LoginForm({ closeModal }) {
@@ -62,21 +60,19 @@ export default function LoginForm({ closeModal }) {
       <Head>
         <title>Login</title>
       </Head>
-      <div>
-        <button type="button" onClick={openModal}>
-          <div className={loginDivs.modalHeader}>Login</div>
-        </button>
-      </div>
+      <div className={loginDivs.modalHeader}>Login</div>
       <div className={loginDivs.signIn}>
         <div className={loginInputs.inputHeader}>Email</div>
-        <input
-          className={loginInputs.inputField}
-          value={inputEmail}
-          placeholder="Email"
-          onChange={(e) => setInputEmail(e.target.value)}
-        />
+        <div className={loginInputs.inputBorder}>
+            <input
+                className={loginInputs.inputField}
+                value={inputEmail}
+                placeholder="Email"
+                onChange={(e) => setInputEmail(e.target.value)}
+            />
+        </div>
         <div className={loginInputs.inputHeader}>Password</div>
-        <div className="relative">
+        <div className={loginInputs.inputBorder}>
           <input
             className={loginInputs.inputField}
             type={showPassword ? "text" : "password"}
@@ -84,20 +80,21 @@ export default function LoginForm({ closeModal }) {
             placeholder="Password"
             onChange={(e) => setInputPassword(e.target.value)}
           />
-          <label
-            onClick={() => setShowPassword(!showPassword)}
-            className="showPW"
-          >
-            {showPassword ? (
-              <div className="w-7">
-                <HidePW fill="currentColor" />
+              <div
+              className={loginInputs.eyeDiv}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                   {showPassword ? (
+                    <UilEyeSlash 
+                    className="cursor-pointer" 
+                    fill="currentColor"/> 
+                   ) : (
+                    <UilEye 
+                    className="cursor-pointer"
+                    fill="currentColor"
+                    />
+                   )}
               </div>
-            ) : (
-              <div className="w-7">
-                <ShowPW fill="currentColor" />
-              </div>
-            )}
-          </label>
         </div>
         <div className={loginDivs.customLink} onClick={openRecoveryPW}>
           Forgot your password?
@@ -107,11 +104,17 @@ export default function LoginForm({ closeModal }) {
             onClick={closeModal}
             addStyle={loginButtons.cancelButtonStyle}
             text="Cancel"
+            keepText={true}
+            icon={null}
+            type="button"
           />
           <Button
             onClick={LogIn}
             addStyle={loginButtons.loginButtonStyle}
             text="Login"
+            keepText={true}
+            icon={null}
+            type="submit"
           />
         </div>
       </div>
