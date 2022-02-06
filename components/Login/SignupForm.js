@@ -1,10 +1,8 @@
 import { useState } from "react";
-import styled from "styled-components";
 import Button from "../Utils/Button";
 import firebase from "firebase/compat/app";
 import * as EmailValidator from "email-validator";
-import ShowPW from "./assets/ShowPW";
-import HidePW from "./assets/HidePW";
+import { UilEye, UilEyeSlash } from "@iconscout/react-unicons";
 import { loginButtons, loginDivs, loginInputs } from "../../styles/login";
 
 export default function SignUpForm({ closeSignupModal }) {
@@ -45,70 +43,70 @@ export default function SignUpForm({ closeSignupModal }) {
       <div className={loginDivs.modalHeader}>Sign Up</div>
       <div>Create an account below.</div>
       <div className={loginInputs.inputHeader}>Email</div>
-      <input
-        className={loginInputs.inputField}
-        value={inputEmail}
-        placeholder="Email"
-        onChange={(e) => setInputEmail(e.target.value)}
-      />
+      <div className={loginInputs.inputBorder}>
+        <input
+          className={loginInputs.inputField}
+          value={inputEmail}
+          placeholder='Email'
+          onChange={(e) => setInputEmail(e.target.value)}
+        />
+      </div>
       <div className={loginInputs.inputHeader}>Password</div>
-      <div className="relative">
+      <div className={loginInputs.inputBorder}>
         <input
           className={loginInputs.inputField}
           type={showPassword ? "text" : "password"}
           value={inputPassword}
-          placeholder="Password"
+          placeholder='Password'
           onChange={(e) => setInputPassword(e.target.value)}
         />
-        <label
+        <div
+          className={loginInputs.eyeDiv}
           onClick={() => setShowPassword(!showPassword)}
-          className="showPW"
         >
           {showPassword ? (
-            <div className="w-7">
-              <HidePW fill="currentColor" />
-            </div>
+            <UilEyeSlash className='cursor-pointer' fill='currentColor' />
           ) : (
-            <div className="w-7">
-              <ShowPW fill="currentColor" />
-            </div>
+            <UilEye className='cursor-pointer' fill='currentColor' />
           )}
-        </label>
+        </div>
       </div>
       <div className={loginInputs.inputHeader}>Repeat Password</div>
-      <div className="relative">
+      <div className={loginInputs.inputBorder}>
         <input
           className={loginInputs.inputField}
           type={showPassword ? "text" : "password"}
           value={inputPasswordRep}
-          placeholder="Repeat Password"
+          placeholder='Repeat Password'
           onChange={(e) => setInputPasswordRep(e.target.value)}
         />
-        <label
+        <div
+          className={loginInputs.eyeDiv}
           onClick={() => setShowPassword(!showPassword)}
-          className="showPW"
         >
           {showPassword ? (
-            <div className="w-7">
-              <HidePW fill="currentColor" />
-            </div>
+            <UilEyeSlash className='cursor-pointer' fill='currentColor' />
           ) : (
-            <div className="w-7">
-              <ShowPW fill="currentColor" />
-            </div>
+            <UilEye className='cursor-pointer' fill='currentColor' />
           )}
-        </label>
+        </div>
       </div>
       <div className={loginDivs.customSignIn}>
         <Button
           onClick={closeSignupModal}
           addStyle={loginButtons.cancelButtonStyle}
-          text="Cancel"
+          text='Cancel'
+          keepText={true}
+          icon={null}
+          type='button'
         />
         <Button
           onClick={createAccount}
           addStyle={loginButtons.loginButtonStyle}
-          text="Login"
+          text='Login'
+          keepText={true}
+          icon={null}
+          type='submit'
         />
       </div>
       <div className={loginInputs.inputHeader}>

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import styled from "styled-components";
 import Button from "../Utils/Button";
 import Modal from "../Utils/Modal";
 import * as EmailValidator from "email-validator";
@@ -71,22 +70,30 @@ export default function PWForm({ closeModal }) {
         signed up with.
       </div>
       <div className={loginInputs.inputHeader}>Email</div>
-      <input
-        className={loginInputs.inputField}
-        value={recoverEmail}
-        placeholder="Email"
-        onChange={(e) => setRecoverEmail(e.target.value)}
-      />
+      <div className={loginInputs.inputBorder}>
+        <input
+          className={loginInputs.inputField}
+          value={recoverEmail}
+          placeholder='Email'
+          onChange={(e) => setRecoverEmail(e.target.value)}
+        />
+      </div>
       <div className={loginDivs.customSignIn}>
         <Button
           onClick={closeModal}
           addStyle={loginButtons.cancelButtonStyle}
-          text="Cancel"
+          text='Cancel'
+          keepText={true}
+          icon={null}
+          type='button'
         />
         <Button
           onClick={sendReset}
           addStyle={loginButtons.loginButtonStyle}
-          text="Send Link"
+          text='Send Link'
+          keepText={true}
+          icon={null}
+          type='submit'
         />
       </div>
       <Modal
