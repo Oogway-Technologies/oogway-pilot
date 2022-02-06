@@ -2,19 +2,17 @@ import { useState } from "react";
 import Head from "next/head";
 import styled from "styled-components";
 import firebase from "firebase/compat/app";
-import * as EmailValidator from "email-validator";
 import Button from "../Utils/Button";
 import Modal from "../Utils/Modal";
 import PWForm from "./PWForm";
 import SignupForm from "./SignupForm";
 import ShowPW from "./assets/ShowPW";
 import HidePW from "./assets/HidePW";
-import { loginButtonStyle, cancelButtonStyle } from "../../styles/login";
+import { loginButtons, loginDivs, loginInputs } from "../../styles/login";
 
 export default function LoginForm({ closeModal }) {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
-  const [inputPasswordRep, setInputPasswordRep] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [recoverPW, setRecoverPW] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
@@ -66,19 +64,21 @@ export default function LoginForm({ closeModal }) {
       </Head>
       <div>
         <button type="button" onClick={openModal}>
-          <ModalHeader>Login</ModalHeader>
+          <div className={loginDivs.modalHeader}>Login</div>
         </button>
       </div>
-      <SignIn>
-        <InputHeader>Email</InputHeader>
-        <InputField
+      <div className={loginDivs.signIn}>
+        <div className={loginInputs.inputHeader}>Email</div>
+        <input
+          className={loginInputs.inputField}
           value={inputEmail}
           placeholder="Email"
           onChange={(e) => setInputEmail(e.target.value)}
         />
-        <InputHeader>Password</InputHeader>
+        <div className={loginInputs.inputHeader}>Password</div>
         <div className="relative">
-          <InputField
+          <input
+            className={loginInputs.inputField}
             type={showPassword ? "text" : "password"}
             value={inputPassword}
             placeholder="Password"
@@ -99,20 +99,28 @@ export default function LoginForm({ closeModal }) {
             )}
           </label>
         </div>
-        <CustomLink onClick={openRecoveryPW}>Forgot your password?</CustomLink>
-        <CustomSignIn>
+        <div className={loginDivs.customLink} onClick={openRecoveryPW}>
+          Forgot your password?
+        </div>
+        <div className={loginDivs.customSignIn}>
           <Button
             onClick={closeModal}
-            addStyle={cancelButtonStyle}
+            addStyle={loginButtons.cancelButtonStyle}
             text="Cancel"
           />
-          <Button onClick={LogIn} addStyle={loginButtonStyle} text="Login" />
-        </CustomSignIn>
-      </SignIn>
-      <InputHeader>
+          <Button
+            onClick={LogIn}
+            addStyle={loginButtons.loginButtonStyle}
+            text="Login"
+          />
+        </div>
+      </div>
+      <div className={loginInputs.inputHeader}>
         Don't have an account?&nbsp;
-        <CustomLink onClick={openSignupModal}>Sign up</CustomLink>
-      </InputHeader>
+        <div className={loginDivs.customLink} onClick={openSignupModal}>
+          Sign up
+        </div>
+      </div>
       <Modal
         children={<PWForm closeModal={closeRecoveryPW} />}
         show={recoverPW}
@@ -126,55 +134,3 @@ export default function LoginForm({ closeModal }) {
     </div>
   );
 }
-
-const SignIn = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-  width: 100%;
-`;
-
-const InputHeader = styled.div`
-  outline-width: 0;
-  padding: 2px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  font-size: 16px;
-  color: rgb(83, 83, 83);
-  margin-right: auto;
-  display: flex;
-`;
-
-const InputField = styled.input`
-  outline-width: 0;
-  padding: 2px;
-  margin-bottom: 5px;
-  border: 1px solid lightgray;
-  border-radius: 5px;
-  width: 550px;
-  height: 40px;
-`;
-
-const CustomSignIn = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 50px;
-`;
-
-const ModalHeader = styled.div`
-  padding-top: 10px;
-  padding-bottom: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-const CustomLink = styled.div`
-  font-size: 16px;
-  color: rgb(112, 65, 238);
-  cursor: pointer;
-  float: right;
-`;
