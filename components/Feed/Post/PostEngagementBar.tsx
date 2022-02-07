@@ -7,6 +7,7 @@ import {auth, db} from '../../../firebase';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {useCollection} from "react-firebase-hooks/firestore";
 import {EngagementItems} from "../../../utils/types/global";
+import {getLikes} from "../../../utils/helpers/common";
 
 
 type PostEngagementBarProps = {
@@ -29,25 +30,10 @@ const PostEngagementBar = ({id}: PostEngagementBarProps) => {
     // function that will set the number of likes on
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
-        // Save ref for unsubscribing on delete
-        const unsubRef = db.collection("posts")
-            .doc(id)
-            .onSnapshot((snapshot) => {
-                if (snapshot.data()) {
-                    // Get the likes map
-                    const likesMap = snapshot && snapshot?.data()?.likes;
-
-                    // Count the entries that are True
-                    let ctr = 0;
-                    Object.values(likesMap).forEach((item) => {
-                        if (item) {
-                            ctr += 1;
-                        }
-                    });
-                    setNumLikes(ctr);
-                }
-            });
-        return () => unsubRef();
+        getLikes(id, setNumLikes)
+        return () => {
+            setNumLikes(0)
+        }
     }, [id]);
 
     // Track number of comments
@@ -91,12 +77,12 @@ const PostEngagementBar = ({id}: PostEngagementBarProps) => {
     const engagementItems: EngagementItems[] = [
         {
             icon: <UilComment/>,
-            text: `${commentsSnapshot ? commentsSnapshot.docs.length : "0"} Comments`,
+            text: commentsSnapshot ? `${commentsSnapshot?.docs.length === 1 ? `${commentsSnapshot.docs.length} Comment` : `${commentsSnapshot?.docs.length} Comments`}` : '0',
             onClick: enterComments
         },
         {
             icon: <UilThumbsUp/>,
-            text: `${numLikes > 0 ? numLikes : "0"} Like`,
+            text: `${numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`}`,
             onClick: addLike
         },
         // {
