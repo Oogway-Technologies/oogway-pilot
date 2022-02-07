@@ -1,6 +1,5 @@
 import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../../../firebase";
-import { postApiClass } from "../../../styles/feed";
 import PostCard from "./Post";
 
 
