@@ -6,8 +6,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
     "@headlessui/react": "^1.4.3",
     "@heroicons/react": "^1.0.5",
     "@iconscout/react-unicons": "^1.1.6",
@@ -30,7 +28,6 @@
     "recoil": "^0.5.2",
     "safe-json-stringify": "^1.2.0",
     "spinners-react": "^1.0.6",
-    "styled-components": "^5.3.3",
     "tailwind-scrollbar-hide": "^1.1.7",
     "unique-names-generator": "^4.6.0",
     "uuid": "^8.3.2"

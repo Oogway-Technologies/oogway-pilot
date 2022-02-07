@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import useTimeout from '../../hooks/useTimeout';
 import { UilExclamationTriangle } from '@iconscout/react-unicons';
 
-type FlashErrorMessageProps = {
+export type FlashErrorMessageProps = {
     message: string,
     ms: number,
-    style: string
+    style: string,
+    error: string | undefined
 };
 
 const FlashErrorMessage: React.FC<FlashErrorMessageProps> = ({ message, ms, style }) => {

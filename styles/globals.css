@@ -11,4 +11,15 @@
     visibility: hidden;
     font-weight: bold;
   }
+
+  .showPW {
+    content: "";
+    position: absolute;
+    left: 93%;
+    top: 12%;
+    bottom: 0;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
 }
