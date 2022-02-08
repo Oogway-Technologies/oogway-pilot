@@ -60,6 +60,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         setDm(!dm)
     }
 
+    // Database Hook functions
     const uploadProfileAndContinue = async () => {
         // Using Firebase v9+ which is nice and modular.
         // Steps:
@@ -90,91 +91,24 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             await uploadString(imageRef, imageToUpload, 'data_url').then(
                 async (snapshot) => {
                     // Get the download URL for the image
-                  const downloadURL = await getDownloadURL(imageRef, snapshot)
+                    const downloadURL = await getDownloadURL(imageRef, snapshot)
 
-                  // Update the original profile with the image url
-                  await updateDoc(doc(db, 'profiles', user.uid), { profilePic: downloadURL })
+                    // Update the original profile with the image url
+                    await updateDoc(doc(db, 'profiles', user.uid), {
+                        profilePic: downloadURL,
+                    })
 
-                  // Upadate the user's data as well
+                    // Upadate the user's data as well
                     await updateDoc(doc(db, 'users', user.uid), {
                         name: name.trim(),
                         username: username,
-                        photoUrl: downloadURL
+                        photoUrl: downloadURL,
                     })
                 }
             )
 
-            setImageToUpload(null)
-        }
-
-        // Close Modal
-        closeModal()
-    }
-
-    // Database Hook functions
-    const saveAndContinue = (e) => {
-        e.preventDefault()
-
-        // Upload profile pic
-        if (imageToUpload) {
-            // Push to storage
-            const uploadTask = storage
-                .ref(`profiles/${user.uid}`)
-                .putString(imageToUpload, 'data_url')
-
-            // Remove image preview
             handleRemoveImage()
-
-            // When the state changes, add the url to profile
-            uploadTask.on(
-                'state_change',
-                null,
-                (error) => console.error(error),
-                () => {
-                    // When the upload completes
-                    storage
-                        .ref('profiles')
-                        .child(userProfile.uid)
-                        .getDownloadURL()
-                        .then((url) => {
-                            // Add the url to the user Profile
-                            // TODO: State not updating, possibly because async
-                            setProfilePic(url)
-                        })
-                }
-            )
         }
-
-        // Update profile state according to refs and continue
-        const userProfile = {
-            ...profile,
-            username: username,
-            name: name,
-            lastName: last,
-            bio: bio,
-            location: location,
-            resetProfile: false,
-            profilePic: profilePic,
-            dm: dm,
-        }
-        console.log(userProfile)
-        createUserProfile(user.uid, userProfile)
-
-        // Update user
-        db.collection('users')
-            .doc(userProfile.uid)
-            .get()
-            .then((doc) => {
-                let name = userProfile.name + ' ' + userProfile.lastName
-                let tmp = doc.data()
-                tmp.name = name.trim()
-                tmp.username = userProfile.username
-                tmp.photoUrl = userProfile.profilePic
-                doc.ref.update(tmp)
-            })
-
-        // TODO: We should also be updating the auth user profile
-        // user.updateProfile({ ...}).then(())
 
         // Close Modal
         closeModal()
@@ -414,7 +348,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     type="button"
                 />
                 <Button
-                    onClick={saveAndContinue}
+                    onClick={uploadProfileAndContinue}
                     addStyle={loginButtons.loginButtonStyle}
                     text="Save"
                     keepText={true}
