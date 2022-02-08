@@ -52,6 +52,59 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         setDm(!dm)
     }
 
+    const uploadProfileAndContinue = async () => {
+        // Using Firebase v9+ which is nice and modular.
+        // Steps:
+        // 1) create a user profile and add to firestore 'profiles' collection
+        // 2) get the post ID for the newly created profile
+        // 3) upload the image to firebase storage with the profile ID as the file name
+        // 4) get the dowanload URL for the image and update the original post with image url
+        const docRef = await setDoc(doc(db, 'profiles', user.uid), {
+            username: username,
+            name: name,
+            lastName: last,
+            bio: bio,
+            location: location,
+            resetProfile: false,
+            profilePic: profilePic,
+            dm: dm,
+            // Timestamp not needed but cool to show how to use
+            // the new Firebase function serverTimestamp().
+            // Then who knows, maybe we need to know when the profile
+            // was created?
+            timestamp: serverTimestamp(),
+        })
+
+        // Upload the profile image in Firebase storage.
+        // Note: path to image is profiles/<profile_id>/image
+        if (imageToUpload) {
+            const imageRef = ref(storage, `profiles/${user.uid}/image`)
+            await uploadString(imageRef, imageToUpload, 'data_url').then(
+                async (snapshot) => {
+                    // Get the download URL for the image
+                    const downloadURL = await getDownloadURL(imageRef, snapshot)
+
+                    // Update the original profile with the image url
+                    await updateDoc(doc(db, 'profiles', user.uid), {
+                        profilePic: downloadURL,
+                    })
+
+                    // Upadate the user's data as well
+                    await updateDoc(doc(db, 'users', user.uid), {
+                        name: name.trim(),
+                        username: username,
+                        photoUrl: downloadURL,
+                    })
+                }
+            )
+
+            setImageToUpload(null)
+        }
+
+        // Close Modal
+        closeModal()
+    }
+
     // Database Hook functions
     const uploadProfileAndContinue = async () => {
         // Using Firebase v9+ which is nice and modular.
