@@ -1,11 +1,11 @@
-import React from 'react';
-import { commentEngagementBarClass, replyEngagementBarClass } from '../../../styles/feed';
+import React, {useEffect, useState} from 'react';
+import {commentEngagementBarClass, replyEngagementBarClass} from '../../../styles/feed';
 import Button from '../../Utils/Button';
-import needsHook from '../../../hooks/needsHook';
-import { UilThumbsUp, UilUpload, UilBookmark } from '@iconscout/react-unicons'
-import { auth, db } from '../../../firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
-
+import {UilThumbsUp} from '@iconscout/react-unicons'
+import {auth, db} from '../../../firebase';
+import {useAuthState} from 'react-firebase-hooks/auth';
+import {EngagementItems} from "../../../utils/types/global";
+import {getLikes} from "../../../utils/helpers/common";
 
 
 type ReplyEngagementBarProps = {
@@ -15,53 +15,61 @@ type ReplyEngagementBarProps = {
 };
 
 const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = (
-    { 
+    {
         postId,
         commentId,
         replyId
     }) => {
     const [user] = useAuthState(auth);
+    const [numLikes, setNumLikes] = useState(0);
+
+    useEffect(() => {
+        getLikes(postId, setNumLikes)
+        return () => {
+            setNumLikes(0)
+        }
+    }, [postId]);
 
     const addLike = (e) => {
         e.preventDefault(); // Don't think it is needed
         db.collection("posts")
-          .doc(postId)
-          .collection("comments")
-          .doc(commentId)
-          .collection("replies")
-          .doc(replyId)
-          .get()
-          .then((doc) => {
-            // Here goes the logic for toggling likes from each user
-            if (doc.exists) {
-              // Get a reference to the comment
-              let tmp = doc.data();
-    
-              // Step 1: check if user.uid is in the list
-              if (user.uid in tmp.likes) {
-                // Negate what the user previously did
-                tmp.likes[user.uid] = !tmp.likes[user.uid];
-              } else {
-                // The user liked the comment
-                tmp.likes[user.uid] = true;
-              }
-    
-              // Update comment.
-              // Note: a simple update here is fine.
-              // No need for a transaction, since even if a like is lost,
-              // That event is very rare and probably not so much of a pain
-              doc.ref.update(tmp);
-            } else {
-              console.log("Error comment not found: " + commentId);
-            }
-          });
-      };
+            .doc(postId)
+            .collection("comments")
+            .doc(commentId)
+            .collection("replies")
+            .doc(replyId)
+            .get()
+            .then((doc) => {
+                // Here goes the logic for toggling likes from each user
+                if (doc.exists) {
+                    // Get a reference to the comment
+                    let tmp = doc.data();
+
+                    // Step 1: check if user.uid is in the list
+                    if (user.uid in tmp.likes) {
+                        // Negate what the user previously did
+                        tmp.likes[user.uid] = !tmp.likes[user.uid];
+                    } else {
+                        // The user liked the comment
+                        tmp.likes[user.uid] = true;
+                    }
+
+                    // Update comment.
+                    // Note: a simple update here is fine.
+                    // No need for a transaction, since even if a like is lost,
+                    // That event is very rare and probably not so much of a pain
+                    doc.ref.update(tmp);
+                } else {
+                    console.log("Error comment not found: " + commentId);
+                }
+            });
+    };
 
     // Items
-    const engagementItems = [
+    const engagementItems: EngagementItems[] = [
         {
             icon: <UilThumbsUp/>,
-            text: 'Like',
+            text: `${numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`}`,
             onClick: addLike
         },
         // {
@@ -77,20 +85,20 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = (
     ]
 
     return <div className={replyEngagementBarClass.engagementBar}>
-                {
-                    engagementItems.map((item, idx) => (
-                        <Button
-                            key={idx}
-                            addStyle={commentEngagementBarClass.engagementButton}
-                            type='button'
-                            onClick={item.onClick}
-                            icon={item.icon}
-                            keepText={true}
-                            text={item.text}
-                        />
-                    ))
-                }
-        </div>
+        {
+            engagementItems.map((item, idx) => (
+                <Button
+                    key={idx}
+                    addStyle={commentEngagementBarClass.engagementButton}
+                    type='button'
+                    onClick={item.onClick}
+                    icon={item.icon}
+                    keepText={true}
+                    text={item.text}
+                />
+            ))
+        }
+    </div>
 };
 
 export default ReplyEngagementBar;
