@@ -37,16 +37,19 @@ function MyApp({ Component, pageProps }: AppProps) {
     const AuthState = () => {
         if (loading) return <Loading />
         else if (!user) return <Login />
-        else return <Component {...pageProps} />
+        else
+            return (
+                <Layout>
+                    <RecoilRoot>
+                        <Component {...pageProps} />
+                    </RecoilRoot>
+                </Layout>
+            )
     }
 
     return (
         <ThemeProvider attribute="class" enableSystem={true}>
-            <Layout>
-                <RecoilRoot>
-                    <AuthState />
-                </RecoilRoot>
-            </Layout>
+            <AuthState />
         </ThemeProvider>
     )
 }
