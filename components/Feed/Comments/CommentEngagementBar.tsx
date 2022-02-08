@@ -5,7 +5,7 @@ import {UilCornerUpLeftAlt, UilThumbsUp} from '@iconscout/react-unicons'
 import {auth, db} from '../../../firebase';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {EngagementItems} from "../../../utils/types/global";
-import {getLikes} from "../../../utils/helpers/common";
+import {getLikesForCommentEngagementBar} from "../../../utils/helpers/getLikesHelper";
 
 
 type CommentEngagementBarProps = {
@@ -20,11 +20,11 @@ const CommentEngagementBar = ({postId, commentId, handleReply, expanded}: Commen
     const [numLikes, setNumLikes] = useState(0);
 
     useEffect(() => {
-        getLikes(postId, setNumLikes)
+        getLikesForCommentEngagementBar(postId, commentId, setNumLikes)
         return () => {
             setNumLikes(0)
         }
-    }, [postId]);
+    }, [postId, commentId]);
 
     const addLike = (e) => {
         e.preventDefault(); // Don't think it is needed
