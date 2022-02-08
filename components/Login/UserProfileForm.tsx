@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useRef } from 'react'
 import { auth, db, storage } from '../../firebase'
-import { createUserProfile } from '../../lib/db'
 import {
     loginButtons,
     loginDivs,
@@ -14,6 +13,10 @@ import { Avatar, useMediaQuery } from '@mui/material'
 import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
 import { useAuthState } from 'react-firebase-hooks/auth'
+
+// Firebase
+import { setDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore'
+import { ref, getDownloadURL, uploadString } from '@firebase/storage'
 
 type UserProfileFormProps = {
     profile: firebase.firestore.DocumentData
@@ -49,43 +52,14 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         setDm(!dm)
     }
 
-    // Database Hook functions
-    const saveAndContinue = (e) => {
-        e.preventDefault()
-
-        // Upload profile pic
-        if (imageToUpload) {
-            // Push to storage
-            const uploadTask = storage
-                .ref(`profiles/${user.uid}`)
-                .putString(imageToUpload, 'data_url')
-
-            // Remove image preview
-            handleRemoveImage()
-
-            // When the state changes, add the url to profile
-            uploadTask.on(
-                'state_change',
-                null,
-                (error) => console.error(error),
-                () => {
-                    // When the upload completes
-                    storage
-                        .ref('profiles')
-                        .child(userProfile.uid)
-                        .getDownloadURL()
-                        .then((url) => {
-                            // Add the url to the user Profile
-                            // TODO: State not updating, possibly because async
-                            setProfilePic(url)
-                        })
-                }
-            )
-        }
-
-        // Update profile state according to refs and continue
-        const userProfile = {
-            ...profile,
+    const uploadProfileAndContinue = async () => {
+        // Using Firebase v9+ which is nice and modular.
+        // Steps:
+        // 1) create a user profile and add to firestore 'profiles' collection
+        // 2) get the post ID for the newly created profile
+        // 3) upload the image to firebase storage with the profile ID as the file name
+        // 4) get the dowanload URL for the image and update the original post with image url
+        const docRef = await setDoc(doc(db, 'profiles', user.uid), {
             username: username,
             name: name,
             lastName: last,
@@ -94,25 +68,92 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             resetProfile: false,
             profilePic: profilePic,
             dm: dm,
+            // Timestamp not needed but cool to show how to use
+            // the new Firebase function serverTimestamp().
+            // Then who knows, maybe we need to know when the profile
+            // was created?
+            timestamp: serverTimestamp(),
+        })
+
+        // Upload the profile image in Firebase storage.
+        // Note: path to image is profiles/<profile_id>/image
+        if (imageToUpload) {
+            const imageRef = ref(storage, `profiles/${user.uid}/image`)
+            await uploadString(imageRef, imageToUpload, 'data_url').then(
+                async (snapshot) => {
+                    // Get the download URL for the image
+                    const downloadURL = await getDownloadURL(imageRef, snapshot)
+
+                    // Update the original profile with the image url
+                    await updateDoc(doc(db, 'profiles', user.uid), {
+                        profilePic: downloadURL,
+                    })
+
+                    // Upadate the user's data as well
+                    await updateDoc(doc(db, 'users', user.uid), {
+                        name: name.trim(),
+                        username: username,
+                        photoUrl: downloadURL,
+                    })
+                }
+            )
+
+            setImageToUpload(null)
         }
-        console.log(userProfile)
-        createUserProfile(user.uid, userProfile)
 
-        // Update user
-        db.collection('users')
-            .doc(userProfile.uid)
-            .get()
-            .then((doc) => {
-                let name = userProfile.name + ' ' + userProfile.lastName
-                let tmp = doc.data()
-                tmp.name = name.trim()
-                tmp.username = userProfile.username
-                tmp.photoUrl = userProfile.profilePic
-                doc.ref.update(tmp)
-            })
+        // Close Modal
+        closeModal()
+    }
 
-        // TODO: We should also be updating the auth user profile
-        // user.updateProfile({ ...}).then(())
+    // Database Hook functions
+    const uploadProfileAndContinue = async () => {
+        // Using Firebase v9+ which is nice and modular.
+        // Steps:
+        // 1) create a user profile and add to firestore 'profiles' collection
+        // 2) get the post ID for the newly created profile
+        // 3) upload the image to firebase storage with the profile ID as the file name
+        // 4) get the dowanload URL for the image and update the original post with image url
+        const docRef = await setDoc(doc(db, 'profiles', user.uid), {
+            username: username,
+            name: name,
+            lastName: last,
+            bio: bio,
+            location: location,
+            resetProfile: false,
+            profilePic: profilePic,
+            dm: dm,
+            // Timestamp not needed but cool to show how to use
+            // the new Firebase function serverTimestamp().
+            // Then who knows, maybe we need to know when the profile
+            // was created?
+            timestamp: serverTimestamp(),
+        })
+
+        // Upload the profile image in Firebase storage.
+        // Note: path to image is profiles/<profile_id>/image
+        if (imageToUpload) {
+            const imageRef = ref(storage, `profiles/${user.uid}/image`)
+            await uploadString(imageRef, imageToUpload, 'data_url').then(
+                async (snapshot) => {
+                    // Get the download URL for the image
+                    const downloadURL = await getDownloadURL(imageRef, snapshot)
+
+                    // Update the original profile with the image url
+                    await updateDoc(doc(db, 'profiles', user.uid), {
+                        profilePic: downloadURL,
+                    })
+
+                    // Upadate the user's data as well
+                    await updateDoc(doc(db, 'users', user.uid), {
+                        name: name.trim(),
+                        username: username,
+                        photoUrl: downloadURL,
+                    })
+                }
+            )
+
+            handleRemoveImage()
+        }
 
         // Close Modal
         closeModal()
@@ -147,8 +188,8 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
-        reader.onload = (readerEvent) => {
-            setImageToUpload(readerEvent.target.result)
+        reader.onload = (readEvent) => {
+            setImageToUpload(readEvent.target.result)
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice
@@ -352,7 +393,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     type="button"
                 />
                 <Button
-                    onClick={saveAndContinue}
+                    onClick={uploadProfileAndContinue}
                     addStyle={loginButtons.loginButtonStyle}
                     text="Save"
                     keepText={true}
