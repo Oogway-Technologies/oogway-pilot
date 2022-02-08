@@ -1,22 +1,17 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useState, useRef } from 'react'
-import { auth, db, storage } from '../../firebase'
-import {
-    loginButtons,
-    loginDivs,
-    loginImages,
-    loginInputs,
-} from '../../styles/login'
+import {useRouter} from 'next/router'
+import {useRef, useState} from 'react'
+import {auth, db, storage} from '../../firebase'
+import {loginButtons, loginDivs, loginImages, loginInputs,} from '../../styles/login'
 import Button from '../Utils/Button'
-import { Avatar, useMediaQuery } from '@mui/material'
-import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
+import {Avatar, useMediaQuery} from '@mui/material'
+import {UilImagePlus, UilTrashAlt} from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import {useAuthState} from 'react-firebase-hooks/auth'
 
 // Firebase
-import { setDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore'
-import { ref, getDownloadURL, uploadString } from '@firebase/storage'
+import {doc, serverTimestamp, setDoc, updateDoc} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
 
 type UserProfileFormProps = {
     profile: firebase.firestore.DocumentData
@@ -24,9 +19,9 @@ type UserProfileFormProps = {
 }
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({
-    profile,
-    closeModal,
-}) => {
+                                                             profile,
+                                                             closeModal,
+                                                         }) => {
     // User state
     const [user] = useAuthState(auth)
 
@@ -105,60 +100,6 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         closeModal()
     }
 
-    // Database Hook functions
-    const uploadProfileAndContinue = async () => {
-        // Using Firebase v9+ which is nice and modular.
-        // Steps:
-        // 1) create a user profile and add to firestore 'profiles' collection
-        // 2) get the post ID for the newly created profile
-        // 3) upload the image to firebase storage with the profile ID as the file name
-        // 4) get the dowanload URL for the image and update the original post with image url
-        const docRef = await setDoc(doc(db, 'profiles', user.uid), {
-            username: username,
-            name: name,
-            lastName: last,
-            bio: bio,
-            location: location,
-            resetProfile: false,
-            profilePic: profilePic,
-            dm: dm,
-            // Timestamp not needed but cool to show how to use
-            // the new Firebase function serverTimestamp().
-            // Then who knows, maybe we need to know when the profile
-            // was created?
-            timestamp: serverTimestamp(),
-        })
-
-        // Upload the profile image in Firebase storage.
-        // Note: path to image is profiles/<profile_id>/image
-        if (imageToUpload) {
-            const imageRef = ref(storage, `profiles/${user.uid}/image`)
-            await uploadString(imageRef, imageToUpload, 'data_url').then(
-                async (snapshot) => {
-                    // Get the download URL for the image
-                    const downloadURL = await getDownloadURL(imageRef, snapshot)
-
-                    // Update the original profile with the image url
-                    await updateDoc(doc(db, 'profiles', user.uid), {
-                        profilePic: downloadURL,
-                    })
-
-                    // Upadate the user's data as well
-                    await updateDoc(doc(db, 'users', user.uid), {
-                        name: name.trim(),
-                        username: username,
-                        photoUrl: downloadURL,
-                    })
-                }
-            )
-
-            handleRemoveImage()
-        }
-
-        // Close Modal
-        closeModal()
-    }
-
     const cancelAndContinue = (e) => {
         e.preventDefault()
 
@@ -224,7 +165,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         } else {
             size = 150
         }
-        return { width: size, height: size }
+        return {width: size, height: size}
     }
 
     return (
@@ -252,7 +193,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             className={loginButtons.uploadImage}
                             onClick={() => profilePicRef.current.click()}
                         >
-                            <UilImagePlus />
+                            <UilImagePlus/>
                             <span>Upload Image</span>
                             <input
                                 ref={profilePicRef}
@@ -274,7 +215,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             disabled={!imageToUpload}
                             onClick={handleRemoveImage}
                         >
-                            <UilTrashAlt />
+                            <UilTrashAlt/>
                             <span>Remove Image</span>
                         </button>
                     </div>
