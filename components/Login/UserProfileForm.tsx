@@ -15,7 +15,7 @@ import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 // Firebase
-import { setDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore'
+import { setDoc, updateDoc, doc } from 'firebase/firestore'
 import { ref, getDownloadURL, uploadString } from '@firebase/storage'
 
 type UserProfileFormProps = {
@@ -69,11 +69,6 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
             resetProfile: false,
             profilePic: profilePic,
             dm: dm,
-            // Timestamp not needed but cool to show how to use
-            // the new Firebase function serverTimestamp().
-            // Then who knows, maybe we need to know when the profile
-            // was created?
-            timestamp: serverTimestamp(),
         })
 
         // Upload the profile image in Firebase storage.
