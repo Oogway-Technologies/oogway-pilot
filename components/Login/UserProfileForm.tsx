@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useRef } from 'react'
 import { auth, db, storage } from '../../firebase'
-import { createUserProfile } from '../../lib/db'
 import {
     loginButtons,
     loginDivs,
@@ -16,14 +15,7 @@ import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 // Firebase
-import {
-    addDoc,
-    collection,
-    setDoc,
-    serverTimestamp,
-    updateDoc,
-    doc,
-} from 'firebase/firestore'
+import { setDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore'
 import { ref, getDownloadURL, uploadString } from '@firebase/storage'
 
 type UserProfileFormProps = {
