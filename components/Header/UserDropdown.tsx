@@ -1,28 +1,40 @@
 import React from 'react'
 import { Avatar } from '@mui/material'
-import SettingsButton from './SettingsButton';
-import ToggleTheme from './ToggleTheme';
-import LogoutButton from './LogoutButton';
-import DropdownMenu from '../Utils/DropdownMenu';
+import SettingsButton from './SettingsButton'
+import ToggleTheme from './ToggleTheme'
+import LogoutButton from './LogoutButton'
+import DropdownMenu from '../Utils/DropdownMenu'
 import { userDropdownClass } from '../../styles/header'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth, db } from '../../firebase'
+import { doc } from 'firebase/firestore'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
 
 const UserDropdown: React.FC = () => {
+    const [user] = useAuthState(auth)
+    const userData = useDocumentData(doc(db, 'users', user.uid))
+
     // Dropdown menu props
-    const menuButton = <Avatar
-        className={userDropdownClass.avatar}
-        src={"https://cdn-icons-png.flaticon.com/512/2395/2395608.png"}/>
+    const menuButton = (
+        <Avatar
+            className={userDropdownClass.avatar}
+            src={userData?.photoUrl ? userData?.photoUrl : null}
+        />
+    )
     const menuItems = [
-        <SettingsButton hasText={true}/>,
-        <LogoutButton hasText={true}/>,
-        <ToggleTheme hasText={true}/>
+        <SettingsButton hasText={true} />,
+        <LogoutButton hasText={true} />,
+        <ToggleTheme hasText={true} />,
     ]
 
-    return <DropdownMenu 
-                menuButtonClass={userDropdownClass.menuButtonClass}
-                menuItemsClass={userDropdownClass.menuItemsClass}
-                menuButton={menuButton}
-                menuItems={menuItems}
-            />
+    return (
+        <DropdownMenu
+            menuButtonClass={userDropdownClass.menuButtonClass}
+            menuItemsClass={userDropdownClass.menuItemsClass}
+            menuButton={menuButton}
+            menuItems={menuItems}
+        />
+    )
 }
 
 export default UserDropdown
