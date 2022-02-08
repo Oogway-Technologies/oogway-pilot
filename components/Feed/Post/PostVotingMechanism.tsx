@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '../../../firebase';
-import { postCardClass } from '../../../styles/feed';
-import { UilCircle, UilCheckCircle } from '@iconscout/react-unicons';
+import React, {useEffect, useState} from 'react';
+import {useAuthState} from 'react-firebase-hooks/auth';
+import {auth, db} from '../../../firebase';
+import {postCardClass} from '../../../styles/feed';
+import {UilCheckCircle, UilCircle} from '@iconscout/react-unicons';
 
 type PostVotingMechanismProps = {
     id: string,
-    compareData: Array<T>, 
+    compareData: Array<T>,
     votesList: Array<T>
 };
 
 const PostVotingMechanism = ({id, compareData, votesList}: PostVotingMechanismProps) => {
     const [user] = useAuthState(auth);
-     
+
     // Track voting button state
     const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle/>);
     const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle/>);
-    
+
     // Initialize correct voting button state
     const updateVoteButton = (idx) => {
         // Exit early if the index doesn't map to left (0)/ right (1)
@@ -31,16 +31,16 @@ const PostVotingMechanism = ({id, compareData, votesList}: PostVotingMechanismPr
             setVoteButtonLeft(<UilCircle/>)
         }
     }
-    
+
     useEffect(() => {
         db.collection("posts")
             .doc(id)
             .onSnapshot((snapshot) => {
                 const postData = snapshot.data();
                 if (postData) { // prevent error on compare post deletion
-                                // Probably not a permanent fix, may want to 
-                                // look at listening only for changes in the children elements
-                                // to avoid issues during post deletion
+                    // Probably not a permanent fix, may want to
+                    // look at listening only for changes in the children elements
+                    // to avoid issues during post deletion
                     // Only gets mounted when post isCompare so we don't need to worry
                     // that postData.compare does not exist
                     for (var i = 0; i < postData.compare.votesObjMapList.length; i++) {
@@ -86,16 +86,15 @@ const PostVotingMechanism = ({id, compareData, votesList}: PostVotingMechanismPr
     };
 
 
-
     return (
         <div className={postCardClass.voteDiv}>
-        {
-            compareData.map(
-                (obj, idx) => {
-                    return <div key={idx} className={postCardClass.voteContainer}>
+            {
+                compareData.map(
+                    (obj, idx) => {
+                        return <div key={idx} className={postCardClass.voteContainer}>
                             {obj.type == 'image' ? (
-                                <img 
-                                    className={postCardClass.imageVote} 
+                                <img
+                                    className={postCardClass.imageVote}
                                     src={obj.value}
                                     onClick={() => {
                                         voteOnImage(idx);
@@ -114,22 +113,24 @@ const PostVotingMechanism = ({id, compareData, votesList}: PostVotingMechanismPr
                                     {obj.value}
                                 </p>
                             )}
-                            <button
-                                className={postCardClass.voteButton}
-                                onClick={() => {
-                                    voteOnImage(idx);
-                                    updateVoteButton(idx);
-                                }}
-                            >
-                                {(idx == 0) ? voteButtonLeft : voteButtonRight }
-                            </button>
-                            <p className={postCardClass.voteCounter}>
-                                {votesList[idx]} {(votesList[idx] == 1) ? 'vote' : 'votes'}
-                            </p> 
-                        </div> 
-                }
-            )
-        }
+                            <div className={postCardClass.voteButtonContainer}>
+                                <button
+                                    className={postCardClass.voteButton}
+                                    onClick={() => {
+                                        voteOnImage(idx);
+                                        updateVoteButton(idx);
+                                    }}
+                                >
+                                    {(idx == 0) ? voteButtonLeft : voteButtonRight}
+                                </button>
+                                <p className={postCardClass.voteCounter}>
+                                    {votesList[idx]} {(votesList[idx] == 1) ? 'vote' : 'votes'}
+                                </p>
+                            </div>
+                        </div>
+                    }
+                )
+            }
         </div>
     );
 };
