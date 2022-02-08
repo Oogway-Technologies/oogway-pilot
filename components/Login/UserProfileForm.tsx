@@ -1,17 +1,22 @@
 import Head from 'next/head'
-import {useRouter} from 'next/router'
-import {useRef, useState} from 'react'
-import {auth, db, storage} from '../../firebase'
-import {loginButtons, loginDivs, loginImages, loginInputs,} from '../../styles/login'
+import { useRouter } from 'next/router'
+import { useState, useRef } from 'react'
+import { auth, db, storage } from '../../firebase'
+import {
+    loginButtons,
+    loginDivs,
+    loginImages,
+    loginInputs,
+} from '../../styles/login'
 import Button from '../Utils/Button'
-import {Avatar, useMediaQuery} from '@mui/material'
-import {UilImagePlus, UilTrashAlt} from '@iconscout/react-unicons'
+import { Avatar, useMediaQuery } from '@mui/material'
+import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
-import {useAuthState} from 'react-firebase-hooks/auth'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 // Firebase
-import {doc, serverTimestamp, setDoc, updateDoc} from 'firebase/firestore'
-import {getDownloadURL, ref, uploadString} from '@firebase/storage'
+import { setDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore'
+import { ref, getDownloadURL, uploadString } from '@firebase/storage'
 
 type UserProfileFormProps = {
     profile: firebase.firestore.DocumentData
@@ -19,9 +24,9 @@ type UserProfileFormProps = {
 }
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({
-                                                             profile,
-                                                             closeModal,
-                                                         }) => {
+    profile,
+    closeModal,
+}) => {
     // User state
     const [user] = useAuthState(auth)
 
@@ -47,6 +52,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         setDm(!dm)
     }
 
+    // Database Hook functions
     const uploadProfileAndContinue = async () => {
         // Using Firebase v9+ which is nice and modular.
         // Steps:
@@ -93,7 +99,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 }
             )
 
-            setImageToUpload(null)
+            handleRemoveImage()
         }
 
         // Close Modal
@@ -165,7 +171,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         } else {
             size = 150
         }
-        return {width: size, height: size}
+        return { width: size, height: size }
     }
 
     return (
@@ -193,7 +199,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             className={loginButtons.uploadImage}
                             onClick={() => profilePicRef.current.click()}
                         >
-                            <UilImagePlus/>
+                            <UilImagePlus />
                             <span>Upload Image</span>
                             <input
                                 ref={profilePicRef}
@@ -215,7 +221,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             disabled={!imageToUpload}
                             onClick={handleRemoveImage}
                         >
-                            <UilTrashAlt/>
+                            <UilTrashAlt />
                             <span>Remove Image</span>
                         </button>
                     </div>
