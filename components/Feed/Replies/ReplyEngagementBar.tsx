@@ -5,7 +5,7 @@ import {UilThumbsUp} from '@iconscout/react-unicons'
 import {auth, db} from '../../../firebase';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {EngagementItems} from "../../../utils/types/global";
-import {getLikes} from "../../../utils/helpers/common";
+import {getLikesForReplyEngagementBar} from "../../../utils/helpers/getLikesHelper";
 
 
 type ReplyEngagementBarProps = {
@@ -24,11 +24,11 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = (
     const [numLikes, setNumLikes] = useState(0);
 
     useEffect(() => {
-        getLikes(postId, setNumLikes)
+        getLikesForReplyEngagementBar(postId, commentId, replyId, setNumLikes)
         return () => {
             setNumLikes(0)
         }
-    }, [postId]);
+    }, [postId, commentId, replyId]);
 
     const addLike = (e) => {
         e.preventDefault(); // Don't think it is needed

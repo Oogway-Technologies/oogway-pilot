@@ -7,7 +7,7 @@ import {auth, db} from '../../../firebase';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {useCollection} from "react-firebase-hooks/firestore";
 import {EngagementItems} from "../../../utils/types/global";
-import {getLikes} from "../../../utils/helpers/common";
+import {getLikes} from "../../../utils/helpers/getLikesHelper";
 
 
 type PostEngagementBarProps = {
