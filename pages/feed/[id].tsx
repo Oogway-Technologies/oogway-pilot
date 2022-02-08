@@ -26,7 +26,12 @@ function Feed({ posts, profile }) {
                 <FeedAPI posts={posts} />
             </div>
             <Modal
-                children={<UserProfileForm closeModal={closeModal} />}
+                children={
+                    <UserProfileForm
+                        profile={profile}
+                        closeModal={closeModal}
+                    />
+                }
                 show={showModal}
                 onClose={closeModal}
             />

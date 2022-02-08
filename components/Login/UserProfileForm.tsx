@@ -1,9 +1,7 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useState, useRef } from 'react'
 import { auth, db, storage } from '../../firebase'
-import useUserProfile from '../../hooks/useUserProfile'
 import { createUserProfile } from '../../lib/db'
 import {
     loginButtons,
@@ -13,44 +11,42 @@ import {
 } from '../../styles/login'
 import Button from '../Utils/Button'
 import { Avatar, useMediaQuery } from '@mui/material'
-import {
-    UilUserCircle,
-    UilImagePlus,
-    UilTrashAlt,
-} from '@iconscout/react-unicons'
+import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 type UserProfileFormProps = {
+    profile: firebase.firestore.DocumentData
     closeModal: () => void
 }
 
-const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
+const UserProfileForm: React.FC<UserProfileFormProps> = ({
+    profile,
+    closeModal,
+}) => {
     // User state
     const [user] = useAuthState(auth)
-    const [userProfile, setUserProfile] = useUserProfile(user.uid)
 
-    // Picture statee
+    // Form state
+    const [dm, setDm] = useState(profile.allowDM || false)
+    const [username, setUsername] = useState(profile.username || '')
+    const [name, setName] = useState('')
+    const [last, setLast] = useState('')
+    const [location, setLocation] = useState('')
+    const [bio, setBio] = useState('')
+    const [profilePic, setProfilePic] = useState('')
+
+    // Picture state
+    const profilePicRef = useRef(null)
     const [imageToUpload, setImageToUpload] = useState(null)
     const [targetEvent, setTargetEvent] = useState(null)
-
-    // Form refs
-    const nameRef = useRef(null)
-    const lastNameRef = useRef(null)
-    const locationRef = useRef(null)
-    const profilePicRef = useRef(null)
-    const bioRef = useRef(null)
-    const usernameRef = useRef(null)
 
     // Router
     const router = useRouter()
 
     // Handler functions
     const toggleDM = () => {
-        setUserProfile({
-            ...userProfile,
-            dm: !userProfile.dm,
-        })
+        setDm(!dm)
     }
 
     // Database Hook functions
@@ -61,7 +57,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
         if (imageToUpload) {
             // Push to storage
             const uploadTask = storage
-                .ref(`profiles/${userProfile.uid}`)
+                .ref(`profiles/${user.uid}`)
                 .putString(imageToUpload, 'data_url')
 
             // Remove image preview
@@ -73,36 +69,43 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                 null,
                 (error) => console.error(error),
                 () => {
-                    // When the upload comples
+                    // When the upload completes
                     storage
                         .ref('profiles')
                         .child(userProfile.uid)
                         .getDownloadURL()
                         .then((url) => {
                             // Add the url to the user Profile
-                            setUserProfile({
-                                ...userProfile,
-                                profilePic: url,
-                            })
+                            // TODO: State not updating, possibly because async
+                            setProfilePic(url)
                         })
                 }
             )
         }
 
         // Update profile state according to refs and continue
-        createUserProfile(userProfile.uid, userProfile) // Worked fine on SignUpForm but won't update now
+        const userProfile = {
+            ...profile,
+            username: username,
+            name: name,
+            lastName: last,
+            bio: bio,
+            location: location,
+            resetProfile: false,
+            profilePic: profilePic,
+            dm: dm,
+        }
+        console.log(userProfile)
+        createUserProfile(user.uid, userProfile)
 
         // Update user
         db.collection('users')
             .doc(userProfile.uid)
             .get()
             .then((doc) => {
+                let name = userProfile.name + ' ' + userProfile.lastName
                 let tmp = doc.data()
-                tmp.name =
-                    userProfile.name +
-                    (userProfile.name && userProfile.lastName
-                        ? ' '
-                        : '' + userProfile.lastName)
+                tmp.name = name.trim()
                 tmp.username = userProfile.username
                 tmp.photoUrl = userProfile.profilePic
                 doc.ref.update(tmp)
@@ -244,8 +247,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                     <div className="flex-col">
                         <div className={loginInputs.inputBorder}>
                             <input
-                                ref={nameRef}
-                                defaultValue={userProfile.name || ''}
+                                onChange={(e) => {
+                                    setName(e.target.value)
+                                }}
+                                defaultValue={profile.name || ''}
                                 className={loginInputs.inputField}
                                 placeholder="First name"
                                 type="text"
@@ -264,8 +269,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                     <div className="flex-col">
                         <div className={loginInputs.inputBorder}>
                             <input
-                                ref={lastNameRef}
-                                defaultValue={userProfile.lastName || ''}
+                                onChange={(e) => {
+                                    setLast(e.target.value)
+                                }}
+                                defaultValue={profile.lastName || ''}
                                 className={loginInputs.inputField}
                                 placeholder="Last name"
                                 type="text"
@@ -286,10 +293,12 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                 <div className={loginInputs.inputHeader}>Username</div>
                 <div className={loginInputs.inputBorder}>
                     <input
-                        ref={usernameRef}
-                        defaultValue={userProfile.username || ''}
+                        onChange={(e) => {
+                            setUsername(e.target.value)
+                        }}
+                        defaultValue={profile.username || ''}
                         className={loginInputs.inputField}
-                        placeholder={userProfile.username}
+                        placeholder="a_cool_username"
                         type="text"
                     />
                 </div>
@@ -297,8 +306,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                 <div className={loginInputs.inputHeader}>Location</div>
                 <div className={loginInputs.inputBorder}>
                     <input
-                        ref={locationRef}
-                        defaultValue={userProfile.location || ''}
+                        onChange={(e) => {
+                            setLocation(e.target.value)
+                        }}
+                        defaultValue={profile.location || ''}
                         className={loginInputs.inputField}
                         placeholder="Country"
                         type="text"
@@ -308,8 +319,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                 <div className={loginInputs.inputHeader}>Bio</div>
                 <div className={loginInputs.inputBorder}>
                     <input
-                        ref={bioRef}
-                        defaultValue={userProfile.bio || ''}
+                        onChange={(e) => {
+                            setBio(e.target.value)
+                        }}
+                        defaultValue={profile.bio || ''}
                         className={loginInputs.inputField}
                         placeholder="About me..."
                         type="text"
@@ -320,7 +333,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                     <input
                         type="checkbox"
                         className={loginButtons.checkbox}
-                        checked={userProfile.dm || false}
+                        checked={profile.dm || false}
                         onChange={toggleDM}
                     />
                     <div>Allow other users to send me a Direct Message</div>
