@@ -1,25 +1,24 @@
-import { FC, useEffect, useRef, useState } from 'react'
+// @ts-ignore
+import {UilExclamationTriangle, UilEye, UilEyeSlash,} from '@iconscout/react-unicons'
 
+import {FC, MouseEvent, useEffect, useMemo, useRef, useState} from 'react'
 // JSX and Styles
 import Button from '../Utils/Button'
-import {
-    UilEye,
-    UilEyeSlash,
-    UilExclamationTriangle,
-} from '@iconscout/react-unicons'
-import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
+import {loginButtons, loginDivs, loginInputs} from '../../styles/login'
 
 // Form
 import * as EmailValidator from 'email-validator'
-import { useForm } from 'react-hook-form'
-import { FlashErrorMessageProps } from '../Utils/FlashErrorMessage'
-import useTimeout from '../../hooks/useTimeout'
+import {useForm} from 'react-hook-form'
 
 // db
 import firebase from 'firebase/compat/app'
-import { useRouter } from 'next/router'
-import { createUserProfile } from '../../lib/db'
-import { getRandomProfilePic, getRandomUsername } from '../../lib/user'
+import {useRouter} from 'next/router'
+import {createUserProfile} from '../../lib/db'
+import {getRandomProfilePic, getRandomUsername} from '../../lib/user'
+import FlashErrorMessage from "../Utils/FlashErrorMessage";
+import Modal from "../Utils/Modal";
+import PrivacyPolicy from "./PrivacyPolicy";
+import TermsConditions from "./TermsConditions";
 
 type SignUpFormProps = {
     goToLogin: () => void
@@ -28,94 +27,69 @@ type SignUpFormProps = {
 }
 
 const SignUpForm: FC<SignUpFormProps> = ({
-    goToLogin,
-    goToProfile,
-    closeModal,
-}) => {
+                                             goToLogin,
+                                             goToProfile,
+                                             closeModal,
+                                         }) => {
     // Router
     const router = useRouter()
 
     // Form management
-    const inputEmailRef = useRef(null)
-    const inputPasswordRef = useRef(null)
-    const inputPasswordRepRef = useRef(null)
+    const inputEmailRef = useRef<HTMLInputElement>(null)
+    const inputPasswordRef = useRef<HTMLInputElement>(null)
+    const inputPasswordRepRef = useRef<HTMLInputElement>(null)
     const [showPassword, setShowPassword] = useState(false)
     const [showPasswordRep, setShowPasswordRep] = useState(false)
+    const [isPrivacyModal, setIsPrivacyModal] = useState(false);
+    const [isTerm, setIsTerm] = useState(false);
+
     const {
         register,
         setError,
         clearErrors,
-        formState: { errors },
+        formState: {errors},
     } = useForm()
     const warningTime = 3000 // set warning to flash for 3 sec
     // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
     useEffect(() => {
-        register('email', { required: true })
+        register('email', {required: true})
     }, [])
     useEffect(() => {
-        register('password', { required: true })
+        register('password', {required: true})
     }, [])
     useEffect(() => {
-        register('passwordRep', { required: true })
+        register('passwordRep', {required: true})
     }, [])
     useEffect(() => {
-        register('match', { required: true })
+        register('match', {required: true})
     }, [])
 
-    const FlashErrorMessage: FC<FlashErrorMessageProps> = ({
-        message,
-        ms,
-        style,
-        error,
-    }) => {
-        // Tracks how long a form warning message has been displayed
-        const [warningHasElapsed, setWarningHasElapsed] = useState(false)
-
-        useTimeout(() => {
-            setWarningHasElapsed(true)
-        }, ms)
-
-        // If show is false the component will return null and stop here
-        if (warningHasElapsed) {
-            if (error) {
-                clearErrors(error)
-            }
-            return null
-        }
-
-        // Otherwise, return warning
-        return (
-            <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4" /> {message}
-            </span>
-        )
-    }
 
     // Database hook to create account
     const createAccount = () => {
-        if (!inputEmailRef.current.value) {
+        if (!inputEmailRef?.current?.value) {
             setError(
                 'email',
-                { type: 'required', message: 'Missing email.' },
-                { shouldFocus: true }
+                {type: 'required', message: 'Missing email.'},
+                {shouldFocus: true}
             )
             return false
         }
 
-        if (!inputPasswordRef.current.value) {
+        if (!inputPasswordRef?.current?.value) {
             setError(
                 'password',
-                { type: 'required', message: 'Missing password.' },
-                { shouldFocus: true }
+                {type: 'required', message: 'Missing password.'},
+                {shouldFocus: true}
             )
             return false
         }
 
-        if (!inputPasswordRepRef.current.value) {
+        if (!inputPasswordRepRef?.current?.value) {
             setError(
                 'passwordRep',
-                { type: 'required', message: 'Missing password.' },
-                { shouldFocus: true }
+                {type: 'required', message: 'Missing password.'},
+                {shouldFocus: true}
             )
             return false
         }
@@ -131,16 +105,16 @@ const SignUpForm: FC<SignUpFormProps> = ({
             ) {
                 setError(
                     'match',
-                    { type: 'required', message: 'Passwords do no match' },
-                    { shouldFocus: true }
+                    {type: 'required', message: 'Passwords do no match'},
+                    {shouldFocus: true}
                 )
                 return false
             } else {
                 if (!EmailValidator.validate(inputEmailRef.current.value)) {
                     setError(
                         'email',
-                        { type: 'required', message: 'Email is invalid.' },
-                        { shouldFocus: true }
+                        {type: 'required', message: 'Email is invalid.'},
+                        {shouldFocus: true}
                     )
                     return false
                 } else {
@@ -156,7 +130,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
                             const user = userCredential.user
 
                             // Create user profile
-                            createUserProfile(user.uid, {
+                            createUserProfile(user?.uid, {
                                 username: getRandomUsername(),
                                 name: '',
                                 lastName: '',
@@ -177,7 +151,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
         return true
     }
 
-    const createAndGoToProfile = (e) => {
+    const createAndGoToProfile = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         const success = createAccount()
         if (success) {
@@ -186,6 +160,13 @@ const SignUpForm: FC<SignUpFormProps> = ({
         }
     }
 
+    const PrivacyModal = useMemo(() => <Modal show={isPrivacyModal} onClose={setIsPrivacyModal}>
+        <PrivacyPolicy/>
+    </Modal>, [isPrivacyModal])
+
+    const TermModal = useMemo(() => <Modal show={isTerm} onClose={setIsTerm}>
+        <TermsConditions/>
+    </Modal>, [isTerm])
     return (
         <div>
             <div className={loginDivs.modalHeader}>Sign Up</div>
@@ -278,14 +259,14 @@ const SignUpForm: FC<SignUpFormProps> = ({
                 </div>
                 {/* Warning message on password repeat */}
                 {errors.passwordRep &&
-                    errors.passwordRep.type === 'required' && (
-                        <FlashErrorMessage
-                            message={errors.passwordRep.message}
-                            ms={warningTime}
-                            style={loginInputs.formAlert}
-                            error="passwordRep"
-                        />
-                    )}
+                errors.passwordRep.type === 'required' && (
+                    <FlashErrorMessage
+                        message={errors.passwordRep.message}
+                        ms={warningTime}
+                        style={loginInputs.formAlert}
+                        error="passwordRep"
+                    />
+                )}
                 {/* Warning message on password repeat */}
                 {errors.match && errors.match.type === 'required' && (
                     <FlashErrorMessage
@@ -296,8 +277,22 @@ const SignUpForm: FC<SignUpFormProps> = ({
                     />
                 )}
             </div>
-
-            <div className={loginDivs.customSignIn}>
+            <div className={loginDivs.checkbox}>
+                <input
+                    type="checkbox"
+                    className={loginButtons.checkbox}
+                    // checked={profile.dm || false}
+                    // onChange={toggleDM}
+                />
+                <b>I have read and accept Oogway’s <span
+                    className={'text-primary cursor-pointer mx-1'}
+                    onClick={() => setIsTerm(!isTerm)}>Terms of Use</span> and <span
+                    className={'text-primary cursor-pointer mx-1'} onClick={() => setIsPrivacyModal(!isPrivacyModal)}>Privacy
+                    Policy</span></b>
+                {PrivacyModal}
+                {TermModal}
+            </div>
+            <div className={loginDivs.customSignUp}>
                 <Button
                     onClick={closeModal}
                     addStyle={loginButtons.cancelButtonStyle}
