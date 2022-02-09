@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import {useState} from 'react'
 import Head from 'next/head'
 import Modal from '../components/Utils/Modal'
-import { loginDivs } from '../styles/login'
 import AuthenticationAPI from '../components/Login/AuthenticationAPI'
 
 function Login() {
@@ -18,7 +17,7 @@ function Login() {
                 <title>Login</title>
             </Head>
             <Modal
-                children={<AuthenticationAPI closeModal={closeModal} />}
+                children={<AuthenticationAPI closeModal={closeModal}/>}
                 show={isOpen}
                 onClose={closeModal}
             />

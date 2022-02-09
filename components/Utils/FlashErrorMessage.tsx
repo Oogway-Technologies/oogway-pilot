@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import useTimeout from '../../hooks/useTimeout';
-import { UilExclamationTriangle } from '@iconscout/react-unicons';
+// @ts-ignore
+import {UilExclamationTriangle} from '@iconscout/react-unicons';
 
 export type FlashErrorMessageProps = {
     message: string,
@@ -9,10 +10,10 @@ export type FlashErrorMessageProps = {
     error: string | undefined
 };
 
-const FlashErrorMessage: React.FC<FlashErrorMessageProps> = ({ message, ms, style }) => {
+const FlashErrorMessage: React.FC<FlashErrorMessageProps> = ({message, ms, style}) => {
     // Tracks how long a form warning message has been displayed
-    const [warningHasElapsed, setWarningHasElapsed] = useState(false); 
-    
+    const [warningHasElapsed, setWarningHasElapsed] = useState(false);
+
     useTimeout(() => {
         setWarningHasElapsed(true)
     }, ms);
