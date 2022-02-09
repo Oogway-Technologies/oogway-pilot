@@ -14,7 +14,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ hasText }) => {
 
     const logout = () => {
         auth.signOut()
-        router.push('/login')
+        router.push('/api/auth/logout')
     }
 
     return (
