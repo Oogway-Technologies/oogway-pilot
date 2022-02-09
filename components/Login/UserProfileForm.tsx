@@ -321,7 +321,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     <input
                         type="checkbox"
                         className={loginButtons.checkbox}
-                        checked={profile.dm || false}
+                        checked={dm}
                         onChange={toggleDM}
                         onKeyPress={preventDefaultOnEnter}
                     />
