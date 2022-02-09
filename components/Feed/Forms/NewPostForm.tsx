@@ -26,7 +26,7 @@ import { postFormClass } from '../../../styles/feed'
 
 // Other and utilities
 import cryptoRandomString from 'crypto-random-string'
-import preventDefaultOnEnter from '../../../hooks/preventDefaultOnEnter'
+import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 
 type NewPostProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>

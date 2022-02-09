@@ -14,6 +14,7 @@ import useTimeout from '../../hooks/useTimeout'
 
 // db
 import firebase from 'firebase/compat/app'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 type PWFormProps = {
     goToLogin: () => void
@@ -159,6 +160,7 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
                             ref={recoveryEmailRef}
                             type="text"
                             placeholder="Email"
+                            onKeyPress={preventDefaultOnEnter}
                         />
                     </div>
                     {/* Warning message on password */}

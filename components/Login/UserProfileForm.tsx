@@ -11,7 +11,7 @@ import {
 import Button from '../Utils/Button'
 import { Avatar, useMediaQuery } from '@mui/material'
 import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
-import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 // Firebase
@@ -233,6 +233,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                                 onChange={(e) => {
                                     setName(e.target.value)
                                 }}
+                                onKeyPress={preventDefaultOnEnter}
                                 defaultValue={profile.name || ''}
                                 className={loginInputs.inputField}
                                 placeholder="First name"
@@ -255,6 +256,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                                 onChange={(e) => {
                                     setLast(e.target.value)
                                 }}
+                                onKeyPress={preventDefaultOnEnter}
                                 defaultValue={profile.lastName || ''}
                                 className={loginInputs.inputField}
                                 placeholder="Last name"
@@ -279,6 +281,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                         onChange={(e) => {
                             setUsername(e.target.value)
                         }}
+                        onKeyPress={preventDefaultOnEnter}
                         defaultValue={profile.username || ''}
                         className={loginInputs.inputField}
                         placeholder="a_cool_username"
@@ -292,6 +295,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                         onChange={(e) => {
                             setLocation(e.target.value)
                         }}
+                        onKeyPress={preventDefaultOnEnter}
                         defaultValue={profile.location || ''}
                         className={loginInputs.inputField}
                         placeholder="Country"
@@ -305,6 +309,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                         onChange={(e) => {
                             setBio(e.target.value)
                         }}
+                        onKeyPress={preventDefaultOnEnter}
                         defaultValue={profile.bio || ''}
                         className={loginInputs.inputField}
                         placeholder="About me..."
@@ -318,6 +323,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                         className={loginButtons.checkbox}
                         checked={profile.dm || false}
                         onChange={toggleDM}
+                        onKeyPress={preventDefaultOnEnter}
                     />
                     <div>Allow other users to send me a Direct Message</div>
                 </div>

@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form'
 import { FlashErrorMessageProps } from '../Utils/FlashErrorMessage'
 import useTimeout from '../../hooks/useTimeout'
 import { useRouter } from 'next/router'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 type LoginFormProps = {
     goToSignUp: () => void
@@ -147,6 +148,7 @@ const LoginForm: FC<LoginFormProps> = ({
                         ref={inputEmailRef}
                         type="text"
                         placeholder="Email"
+                        onKeyPress={preventDefaultOnEnter}
                     />
                 </div>
                 {/* Warning message on email */}
@@ -165,6 +167,7 @@ const LoginForm: FC<LoginFormProps> = ({
                         ref={inputPasswordRef}
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Password"
+                        onKeyPress={preventDefaultOnEnter}
                     />
                     <div
                         className={loginDivs.eye}
