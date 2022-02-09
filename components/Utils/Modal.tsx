@@ -1,5 +1,5 @@
-import { Dialog, Transition } from '@headlessui/react';
-import React, { Fragment, ReactNode } from 'react';
+import {Dialog, Transition} from '@headlessui/react';
+import React, {Fragment, ReactNode} from 'react';
 
 type ModalProps = {
     children: ReactNode,
@@ -7,11 +7,11 @@ type ModalProps = {
     onClose: ((value: boolean) => void)
 };
 
-const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {  
+const Modal: React.FC<ModalProps> = ({children: content, show, onClose}) => {
     return (
         <Transition appear show={show} as={Fragment}>
-            <Dialog 
-                className="fixed inset-0 z-10 overflow-y-auto flex  justify-center items-center"
+            <Dialog
+                className="fixed inset-0 z-10 overflow-y-auto flex justify-center items-center"
                 as="div"
                 onClose={onClose}
             >
@@ -25,7 +25,7 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <Dialog.Overlay className="fixed inset-0 bg-neutralDark-300/75" />
+                        <Dialog.Overlay className="fixed inset-0 bg-neutralDark-300/75"/>
                     </Transition.Child>
 
                     {/* This element is to trick the browser into centering the modal contents. */}
@@ -49,9 +49,9 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
                             {content}
                         </div>
                     </Transition.Child>
-                </div>       
-        </Dialog>
-      </Transition>
+                </div>
+            </Dialog>
+        </Transition>
     );
 };
 
