@@ -11,6 +11,9 @@ import { formatUser } from '../lib/user'
 import Login from './login'
 import Loading from '../components/Loading'
 
+// Auth0
+import { UserProvider } from '@auth0/nextjs-auth0';
+
 function MyApp({ Component, pageProps }: AppProps) {
     // Read in config variables from environment
     const appConfig = {
@@ -39,17 +42,25 @@ function MyApp({ Component, pageProps }: AppProps) {
         else if (!user) return <Login />
         else
             return (
-                <Layout>
-                    <RecoilRoot>
-                        <Component {...pageProps} />
-                    </RecoilRoot>
-                </Layout>
+                <UserProvider>
+                    <Layout>
+                        <RecoilRoot>
+                            <Component {...pageProps} />
+                        </RecoilRoot>
+                    </Layout>
+                </UserProvider>
             )
     }
 
     return (
         <ThemeProvider attribute="class" enableSystem={true}>
-            <AuthState />
+            <UserProvider>
+                <Layout>
+                    <RecoilRoot>
+                        <Component {...pageProps} />
+                    </RecoilRoot>
+                </Layout>
+            </UserProvider>
         </ThemeProvider>
     )
 }
