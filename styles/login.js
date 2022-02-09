@@ -7,7 +7,7 @@ export const loginButtons = {
     cancelButtonStyle:
         'rounded-[20px] w-2/4 mx-2 px-1.5 py-3 justify-center align-middle content-center \
     p-sm md:px-md md:space-x-2 border-solid border-transparent text-neutral-700 dark:text-white \
-    bg-neutral-150 dark:bg-neutralDark-300 hover:bg-neutral-150 dark:hover:bg-neutralDark-150\
+    bg-neutral-150 dark:bg-neutralDark-300 hover:bg-neutral-300 dark:hover:bg-neutralDark-150\
     font-bold',
     closeButtonStyle:
         'rounded-[20px] w-full mx-2 px-1.5 py-3 justify-center align-middle content-center \
@@ -65,11 +65,13 @@ export const privacyDivs = {
     card: 'bg-violet-100 dark:bg-neutralDark-600 rounded-lg px-4 py-2 my-5 shadow',
     container: 'flex flex-col overflow-auto p-2.5 scrollbar-hide max-h-[75vh]',
     title: 'flex items-start justify-center text-3xl font-bold leading-normal',
-    subheading: 'flex items-start justify-start text-1xl font-bold leading-normal mt-4 mb-3 text-primary',
+    subheading:
+        'flex items-start justify-start text-1xl font-bold leading-normal mt-4 mb-3 text-primary',
     paragraph: 'flex items-start justify-start leading-normal mb-3 mt-1',
-    paragraphBold: 'flex items-start justify-start leading-normal mb-3 font-bold mt-1',
+    paragraphBold:
+        'flex items-start justify-start leading-normal mb-3 font-bold mt-1',
     divider: 'mb-4',
     th: 'py-3 px-6 text-xs font-medium tracking-wider text-left text-violet-700 uppercase dark:bg-neutralDark-500  border-b dark:border-gray-700',
-    tr: "bg-white border-b dark:bg-neutralDark-500 dark:border-gray-700",
-    td: "py-4 px-6 text-sm"
+    tr: 'bg-white border-b dark:bg-neutralDark-500 dark:border-gray-700',
+    td: 'py-4 px-6 text-sm',
 }

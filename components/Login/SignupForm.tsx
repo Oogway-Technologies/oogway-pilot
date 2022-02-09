@@ -1,24 +1,28 @@
 // @ts-ignore
-import {UilExclamationTriangle, UilEye, UilEyeSlash,} from '@iconscout/react-unicons'
+import {
+    UilExclamationTriangle,
+    UilEye,
+    UilEyeSlash,
+} from '@iconscout/react-unicons'
 
-import {FC, MouseEvent, useEffect, useMemo, useRef, useState} from 'react'
+import { FC, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 // JSX and Styles
 import Button from '../Utils/Button'
-import {loginButtons, loginDivs, loginInputs} from '../../styles/login'
+import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
 
 // Form
 import * as EmailValidator from 'email-validator'
-import {useForm} from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 // db
 import firebase from 'firebase/compat/app'
-import {useRouter} from 'next/router'
-import {createUserProfile} from '../../lib/db'
-import {getRandomProfilePic, getRandomUsername} from '../../lib/user'
-import FlashErrorMessage from "../Utils/FlashErrorMessage";
-import Modal from "../Utils/Modal";
-import PrivacyPolicy from "./PrivacyPolicy";
-import TermsConditions from "./TermsConditions";
+import { useRouter } from 'next/router'
+import { createUserProfile } from '../../lib/db'
+import { getRandomProfilePic, getRandomUsername } from '../../lib/user'
+import FlashErrorMessage from '../Utils/FlashErrorMessage'
+import Modal from '../Utils/Modal'
+import PrivacyPolicy from './PrivacyPolicy'
+import TermsConditions from './TermsConditions'
 
 type SignUpFormProps = {
     goToLogin: () => void
@@ -27,10 +31,10 @@ type SignUpFormProps = {
 }
 
 const SignUpForm: FC<SignUpFormProps> = ({
-                                             goToLogin,
-                                             goToProfile,
-                                             closeModal,
-                                         }) => {
+    goToLogin,
+    goToProfile,
+    closeModal,
+}) => {
     // Router
     const router = useRouter()
 
@@ -40,38 +44,36 @@ const SignUpForm: FC<SignUpFormProps> = ({
     const inputPasswordRepRef = useRef<HTMLInputElement>(null)
     const [showPassword, setShowPassword] = useState(false)
     const [showPasswordRep, setShowPasswordRep] = useState(false)
-    const [isPrivacyModal, setIsPrivacyModal] = useState(false);
-    const [isTerm, setIsTerm] = useState(false);
+    const [isPrivacyModal, setIsPrivacyModal] = useState(false)
+    const [isTerm, setIsTerm] = useState(false)
 
     const {
         register,
         setError,
-        clearErrors,
-        formState: {errors},
+        formState: { errors },
     } = useForm()
     const warningTime = 3000 // set warning to flash for 3 sec
     // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
     useEffect(() => {
-        register('email', {required: true})
+        register('email', { required: true })
     }, [])
     useEffect(() => {
-        register('password', {required: true})
+        register('password', { required: true })
     }, [])
     useEffect(() => {
-        register('passwordRep', {required: true})
+        register('passwordRep', { required: true })
     }, [])
     useEffect(() => {
-        register('match', {required: true})
+        register('match', { required: true })
     }, [])
-
 
     // Database hook to create account
     const createAccount = () => {
         if (!inputEmailRef?.current?.value) {
             setError(
                 'email',
-                {type: 'required', message: 'Missing email.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'Missing email.' },
+                { shouldFocus: true }
             )
             return false
         }
@@ -79,8 +81,8 @@ const SignUpForm: FC<SignUpFormProps> = ({
         if (!inputPasswordRef?.current?.value) {
             setError(
                 'password',
-                {type: 'required', message: 'Missing password.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'Missing password.' },
+                { shouldFocus: true }
             )
             return false
         }
@@ -88,8 +90,8 @@ const SignUpForm: FC<SignUpFormProps> = ({
         if (!inputPasswordRepRef?.current?.value) {
             setError(
                 'passwordRep',
-                {type: 'required', message: 'Missing password.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'Missing password.' },
+                { shouldFocus: true }
             )
             return false
         }
@@ -105,16 +107,16 @@ const SignUpForm: FC<SignUpFormProps> = ({
             ) {
                 setError(
                     'match',
-                    {type: 'required', message: 'Passwords do no match'},
-                    {shouldFocus: true}
+                    { type: 'required', message: 'Passwords do not match' },
+                    { shouldFocus: true }
                 )
                 return false
             } else {
                 if (!EmailValidator.validate(inputEmailRef.current.value)) {
                     setError(
                         'email',
-                        {type: 'required', message: 'Email is invalid.'},
-                        {shouldFocus: true}
+                        { type: 'required', message: 'Email is invalid.' },
+                        { shouldFocus: true }
                     )
                     return false
                 } else {
@@ -160,13 +162,24 @@ const SignUpForm: FC<SignUpFormProps> = ({
         }
     }
 
-    const PrivacyModal = useMemo(() => <Modal show={isPrivacyModal} onClose={setIsPrivacyModal}>
-        <PrivacyPolicy/>
-    </Modal>, [isPrivacyModal])
+    const PrivacyModal = useMemo(
+        () => (
+            <Modal show={isPrivacyModal} onClose={setIsPrivacyModal}>
+                <PrivacyPolicy />
+            </Modal>
+        ),
+        [isPrivacyModal]
+    )
 
-    const TermModal = useMemo(() => <Modal show={isTerm} onClose={setIsTerm}>
-        <TermsConditions/>
-    </Modal>, [isTerm])
+    const TermModal = useMemo(
+        () => (
+            <Modal show={isTerm} onClose={setIsTerm}>
+                <TermsConditions />
+            </Modal>
+        ),
+        [isTerm]
+    )
+
     return (
         <div>
             <div className={loginDivs.modalHeader}>Sign Up</div>
@@ -259,14 +272,14 @@ const SignUpForm: FC<SignUpFormProps> = ({
                 </div>
                 {/* Warning message on password repeat */}
                 {errors.passwordRep &&
-                errors.passwordRep.type === 'required' && (
-                    <FlashErrorMessage
-                        message={errors.passwordRep.message}
-                        ms={warningTime}
-                        style={loginInputs.formAlert}
-                        error="passwordRep"
-                    />
-                )}
+                    errors.passwordRep.type === 'required' && (
+                        <FlashErrorMessage
+                            message={errors.passwordRep.message}
+                            ms={warningTime}
+                            style={loginInputs.formAlert}
+                            error="passwordRep"
+                        />
+                    )}
                 {/* Warning message on password repeat */}
                 {errors.match && errors.match.type === 'required' && (
                     <FlashErrorMessage
@@ -278,17 +291,23 @@ const SignUpForm: FC<SignUpFormProps> = ({
                 )}
             </div>
             <div className={loginDivs.checkbox}>
-                <input
-                    type="checkbox"
-                    className={loginButtons.checkbox}
-                    // checked={profile.dm || false}
-                    // onChange={toggleDM}
-                />
-                <b>I have read and accept Oogway’s <span
-                    className={'text-primary cursor-pointer mx-1'}
-                    onClick={() => setIsTerm(!isTerm)}>Terms of Use</span> and <span
-                    className={'text-primary cursor-pointer mx-1'} onClick={() => setIsPrivacyModal(!isPrivacyModal)}>Privacy
-                    Policy</span></b>
+                <input type="checkbox" className={loginButtons.checkbox} />
+                <b>
+                    I have read and accept Oogway’s{' '}
+                    <span
+                        className={'text-primary cursor-pointer mx-1'}
+                        onClick={() => setIsTerm(!isTerm)}
+                    >
+                        Terms of Use
+                    </span>{' '}
+                    and{' '}
+                    <span
+                        className={'text-primary cursor-pointer mx-1'}
+                        onClick={() => setIsPrivacyModal(!isPrivacyModal)}
+                    >
+                        Privacy Policy
+                    </span>
+                </b>
                 {PrivacyModal}
                 {TermModal}
             </div>
