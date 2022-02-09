@@ -23,6 +23,7 @@ import FlashErrorMessage from '../Utils/FlashErrorMessage'
 import Modal from '../Utils/Modal'
 import PrivacyPolicy from './PrivacyPolicy'
 import TermsConditions from './TermsConditions'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 type SignUpFormProps = {
     goToLogin: () => void
@@ -193,6 +194,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
                         type="text"
                         ref={inputEmailRef}
                         placeholder="Email"
+                        onKeyPress={preventDefaultOnEnter}
                     />
                 </div>
                 {/* Warning message on email */}
@@ -214,6 +216,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Password"
                         ref={inputPasswordRef}
+                        onKeyPress={preventDefaultOnEnter}
                     />
                     <div
                         className={loginDivs.eye}
@@ -252,6 +255,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
                         type={showPasswordRep ? 'text' : 'password'}
                         placeholder="Repeat Password"
                         ref={inputPasswordRepRef}
+                        onKeyPress={preventDefaultOnEnter}
                     />
                     <div
                         className={loginDivs.eye}

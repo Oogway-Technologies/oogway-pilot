@@ -12,13 +12,13 @@ import { useDocumentData } from 'react-firebase-hooks/firestore'
 
 const UserDropdown: React.FC = () => {
     const [user] = useAuthState(auth)
-    const userData = useDocumentData(doc(db, 'users', user.uid))
+    const [userProfile] = useDocumentData(doc(db, 'profiles', user.uid))
 
     // Dropdown menu props
     const menuButton = (
         <Avatar
             className={userDropdownClass.avatar}
-            src={userData?.photoUrl ? userData?.photoUrl : null}
+            src={userProfile?.profilePic ? userProfile.profilePic : null}
         />
     )
     const menuItems = [
