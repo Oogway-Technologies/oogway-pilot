@@ -7,11 +7,12 @@ import { Avatar } from '@mui/material'
 import { avatarURL, postCardClass } from '../../../styles/feed'
 import bull from '../../Utils/Bullet'
 import Timestamp from '../../Utils/Timestamp'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { doc } from 'firebase/firestore'
 
 type PostHeaderProps = {
     id: string
     authorUid: string
-    userImage: string | null
     name: string | null
     email: string
     timestamp: Date | null
@@ -19,13 +20,15 @@ type PostHeaderProps = {
 
 const PostHeader = ({
     id,
-    userImage,
     name,
     authorUid,
     email,
     timestamp,
 }: PostHeaderProps) => {
     const [user] = useAuthState(auth)
+
+    // Author profile
+    const [authorProfile] = useDocumentData(doc(db, 'profiles', authorUid)) // static, should listen for updates
 
     const deletePostEntry = () => {
         // Delete the post entry from the DB.
@@ -104,7 +107,11 @@ const PostHeader = ({
                 <Avatar
                     onClick={needsHook}
                     className={postCardClass.avatar}
-                    src={userImage ? userImage : avatarURL}
+                    src={
+                        authorProfile?.profilePic
+                            ? authorProfile.profilePic
+                            : null
+                    }
                 />
 
                 {/* Split into two rows on mobile */}

@@ -113,9 +113,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             message: inputRef.current.value,
             author: user.username ? user.username : user.email,
             authorUid: user.uid,
-            photoURL: user.photoURL ? user.photoURL : avatarURL,
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
-            commentUID: uuidv4(), // This is used to uniquely identify the comment, e.g., to remove it
         }
         db.collection('posts')
             .doc(router.query.id)
