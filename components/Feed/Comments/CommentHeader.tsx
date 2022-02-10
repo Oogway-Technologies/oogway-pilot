@@ -51,7 +51,7 @@ const CommentHeader = ({
             .doc(commentId)
             .delete()
             .catch((err) => {
-                console.log('Cannot delete post: ', err)
+                console.log('Cannot delete coment: ', err)
             })
 
         // Update the user's comment map
@@ -60,7 +60,6 @@ const CommentHeader = ({
             .get()
             .then((doc) => {
                 let tmp = doc.data()
-                console.log(tmp.comments)
                 delete tmp.comments[commentId]
                 doc.ref.update(tmp)
             })
