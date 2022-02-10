@@ -2,7 +2,7 @@
 
 [Oogway](www.oogway.ai) is a DAO (decentralized autonomous organization) and therefore contributions are our lifeblood. We strive to make contributing as seemless as possible and welcome any recommendations on how to improve.
 
-First thing's first, Oogway lives at our [discord server](https://discord.com/invite/GYKDE85pxN). Please join and introduce yourself. If you are here, then you are likely already interested in contributing to the Oogway-Pilot app -- the beta version of our social + evaluate + search ecosystem. Nonetheless, you may discover other ways you can contribute, in addition to, or besides this project. Please take a moment to familiarize yourself with Oogway and our contributor culture.
+First thing's first, Oogway lives at our [discord server](https://discord.com/invite/GYKDE85pxN) and out [Notion]() page. Please join discord and introduce yourself. And please take a look at the notion page. If you are here, then you are likely already interested in contributing to the Oogway-Pilot app -- the beta version of our social + evaluate + search ecosystem. Nonetheless, you may discover other ways you can contribute, in addition to, or besides this project. Please take a moment to familiarize yourself with Oogway and our contributor culture.
 
 If you've already done the above and are ready to get working on your first issue, then head down to the Pull Request Process section. Otherwise, below is a brief summary of Oogway's mission and contribution process.
 
@@ -41,6 +41,48 @@ You'll find that because Oogway's mission is so broad, there are a wide variety 
 3. Execute: Once the ticket is assigned to you on the Oogway Task Board, it's time to get that ticket done. When you start working on it, move the ticket to “In Progress”. Discuss with anyone else on the ticket (listed in the ticket details) or anyone in the community who you think might be relevant. If there is an owner/lead for the ticket, please follow their lead. You can use our open Google Drive folder if you want to collaborate on Google Docs: https://drive.google.com/drive/folders/1TdjvYOmoHj4ZDzTnMxFfCJRcKvcQYp7s?usp=sharing
 
 Let's build some awesome stuff together and have fun!
+
+## Getting Started with the App
+
+---
+
+### **Tool Stack**
+
+The app is built with NextJS + Firebase + Recoil + Auth0. You don't need to be an expert on all four to contribute, but you should at least familiarize yourself with them.
+
+| Tool                                                                        | Purpose                                      |
+| :-------------------------------------------------------------------------- | :------------------------------------------- |
+| [NextJS](https://nextjs.org/docs/getting-started)                           | Front-end, middleware, server-side rendering |
+| [Firebase](https://firebase.google.com/docs/database)                       | Back-end realtime database and storage       |
+| [Recoil](https://firebase.google.com/docs/database)                         | Global state management                      |
+| [Auth0](https://auth0.com/blog/ultimate-guide-nextjs-authentication-auth0/) | User authentication                          |
+
+### Environment variables
+
+In order to run the app and connect to the development database, you'll need a copy of the development
+environment variables, `.env.local`, in your local directory.
+
+If you haven't been given these after receiving the green light to work on a ticket, please contact either Federico Campeotto or Evan Jones in discord.
+
+### **Running the development version**
+
+Once you have the repo on your local machine, install all project dependencies:
+
+```
+$ npm install
+```
+
+Then you can run the app with the usual conventions:
+
+```
+$ npm run dev
+```
+
+or
+
+```
+$ npx next dev
+```
 
 ## Pull Request Process
 
@@ -97,6 +139,8 @@ Let's build some awesome stuff together and have fun!
 ## Contributor Focus
 
 ---
+
+We incentivize and welcome new ideas. We want to make things better, not to clone them. We are not a "me too company". If you think you have a cool idea, go ahead and discuss it on Discord. Even if it seems impossible to implement. Indeed, what we are looking for _is_ impossible ideas. Those are the ones we consider first because those are the ideas that change things.
 
 We want to enable a community of contributors to add as much value as possible. If you're a potential contributor, we want to make it as frictionless as possible for you to contribute; hopefully, it'll be much easier than the companies/organizations you might be used to.
 
