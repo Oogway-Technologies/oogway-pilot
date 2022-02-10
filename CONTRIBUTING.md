@@ -70,15 +70,21 @@ Let's build some awesome stuff together and have fun!
     The work flow is as follows:
 
     ```
+    $ [local branch] git commit
     $ git checkout main
-    $ git fetch upstream
-    $ git merge upstream/main
+    $ git pull upstream main
     $ git push origin main [update main branch on your fork]
-    $ git checkout <PR-branch-name>
-    $ git rebase main
+    $ git checkout <local-branch>
+    $ [local-branch] git rebase main (or merge depending on whether we want clean history or not)
+    $ [local-branch] resolve conflicts
     ```
 
-6. Push your branch to origin: `git push origin <PR-branch-name>`
+    Tools that can help resolve conflicts:
+
+    - [GitKraken](https://www.gitkraken.com/)
+    - [Fork](https://git-fork.com/) for Mac (free trial)
+
+6. Push your branch to origin: `git push origin <local-branch>`
 
 7. Make a pull request (When pushing to your fork, git will automatically provide you with a link to create a PR on the Oogway-Technologies repo or you can manually navigate there.)
 
