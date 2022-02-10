@@ -1,25 +1,23 @@
-import {replyClass} from "../../../styles/feed";
-import ReplyHeader from './ReplyHeader';
-import ReplyEngagementBar from './ReplyEngagementBar';
-import firebase from 'firebase/compat/app';
+import { replyClass } from '../../../styles/feed'
+import ReplyHeader from './ReplyHeader'
+import ReplyEngagementBar from './ReplyEngagementBar'
+import firebase from 'firebase/compat/app'
 
 type ReplyProps = {
-    replyOwner: string,
-    postId: string | string[] | undefined,
-    commentId: string,
-    replyId: string,
+    replyOwner: string
+    postId: string | string[] | undefined
+    commentId: string
+    replyId: string
     reply: firebase.firestore.DocumentData
 }
 
-const Reply: React.FC<ReplyProps> = (
-    {
-        replyOwner,
-        postId,
-        commentId,
-        replyId,
-        reply
-    }) => {
-
+const Reply: React.FC<ReplyProps> = ({
+    replyOwner,
+    postId,
+    commentId,
+    replyId,
+    reply,
+}) => {
     return (
         <div className={replyClass.outerDiv}>
             {/* Header */}
@@ -28,14 +26,13 @@ const Reply: React.FC<ReplyProps> = (
                 commentId={commentId}
                 replyId={replyId}
                 authorUid={replyOwner}
-                userImage={reply.photoURL}
                 name={reply.author}
                 email={reply.email}
                 timestamp={reply.timestamp}
             />
 
             <div className={replyClass.innerDiv}>
-                <div className={replyClass.dividerLeft}/>
+                <div className={replyClass.dividerLeft} />
                 <div className={replyClass.dividerRight}>
                     {/* Body */}
                     <div className={replyClass.body}>
@@ -51,10 +48,9 @@ const Reply: React.FC<ReplyProps> = (
                         replyId={replyId}
                     />
                 </div>
-
             </div>
         </div>
-    );
+    )
 }
 
-export default Reply;
+export default Reply

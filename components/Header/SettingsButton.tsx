@@ -1,28 +1,26 @@
-import React from 'react'
+import { MouseEventHandler, FC } from 'react'
 import { UilSetting } from '@iconscout/react-unicons'
 import Link from 'next/link'
 import { settingsButtonClass } from '../../styles/header'
-import needsHook from '../../hooks/needsHook';
 
 interface SettingsButtonProps {
     hasText: boolean
+    onClick: MouseEventHandler<HTMLAnchorElement>
 }
 
-const SettingsButton: React.FC<SettingsButtonProps> = ({ hasText }) => {
+const SettingsButton: FC<SettingsButtonProps> = ({ hasText, onClick }) => {
     return (
-        <Link href='#'  passHref>
-            <a 
-                onClick={needsHook}
-                className={settingsButtonClass.a}>
-                <UilSetting className={settingsButtonClass.icon}/>
-            {hasText && 'Settings'}
+        <Link href="#" passHref>
+            <a onClick={onClick} className={settingsButtonClass.a}>
+                <UilSetting className={settingsButtonClass.icon} />
+                {hasText && 'Settings'}
             </a>
         </Link>
     )
 }
 
 SettingsButton.defaultProps = {
-    hasText: false
+    hasText: false,
 }
 
 export default SettingsButton

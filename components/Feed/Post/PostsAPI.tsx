@@ -23,7 +23,6 @@ function PostsAPI({ posts }) {
                 isCompare={post.data().isCompare}
                 email={post.data().email}
                 timestamp={post.data().timestamp}
-                userImage={post.data().image}
                 postImage={post.data().postImage}
                 comments={null}
                 isCommentThread={false}
@@ -41,7 +40,6 @@ function PostsAPI({ posts }) {
                 isCompare={post.isCompare}
                 email={post.email}
                 timestamp={post.timestamp}
-                userImage={post.image}
                 postImage={post.postImage}
                 comments={null}
                 isCommentThread={false}
