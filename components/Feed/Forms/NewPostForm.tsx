@@ -1,32 +1,27 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 // Database
 import firebase from 'firebase/compat/app'
-import { auth, db, storage } from '../../../firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import {auth, db, storage} from '../../../firebase'
+import {useAuthState} from 'react-firebase-hooks/auth'
 
 // JSX components
 import Button from '../../Utils/Button'
-import { Dialog } from '@headlessui/react'
-import {
-    UilNavigator,
-    UilImagePlus,
-    UilTimesCircle,
-    UilChart,
-} from '@iconscout/react-unicons'
-import { Collapse } from '@mui/material'
+import {Dialog} from '@headlessui/react'
+import {UilChart, UilExclamationTriangle, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
+import {Collapse} from '@mui/material'
 
 // Form management
-import { useForm } from 'react-hook-form'
+import {useForm} from 'react-hook-form'
 import useTimeout from '../../../hooks/useTimeout'
-import { UilExclamationTriangle } from '@iconscout/react-unicons'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
-import { doc } from 'firebase/firestore'
-import { postFormClass } from '../../../styles/feed'
+import {useDocumentData} from 'react-firebase-hooks/firestore'
+import {doc} from 'firebase/firestore'
+import {postFormClass} from '../../../styles/feed'
 
 // Other and utilities
 import cryptoRandomString from 'crypto-random-string'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
+import {isAmazonValidURL} from "../../../utils/helpers/common";
 
 type NewPostProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
@@ -35,10 +30,10 @@ type NewPostProps = {
 }
 
 const NewPostForm: React.FC<NewPostProps> = ({
-    closeModal,
-    questPlaceholder,
-    descPlaceholder,
-}) => {
+                                                 closeModal,
+                                                 questPlaceholder,
+                                                 descPlaceholder,
+                                             }) => {
     const [user] = useAuthState(auth)
     const [userData] = useDocumentData(doc(db, 'users', user.uid))
 
@@ -46,16 +41,16 @@ const NewPostForm: React.FC<NewPostProps> = ({
     const {
         register,
         setError,
-        formState: { errors },
+        formState: {errors},
     } = useForm()
     const warningTime = 3000 // set warning to flash for 3 sec
 
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('question', { required: true })
+        register('question', {required: true})
     }, [])
     useEffect(() => {
-        register('compare', { required: true })
+        register('compare', {required: true})
     }, [])
 
     // The image to post and to display as preview
@@ -69,31 +64,31 @@ const NewPostForm: React.FC<NewPostProps> = ({
     const [expanded, setExpanded] = useState(false)
 
     // Get a reference to the input text
-    const inputRef = useRef(null)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     // Get a reference to the description text
-    const descriptionRef = useRef(null)
+    const descriptionRef = useRef<HTMLTextAreaElement>(null)
 
     // Get a reference for the input image
-    const filePickerRef = useRef(null)
+    const filePickerRef = useRef<HTMLInputElement>(null)
 
     // Ref and data for left and right images
     const [imageToCompareLeft, setImageToCompareLeft] = useState(null)
     const [imageToCompareRight, setImageToCompareRight] = useState(null)
     const [textToCompareLeft, setTextToCompareLeft] = useState('')
     const [textToCompareRight, setTextToCompareRight] = useState('')
-    const filePickerCompareLeftRef = useRef(null)
-    const filePickerCompareRightRef = useRef(null)
+    const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
+    const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
 
     // Utility Component for warnings
     // Will not work correctly as an export only as a nested component.
     // Must have to do with state not being shared.
     // TODO: Look into sharing context
     const FlashErrorMessage = ({
-        message,
-        ms,
-        style,
-    }: {
+                                   message,
+                                   ms,
+                                   style,
+                               }: {
         message: string
         ms: number
         style: string
@@ -113,7 +108,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         // Otherwise, return warning
         return (
             <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4" /> {message}
+                <UilExclamationTriangle className="mr-1 h-4"/> {message}
             </span>
         )
     }
@@ -211,11 +206,11 @@ const NewPostForm: React.FC<NewPostProps> = ({
         e.preventDefault()
 
         // If the input is empty, return asap
-        if (!inputRef.current.value) {
+        if (!inputRef?.current?.value) {
             setError(
                 'question',
-                { type: 'required', message: 'A question is required.' },
-                { shouldFocus: true }
+                {type: 'required', message: 'A question is required.'},
+                {shouldFocus: true}
             )
             return false // Whether to sendPost or not
         }
@@ -228,17 +223,31 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     message:
                         'You are missing required information to create a compare post.',
                 },
-                { shouldFocus: true }
+                {shouldFocus: true}
             )
             return false // Whether to send post or not
         }
 
+        let messageData = inputRef?.current?.value;
+        // checks if the pasted URL is from Amazon.
+        if (isAmazonValidURL(messageData)) {
+            // checks if the given URL doesnt have the oogway tag.
+            if (!messageData.includes('tag=oogwayai0c-20')) {
+                // adds the tag to URL.
+                if (!messageData.includes('?')) {
+                    messageData = inputRef?.current?.value + '?tag=oogwayai0c-20';
+                } else {
+                    messageData = inputRef?.current?.value + '&tag=oogwayai0c-20';
+                }
+            }
+        }
+
         // Prepare the data to add as a post
         let postData = {
-            message: inputRef.current.value, // Leaving field name as message even though UI refers to it as a question
-            description: descriptionRef.current.value, // Optional description
-            name: userData.username ? userData.username : user.email, // Change this with username or incognito
-            uid: user.uid, // uid of the user that created this post
+            message: messageData, // Leaving field name as message even though UI refers to it as a question
+            description: descriptionRef?.current?.value, // Optional description
+            name: userData?.username ? userData.username : user?.email, // Change this with username or incognito
+            uid: user?.uid, // uid of the user that created this post
             isCompare: false, // Explicitly flag whether is compare type
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -290,7 +299,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                         {
                                             postImage: url,
                                         },
-                                        { merge: true }
+                                        {merge: true}
                                     ) // Use merge: true! otherwise it replaces the Post!
                                 })
                         }
@@ -300,7 +309,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     let uploadTaskList = []
                     let uploadTextList = []
                     if (imageToCompareLeft) {
-                        const rndName = cryptoRandomString({ length: 10 })
+                        const rndName = cryptoRandomString({length: 10})
                         const mediaAddr = `posts/${doc.id}/${rndName}`
                         const uploadTaskLeft = storage
                             .ref(mediaAddr)
@@ -312,7 +321,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     }
 
                     if (imageToCompareRight) {
-                        const rndName = cryptoRandomString({ length: 10 })
+                        const rndName = cryptoRandomString({length: 10})
                         const mediaAddr = `posts/${doc.id}/${rndName}`
                         const uploadTaskRight = storage
                             .ref(mediaAddr)
@@ -543,10 +552,10 @@ const NewPostForm: React.FC<NewPostProps> = ({
             <div className={postFormClass.uploadBar}>
                 {/* Upload Image */}
                 <button
-                    onClick={() => filePickerRef.current.click()}
+                    onClick={() => filePickerRef?.current?.click()}
                     className={postFormClass.imageButton}
                 >
-                    <UilImagePlus />
+                    <UilImagePlus/>
                     <input
                         ref={filePickerRef}
                         onChange={handleImageUpload}
@@ -563,7 +572,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     aria-expanded={expanded}
                     aria-label="compare"
                 >
-                    <UilChart />
+                    <UilChart/>
                 </button>
             </div>
 
@@ -643,7 +652,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                     <button
                                         className={postFormClass.compareUpload}
                                         onClick={() =>
-                                            filePickerCompareLeftRef.current.click()
+                                            filePickerCompareLeftRef?.current?.click()
                                         }
                                     >
                                         Upload Image
@@ -701,7 +710,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                     <button
                                         className={postFormClass.compareUpload}
                                         onClick={() =>
-                                            filePickerCompareRightRef.current.click()
+                                            filePickerCompareRightRef?.current?.click()
                                         }
                                     >
                                         Upload Image
@@ -717,13 +726,13 @@ const NewPostForm: React.FC<NewPostProps> = ({
                             )}
                         </div>
                         {errors.compare &&
-                            errors.compare.type === 'required' && (
-                                <FlashErrorMessage
-                                    message={errors.compare.message}
-                                    ms={warningTime}
-                                    style={postFormClass.formAlert}
-                                />
-                            )}
+                        errors.compare.type === 'required' && (
+                            <FlashErrorMessage
+                                message={errors.compare.message}
+                                ms={warningTime}
+                                style={postFormClass.formAlert}
+                            />
+                        )}
                     </div>
                 </div>
             </Collapse>
@@ -741,7 +750,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                 <Button
                     text="Post"
                     keepText={true}
-                    icon={<UilNavigator />}
+                    icon={<UilNavigator/>}
                     type="submit"
                     addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}

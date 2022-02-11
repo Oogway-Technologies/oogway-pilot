@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { db } from '../../../firebase'
-import { postCardClass } from '../../../styles/feed'
-import { Card, CardContent, CardMedia, Typography } from '@mui/material'
+import React, {useEffect, useState} from 'react'
+import {db} from '../../../firebase'
+import {postCardClass} from '../../../styles/feed'
+import {Card, CardContent, CardMedia, Link, Typography} from '@mui/material'
 import PostEngagementBar from './PostEngagementBar'
 import PostHeader from './PostHeader'
 import PostVotingMechanism from './PostVotingMechanism'
 import CommentsAPI from '../Comments/CommentsAPI'
+import {isValidURL} from "../../../utils/helpers/common";
 
 interface PostProps {
     authorUid: string
@@ -22,21 +23,22 @@ interface PostProps {
 }
 
 const PostCard: React.FC<PostProps> = ({
-    authorUid,
-    id,
-    name,
-    message,
-    description,
-    email,
-    isCompare,
-    postImage,
-    timestamp,
-    isCommentThread,
-    comments,
-}) => {
+                                           authorUid,
+                                           id,
+                                           name,
+                                           message,
+                                           description,
+                                           email,
+                                           isCompare,
+                                           postImage,
+                                           timestamp,
+                                           isCommentThread,
+                                           comments,
+                                       }) => {
     // Track state for voting mechanism
-    const [votesList, setVotesList] = useState([])
-    const [compareData, setCompareData] = useState([])
+    const [votesList, setVotesList] = useState([]);
+    const [compareData, setCompareData] = useState([]);
+    const [urlFound, setUrlFound] = useState(false);
 
     // Use useEffect to bind on document loading the
     // function that will listen for DB updates to the
@@ -53,6 +55,10 @@ const PostCard: React.FC<PostProps> = ({
                     // Probably not a permanent fix, may want to
                     // look at listening only for changes in the children elements
                     // to avoid issues during post deletion
+                    if (isValidURL(postData?.message)) {
+                        //checks if the message is an URL
+                        setUrlFound(true);
+                    }
                     if (isComparePost(postData)) {
                         // Add a counter of votes for each object to compare.
                         // Note: this should generally be an array of 2 objects
@@ -92,12 +98,16 @@ const PostCard: React.FC<PostProps> = ({
 
             {/* Body */}
             <CardContent className={postCardClass.body}>
-                <Typography
-                    component={'h4'}
-                    className={postCardClass.bodyQuestion}
-                >
+                {urlFound ?
+                    <Link href={message} target="_blank" className={postCardClass.bodyQuestion}>
+                        {message}
+                    </Link> :
+                    <Typography component={'h4'} className={postCardClass.bodyQuestion}>
+                        {message}
+                    </Typography>}
+                {/* <Typography component={'h4'} className={postCardClass.bodyQuestion}>
                     {message}
-                </Typography>
+                </Typography> */}
                 <Typography className={postCardClass.bodyDescription}>
                     {description}
                 </Typography>
@@ -106,7 +116,7 @@ const PostCard: React.FC<PostProps> = ({
             {/* Media */}
             {postImage && (
                 <div className="flex ml-xl p-md">
-                    <CardMedia component="img" src={postImage} />
+                    <CardMedia component="img" src={postImage}/>
                 </div>
             )}
 
@@ -120,11 +130,11 @@ const PostCard: React.FC<PostProps> = ({
             )}
 
             {/* Engagement */}
-            <PostEngagementBar id={id} />
+            <PostEngagementBar id={id}/>
 
             {/* Comments */}
             {/* Note: pass the server-rendered comments to the panel */}
-            {isCommentThread && <CommentsAPI comments={comments} />}
+            {isCommentThread && <CommentsAPI comments={comments}/>}
         </Card>
     )
 }
