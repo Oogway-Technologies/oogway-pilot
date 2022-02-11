@@ -13,10 +13,10 @@ const FeedAPI = ({ posts }) => {
         </div>
 
         <div className={feedApiClass.innerDiv}>
-            {/* Posts 
+            {/* Posts */}
             <div className={feedApiClass.contentDiv}>
                 <PostsAPI posts={posts} />
-            </div>*/}
+            </div>
         </div>
     </>
   );
