@@ -1,3 +1,4 @@
+import {FieldValue} from "firebase/firestore";
 export interface FirebaseUserProfile {
     provider: string;
     uid: string;
@@ -11,13 +12,12 @@ export interface FirebaseUserProfile {
 
 export interface FirebaseUser {
     email: string;
-    expirationTime: string;
-    lastSeen: string;
+    lastSeen: FieldValue;
     name: string;
-    photoUrl: string;
     provider: string;
-    resetProfile: boolean;
-    uid: string;
+    blockedUsers: string[];
+    posts: string[];
+    auth0: string;
 }
 
 export interface FirebaseProfile {
@@ -28,6 +28,5 @@ export interface FirebaseProfile {
     name: string;
     profilePic: string;
     resetProfile: boolean;
-    uid: string;
     username: string;
 }
