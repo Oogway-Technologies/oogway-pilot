@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.7.0",
     "@headlessui/react": "^1.4.3",
     "@heroicons/react": "^1.0.5",
     "@iconscout/react-unicons": "^1.1.6",

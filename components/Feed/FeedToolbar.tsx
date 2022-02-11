@@ -6,9 +6,12 @@ import NewPostForm from './Forms/NewPostForm';
 import { feedToolbarClass } from '../../styles/feed';
 import needsHook from '../../hooks/needsHook';
 
+// Auth0
+import { useUser } from '@auth0/nextjs-auth0';
 
 const FeedToolbar = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const { user, isLoading } = useUser();
 
     // Modal helper functions
     const openModal = () => {
@@ -19,6 +22,7 @@ const FeedToolbar = () => {
         setIsOpen(false)
     }
 
+    // TODO: Center buttons when New Post button is not displayed
     return (
         <>
             <div className={feedToolbarClass.div}>
@@ -47,13 +51,15 @@ const FeedToolbar = () => {
                 </div>
 
                 {/* Right: new post button */}
-                <div className={feedToolbarClass.rightDiv}>
-                    <Button text="New Post" keepText={false} icon={<UilPen/>}
-                        type='button'
-                        addStyle={feedToolbarClass.newPostButton}
-                        onClick={openModal}
-                    />
-                </div>
+                {user && (
+                    <div className={feedToolbarClass.rightDiv}>
+                        <Button text="New Post" keepText={false} icon={<UilPen/>}
+                            type='button'
+                            addStyle={feedToolbarClass.newPostButton}
+                            onClick={openModal}
+                        />
+                    </div>
+                )}
             </div>
         
             <Modal 
