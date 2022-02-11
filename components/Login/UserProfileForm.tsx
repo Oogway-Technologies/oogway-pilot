@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useRef } from 'react'
-import { auth, db, storage } from '../../firebase'
+import { db, storage } from '../../firebase'
 import {
     loginButtons,
     loginDivs,
@@ -11,12 +11,13 @@ import {
 import Button from '../Utils/Button'
 import { Avatar, useMediaQuery } from '@mui/material'
 import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
-import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
 
 // Firebase
 import { setDoc, updateDoc, doc } from 'firebase/firestore'
 import { ref, getDownloadURL, uploadString } from '@firebase/storage'
+import { userProfileState } from '../../atoms/user'
+import { useRecoilState } from 'recoil'
 
 type UserProfileFormProps = {
     profile: firebase.firestore.DocumentData
@@ -27,8 +28,8 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
     profile,
     closeModal,
 }) => {
-    // User state
-    const [user] = useAuthState(auth)
+    // Get current user profile
+    const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
     // Form state
     const [dm, setDm] = useState(profile.allowDM || false)
