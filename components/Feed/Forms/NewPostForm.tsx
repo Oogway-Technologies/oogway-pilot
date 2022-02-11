@@ -9,9 +9,9 @@ import {
     updateDoc,
     doc,
     setDoc,
-  } from 'firebase/firestore'
+} from 'firebase/firestore'
 import { ref, getDownloadURL, uploadString } from '@firebase/storage'
-  
+
 // JSX components
 import Button from '../../Utils/Button'
 import { Dialog } from '@headlessui/react'
@@ -150,7 +150,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
     }
 
     const sendPost = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         // If the input is empty, return asap
         if (inputRef && !inputRef.current.value) {
@@ -178,14 +178,14 @@ const NewPostForm: React.FC<NewPostProps> = ({
 
         // Avoid spamming the post button while uploading the post to the DB
         if (loading) return
-        setLoading(true);
+        setLoading(true)
 
         // Steps:
         // 1) create a post and add to firestore 'posts' collection
         // 2) get the post ID for the newly created post
         // 3) upload the image to firebase storage with the post ID as the file name
         // 4) get the dowanload URL for the image and update the original post with image url
-        
+
         // Prepare the data to add as a post
         let postData = {
             message: inputRef.current.value, // Leaving field name as message even though UI refers to it as a question
@@ -209,7 +209,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
 
         // Add the post to the firestore DB and get its ref
-        const docRef = await addDoc(collection(db, 'posts'), postData);
+        const docRef = await addDoc(collection(db, 'posts'), postData)
 
         // Add media
         if (imageToPost) {
@@ -220,13 +220,15 @@ const NewPostForm: React.FC<NewPostProps> = ({
             await uploadString(imageRef, imageToPost, 'data_url').then(
                 async (snapshot) => {
                     // Get the download URL for the image
-                    const downloadURL = await getDownloadURL(imageRef, snapshot);
+                    const downloadURL = await getDownloadURL(imageRef, snapshot)
 
                     // Update the post with the image URL
-                    await updateDoc(doc(db, 'posts', docRef.id), { postImage: downloadURL })
+                    await updateDoc(doc(db, 'posts', docRef.id), {
+                        postImage: downloadURL,
+                    })
 
                     // Remove image preview
-                    removeImage(0);
+                    removeImage(0)
                 }
             )
         } else if (isComparePost()) {
@@ -237,59 +239,62 @@ const NewPostForm: React.FC<NewPostProps> = ({
 
             // Upload the left image, if there is one
             if (imageToCompareLeft) {
-                const imageRef = ref(storage, `posts/${docRef.id}/imageLeft`);
-                await uploadString(imageRef, imageToCompareLeft, 'data_url').then(
-                    async (snapshot) => {
-                        // Get the download URL for the image
-                        const downloadURL = await getDownloadURL(imageToCompareLeft, snapshot);
-                        mediaObjectList.push({
-                            type: 'image',
-                            value: downloadURL,
-                        });
-                        votesObjMapList.push({});
-                    }
-                )
+                const imageRef = ref(storage, `posts/${docRef.id}/imageLeft`)
+                await uploadString(
+                    imageRef,
+                    imageToCompareLeft,
+                    'data_url'
+                ).then(async (snapshot) => {
+                    // Get the download URL for the image
+                    const downloadURL = await getDownloadURL(imageRef)
+                    mediaObjectList.push({
+                        type: 'image',
+                        value: downloadURL,
+                    })
+                    votesObjMapList.push({})
+                })
             }
 
             // Upload the right image, if there is one
             if (imageToCompareRight) {
-                const imageRef = ref(storage, `posts/${docRef.id}/imageRight`);
-                await uploadString(imageRef, imageToCompareRight, 'data_url').then(
-                    async (snapshot) => {
-                        // Get the download URL for the image
-                        const downloadURL = await getDownloadURL(imageToCompareRight, snapshot);
-                        mediaObjectList.push({
-                            type: 'image',
-                            value: downloadURL,
-                        });
-                        votesObjMapList.push({});
-                    }
-                )
+                const imageRef = ref(storage, `posts/${docRef.id}/imageRight`)
+                await uploadString(
+                    imageRef,
+                    imageToCompareRight,
+                    'data_url'
+                ).then(async () => {
+                    // Get the download URL for the image
+                    const downloadURL = await getDownloadURL(imageRef)
+                    mediaObjectList.push({
+                        type: 'image',
+                        value: downloadURL,
+                    })
+                    votesObjMapList.push({})
+                })
             }
 
             if (textToCompareLeft) {
                 mediaObjectList.push({
                     type: 'text',
                     value: textToCompareLeft,
-                });
-                votesObjMapList.push({});
+                })
+                votesObjMapList.push({})
             }
 
             if (textToCompareRight) {
                 mediaObjectList.push({
                     type: 'text',
                     value: textToCompareLeft,
-                });
-                votesObjMapList.push({});
+                })
+                votesObjMapList.push({})
             }
 
             // Update the post with the image URLs and text
-            await updateDoc(doc(db, 'posts', docRef.id),
-            {
+            await updateDoc(doc(db, 'posts', docRef.id), {
                 compare: {
                     objList: mediaObjectList,
                     votesObjMapList: votesObjMapList,
-                }
+                },
             })
 
             // Remove previews
@@ -297,14 +302,18 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
 
         // Store the reference to this post to the list of posts created by the current user
-        const userDocRef = doc(db, 'users', userProfile.uid);
-        setDoc(userDocRef, {
-            posts: { id: docRef.id },
-        }, { merge: true });
+        const userDocRef = doc(db, 'users', userProfile.uid)
+        setDoc(
+            userDocRef,
+            {
+                posts: { id: docRef.id },
+            },
+            { merge: true }
+        )
 
         // Everything is done
-        setLoading(false);
-        if (inputRef) {
+        setLoading(false)
+        if (inputRef.current) {
             inputRef.current.value = ''
         }
     }
