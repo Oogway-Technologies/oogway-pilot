@@ -7,6 +7,8 @@ import { db } from '../firebase'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import { useState } from 'react'
+
+// Recoil states
 import { userProfileState } from '../atoms/user'
 import { useRecoilValue } from 'recoil'
 
@@ -14,10 +16,10 @@ export default function Home({ posts }) {
     // Call user Profile and check whether profile requires updating
     // Should only be called on user first log-in
     const userProfile = useRecoilValue(userProfileState)
-    // const [show, setShow] = useState(userProfile.resetProfile)
-    // const closeModal = () => {
-    //     setShow(false)
-    // }
+    const [show, setShow] = useState(userProfile.resetProfile)
+    const closeModal = () => {
+         setShow(false)
+    }
 
     return (
         <>
@@ -27,11 +29,13 @@ export default function Home({ posts }) {
                 </Head>
                 <FeedAPI posts={posts} />
             </div>
-            {/* <Modal
-        children={<UserProfileForm/>}
-        show={show}
-        onClose={closeModal}
-    /> */}
+            
+            {/* Modal for user profile */}
+            {/*<Modal
+                children={<UserProfileForm profile={userProfile}/>}
+                show={show}
+                onClose={closeModal}
+            />*/}
         </>
     )
 }

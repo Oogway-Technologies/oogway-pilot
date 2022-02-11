@@ -1,9 +1,16 @@
 import React, { useRef, useState, useEffect } from 'react'
 
 // Database
-import firebase from 'firebase/compat/app'
-import { auth, db, storage } from '../../../firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { db, storage } from '../../../firebase'
+import {
+    addDoc,
+    collection,
+    serverTimestamp,
+    updateDoc,
+    doc,
+    setDoc,
+} from 'firebase/firestore'
+import { ref, getDownloadURL, uploadString } from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
@@ -20,12 +27,13 @@ import { Collapse } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import useTimeout from '../../../hooks/useTimeout'
 import { UilExclamationTriangle } from '@iconscout/react-unicons'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
-import { doc } from 'firebase/firestore'
 import { postFormClass } from '../../../styles/feed'
 
+// Recoil states
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
+
 // Other and utilities
-import cryptoRandomString from 'crypto-random-string'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 
 type NewPostProps = {
@@ -39,8 +47,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
     questPlaceholder,
     descPlaceholder,
 }) => {
-    const [user] = useAuthState(auth)
-    const [userData] = useDocumentData(doc(db, 'users', user.uid))
+    const userProfile = useRecoilValue(userProfileState)
 
     // Form management
     const {
@@ -57,6 +64,8 @@ const NewPostForm: React.FC<NewPostProps> = ({
     useEffect(() => {
         register('compare', { required: true })
     }, [])
+
+    const [loading, setLoading] = useState(false)
 
     // The image to post and to display as preview
     const [imageToPost, setImageToPost] = useState(null)
@@ -140,78 +149,11 @@ const NewPostForm: React.FC<NewPostProps> = ({
         )
     }
 
-    const addCompareTextToPostSync = (textList, doc) => {
-        if (textList.length > 0) {
-            let text = textList[0]
-
-            // Remove the first element (currently being used)
-            textList.shift()
-
-            doc.get().then((docSnapshot) => {
-                let tmp = docSnapshot.data()
-                let obj = {
-                    type: 'text',
-                    value: text,
-                }
-
-                tmp.compare['objList'].push(obj)
-                tmp.compare['votesObjMapList'].push({})
-
-                doc.update(tmp).then(() => {
-                    // Recursively call the same function for the other
-                    // text to upload when the current upload is done
-                    addCompareTextToPostSync(textList, doc)
-                })
-            })
-        }
-    }
-
-    const addCompareDataToPostSync = (uploadTaskList, doc) => {
-        if (uploadTaskList.length > 0) {
-            let uploadTaskPair = uploadTaskList[0]
-
-            // Remove the first element (currently being used)
-            uploadTaskList.shift()
-
-            uploadTaskPair[0].on(
-                'state_changed',
-                null,
-                (error) => console.log(error),
-                () => {
-                    // When the uploads completes, add the image to the post
-                    storage
-                        .ref(uploadTaskPair[1])
-                        .getDownloadURL()
-                        .then((url) => {
-                            doc.get().then((docSnapshot) => {
-                                let tmp = docSnapshot.data()
-                                let obj = {
-                                    type: 'image',
-                                    value: url,
-                                }
-
-                                tmp.compare['objList'].push(obj)
-                                tmp.compare['votesObjMapList'].push({})
-                                doc.update(tmp).then(() => {
-                                    // Recursively call the same function for the other
-                                    // media to upload when the current upload is done
-                                    addCompareDataToPostSync(
-                                        uploadTaskList,
-                                        doc
-                                    )
-                                })
-                            })
-                        })
-                }
-            )
-        }
-    }
-
-    const sendPost = (e) => {
+    const sendPost = async (e) => {
         e.preventDefault()
 
         // If the input is empty, return asap
-        if (!inputRef.current.value) {
+        if (inputRef && !inputRef.current.value) {
             setError(
                 'question',
                 { type: 'required', message: 'A question is required.' },
@@ -220,6 +162,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
             return false // Whether to sendPost or not
         }
 
+        // If the post is a compare post and not all media is specified, return asap
         if (isMissingDataForComparePost() && !isComparePost()) {
             setError(
                 'compare',
@@ -233,15 +176,25 @@ const NewPostForm: React.FC<NewPostProps> = ({
             return false // Whether to send post or not
         }
 
+        // Avoid spamming the post button while uploading the post to the DB
+        if (loading) return
+        setLoading(true)
+
+        // Steps:
+        // 1) create a post and add to firestore 'posts' collection
+        // 2) get the post ID for the newly created post
+        // 3) upload the image to firebase storage with the post ID as the file name
+        // 4) get the dowanload URL for the image and update the original post with image url
+
         // Prepare the data to add as a post
         let postData = {
             message: inputRef.current.value, // Leaving field name as message even though UI refers to it as a question
             description: descriptionRef.current.value, // Optional description
-            name: userData.username ? userData.username : user.email, // Change this with username or incognito
-            uid: user.uid, // uid of the user that created this post
+            name: userProfile.username, // Change this with username or incognito
+            uid: userProfile.uid, // uid of the user that created this post
             isCompare: false, // Explicitly flag whether is compare type
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            timestamp: serverTimestamp(),
         }
 
         if (isComparePost()) {
@@ -255,122 +208,114 @@ const NewPostForm: React.FC<NewPostProps> = ({
             postData['compare'] = compareData
         }
 
-        // Add a post to the posts collection
-        db.collection('posts')
-            .add(postData)
-            .then((doc) => {
-                // After posting, check if the user has selected and image to post
-                if (imageToPost) {
-                    // Funky upload stuff for the image:
-                    // take the base64 encoded image and push it to the Firebase storage DB.
-                    // Note: this goes in the Storage DB under a folder named posts/[document_id]
-                    const uploadTask = storage
-                        .ref(`posts/${doc.id}`)
-                        .putString(imageToPost, 'data_url')
+        // Add the post to the firestore DB and get its ref
+        const docRef = await addDoc(collection(db, 'posts'), postData)
+
+        // Add media
+        if (imageToPost) {
+            // There is one image to upload: get its refernce in the DB
+            const imageRef = ref(storage, `posts/${docRef.id}/image`)
+
+            // Upload the image
+            await uploadString(imageRef, imageToPost, 'data_url').then(
+                async (snapshot) => {
+                    // Get the download URL for the image
+                    const downloadURL = await getDownloadURL(imageRef, snapshot)
+
+                    // Update the post with the image URL
+                    await updateDoc(doc(db, 'posts', docRef.id), {
+                        postImage: downloadURL,
+                    })
 
                     // Remove image preview
-                    removeImage()
-
-                    // When the state changes run the following function
-                    uploadTask.on(
-                        'state_change',
-                        null,
-                        (error) => console.error(error),
-                        () => {
-                            // When the uploads completes.
-                            // Note: ref(`post`).child(doc.id) === `posts/${doc.id}`.
-                            // Note: getDownloadURL() -> get the URL to use on the front-end
-                            storage
-                                .ref('posts')
-                                .child(doc.id)
-                                .getDownloadURL()
-                                .then((url) => {
-                                    // Store the URL in the DB as part of the post
-                                    db.collection('posts').doc(doc.id).set(
-                                        {
-                                            postImage: url,
-                                        },
-                                        { merge: true }
-                                    ) // Use merge: true! otherwise it replaces the Post!
-                                })
-                        }
-                    )
-                } else if (isComparePost()) {
-                    // This is a compare post
-                    let uploadTaskList = []
-                    let uploadTextList = []
-                    if (imageToCompareLeft) {
-                        const rndName = cryptoRandomString({ length: 10 })
-                        const mediaAddr = `posts/${doc.id}/${rndName}`
-                        const uploadTaskLeft = storage
-                            .ref(mediaAddr)
-                            .putString(imageToCompareLeft, 'data_url')
-
-                        // Add compare data to the post
-                        uploadTaskList.push([uploadTaskLeft, mediaAddr])
-                        //addCompareDataToPost(uploadTaskLeft, doc);
-                    }
-
-                    if (imageToCompareRight) {
-                        const rndName = cryptoRandomString({ length: 10 })
-                        const mediaAddr = `posts/${doc.id}/${rndName}`
-                        const uploadTaskRight = storage
-                            .ref(mediaAddr)
-                            .putString(imageToCompareRight, 'data_url')
-
-                        // Add compare data to the post
-                        //addCompareDataToPost(uploadTaskRight, doc);
-                        uploadTaskList.push([uploadTaskRight, mediaAddr])
-                    }
-
-                    if (textToCompareLeft) {
-                        uploadTextList.push(textToCompareLeft)
-                    }
-
-                    if (textToCompareRight) {
-                        uploadTaskList.push(textToCompareRight)
-                    }
-
-                    // Upload all media into the post doc
-                    addCompareDataToPostSync(uploadTaskList, doc)
-
-                    // Upload all text into the post doc
-                    addCompareTextToPostSync(uploadTextList, doc)
-
-                    // Remove image preview
-                    removeCompareObjects()
+                    removeImage(0)
                 }
+            )
+        } else if (isComparePost()) {
+            // This is a compare post and it is slightly more complex than the single image post
+            // since now we need to upload two images and/or text to the DB and post
+            let mediaObjectList: { type: string; value: string }[] = []
+            let votesObjMapList: {}[] = [] // TODO: remove and fix likes
 
-                // Store the reference to this post to the list of posts
-                // create by the current user.
-                // Why is this needed?
-                // If we don't keep track of this we would need to
-                // scan the entire collection of posts when retrieving
-                // the posts of a given user
-                db.collection('users')
-                    .doc(user.uid)
-                    .get()
-                    .then((userDoc) => {
-                        let tmp = userDoc.data()
-
-                        if ('posts' in tmp) {
-                            tmp.posts.push(doc.id)
-                        } else {
-                            // Add a new entry
-                            tmp['posts'] = [doc.id]
-                        }
-
-                        userDoc.ref.update(tmp)
+            // Upload the left image, if there is one
+            if (imageToCompareLeft) {
+                const imageRef = ref(storage, `posts/${docRef.id}/imageLeft`)
+                await uploadString(
+                    imageRef,
+                    imageToCompareLeft,
+                    'data_url'
+                ).then(async (snapshot) => {
+                    // Get the download URL for the image
+                    const downloadURL = await getDownloadURL(imageRef)
+                    mediaObjectList.push({
+                        type: 'image',
+                        value: downloadURL,
                     })
-                    .catch((err) => {
-                        console.log(err)
+                    votesObjMapList.push({})
+                })
+            }
+
+            // Upload the right image, if there is one
+            if (imageToCompareRight) {
+                const imageRef = ref(storage, `posts/${docRef.id}/imageRight`)
+                await uploadString(
+                    imageRef,
+                    imageToCompareRight,
+                    'data_url'
+                ).then(async () => {
+                    // Get the download URL for the image
+                    const downloadURL = await getDownloadURL(imageRef)
+                    mediaObjectList.push({
+                        type: 'image',
+                        value: downloadURL,
                     })
+                    votesObjMapList.push({})
+                })
+            }
+
+            if (textToCompareLeft) {
+                mediaObjectList.push({
+                    type: 'text',
+                    value: textToCompareLeft,
+                })
+                votesObjMapList.push({})
+            }
+
+            if (textToCompareRight) {
+                mediaObjectList.push({
+                    type: 'text',
+                    value: textToCompareLeft,
+                })
+                votesObjMapList.push({})
+            }
+
+            // Update the post with the image URLs and text
+            await updateDoc(doc(db, 'posts', docRef.id), {
+                compare: {
+                    objList: mediaObjectList,
+                    votesObjMapList: votesObjMapList,
+                },
             })
 
-        // Clear the input
-        inputRef.current.value = ''
+            // Remove previews
+            removeCompareObjects()
+        }
 
-        return true // Return true on a successful submission
+        // Store the reference to this post to the list of posts created by the current user
+        const userDocRef = doc(db, 'users', userProfile.uid)
+        setDoc(
+            userDocRef,
+            {
+                posts: { id: docRef.id },
+            },
+            { merge: true }
+        )
+
+        // Everything is done
+        setLoading(false)
+        if (inputRef.current) {
+            inputRef.current.value = ''
+        }
     }
 
     const addImageToCompareLeft = (e) => {
