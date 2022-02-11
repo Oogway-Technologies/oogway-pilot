@@ -3,18 +3,6 @@ import {FieldValue} from "firebase/firestore";
 export type blockedUsersMap = {[id: string] : boolean}
 
 export type postsMap = {[id: string] : boolean}
-
-export interface FirebaseUserProfile {
-    provider: string;
-    uid: string;
-    email: string;
-    expirationTime: string;
-    resetProfile: boolean;
-    photoUrl: string;
-    lastSeen: string;
-    name: string;
-}
-
 export interface FirebaseUser {
     email: string;
     lastSeen: FieldValue;

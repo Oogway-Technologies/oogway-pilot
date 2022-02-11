@@ -11,15 +11,15 @@ const Settings = ({ userProfile, referer }) => {
     const router = useRouter()
 
     // Block unauthorized users
-    const [user] = useAuthState(auth)
-    useEffect(() => {
-        if (!user) {
-            router.push(referer)
-        }
-        if (!user.uid === userProfile.uid) {
-            router.push(`settings/${user.uid}`)
-        }
-    }, [user])
+    //const [user] = useAuthState(auth)
+    //useEffect(() => {
+    //    if (!user) {
+    //        router.push(referer)
+    //    }
+    //    if (!user.uid === userProfile.uid) {
+    //        router.push(`settings/${user.uid}`)
+    //    }
+    //}, [user])
 
     // Modal handlers
     const [showModal, setShowModal] = useState(true)

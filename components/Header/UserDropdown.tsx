@@ -6,12 +6,10 @@ import LogoutButton from './LogoutButton'
 import DropdownMenu from '../Utils/DropdownMenu'
 import { userDropdownClass } from '../../styles/header'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, db } from '../../firebase'
 import { doc } from 'firebase/firestore'
 import { useDocumentData } from 'react-firebase-hooks/firestore'
 import Modal from '../../components/Utils/Modal'
 import UserProfileForm from '../Login/UserProfileForm'
-import { useRouter } from 'next/router'
 
 // JSX and styling
 import Button from '../Utils/Button'
@@ -21,12 +19,19 @@ import { loginButtons } from '../../styles/login'
 import { useUser } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router'
 
+// Recoil state
+import { userProfileState } from '../../atoms/user'
+import { useRecoilValue } from 'recoil'
+
 const UserDropdown: React.FC = () => {
     const router = useRouter();
     const { user, isLoading } = useUser();
+    const userProfile = useRecoilValue(userProfileState)
 
-    // const [user] = useAuthState(auth)
-    // const userData = useDocumentData(doc(db, 'users', user.uid))
+    // Navigate to user settings
+    const goToUserSettings = () => {
+        router.push(`/settings/${userProfile.uid}`)
+    }
 
     const signIn = () => {
         router.push("/api/auth/login");
@@ -37,7 +42,7 @@ const UserDropdown: React.FC = () => {
     const menuButton = (
         <Avatar
             className={userDropdownClass.avatar}
-            src={user ? user.picture : null}
+            src={userProfile ? userProfile.profilePic : (user ? user.picture : null)}
         />
     )
     

@@ -11,7 +11,10 @@ import {
 import Button from '../Utils/Button'
 import { Avatar, useMediaQuery } from '@mui/material'
 import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
-import preventDefaultOnEnter from '../../hooks/preventDefaultOnEnter'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
+
+// User profile
+import { FirebaseProfile } from '../../utils/types/firebase'
 
 // Firebase
 import { setDoc, updateDoc, doc } from 'firebase/firestore'
@@ -20,7 +23,7 @@ import { userProfileState } from '../../atoms/user'
 import { useRecoilState } from 'recoil'
 
 type UserProfileFormProps = {
-    profile: firebase.firestore.DocumentData
+    profile: FirebaseProfile
     closeModal: () => void
 }
 
