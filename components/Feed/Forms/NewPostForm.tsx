@@ -220,7 +220,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
             await uploadString(imageRef, imageToPost, 'data_url').then(
                 async (snapshot) => {
                     // Get the download URL for the image
-                    const downloadURL = await getDownloadURL(imageRef, snapshot)
+                    const downloadURL = await getDownloadURL(imageRef)
 
                     // Update the post with the image URL
                     await updateDoc(doc(db, 'posts', docRef.id), {

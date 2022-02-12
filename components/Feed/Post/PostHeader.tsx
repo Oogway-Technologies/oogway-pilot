@@ -1,57 +1,50 @@
-import React from 'react'
+import React, { FC } from 'react'
 import needsHook from '../../../hooks/needsHook'
-import { auth, db, storage } from '../../../firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { db, storage } from '../../../firebase'
 import PostOptionsDropdown from './PostOptionsDropdown'
 import { Avatar } from '@mui/material'
-import { avatarURL, postCardClass } from '../../../styles/feed'
+import { postCardClass } from '../../../styles/feed'
 import bull from '../../Utils/Bullet'
 import Timestamp from '../../Utils/Timestamp'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
-import { doc } from 'firebase/firestore'
+import { getUserDoc } from '../../../lib/userHelper'
+import { getCommentsCollection } from '../../../lib/commentsHelper'
+import { getPost } from '../../../lib/postsHelper'
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { useProfileData } from '../../../hooks/useProfileData'
 
 type PostHeaderProps = {
     id: string
     authorUid: string
-    name: string | null
-    email: string
+    name: string
     timestamp: Date | null
 }
 
-const PostHeader = ({
+const PostHeader: FC<PostHeaderProps> = ({
     id,
     name,
     authorUid,
-    email,
     timestamp,
-}: PostHeaderProps) => {
-    const [user] = useAuthState(auth)
+}) => {
+    // Listen to real time author profile data
+    const [authorProfile] = useProfileData(authorUid)
 
-    // Author profile
-    const [authorProfile] = useDocumentData(doc(db, 'profiles', authorUid)) // static, should listen for updates
-
-    const deletePostEntry = () => {
-        // Delete the post entry from the DB.
-        // Note: this post should NOT have any comments
-        db.collection('posts')
-            .doc(id)
-            .delete()
-            .catch((err) => {
-                console.log('Cannot delete post: ', err)
-            })
+    // Delete the post entry from the DB.
+    // Note: this post should NOT have any comments
+    const deletePostEntry = async () => {
+        const postDocRef = doc(db, 'posts', id)
+        await deleteDoc(postDocRef).catch((err) => {
+            console.log('Cannot delete post: ', err)
+        })
 
         // Update the user's posts list
-        db.collection('users')
-            .doc(user.uid)
-            .get()
-            .then((doc) => {
+        const authorUserDoc = getUserDoc(authorUid)
+        await authorUserDoc.then(async (doc) => {
+            if (doc?.exists()) {
                 let tmp = doc.data()
-                const index = tmp.posts.indexOf(id)
-                if (index > -1) {
-                    tmp.posts.splice(index, 1)
-                    doc.ref.update(tmp)
-                }
-            })
+                delete tmp.posts[id]
+                await updateDoc(doc.ref, tmp)
+            }
+        })
 
         // Delete the post's media, if any
         storage
@@ -67,36 +60,29 @@ const PostHeader = ({
 
     // Deletes a post
     const deletePost = () => {
+        const postDoc = getPost(id)
         // Before deleting the post, we need to delete the comments.
         // Comments is a sub-collection of the post, so we need to
         // retrieve all comments and delete them first.
-        db.collection('posts')
-            .doc(id)
-            .get()
-            .then(() => {
-                // Check if comments exists for this post
-                db.collection('posts')
-                    .doc(id)
-                    .collection('comments')
-                    .get()
-                    .then((sub) => {
-                        if (sub.docs.length > 0) {
-                            // Comments are present, delete them
-                            sub.forEach((com) => {
-                                com.ref.delete()
-                            })
-                        }
+        postDoc.then(() => {
+            // Check if comments exists for this post
+            const commentsCollection = getCommentsCollection(id)
+            commentsCollection
+                .then((sub) => {
+                    if (sub.docs.length > 0) {
+                        // Comments are present, delete them
+                        sub.forEach((com) => {
+                            com.ref.delete() // Check if issue with getDoc vs get in helpers
+                        })
+                    }
 
-                        // Proceed to delete the post
-                        deletePostEntry()
-                    })
-                    .catch((err) => {
-                        console.log('Cannot delete comments: ', err)
-                    })
-            })
-
-        // Return where the user should be routed, if necesary
-        return `/feed/${user.uid}`
+                    // Proceed to delete the post
+                    deletePostEntry()
+                })
+                .catch((err) => {
+                    console.log('Cannot delete comments: ', err)
+                })
+        })
     }
 
     return (
@@ -108,7 +94,7 @@ const PostHeader = ({
                     onClick={needsHook}
                     className={postCardClass.avatar}
                     src={
-                        authorProfile?.profilePic
+                        authorProfile.profilePic
                             ? authorProfile.profilePic
                             : null
                     }
@@ -119,7 +105,9 @@ const PostHeader = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            {name ? name : email}
+                            {authorProfile.username
+                                ? authorProfile.username
+                                : name}
                         </span>
                     </div>
                     <div className={postCardClass.leftMobileRowTwo}>
@@ -136,7 +124,9 @@ const PostHeader = ({
             <div className={postCardClass.headerRight}>
                 <PostOptionsDropdown
                     authorUid={authorUid}
-                    authorName={name ? name : email}
+                    authorName={
+                        authorProfile.username ? authorProfile.username : name
+                    }
                     deletePost={deletePost}
                 />
             </div>

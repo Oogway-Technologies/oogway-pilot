@@ -86,7 +86,6 @@ const PostCard: React.FC<PostProps> = ({
                 id={id}
                 authorUid={authorUid}
                 name={name}
-                email={email}
                 timestamp={timestamp}
             />
 

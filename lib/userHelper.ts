@@ -1,6 +1,6 @@
 import {UserProfile} from "@auth0/nextjs-auth0/src/frontend/use-user";
 import {db} from "../firebase";
-import {addDoc, collection, doc, getDocs, getDoc, query, setDoc, where, serverTimestamp} from "firebase/firestore";
+import {addDoc, collection, doc, getDocs, getDoc, query, setDoc, where, serverTimestamp, onSnapshot} from "firebase/firestore";
 import {FirebaseProfile, FirebaseUser} from "../utils/types/firebase";
 
 
@@ -52,4 +52,31 @@ export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
     } catch (e) {
         console.log(e)
     }
+}
+
+export const getUserDoc = async (id: string) => {
+    try {
+        const userDocRef = doc(db, "users", id);
+        return await getDoc(userDocRef);
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const getUserDocData = async (id: string) => {
+    try {
+        const userDocRef = doc(db, "users", id);
+        const userDoc = await getDoc(userDocRef);
+        return userDoc.data()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const streamUserData = (id: string,
+    snapshot: (snap: firebase.firestore.snapshot) => void, 
+    error: (err: any) => void
+    ) => {
+        const userDocRef = doc(db, "users", id);
+        return onSnapshot(userDocRef, snapshot, error)
 }

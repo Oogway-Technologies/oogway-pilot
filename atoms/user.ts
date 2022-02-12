@@ -1,7 +1,7 @@
 import {atom} from "recoil";
 import {FirebaseProfile} from "../utils/types/firebase";
 
-const defaultProfile = {
+export const defaultProfile = {
     bio: '',
     dm: false,
     lastName: '',
