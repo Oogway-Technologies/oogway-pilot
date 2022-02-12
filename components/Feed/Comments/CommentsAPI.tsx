@@ -1,22 +1,16 @@
 import React, { useState } from 'react'
-import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore'
-import { auth, db } from '../../../firebase'
 import { useRouter } from 'next/router'
 import Comment from './Comment'
-import {
-    avatarURL,
-    commentFormClass,
-    commentsApiClass,
-} from '../../../styles/feed'
-import { doc } from 'firebase/firestore'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { commentFormClass, commentsApiClass } from '../../../styles/feed'
 import needsHook from '../../../hooks/needsHook'
 import { Avatar, useMediaQuery } from '@mui/material'
 import firebase from 'firebase/compat/app'
 import NewCommentForm from '../Forms/NewCommentForm'
 import Button from '../../Utils/Button'
-import { UilCommentPlus } from '@iconscout/react-unicons'
 import Modal from '../../Utils/Modal'
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
+import { useComments } from '../../../hooks/useComments'
 
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
@@ -30,17 +24,10 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
     const isMobile = useMediaQuery('(max-width: 500px)')
 
     // Retrieve user profile
-    const [user] = useAuthState(auth)
-    const [userProfile] = useDocumentData(doc(db, 'profiles', user.uid))
+    const userProfile = useRecoilValue(userProfileState)
 
     // Get a snapshot of the comments from the DB
-    const [commentsSnapshot] = useCollection(
-        db
-            .collection('posts')
-            .doc(router.query.id)
-            .collection('comments')
-            .orderBy('timestamp', 'asc')
-    )
+    const [commentsSnapshot] = useComments(router.query.id)
 
     // Modal helper functions
     const openModal = () => {
@@ -56,7 +43,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
         // if so show the comments.
         // If not, show the props comments
         if (commentsSnapshot) {
-            return commentsSnapshot.docs.map((comment) => (
+            return commentsSnapshot.map((comment) => (
                 <Comment
                     key={comment.id}
                     commentOwner={comment.data().authorUid}
@@ -114,6 +101,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                                     : 'What do you think?'
                             }
                             isMobile={isMobile}
+                            closeModal={closeModal}
                         />
                     )}
                 </div>
@@ -121,7 +109,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                 {/* Comment counter */}
                 <p className={commentsApiClass.counter}>
                     {commentsSnapshot
-                        ? commentsSnapshot.docs.length
+                        ? commentsSnapshot.length
                         : JSON.parse(comments).length}{' '}
                     Answers
                 </p>

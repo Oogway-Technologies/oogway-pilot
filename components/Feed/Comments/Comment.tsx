@@ -71,6 +71,8 @@ function Comment({ commentOwner, postId, commentId, comment }) {
                         <NewReplyForm
                             commentId={commentId}
                             placeholder="What would you like to say back?"
+                            closeModal={closeModal}
+                            isMobile={isMobile}
                         />
                     </div>
                 </Collapse>

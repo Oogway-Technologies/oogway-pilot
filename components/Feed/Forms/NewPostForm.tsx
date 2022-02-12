@@ -316,6 +316,8 @@ const NewPostForm: React.FC<NewPostProps> = ({
         if (inputRef.current) {
             inputRef.current.value = ''
         }
+
+        return true
     }
 
     const addImageToCompareLeft = (e) => {
@@ -425,10 +427,10 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const sendAndClose = (e) => {
+    const sendAndClose = async (e) => {
         e.preventDefault()
         const success = sendPost(e)
-        if (success) {
+        if (await success) {
             closeModal(e)
         }
     }

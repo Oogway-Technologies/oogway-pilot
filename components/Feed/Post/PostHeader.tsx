@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import needsHook from '../../../hooks/needsHook'
-import { db, storage } from '../../../firebase'
+import { db } from '../../../firebase'
 import PostOptionsDropdown from './PostOptionsDropdown'
 import { Avatar } from '@mui/material'
 import { postCardClass } from '../../../styles/feed'
@@ -11,6 +11,7 @@ import { getCommentsCollection } from '../../../lib/commentsHelper'
 import { getPost } from '../../../lib/postsHelper'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { useProfileData } from '../../../hooks/useProfileData'
+import { deleteMedia } from '../../../lib/storageHelper'
 
 type PostHeaderProps = {
     id: string
@@ -47,15 +48,7 @@ const PostHeader: FC<PostHeaderProps> = ({
         })
 
         // Delete the post's media, if any
-        storage
-            .ref(`posts/${id}`)
-            .listAll()
-            .then((listResults) => {
-                const promises = listResults.items.map((item) => {
-                    return item.delete()
-                })
-                Promise.all(promises)
-            })
+        deleteMedia(`posts/${id}`)
     }
 
     // Deletes a post
@@ -83,6 +76,9 @@ const PostHeader: FC<PostHeaderProps> = ({
                     console.log('Cannot delete comments: ', err)
                 })
         })
+
+        // Return where the user should be routed
+        return '/'
     }
 
     return (

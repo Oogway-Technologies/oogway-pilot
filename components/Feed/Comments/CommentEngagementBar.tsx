@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { commentEngagementBarClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
 import { UilCornerUpLeftAlt, UilThumbsUp } from '@iconscout/react-unicons'
-import { auth, db } from '../../../firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { EngagementItems } from '../../../utils/types/global'
-import { getLikesForCommentEngagementBar } from '../../../lib/getLikesHelper'
+import { addLike } from '../../../lib/getLikesHelper'
+import { useCommentNumberLikes } from '../../../hooks/useNumberLikes'
+import { useCommentNumberReplies } from '../../../hooks/useNumberComments'
+import { useUser } from '@auth0/nextjs-auth0'
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../../atoms/user'
+import { getComment } from '../../../lib/commentsHelper'
 
 type CommentEngagementBarProps = {
     postId: string
@@ -20,63 +24,32 @@ const CommentEngagementBar = ({
     handleReply,
     expanded,
 }: CommentEngagementBarProps) => {
-    const [user] = useAuthState(auth)
-    const [numLikes, setNumLikes] = useState(0)
+    const { user } = useUser()
+    const userProfile = useRecoilValue(userProfileState)
 
-    useEffect(() => {
-        getLikesForCommentEngagementBar(postId, commentId, setNumLikes)
-        return () => {
-            setNumLikes(0)
-        }
-    }, [postId, commentId])
-
-    const addLike = (e) => {
-        e.preventDefault() // Don't think it is needed
-        db.collection('posts')
-            .doc(postId)
-            .collection('comments')
-            .doc(commentId)
-            .get()
-            .then((doc) => {
-                // Here goes the logic for toggling likes from each user
-                if (doc.exists) {
-                    // Get a reference to the comment
-                    let tmp = doc.data()
-
-                    // Step 1: check if user.uid is in the list
-                    if (user.uid in tmp.likes) {
-                        // Negate what the user previously did
-                        tmp.likes[user.uid] = !tmp.likes[user.uid]
-                    } else {
-                        // The user liked the comment
-                        tmp.likes[user.uid] = true
-                    }
-
-                    // Update comment.
-                    // Note: a simple update here is fine.
-                    // No need for a transaction, since even if a like is lost,
-                    // That event is very rare and probably not so much of a pain
-                    doc.ref.update(tmp)
-                } else {
-                    console.log('Error comment not found: ' + commentId)
-                }
-            })
-    }
+    // Track number of likes and Comments
+    const [numLikes] = useCommentNumberLikes(postId, commentId)
+    const [numReplies] = useCommentNumberReplies(postId, commentId)
 
     // Items
     const engagementItems: EngagementItems[] = [
+        {
+            icon: <UilCornerUpLeftAlt />,
+            text: `${
+                numReplies === 1
+                    ? `${numReplies} Reply`
+                    : `${numReplies} Replies`
+            }`,
+            onClick: handleReply,
+        },
         {
             icon: <UilThumbsUp />,
             text: `${
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
-            onClick: addLike,
+            onClick: () =>
+                addLike(user, userProfile, getComment(postId, commentId)),
             expanded: expanded,
-        },
-        {
-            icon: <UilCornerUpLeftAlt />,
-            text: 'Reply',
-            onClick: handleReply,
         },
         // {
         //     icon: <UilUpload/>,
@@ -95,7 +68,10 @@ const CommentEngagementBar = ({
             {engagementItems.map((item, idx) => (
                 <Button
                     key={idx}
-                    addStyle={commentEngagementBarClass.engagementButton}
+                    addStyle={
+                        commentEngagementBarClass.engagementButton +
+                        (!user && idx === 1 ? ' cursor-default' : '')
+                    }
                     type="button"
                     onClick={item.onClick}
                     icon={item.icon}
