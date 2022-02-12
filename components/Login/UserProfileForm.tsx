@@ -1,26 +1,21 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useState, useRef } from 'react'
-import { db, storage } from '../../firebase'
-import {
-    loginButtons,
-    loginDivs,
-    loginImages,
-    loginInputs,
-} from '../../styles/login'
+import {useRouter} from 'next/router'
+import {useRef, useState} from 'react'
+import {db, storage} from '../../firebase'
+import {loginButtons, loginDivs, loginImages, loginInputs,} from '../../styles/login'
 import Button from '../Utils/Button'
-import { Avatar, useMediaQuery } from '@mui/material'
-import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
+import {Avatar, useMediaQuery} from '@mui/material'
+import {UilImagePlus, UilTrashAlt} from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 // User profile
-import { FirebaseProfile } from '../../utils/types/firebase'
+import {FirebaseProfile} from '../../utils/types/firebase'
 
 // Firebase
-import { setDoc, updateDoc, doc } from 'firebase/firestore'
-import { ref, getDownloadURL, uploadString } from '@firebase/storage'
-import { userProfileState } from '../../atoms/user'
-import { useRecoilState } from 'recoil'
+import {doc, setDoc, updateDoc} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
+import {userProfileState} from '../../atoms/user'
+import {useRecoilState} from 'recoil'
 
 type UserProfileFormProps = {
     profile: FirebaseProfile
@@ -28,9 +23,9 @@ type UserProfileFormProps = {
 }
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({
-    profile,
-    closeModal,
-}) => {
+                                                             profile,
+                                                             closeModal,
+                                                         }) => {
     // Get current user profile
     const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
@@ -64,7 +59,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         // 2) get the post ID for the newly created profile
         // 3) upload the image to firebase storage with the profile ID as the file name
         // 4) get the dowanload URL for the image and update the original post with image url
-        const docRef = await setDoc(doc(db, 'profiles', user.uid), {
+        const docRef = await setDoc(doc(db, 'profiles', userProfile.uid), {
             username: username,
             name: name,
             lastName: last,
@@ -78,19 +73,19 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         // Upload the profile image in Firebase storage.
         // Note: path to image is profiles/<profile_id>/image
         if (imageToUpload) {
-            const imageRef = ref(storage, `profiles/${user.uid}/image`)
+            const imageRef = ref(storage, `profiles/${userProfile.uid}/image`)
             await uploadString(imageRef, imageToUpload, 'data_url').then(
                 async (snapshot) => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef, snapshot)
 
                     // Update the original profile with the image url
-                    await updateDoc(doc(db, 'profiles', user.uid), {
+                    await updateDoc(doc(db, 'profiles', userProfile.uid), {
                         profilePic: downloadURL,
                     })
 
                     // Upadate the user's data as well
-                    await updateDoc(doc(db, 'users', user.uid), {
+                    await updateDoc(doc(db, 'users', userProfile.uid), {
                         name: name.trim(),
                         username: username,
                         photoUrl: downloadURL,
@@ -170,7 +165,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         } else {
             size = 150
         }
-        return { width: size, height: size }
+        return {width: size, height: size}
     }
 
     return (
@@ -198,7 +193,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             className={loginButtons.uploadImage}
                             onClick={() => profilePicRef.current.click()}
                         >
-                            <UilImagePlus />
+                            <UilImagePlus/>
                             <span>Upload Image</span>
                             <input
                                 ref={profilePicRef}
@@ -220,7 +215,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             disabled={!imageToUpload}
                             onClick={handleRemoveImage}
                         >
-                            <UilTrashAlt />
+                            <UilTrashAlt/>
                             <span>Remove Image</span>
                         </button>
                     </div>
