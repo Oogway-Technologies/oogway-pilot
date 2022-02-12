@@ -1,28 +1,37 @@
-import React, { useState } from 'react';
-import Button from '../../Utils/Button';
-import DropdownMenu from '../../Utils/DropdownMenu';
-import { UilQuestionCircle, UilExclamationCircle, UilBan, UilTrashAlt, UilEllipsisH} from '@iconscout/react-unicons'
-import { auth, db } from '../../../firebase';
-import Modal from '../../Utils/Modal';
-import { Dialog } from '@headlessui/react';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { doc } from 'firebase/firestore';
-import { postOptionsDropdownClass } from '../../../styles/feed';
-import needsHook from '../../../hooks/needsHook';
-import { useRouter } from 'next/router';
+import React, { useState } from 'react'
+import Button from '../../Utils/Button'
+import DropdownMenu from '../../Utils/DropdownMenu'
+import {
+    UilQuestionCircle,
+    UilExclamationCircle,
+    UilBan,
+    UilTrashAlt,
+    UilEllipsisH,
+} from '@iconscout/react-unicons'
+import Modal from '../../Utils/Modal'
+import { Dialog } from '@headlessui/react'
+import { postOptionsDropdownClass } from '../../../styles/feed'
+import needsHook from '../../../hooks/needsHook'
+import { useRouter } from 'next/router'
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
+import { getUserDoc } from '../../../lib/userHelper'
 
 type PostOptionsDropdownProps = {
-    authorUid: string, // Post author id
-    deletePost:  React.MouseEventHandler<HTMLButtonElement> // Handler function to delete post
-    authorName: string, // Post author name
+    authorUid: string // Post author id
+    deletePost: React.MouseEventHandler<HTMLButtonElement> // Handler function to delete post
+    authorName: string // Post author name
 }
 
-const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid, deletePost, authorName }) => {
-    const [user] = useAuthState(auth);
-    const [userData] = useDocumentData(doc(db, "users", user.uid));
-    
-    const router = useRouter();
+const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
+    authorUid,
+    deletePost,
+    authorName,
+}) => {
+    const userProfile = useRecoilValue(userProfileState) // Get user profile
+    const currentUserDoc = getUserDoc(userProfile.uid) // Get user document data
+
+    const router = useRouter()
 
     // Modal state
     const [isOpen, setIsOpen] = useState(false)
@@ -36,167 +45,166 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({ authorUid, de
         setIsOpen(false)
     }
 
-    const isUsersOwnPost = (authorUid) => {
-        return user?.uid === authorUid
+    const isUsersOwnPost = (authorUid: string) => {
+        return userProfile.uid === authorUid
     }
 
-    const isUserBlocked = (authorUid) => {
-        return userData?.blockedUsers?.includes(authorUid)
+    const isUserBlocked = (authorUid: string) => {
+        return authorUid in currentUserDoc?.data().blockedUsers
     }
 
     // Handler functions
     const blockUser = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         // Return early if user already blocked
-        console.log(user.posts);
         if (isUserBlocked(authorUid)) {
             return
         }
 
         // Otherwise add blocked user uid to current user's
-        // blockedUsers array
-        // Why is this needed?
-        // The alternative is to create a separate collection for blocked
-        // users which maps  user's uid to an array of blocked user uids
-        // Storing this as an attribute under the user collection is more 
-        // efficient because we will need to store the current user attribuutes
-        // in global state
-        db.collection("users")
-        .doc(user.uid)
-        .get()
-        .then((userDoc) => {
-            let tmp = userDoc.data();
-
-            if ("blockedUsers" in tmp) {
-                tmp.blockedUsers.push(authorUid)
-            } else {
-                // Create a new array
-                tmp["blockedUsers"] = [authorUid]
-            }
-
-            userDoc.ref.update(tmp);
-        })
-        .catch((err) => {console.log(err)})
+        // blockedUsers map
+        currentUserDoc
+            .then((doc) => {
+                let tmp = doc.data()
+                tmp.blockedUsers[authorUid] = true
+                doc.ref.update(tmp)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     const unblockUser = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         // Return early if user not blocked
         if (!isUserBlocked(authorUid)) {
             return
         }
 
-        // Remove blocked user uid from current user's 
+        // Remove blocked user uid from current user's
         // blockedUser list
-        db.collection("users")
-        .doc(user.uid)
-        .get()
-        .then((userDoc) => {
-            let tmp = userDoc.data();
-            const index = tmp.blockedUsers.indexOf(authorUid);
-            if (index > -1) {
-                tmp.blockedUsers.splice(index, 1);
-                userDoc.ref.update(tmp);
-            }
-        })
-        .catch((err) => {console.log(err)})
+        currentUserDoc
+            .then((doc) => {
+                let tmp = doc.data()
+                delete tmp.blockedUSers[authorUid]
+                doc.ref.update(tmp)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     const deleteAndClose = (e) => {
-        e.preventDefault();
-        const nextRoute = deletePost(e);
-        closeModal();
+        e.preventDefault()
+        deletePost(e)
+        closeModal()
 
         // Reroute user back to homepage if not already there
-        if (router.pathname !== nextRoute) {
-            router.push(nextRoute);
+        if (router.pathname !== '/') {
+            router.push('/')
         }
     }
 
     // Confirm delete post modal component
     const ConfirmDeletePost = () => {
-
         return (
             <div className={postOptionsDropdownClass.modalDiv}>
-                <Dialog.Title as="div" className={postOptionsDropdownClass.modalTitle}>
-                    Are you sure you want to delete your post? It will be gone forever.
+                <Dialog.Title
+                    as="div"
+                    className={postOptionsDropdownClass.modalTitle}
+                >
+                    Are you sure you want to delete your post? It will be gone
+                    forever.
                 </Dialog.Title>
-                
+
                 {/* Cancel / Submit buttons */}
                 <div className="inline-flex w-full space-x-3 px-2">
-                    <Button text="No" keepText={true} icon={null}
-                        type='button' 
+                    <Button
+                        text="No"
+                        keepText={true}
+                        icon={null}
+                        type="button"
                         addStyle={postOptionsDropdownClass.modalCancelButton}
                         onClick={closeModal}
                     />
-                    <Button text="Yes, delete" keepText={true} icon={<UilTrashAlt/>}
+                    <Button
+                        text="Yes, delete"
+                        keepText={true}
+                        icon={<UilTrashAlt />}
                         type="submit"
                         addStyle={postOptionsDropdownClass.modalConfirmButton}
-                        onClick={deleteAndClose}/>
+                        onClick={deleteAndClose}
+                    />
                 </div>
             </div>
         )
     }
 
     // Dropdown menu props
-    const menuButton = <UilEllipsisH/>
+    const menuButton = <UilEllipsisH />
     const ownPostMenuItems = [
-        <Button 
+        <Button
             text="Delete Post"
             keepText={true}
-            icon={<UilTrashAlt/>}
+            icon={<UilTrashAlt />}
             type="button"
             onClick={openModal}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
-        />
+        />,
     ]
     const otherPostMenuItems = [
-        <Button 
+        <Button
             text="Not Interested in This Post"
             keepText={true}
-            icon={<UilQuestionCircle/>}
+            icon={<UilQuestionCircle />}
             type="button"
             onClick={needsHook}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
         />,
-        // TODO: Get more input on business logic. Does not make sense to be able to unblock 
+        // TODO: Get more input on business logic. Does not make sense to be able to unblock
         // a user you've previous blocked froom within their posts. Presumably, you wouldn't see
         // a blocked user's posts...
-        <Button 
-            text={`${isUserBlocked(authorUid) ? 'Unblock' : 'Block'} ${authorName}`}
+        <Button
+            text={`${
+                isUserBlocked(authorUid) ? 'Unblock' : 'Block'
+            } ${authorName}`}
             keepText={true}
-            icon={<UilBan/>}
+            icon={<UilBan />}
             type="button"
             onClick={isUserBlocked(authorUid) ? unblockUser : blockUser}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
         />,
-        <Button 
+        <Button
             text="Report"
             keepText={true}
-            icon={<UilExclamationCircle/>}
+            icon={<UilExclamationCircle />}
             type="button"
             onClick={needsHook}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
-        />
+        />,
     ]
 
     return (
-            <>
-            <DropdownMenu 
+        <>
+            <DropdownMenu
                 menuButtonClass={postOptionsDropdownClass.menuButtonClass}
                 menuItemsClass={postOptionsDropdownClass.menuItemsClass}
                 menuButton={menuButton}
-                menuItems={isUsersOwnPost(authorUid) ? ownPostMenuItems : otherPostMenuItems}
+                menuItems={
+                    isUsersOwnPost(authorUid)
+                        ? ownPostMenuItems
+                        : otherPostMenuItems
+                }
             />
-            <Modal 
-                children={<ConfirmDeletePost/>}
+            <Modal
+                children={<ConfirmDeletePost />}
                 show={isOpen}
                 onClose={closeModal}
             />
-            </>
+        </>
     )
-};
+}
 
-export default PostOptionsDropdown;
+export default PostOptionsDropdown

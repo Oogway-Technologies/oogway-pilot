@@ -1,5 +1,5 @@
-import {db} from "../../firebase";
-import {findLikes} from "./common";
+import {db} from "../firebase";
+import {findLikes} from "../utils/helpers/common";
 
 /**
  *

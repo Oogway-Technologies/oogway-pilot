@@ -6,6 +6,7 @@ import PostEngagementBar from './PostEngagementBar'
 import PostHeader from './PostHeader'
 import PostVotingMechanism from './PostVotingMechanism'
 import CommentsAPI from '../Comments/CommentsAPI'
+import { useUser } from '@auth0/nextjs-auth0'
 
 interface PostProps {
     authorUid: string

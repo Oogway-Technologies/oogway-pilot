@@ -1,76 +1,79 @@
-import React, {useEffect, useState} from 'react';
-import {commentEngagementBarClass, replyEngagementBarClass} from '../../../styles/feed';
-import Button from '../../Utils/Button';
-import {UilThumbsUp} from '@iconscout/react-unicons'
-import {auth, db} from '../../../firebase';
-import {useAuthState} from 'react-firebase-hooks/auth';
-import {EngagementItems} from "../../../utils/types/global";
-import {getLikesForReplyEngagementBar} from "../../../utils/helpers/getLikesHelper";
-
+import React, { useEffect, useState } from 'react'
+import {
+    commentEngagementBarClass,
+    replyEngagementBarClass,
+} from '../../../styles/feed'
+import Button from '../../Utils/Button'
+import { UilThumbsUp } from '@iconscout/react-unicons'
+import { auth, db } from '../../../firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { EngagementItems } from '../../../utils/types/global'
+import { getLikesForReplyEngagementBar } from '../../../lib/getLikesHelper'
 
 type ReplyEngagementBarProps = {
-    postId: string,
-    commentId: string,
+    postId: string
+    commentId: string
     replyId: string
-};
+}
 
-const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = (
-    {
-        postId,
-        commentId,
-        replyId
-    }) => {
-    const [user] = useAuthState(auth);
-    const [numLikes, setNumLikes] = useState(0);
+const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
+    postId,
+    commentId,
+    replyId,
+}) => {
+    const [user] = useAuthState(auth)
+    const [numLikes, setNumLikes] = useState(0)
 
     useEffect(() => {
         getLikesForReplyEngagementBar(postId, commentId, replyId, setNumLikes)
         return () => {
             setNumLikes(0)
         }
-    }, [postId, commentId, replyId]);
+    }, [postId, commentId, replyId])
 
     const addLike = (e) => {
-        e.preventDefault(); // Don't think it is needed
-        db.collection("posts")
+        e.preventDefault() // Don't think it is needed
+        db.collection('posts')
             .doc(postId)
-            .collection("comments")
+            .collection('comments')
             .doc(commentId)
-            .collection("replies")
+            .collection('replies')
             .doc(replyId)
             .get()
             .then((doc) => {
                 // Here goes the logic for toggling likes from each user
                 if (doc.exists) {
                     // Get a reference to the comment
-                    let tmp = doc.data();
+                    let tmp = doc.data()
 
                     // Step 1: check if user.uid is in the list
                     if (user.uid in tmp.likes) {
                         // Negate what the user previously did
-                        tmp.likes[user.uid] = !tmp.likes[user.uid];
+                        tmp.likes[user.uid] = !tmp.likes[user.uid]
                     } else {
                         // The user liked the comment
-                        tmp.likes[user.uid] = true;
+                        tmp.likes[user.uid] = true
                     }
 
                     // Update comment.
                     // Note: a simple update here is fine.
                     // No need for a transaction, since even if a like is lost,
                     // That event is very rare and probably not so much of a pain
-                    doc.ref.update(tmp);
+                    doc.ref.update(tmp)
                 } else {
-                    console.log("Error comment not found: " + commentId);
+                    console.log('Error comment not found: ' + commentId)
                 }
-            });
-    };
+            })
+    }
 
     // Items
     const engagementItems: EngagementItems[] = [
         {
-            icon: <UilThumbsUp/>,
-            text: `${numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`}`,
-            onClick: addLike
+            icon: <UilThumbsUp />,
+            text: `${
+                numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
+            }`,
+            onClick: addLike,
         },
         // {
         //     icon: <UilUpload/>,
@@ -84,21 +87,21 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = (
         // },
     ]
 
-    return <div className={replyEngagementBarClass.engagementBar}>
-        {
-            engagementItems.map((item, idx) => (
+    return (
+        <div className={replyEngagementBarClass.engagementBar}>
+            {engagementItems.map((item, idx) => (
                 <Button
                     key={idx}
                     addStyle={commentEngagementBarClass.engagementButton}
-                    type='button'
+                    type="button"
                     onClick={item.onClick}
                     icon={item.icon}
                     keepText={true}
                     text={item.text}
                 />
-            ))
-        }
-    </div>
-};
+            ))}
+        </div>
+    )
+}
 
-export default ReplyEngagementBar;
+export default ReplyEngagementBar
