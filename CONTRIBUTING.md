@@ -2,7 +2,7 @@
 
 [Oogway](www.oogway.ai) is a DAO (decentralized autonomous organization) and therefore contributions are our lifeblood. We strive to make contributing as seemless as possible and welcome any recommendations on how to improve.
 
-First thing's first, Oogway lives at our [discord server](https://discord.com/invite/GYKDE85pxN) and out [Notion](https://oog.notion.site/Oogway-Home-f4ee1e1bca58404f8088bc7eac36064d) page. Please join discord and introduce yourself. And please take a look at the notion page. If you are here, then you are likely already interested in contributing to the Oogway-Pilot app -- the beta version of our social + evaluate + search ecosystem. Nonetheless, you may discover other ways you can contribute, in addition to, or besides this project. Please take a moment to familiarize yourself with Oogway and our contributor culture.
+First thing's first, Oogway lives at our [discord server](https://discord.com/invite/GYKDE85pxN) and our [Notion](https://oog.notion.site/Oogway-Home-f4ee1e1bca58404f8088bc7eac36064d) page. Please join discord and introduce yourself. And please take a look at the notion page. If you are here, then you are likely already interested in contributing to the Oogway-Pilot app -- the beta version of our social + evaluate + search ecosystem. Nonetheless, you may discover other ways you can contribute, in addition to, or besides this project. Please take a moment to familiarize yourself with Oogway and our contributor culture.
 
 If you've already done the above and are ready to get working on your first issue, then head down to the Pull Request Process section. Otherwise, below is a brief summary of Oogway's mission and contribution process.
 
