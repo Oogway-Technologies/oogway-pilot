@@ -55,6 +55,10 @@ export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
 }
 
 export const getUserDoc = async (id: string) => {
+    if (!id) {
+        return null;
+    }
+
     try {
         const userDocRef = doc(db, "users", id);
         return await getDoc(userDocRef);
@@ -65,9 +69,13 @@ export const getUserDoc = async (id: string) => {
 
 export const getUserDocData = async (id: string) => {
     try {
-        const userDocRef = doc(db, "users", id);
-        const userDoc = await getDoc(userDocRef);
-        return userDoc.data()
+        await getUserDoc(id).then(doc => {
+            if (doc) {
+                return doc.data()
+            } else { 
+                return null;
+            }
+        })
     } catch (e) {
         console.log(e)
     }

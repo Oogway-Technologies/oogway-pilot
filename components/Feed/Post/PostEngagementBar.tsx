@@ -104,7 +104,7 @@ const PostEngagementBar = ({ id }: PostEngagementBarProps) => {
             {engagementItems.map((item, idx) => (
                 <Button
                     key={idx}
-                    addStyle={postCardClass.engagementButton}
+                    addStyle={postCardClass.engagementButton + ((!user && idx === 1) ? ' cursor-default' : '')}
                     type="button"
                     onClick={item.onClick}
                     icon={item.icon}
