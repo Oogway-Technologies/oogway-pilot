@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import needsHook from '../../../hooks/needsHook'
 import { db } from '../../../firebase'
 import PostOptionsDropdown from './PostOptionsDropdown'
 import {Avatar} from '@mui/material'
@@ -11,6 +10,7 @@ import { getPost } from '../../../lib/postsHelper'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { deleteMedia } from '../../../lib/storageHelper'
+import { useRouter } from 'next/router'
 
 type PostHeaderProps = {
     id: string
