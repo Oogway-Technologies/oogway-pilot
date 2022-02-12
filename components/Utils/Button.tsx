@@ -2,7 +2,7 @@ import {useMediaQuery} from '@mui/material';
 import {ButtonHTMLAttributes, FC, MouseEventHandler, ReactNode} from 'react';
 
 interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    icon: any,
+    icon?: any,
     keepText?: boolean
     forceNoText?: boolean
     text?: string

@@ -2,9 +2,8 @@ import React, { FC } from 'react'
 import needsHook from '../../../hooks/needsHook'
 import { db } from '../../../firebase'
 import PostOptionsDropdown from './PostOptionsDropdown'
-import { Avatar } from '@mui/material'
-import { postCardClass } from '../../../styles/feed'
-import bull from '../../Utils/Bullet'
+import {Avatar} from '@mui/material'
+import {postCardClass} from '../../../styles/feed'
 import Timestamp from '../../Utils/Timestamp'
 import { getUserDoc } from '../../../lib/userHelper'
 import { getCommentsCollection } from '../../../lib/commentsHelper'
@@ -21,13 +20,15 @@ type PostHeaderProps = {
 }
 
 const PostHeader: FC<PostHeaderProps> = ({
-    id,
-    name,
-    authorUid,
-    timestamp,
-}) => {
+                                             id,
+                                             name,
+                                             authorUid,
+                                             timestamp,
+                                         }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
+    // router from next.js to use location functions.
+    const router = useRouter()
 
     // Delete the post entry from the DB.
     // Note: this post should NOT have any comments
@@ -81,19 +82,20 @@ const PostHeader: FC<PostHeaderProps> = ({
         return '/'
     }
 
+    const handleProfileAvatarClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault()
+        await router.push(`/profile/${authorUid}`)
+    }
+
     return (
         <div className={postCardClass.header}>
             {/* Left content */}
             <div className={postCardClass.headerLeft}>
                 {/* Avatar */}
                 <Avatar
-                    onClick={needsHook}
+                    onClick={handleProfileAvatarClick}
                     className={postCardClass.avatar}
-                    src={
-                        authorProfile.profilePic
-                            ? authorProfile.profilePic
-                            : null
-                    }
+                    src={authorProfile?.profilePic || undefined}
                 />
 
                 {/* Split into two rows on mobile */}
@@ -111,7 +113,7 @@ const PostHeader: FC<PostHeaderProps> = ({
                         {/* <p className={postCardClass.categoryP}>Education</p>
                         {bull} */}
                         {/* Time stamp */}
-                        <Timestamp timestamp={timestamp} />
+                        <Timestamp timestamp={timestamp}/>
                     </div>
                 </div>
             </div>

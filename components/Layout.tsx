@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react'
+import React, {useEffect} from 'react'
 import Header from './Header/Header'
-import { useUser } from '@auth0/nextjs-auth0'
-import { userProfileState } from '../atoms/user'
-import { useSetRecoilState } from 'recoil'
-import { getOrCreateUserFromFirebase } from '../lib/userHelper'
+import {useUser} from '@auth0/nextjs-auth0'
+import {userProfileState} from '../atoms/user'
+import {useSetRecoilState} from 'recoil'
+import {getOrCreateUserFromFirebase} from '../lib/userHelper'
+import {FirebaseProfile} from "../utils/types/firebase";
+import firebase from "firebase/compat";
+import DocumentData = firebase.firestore.DocumentData;
 
 interface LayoutProps {
     children: React.ReactNode
 }
 
-const Layout = ({ children }: LayoutProps) => {
-    const { user, isLoading } = useUser()
+const Layout = ({children}: LayoutProps) => {
+    const {user, isLoading} = useUser()
 
     // Get userProfileState state from recoil.
     const setUserProfileState = useSetRecoilState(userProfileState)
@@ -20,12 +23,12 @@ const Layout = ({ children }: LayoutProps) => {
     // It will then set the recoil state with the user profile information
     // to make it available to each component.
     useEffect(() => {
-        // isLoading is completed (i.e., it is not loading anymoe) and user exists,
+        // isLoading is completed (i.e., it is not loading anymore) and user exists,
         // getUserFromFirebase will get the returned user from the backend
         // and set it to recoil state by setUserProfileState
         if (!isLoading && user) {
-            getOrCreateUserFromFirebase(user).then((data) => {
-                setUserProfileState(data || {})
+            getOrCreateUserFromFirebase(user).then((data: FirebaseProfile | DocumentData | undefined) => {
+                setUserProfileState(data as FirebaseProfile)
             })
         }
     }, [isLoading, user])
@@ -33,7 +36,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <div className="flex flex-col min-h-screen max-h-screen overflow-y-hidden">
             <div className="sticky">
-                <Header />
+                <Header/>
             </div>
             <div className="">
                 <main>{children}</main>
