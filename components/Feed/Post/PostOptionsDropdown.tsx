@@ -129,12 +129,12 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
 
     const deleteAndClose = (e) => {
         e.preventDefault()
-        deletePost(e)
+        const nextUrl = deletePost(e)
         closeModal()
 
         // Reroute user back to homepage if not already there
-        if (router.pathname !== '/') {
-            router.push('/')
+        if (router.pathname !== nextUrl) {
+            router.push(nextUrl)
         }
     }
 

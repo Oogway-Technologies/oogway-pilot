@@ -1,19 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { useForm } from 'react-hook-form'
-import { auth, db, storage } from '../../../firebase'
-import { v4 as uuidv4 } from 'uuid'
+
+// Database
+import { db, storage } from '../../../firebase'
+import firebase from 'firebase/compat/app'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+} from 'firebase/firestore'
+import { ref, getDownloadURL, uploadString } from '@firebase/storage'
+import { getUserDoc } from '../../../lib/userHelper'
+
+// JSX and Styles
+import { commentFormClass } from '../../../styles/feed'
+import Button from '../../Utils/Button'
+
+// Form
+import useTimeout from '../../../hooks/useTimeout'
+import { useRouter } from 'next/router'
 import {
     UilCommentPlus,
     UilExclamationTriangle,
     UilImagePlus,
     UilTimesCircle,
 } from '@iconscout/react-unicons'
-import useTimeout from '../../../hooks/useTimeout'
-import { useRouter } from 'next/router'
-import firebase from 'firebase/compat/app'
-import { avatarURL, commentFormClass } from '../../../styles/feed'
-import Button from '../../Utils/Button'
+
+// Recoil states
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
+
+// Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 
 type NewCommentFormProps = {
@@ -27,8 +47,8 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
     isMobile,
     placeholder,
 }) => {
+    const userProfile = useRecoilValue(userProfileState)
     const router = useRouter()
-    const [user] = useAuthState(auth)
 
     // The image to post and to display as preview
     const [imageToPost, setImageToPost] = useState(null)
@@ -36,6 +56,9 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
     // to load the same image twice
     const filePickerRef = useRef(null) // Get a reference for the input image
     const inputRef = useRef(null) // Get a reference to the input text
+
+    // Track upload
+    const [loading, setLoading] = useState(false)
 
     // Form management
     const {
@@ -85,11 +108,11 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         )
     }
 
-    const addComment = (e) => {
+    const addComment = async (e) => {
         e.preventDefault()
 
         // Return asap if no input
-        if (!inputRef.current.value) {
+        if (inputRef && !inputRef.current.value) {
             setError(
                 'comment',
                 { type: 'required', message: 'A comment is required.' },
@@ -98,107 +121,97 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             return false // Whether to addComment or not
         }
 
+        // Avoid spamming the post button while uploading the post to the DB
+        if (loading) return
+        setLoading(true)
+
         // First of all, update last seen entry for the user
         // currently posting a comment
-        db.collection('users').doc(user.uid).set(
+        const userDocRef = doc(db, 'users', userProfile.uid)
+        setDoc(
+            userDocRef,
             {
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             },
             { merge: true }
-        ) // Remember to MERGE the content otherwise it will be overwritten!
+        )
 
         // Now add a new comment for this post
         let commentData = {
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            timestamp: serverTimestamp(),
             message: inputRef.current.value,
-            author: user.username ? user.username : user.email,
-            authorUid: user.uid,
+            author: userProfile.username,
+            authorUid: userProfile.uid,
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
         }
-        db.collection('posts')
-            .doc(router.query.id)
-            .collection('comments')
-            .add(commentData)
-            .then((doc) => {
-                // After posting, check if the user has selected and image to post
-                if (imageToPost) {
-                    // Funky upload stuff for the image:
-                    // take the base64 encoded image and push it to the Firebase storage DB.
-                    // Note: this goes in the Storage DB under a folder named posts/[document_id]
-                    const uploadTask = storage
-                        .ref(`posts/${doc.id}`) // Should we make a sub-dir for comments or treat comments as a type of post?
-                        .putString(imageToPost, 'data_url')
+        const docRef = await addDoc(
+            collection(db, `posts/${router.query.id}/comments`),
+            commentData
+        )
+
+        // After posting, check if the user has selected and image to post
+        if (imageToPost) {
+            // There is one image to upload: get its refernce in the DB
+            const imageRef = ref(storage, `comments/${docRef.id}/image`)
+
+            // Upload the image
+            await uploadString(imageRef, imageToPost, 'data_url').then(
+                async () => {
+                    // Get the downloaded URL for the image
+                    const downloadURL = await getDownloadURL(imageRef)
+
+                    // Update the comment with the image URL
+                    await updateDoc(
+                        doc(
+                            db,
+                            'posts',
+                            router.query.id,
+                            'comments',
+                            docRef.id
+                        ),
+                        {
+                            postImage: downloadURL,
+                        }
+                    )
 
                     // Remove image preview
                     setImageToPost(null)
-
-                    // When the state changes run the following function
-                    uploadTask.on(
-                        'state_change',
-                        null,
-                        (error) => console.error(error),
-                        () => {
-                            // When the uploads completes.
-                            // Note: ref(`post`).child(doc.id) === `posts/${doc.id}`.
-                            // Note: getDownloadURL() -> get the URL to use on the front-end
-                            storage
-                                .ref('posts')
-                                .child(doc.id)
-                                .getDownloadURL()
-                                .then((url) => {
-                                    // Store the URL in the DB as part of the post
-                                    db.collection('posts')
-                                        .doc(router.query.id)
-                                        .collection('comments')
-                                        .doc(doc.id)
-                                        .set(
-                                            {
-                                                postImage: url,
-                                            },
-                                            { merge: true }
-                                        ) // Use merge: true! otherwise it replaces the Post!
-                                })
-                        }
-                    )
                 }
+            )
+        }
 
-                // Store the reference to this comment in the map of comments
-                // create by the current user.
-                // Why is this needed?
-                // If we don't keep track of this we would need to
-                // scan the entire collection of posts when retrieving
-                // the posts of a given user
-                db.collection('users')
-                    .doc(user.uid)
-                    .get()
-                    .then((userDoc) => {
-                        let tmp = userDoc.data()
+        // Store the reference to this comment in the map of comments
+        // create by the current user.
+        const userDoc = getUserDoc(userProfile.uid)
+        await userDoc
+            .then(async (doc) => {
+                if (doc?.exists()) {
+                    let tmp = doc.data()
 
-                        // Since comments don't exist as their own colletion but rather as
-                        // a sub-collection under individual posts, we must use a map to
-                        // store comments where the key is the comment id and the value
-                        // it points to is the parent post id it resides under.
-                        if ('comments' in tmp) {
-                            tmp.comments[doc.id] = router.query.id
-                        } else {
-                            // Add a new entry
-                            let newComments: Map<string, string> = new Map<
-                                string,
-                                string
-                            >()
-                            newComments.set(doc.id, router.query.id)
-                            tmp['comments'] = newComments
-                        }
-
-                        userDoc.ref.update(tmp)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
+                    // Since comments don't exist as their own colletion but rather as
+                    // a sub-collection under individual posts, we must use a map to
+                    // store comments where the key is the comment id and the value
+                    // it points to is the parent post id it resides under.
+                    if ('comments' in tmp) {
+                        tmp.comments[docRef.id] = router.query.id
+                    } else {
+                        // Add a new entry
+                        let newComments = {}
+                        newComments[docRef.id] = router.query.id
+                        tmp['comments'] = newComments
+                    }
+                    await updateDoc(doc?.ref, tmp)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
             })
 
-        // Clear the input
-        inputRef.current.value = ''
+        // Everything is done
+        setLoading(false)
+        if (inputRef.current) {
+            inputRef.current.value = ''
+        }
 
         return true // Return true on a successful submission
     }
@@ -232,10 +245,10 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         addImageToPost(e)
     }
 
-    const addAndClose = (e) => {
+    const addAndClose = async (e) => {
         e.preventDefault()
         const success = addComment(e)
-        if (success) {
+        if (await success) {
             closeModal(e)
         }
     }
