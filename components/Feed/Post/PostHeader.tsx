@@ -6,16 +6,16 @@ import { Avatar } from '@mui/material'
 import { postCardClass } from '../../../styles/feed'
 import bull from '../../Utils/Bullet'
 import Timestamp from '../../Utils/Timestamp'
-import { getProfileDoc } from '../../../lib/profileHelper'
 import { getUserDoc } from '../../../lib/userHelper'
 import { getCommentsCollection } from '../../../lib/commentsHelper'
 import { getPost } from '../../../lib/postsHelper'
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { useProfileData } from '../../../hooks/useProfileData'
 
 type PostHeaderProps = {
     id: string
     authorUid: string
-    name: string | null
-    email: string
+    name: string
     timestamp: Date | null
 }
 
@@ -23,28 +23,27 @@ const PostHeader: FC<PostHeaderProps> = ({
     id,
     name,
     authorUid,
-    email,
     timestamp,
 }) => {
-    // Author profile
-    const authorProfileDoc = getProfileDoc(authorUid)
-    const authorUserDoc = getUserDoc(authorUid)
+    // Listen to real time author profile data
+    const [authorProfile] = useProfileData(authorUid)
 
-    const deletePostEntry = () => {
-        // Delete the post entry from the DB.
-        // Note: this post should NOT have any comments
-        db.collection('posts')
-            .doc(id)
-            .delete()
-            .catch((err) => {
-                console.log('Cannot delete post: ', err)
-            })
+    // Delete the post entry from the DB.
+    // Note: this post should NOT have any comments
+    const deletePostEntry = async () => {
+        const postDocRef = doc(db, 'posts', id)
+        await deleteDoc(postDocRef).catch((err) => {
+            console.log('Cannot delete post: ', err)
+        })
 
         // Update the user's posts list
-        authorUserDoc.then((doc) => {
-            let tmp = doc.data()
-            delete tmp.posts[id]
-            doc.ref.update(tmp)
+        const authorUserDoc = getUserDoc(authorUid)
+        await authorUserDoc.then(async (doc) => {
+            if (doc?.exists()) {
+                let tmp = doc.data()
+                delete tmp.posts[id]
+                await updateDoc(doc.ref, tmp)
+            }
         })
 
         // Delete the post's media, if any
@@ -95,8 +94,8 @@ const PostHeader: FC<PostHeaderProps> = ({
                     onClick={needsHook}
                     className={postCardClass.avatar}
                     src={
-                        authorProfileDoc?.data().profilePic
-                            ? authorProfileDoc?.data().profilePic
+                        authorProfile.profilePic
+                            ? authorProfile.profilePic
                             : null
                     }
                 />
@@ -106,7 +105,9 @@ const PostHeader: FC<PostHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            {name ? name : email}
+                            {authorProfile.username
+                                ? authorProfile.username
+                                : name}
                         </span>
                     </div>
                     <div className={postCardClass.leftMobileRowTwo}>
@@ -123,7 +124,9 @@ const PostHeader: FC<PostHeaderProps> = ({
             <div className={postCardClass.headerRight}>
                 <PostOptionsDropdown
                     authorUid={authorUid}
-                    authorName={name ? name : email}
+                    authorName={
+                        authorProfile.username ? authorProfile.username : name
+                    }
                     deletePost={deletePost}
                 />
             </div>

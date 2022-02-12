@@ -10,6 +10,8 @@ import { useUser } from '@auth0/nextjs-auth0'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
+import { getPost } from '../../../lib/postsHelper'
+import { updateDoc } from 'firebase/firestore'
 
 type PostEngagementBarProps = {
     id: string
@@ -33,38 +35,38 @@ const PostEngagementBar = ({ id }: PostEngagementBarProps) => {
 
     const addLike = (e) => {
         // Return early for unathenticated users
-        // They cannot engage with posts
+        // TODO: trigger a popover that tells users they must be
+        // logged in to engage and point them to registration?
         if (!user) {
             return
         }
-        e.preventDefault() // Don't think it is needed
-        db.collection('posts')
-            .doc(id)
-            .get()
-            .then((doc) => {
-                // Here goes the logic for toggling likes from each user
-                if (doc.exists) {
-                    // Get a reference to the comment
-                    let tmp = doc.data()
 
-                    // Step 1: check if user.uid is in the list
-                    if (userProfile.uid in tmp.likes) {
-                        // Negate what the user previously did
-                        tmp.likes[userProfile.uid] = !tmp.likes[userProfile.uid]
-                    } else {
-                        // The user liked the comment
-                        tmp.likes[userProfile.uid] = true
-                    }
+        // Add like
+        const postDoc = getPost(id)
+        postDoc.then((doc) => {
+            // Here goes the logic for toggling likes from each user
+            if (doc.exists) {
+                // Get a reference to the comment
+                let tmp = doc.data()
 
-                    // Update comment.
-                    // Note: a simple update here is fine.
-                    // No need for a transaction, since even if a like is lost,
-                    // That event is very rare and probably not so much of a pain
-                    doc.ref.update(tmp)
+                // Step 1: check if user.uid is in the list
+                if (userProfile.uid in tmp.likes) {
+                    // Negate what the user previously did
+                    tmp.likes[userProfile.uid] = !tmp.likes[userProfile.uid]
                 } else {
-                    console.log('Error post not found: ' + id)
+                    // The user liked the comment
+                    tmp.likes[userProfile.uid] = true
                 }
-            })
+
+                // Update comment.
+                // Note: a simple update here is fine.
+                // No need for a transaction, since even if a like is lost,
+                // That event is very rare and probably not so much of a pain
+                updateDoc(doc.ref, tmp)
+            } else {
+                console.log('Error post not found: ' + id)
+            }
+        })
     }
 
     // Items

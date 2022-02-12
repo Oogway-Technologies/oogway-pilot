@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '../../Utils/Button'
 import DropdownMenu from '../../Utils/DropdownMenu'
 import {
@@ -16,6 +16,8 @@ import { useRouter } from 'next/router'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
 import { getUserDoc } from '../../../lib/userHelper'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { db } from '../../../firebase'
 
 type PostOptionsDropdownProps = {
     authorUid: string // Post author id
@@ -30,6 +32,14 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
 }) => {
     const userProfile = useRecoilValue(userProfileState) // Get user profile
     const currentUserDoc = getUserDoc(userProfile.uid) // Get user document data
+
+    // Track author blocked state
+    const [authorIsBlocked, setAuthorIsBlocked] = useState(false)
+    useEffect(() => {
+        isUserBlocked(authorUid).then((result) => {
+            setAuthorIsBlocked(result)
+        })
+    }, [authorUid])
 
     const router = useRouter()
 
@@ -49,51 +59,72 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         return userProfile.uid === authorUid
     }
 
-    const isUserBlocked = (authorUid: string) => {
-        return authorUid in currentUserDoc?.data().blockedUsers
+    const isUserBlocked = async (authorUid: string) => {
+        const isBlocked = await currentUserDoc.then(async (doc) => {
+            if (doc?.exists()) {
+                return authorUid in doc.data().blockedUsers
+            } else {
+                return false
+            }
+        })
+        return isBlocked
     }
 
     // Handler functions
-    const blockUser = (e) => {
-        e.preventDefault()
+    const blockUser = async (e) => {
+        e.preventDefault() // Not sure if necessary
 
         // Return early if user already blocked
-        if (isUserBlocked(authorUid)) {
+        if (authorIsBlocked) {
             return
         }
 
         // Otherwise add blocked user uid to current user's
         // blockedUsers map
-        currentUserDoc
-            .then((doc) => {
-                let tmp = doc.data()
-                tmp.blockedUsers[authorUid] = true
-                doc.ref.update(tmp)
+        await currentUserDoc
+            .then(async (doc) => {
+                if (doc?.exists()) {
+                    let tmp = doc.data()
+                    tmp.blockedUsers[authorUid] = true
+                    await updateDoc(doc.ref, tmp)
+                } else {
+                    console.log('User doc not retrieved')
+                }
             })
             .catch((err) => {
                 console.log(err)
             })
+
+        // Update state
+        setAuthorIsBlocked(true)
     }
 
-    const unblockUser = (e) => {
+    const unblockUser = async (e) => {
         e.preventDefault()
 
         // Return early if user not blocked
-        if (!isUserBlocked(authorUid)) {
+        if (!authorIsBlocked) {
             return
         }
 
         // Remove blocked user uid from current user's
         // blockedUser list
-        currentUserDoc
-            .then((doc) => {
-                let tmp = doc.data()
-                delete tmp.blockedUSers[authorUid]
-                doc.ref.update(tmp)
+        await currentUserDoc
+            .then(async (doc) => {
+                if (doc?.exists()) {
+                    let tmp = doc.data()
+                    delete tmp.blockedUsers[authorUid]
+                    await updateDoc(doc.ref, tmp)
+                } else {
+                    console.log('User doc not retrieved')
+                }
             })
             .catch((err) => {
                 console.log(err)
             })
+
+        // Update state
+        setAuthorIsBlocked(false)
     }
 
     const deleteAndClose = (e) => {
@@ -167,13 +198,11 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         // a user you've previous blocked froom within their posts. Presumably, you wouldn't see
         // a blocked user's posts...
         <Button
-            text={`${
-                isUserBlocked(authorUid) ? 'Unblock' : 'Block'
-            } ${authorName}`}
+            text={`${authorIsBlocked ? 'Unblock' : 'Block'} ${authorName}`}
             keepText={true}
             icon={<UilBan />}
             type="button"
-            onClick={isUserBlocked(authorUid) ? unblockUser : blockUser}
+            onClick={authorIsBlocked ? unblockUser : blockUser}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
         />,
         <Button
