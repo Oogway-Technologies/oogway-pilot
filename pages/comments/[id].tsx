@@ -75,7 +75,7 @@ export async function getServerSideProps(context) {
     const post = {
         id: postRes.id,
         ...postRes.data(),
-        timestamp: postRes.data().timestamp.toDate().toLocaleString(), // DO NOT prefetch timestamp as is
+        timestamp: postRes.data().timestamp.toDate().getTime(),
     }
 
     // Prepare the comments

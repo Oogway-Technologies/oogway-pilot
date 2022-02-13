@@ -48,13 +48,14 @@ export async function getServerSideProps(context) {
         .collection('posts')
         .orderBy('timestamp', 'desc')
         .get()
-    const profile = await db.collection('profiles').doc(context.query.id).get()
-
     const docs = posts.docs.map((post) => ({
         id: post.id,
         ...post.data(),
-        timestamp: null, // DO NOT prefetch timestamp
+        timestamp: posts.data().timestamp.toDate().getTime(), // DO NOT prefetch timestamp
     }))
+
+    // Get user profile
+    const profile = await db.collection('profiles').doc(context.query.id).get()
     const userProfile = profile.data()
 
     return {
