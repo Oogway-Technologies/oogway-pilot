@@ -20,6 +20,7 @@ import {
     collection,
     serverTimestamp,
     updateDoc,
+    orderBy,
     where,
     query,
   } from 'firebase/firestore'
@@ -28,14 +29,14 @@ interface ProfileProps {
     userProfile: FirebaseProfile
 }
 
-const Profile: FC<ProfileProps> = ({userProfile}) => {
+const Profile: FC<ProfileProps> = ({userProfile, posts}) => {
     const {bio, profilePic, resetProfile, uid, username, name, lastName, dm, location} = userProfile;
     // recoil state to check if Profile card is for current user.
     const {uid: currentUserUid} = useRecoilValue(userProfileState);
 
     // Get real-time connection with DB
     const [realtimePosts] = useCollection(
-        query(collection(db, "posts"), where("uid", "==", uid))
+        query(collection(db, "posts"), where("uid", "==", uid), orderBy("timestamp", "desc"))
     );
 
     return (
@@ -55,6 +56,44 @@ const Profile: FC<ProfileProps> = ({userProfile}) => {
                 {/*
                     {currentUserUid !== uid && <ProfileEngagementBar expanded={true}/>}
                 */}
+                <>
+                {
+                    realtimePosts
+                    ? realtimePosts?.docs.map((post) => (
+                        <PostCard
+                        key={post.id}
+                        id={post.id}
+                        authorUid={post.data().uid}
+                        name={post.data().name}
+                        message={post.data().message}
+                        description={post.data().description}
+                        isCompare={post.data().isCompare}
+                        email={post.data().email}
+                        timestamp={post.data().timestamp}
+                        postImage={post.data().postImage}
+                        comments={null}
+                        isCommentThread={false}
+                        />
+                    ))
+                    : // Render out the server-side rendered posts
+                    posts.map((post) => (
+                        <PostCard
+                        key={post.id}
+                        id={post.id}
+                        authorUid={post.uid}
+                        name={post.name}
+                        message={post.message}
+                        description={post.description}
+                        isCompare={post.isCompare}
+                        email={post.email}
+                        timestamp={post.timestamp}
+                        postImage={post.postImage}
+                        comments={null}
+                        isCommentThread={false}
+                        />
+                    ))
+                }
+                </>
                 {realtimePosts?.docs.map((post) => (
                         <PostCard
                             key={post.id}
@@ -84,23 +123,22 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
     const userProfile: DocumentData | undefined = (await getDoc(doc(db, "profiles", context?.query?.id as string || ''))).data();
 
     // Get the posts
-    // TODO: Get the posts from the database AFTER we implement an index on Firebase.
-    // If we don't have an index, Firebase complains that the query is too complex.
-    // This is because it needs to run the where and the orderBy.
-    //
-    // Message from firebase:
-    // error - FirebaseError: [code=failed-precondition]: The query requires an index.
-    // You can create it here:
-    // https://console.firebase.google.com/v1/r/project/oogway-pilot/firestore/indexes?create_composite=Ckpwcm9qZWN0cy9vb2d3YXktcGlsb3QvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL3Bvc3RzL2luZGV4ZXMvXxABGgcKA3VpZBABGg0KCXRpbWVzdGFtcBACGgwKCF9fbmFtZV9fEAI
-    //const posts = await db
-    //    .collection('posts')
-    //    .where('uid', '==', context?.query?.id as string)
-    //    .orderBy('timestamp', 'desc')
-    //    .get()
-    //
+    const postsRef = await db
+        .collection('posts')
+        .where('uid', '==', context?.query?.id as string)
+        .orderBy('timestamp', 'desc')
+        .get()
+
+    const posts = postsRef.docs.map((post) => ({
+        id: post.id,
+        ...post.data(),
+        timestamp: null, // DO NOT prefetch timestamp
+    }))
+
     // Note: after fetching the posts, we need to stringify the Timestamp objects.
     return {
         props: {
+            posts,
             userProfile, // pass the userProfile back to the front-end
         },
     }
