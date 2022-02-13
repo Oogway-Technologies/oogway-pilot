@@ -21,7 +21,7 @@ import { db } from '../../../firebase'
 
 type PostOptionsDropdownProps = {
     authorUid: string // Post author id
-    deletePost: React.MouseEventHandler<HTMLButtonElement> // Handler function to delete post
+    deletePost: () => Promise<string> // Handler function to delete post
     authorName: string // Post author name
 }
 
@@ -34,6 +34,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     const currentUserDoc = getUserDoc(userProfile.uid) // Get user document data
 
     // Track author blocked state
+    // TODO: refactor to custom hook
     const [authorIsBlocked, setAuthorIsBlocked] = useState(false)
     useEffect(() => {
         isUserBlocked(authorUid).then((result) => {
@@ -127,13 +128,13 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         setAuthorIsBlocked(false)
     }
 
-    const deleteAndClose = (e) => {
+    const deleteAndClose = async (e) => {
         e.preventDefault()
-        const nextUrl = deletePost(e)
+        const nextUrl = deletePost()
         closeModal()
 
         // Reroute user back to homepage if not already there
-        if (router.pathname !== nextUrl) {
+        if (router.pathname !== (await nextUrl)) {
             router.push(nextUrl)
         }
     }
