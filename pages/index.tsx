@@ -18,7 +18,7 @@ export default function Home({ posts }) {
     const userProfile = useRecoilValue(userProfileState)
     const [show, setShow] = useState(userProfile.resetProfile)
     const closeModal = () => {
-         setShow(false)
+        setShow(false)
     }
 
     return (
@@ -29,13 +29,13 @@ export default function Home({ posts }) {
                 </Head>
                 <FeedAPI posts={posts} />
             </div>
-            
+
             {/* Modal for user profile */}
-            {/*<Modal
-                children={<UserProfileForm profile={userProfile}/>}
+            <Modal
+                children={<UserProfileForm closeModal={closeModal} />}
                 show={show}
                 onClose={closeModal}
-            />*/}
+            />
         </>
     )
 }

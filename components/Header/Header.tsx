@@ -18,7 +18,7 @@ const Header = () => {
             text: 'Search',
         },
         {
-            href: [`/feed/${userProfile.uid}`],
+            href: ['/'],
             text: 'Feed',
         },
         {

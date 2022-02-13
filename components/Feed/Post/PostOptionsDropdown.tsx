@@ -134,8 +134,8 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         closeModal()
 
         // Reroute user back to homepage if not already there
-        if (router.pathname !== (await nextUrl)) {
-            router.push(nextUrl)
+        if (router.asPath !== (await nextUrl)) {
+            router.push(await nextUrl)
         }
     }
 
