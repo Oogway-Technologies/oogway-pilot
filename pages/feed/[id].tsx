@@ -4,11 +4,19 @@ import FeedAPI from '../../components/Feed/FeedAPI'
 import UserProfileForm from '../../components/Login/UserProfileForm'
 import Modal from '../../components/Utils/Modal'
 import { db } from '../../firebase'
+<<<<<<< HEAD
 import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../atoms/user'
 
 // Pass the posts in from server-side rendering.
 function Feed({ posts }) {
+=======
+import { useRecoilValue } from 'recoil';
+import { userProfileState } from '../../atoms/user'
+
+// Pass the posts in from server-side rendering.
+function Feed({ posts}) {
+>>>>>>> e040160e8a9bb74a4009ab4fa9e56c7915a921bf
     // Track reset profile state
     const userProfile = useRecoilValue(userProfileState)
     const [showModal, setShowModal] = useState(
@@ -27,7 +35,13 @@ function Feed({ posts }) {
                 <FeedAPI posts={posts} />
             </div>
             <Modal
+<<<<<<< HEAD
                 children={<UserProfileForm closeModal={closeModal} />}
+=======
+                children={
+                    <UserProfileForm closeModal={closeModal}/>
+                }
+>>>>>>> e040160e8a9bb74a4009ab4fa9e56c7915a921bf
                 show={showModal}
                 onClose={closeModal}
             />
