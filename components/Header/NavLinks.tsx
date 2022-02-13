@@ -45,23 +45,4 @@ const NavLinks = ({ links, listStyle }: NavLinksProps) => {
     )
 }
 
-NavLinks.defaultProps = {
-    links: [
-        // TODO: Add as pages created
-        {
-            href: ['/#'], // change to /Search when search page created
-            text: 'Search',
-        },
-        {
-            href: ['/feed/[id]'],
-            text: 'Feed',
-        },
-        {
-            href: ['/#'], // change to Friends when created
-            text: 'Friends',
-        },
-    ],
-    listStyle: '',
-}
-
 export default NavLinks
