@@ -11,25 +11,26 @@ import Modal from '../../Utils/Modal'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
 import { useComments } from '../../../hooks/useComments'
+import { useUser } from '@auth0/nextjs-auth0'
 
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
 }
 
 const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
+    // Retrieve user profile
+    const userProfile = useRecoilValue(userProfileState)
+    const { user } = useUser()
+
+    // Get a snapshot of the comments from the DB
     const router = useRouter()
-    const [isOpen, setIsOpen] = useState(false)
+    const [commentsSnapshot] = useComments(router.query.id)
 
     // Track mobile state
     const isMobile = useMediaQuery('(max-width: 500px)')
 
-    // Retrieve user profile
-    const userProfile = useRecoilValue(userProfileState)
-
-    // Get a snapshot of the comments from the DB
-    const [commentsSnapshot] = useComments(router.query.id)
-
-    // Modal helper functions
+    // Modal
+    const [isOpen, setIsOpen] = useState(false)
     const openModal = () => {
         setIsOpen(true)
     }
@@ -69,40 +70,52 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
         }
     }
 
+    const showCommentForm = () => {
+        return (
+            <>
+                <Avatar
+                    onClick={needsHook}
+                    className={commentsApiClass.avatar}
+                    src={
+                        userProfile?.profilePic ? userProfile.profilePic : null
+                    }
+                />
+                {isMobile ? (
+                    <Button
+                        text="Add Comment"
+                        keepText={true}
+                        icon={null}
+                        type="button"
+                        onClick={openModal}
+                        addStyle={commentFormClass.submitButton}
+                    />
+                ) : (
+                    <NewCommentForm
+                        placeholder={
+                            userProfile?.name
+                                ? `What do you think, ${userProfile.name}?`
+                                : 'What do you think?'
+                        }
+                        isMobile={isMobile}
+                        closeModal={closeModal}
+                    />
+                )}
+            </>
+        )
+    }
+
     return (
         <>
             <div className={commentsApiClass.outerDiv}>
                 <hr className={commentsApiClass.hr} />
                 {/* New Comment Form */}
                 <div className={commentsApiClass.innerDiv}>
-                    <Avatar
-                        onClick={needsHook}
-                        className={commentsApiClass.avatar}
-                        src={
-                            userProfile?.profilePic
-                                ? userProfile.profilePic
-                                : null
-                        }
-                    />
-                    {isMobile ? (
-                        <Button
-                            text="Add Comment"
-                            keepText={true}
-                            icon={null}
-                            type="button"
-                            onClick={openModal}
-                            addStyle={commentFormClass.submitButton}
-                        />
+                    {user ? (
+                        showCommentForm()
                     ) : (
-                        <NewCommentForm
-                            placeholder={
-                                userProfile?.name
-                                    ? `What do you think, ${userProfile.name}?`
-                                    : 'What do you think?'
-                            }
-                            isMobile={isMobile}
-                            closeModal={closeModal}
-                        />
+                        <div className={commentsApiClass.loginReminder}>
+                            Please log in to comment on posts.
+                        </div>
                     )}
                 </div>
 

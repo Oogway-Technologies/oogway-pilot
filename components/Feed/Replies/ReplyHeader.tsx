@@ -10,7 +10,10 @@ import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 import { db } from '../../../firebase'
 import { Avatar } from '@mui/material'
 import { useDocumentData } from 'react-firebase-hooks/firestore'
-import { doc } from 'firebase/firestore'
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { useProfileData } from '../../../hooks/useProfileData'
+import { getReply } from '../../../lib/repliesHelper'
+import { getUserDoc } from '../../../lib/userHelper'
 
 type ReplyHeaderProps = {
     postId: string | string[] | undefined
@@ -31,31 +34,33 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
     email,
     timestamp,
 }) => {
-    // Get author profile
-    const [authorProfile] = useDocumentData(doc(db, 'profiles', authorUid))
+    // Listen to real time author profile data
+    const [authorProfile] = useProfileData(authorUid)
 
     // Deletes a reply
-    const deleteReply = () => {
-        db.collection('posts')
-            .doc(postId)
-            .collection('comments') // Or whatever the name of the collection is
-            .doc(commentId)
-            .collection('replies')
-            .doc(replyId)
-            .delete()
-            .catch((err) => {
-                console.log('Cannot delete reply: ', err)
-            })
+    const deleteReplyEntry = async () => {
+        const replyDocRef = doc(
+            db,
+            'posts',
+            postId,
+            'comments',
+            commentId,
+            'replies',
+            replyId
+        )
+        await deleteDoc(replyDocRef).catch((err) => {
+            console.log('Cannot delete reply: ', err)
+        })
 
         // Update the user's reply map
-        db.collection('users')
-            .doc(user.uid)
-            .get()
-            .then((doc) => {
+        const authorUserDoc = getUserDoc(authorUid)
+        await authorUserDoc.then(async (doc) => {
+            if (doc?.exists()) {
                 let tmp = doc.data()
-                delete tmp.replies[replyId]
-                doc.ref.update(tmp)
-            })
+                delete tmp.comments[commentId]
+                await updateDoc(doc?.ref, tmp)
+            }
+        })
 
         // Return where the user should be routed
         return `/comments/${postId}`
@@ -81,7 +86,9 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            {name ? name : email}
+                            {authorProfile.username
+                                ? authorProfile.username
+                                : name}
                         </span>
                     </div>
 
@@ -96,8 +103,10 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
             <div className={postCardClass.headerRight}>
                 <PostOptionsDropdown
                     authorUid={authorUid}
-                    authorName={name ? name : email}
-                    deletePost={deleteReply}
+                    authorName={
+                        authorProfile.username ? authorProfile.username : name
+                    }
+                    deletePost={deleteReplyEntry}
                 />
             </div>
         </div>

@@ -1,23 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { useForm } from 'react-hook-form'
-import { auth, db, storage } from '../../../firebase'
-import {
-    UilCommentPlus,
-    UilExclamationTriangle,
-    UilImagePlus,
-    UilTimesCircle,
-} from '@iconscout/react-unicons'
-import useTimeout from '../../../hooks/useTimeout'
+import { db } from '../../../firebase'
+import { UilCommentPlus } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import firebase from 'firebase/compat/app'
-import { avatarURL, replyFormClass } from '../../../styles/feed'
+import { replyFormClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
 import needsHook from '../../../hooks/needsHook'
-import { doc } from 'firebase/firestore'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+} from 'firebase/firestore'
 import { Avatar } from '@mui/material'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../../atoms/user'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
+import { getUserDoc } from '../../../lib/userHelper'
 
 type NewReplyFormProps = {
     commentId: string
@@ -32,12 +35,14 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
     isMobile,
     placeholder,
 }) => {
+    const userProfile = useRecoilValue(userProfileState)
     const router = useRouter()
-    const [user] = useAuthState(auth)
-    const [userProfile] = useDocumentData(doc(db, 'profiles', user.uid)) // This needs to be stored in global state eventually
 
     // Get a reference to the input text
     const inputRef = useRef(null)
+
+    // Track upload
+    const [loading, setLoading] = useState(false)
 
     // Form management
     const {
@@ -54,44 +59,11 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         return () => unregister('reply')
     }, [unregister])
 
-    // Utility Component for warnings
-    // Will not work correctly as an export only as a nested component.
-    // Must have to do with state not being shared.
-    // TODO: Look into sharing context
-    const FlashErrorMessage = ({
-        message,
-        ms,
-        style,
-    }: {
-        message: string
-        ms: number
-        style: string
-    }) => {
-        // Tracks how long a form warning message has been displayed
-        const [warningHasElapsed, setWarningHasElapsed] = useState(false)
-
-        useTimeout(() => {
-            setWarningHasElapsed(true)
-        }, ms)
-
-        // If show is false the component will return null and stop here
-        if (warningHasElapsed) {
-            return null
-        }
-
-        // Otherwise, return warning
-        return (
-            <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4" /> {message}
-            </span>
-        )
-    }
-
-    const addReply = (e) => {
+    const addReply = async (e) => {
         e.preventDefault()
 
         // Return asap if no input
-        if (!inputRef.current.value) {
+        if (inputRef && !inputRef.current.value) {
             setError(
                 'reply',
                 { type: 'required', message: 'A reply is required.' },
@@ -100,77 +72,83 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             return false
         }
 
+        // Avoid spamming the post button while uploading the post to the DB
+        if (loading) return
+        setLoading(true)
+
         // First of all, update last seen entry for the user
         // currently posting a comment
-        db.collection('users').doc(user.uid).set(
+        const userDocRef = doc(db, 'users', userProfile.uid)
+        setDoc(
+            userDocRef,
             {
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             },
             { merge: true }
-        ) // Remember to MERGE the content otherwise it will be overwritten!
+        )
 
         // Now add a new reply for this post
         let replyData = {
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            timestamp: serverTimestamp(),
             message: inputRef.current.value,
-            author: user.username ? user.username : user.email,
-            authorUid: user.uid,
+            author: userProfile.username,
+            authorUid: userProfile.uid,
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
         }
-        db.collection('posts')
-            .doc(router.query.id)
-            .collection('comments')
-            .doc(commentId)
-            .collection('replies')
-            .add(replyData)
-            .then((doc) => {
-                // Store the reference to this reply in the map of repliess
-                // create by the current user.
-                db.collection('users')
-                    .doc(user.uid)
-                    .get()
-                    .then((userDoc) => {
-                        let tmp = userDoc.data()
+        const docRef = await addDoc(
+            collection(
+                db,
+                `posts/${router.query.id}/comments/${commentId}/replies`
+            ),
+            replyData
+        )
 
-                        // Since replies don't exist as their own colletion but rather as
-                        // a sub-collection under comments, we must use a map to
-                        // store comments where the key is the comment id and the value
-                        // it points to is the parent post id it resides under.
-                        if ('replies' in tmp) {
-                            tmp.replies[doc.id] = {
-                                comment: commentId,
-                                post: router.query.id,
-                            }
-                        } else {
-                            // Add a new entry
-                            let newReplies: Map<string, object> = new Map<
-                                string,
-                                object
-                            >()
-                            newReplies.set(doc.id, {
-                                comment: commentId,
-                                post: router.query.id,
-                            })
-                            tmp['replies'] = newReplies
+        // Store the reference to this reply in the map of repliess
+        // create by the current user.
+        const userDoc = getUserDoc(userProfile.uid)
+        await userDoc
+            .then(async (doc) => {
+                if (doc?.exists()) {
+                    let tmp = doc.data()
+
+                    // Since replies don't exist as their own colletion but rather as
+                    // a sub-collection under comments, we must use a map to
+                    // store comments where the key is the comment id and the value
+                    // it points to is the parent post id it resides under.
+                    if ('replies' in tmp) {
+                        tmp.replies[doc.id] = {
+                            comment: commentId,
+                            post: router.query.id,
                         }
-
-                        userDoc.ref.update(tmp)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
+                    } else {
+                        // Add a new entry
+                        let newReplies = {}
+                        newReplies[doc.id] = {
+                            comment: commentId,
+                            post: router.query.id,
+                        }
+                        tmp['replies'] = newReplies
+                    }
+                    await updateDoc(doc?.ref, tmp)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
             })
 
         // Clear the input
-        inputRef.current.value = ''
+        setLoading(false)
+        if (inputRef.current) {
+            inputRef.current.value = ''
+        }
 
-        return true
+        return true // Return true on a successful submission
     }
 
-    const addAndClose = (e) => {
+    const addAndClose = async (e) => {
         e.preventDefault()
         const success = addReply(e)
-        if (success) {
+        if (await success) {
             closeModal(e)
         }
     }

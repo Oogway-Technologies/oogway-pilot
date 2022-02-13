@@ -47,8 +47,10 @@ const CommentEngagementBar = ({
             text: `${
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
-            onClick: () =>
-                addLike(user, userProfile, getComment(postId, commentId)),
+            onClick: () => {
+                if (!user) return null // TODO: add popover about logging in
+                addLike(user, userProfile, getComment(postId, commentId))
+            },
             expanded: expanded,
         },
         // {
@@ -70,7 +72,7 @@ const CommentEngagementBar = ({
                     key={idx}
                     addStyle={
                         commentEngagementBarClass.engagementButton +
-                        (!user && idx === 1 ? ' cursor-default' : '')
+                        (!user ? ' cursor-default' : '')
                     }
                     type="button"
                     onClick={item.onClick}
