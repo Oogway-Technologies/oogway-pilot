@@ -1,43 +1,50 @@
-import React, {FC} from 'react'
-import {ParsedUrlQuery} from "querystring";
-import {FirebaseProfile} from "../../utils/types/firebase";
-import {profilePage,} from "../../styles/profile";
-import {GetServerSideProps, GetServerSidePropsContext} from "next";
+import React, { FC } from 'react'
+import { ParsedUrlQuery } from 'querystring'
+import { FirebaseProfile } from '../../utils/types/firebase'
+import { profilePage } from '../../styles/profile'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 
-import {ProfileCard} from "../../components/Profile/ProfileCard";
+import { ProfileCard } from '../../components/Profile/ProfileCard'
 // import ProfileEngagementBar from "../../components/Profile/ProfileEngagementBar";
-import {useRecoilValue} from "recoil";
-import {userProfileState} from "../../atoms/user";
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../atoms/user'
 
 // Firebase imports
-import firebase from "firebase/compat";
-import {doc, getDoc} from "firebase/firestore";
-import {db} from "../../firebase";
-import { useCollection } from "react-firebase-hooks/firestore";
-import PostCard from "../../components/Feed/Post/Post";
+import firebase from 'firebase/compat'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../../firebase'
+import { useCollection } from 'react-firebase-hooks/firestore'
+import PostCard from '../../components/Feed/Post/Post'
 
-import DocumentData = firebase.firestore.DocumentData;
+import DocumentData = firebase.firestore.DocumentData
 
-import {
-    collection,
-    orderBy,
-    where,
-    query,
-  } from 'firebase/firestore'
+import { collection, orderBy, where, query } from 'firebase/firestore'
 
 interface ProfileProps {
     userProfile: FirebaseProfile
 }
 
-const Profile: FC<ProfileProps> = ({userProfile, posts}) => {
-    const {bio, profilePic, resetProfile, uid, username, name, lastName, dm, location} = userProfile;
-    // recoil state to check if Profile card is for current user.
-    const {uid: currentUserUid} = useRecoilValue(userProfileState);
+const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
+    const {
+        bio,
+        profilePic,
+        resetProfile,
+        uid,
+        username,
+        name,
+        lastName,
+        dm,
+        location,
+    } = userProfile
 
     // Get real-time connection with DB
     const [realtimePosts] = useCollection(
-        query(collection(db, "posts"), where("uid", "==", uid), orderBy("timestamp", "desc"))
-    );
+        query(
+            collection(db, 'posts'),
+            where('uid', '==', uid),
+            orderBy('timestamp', 'desc')
+        )
+    )
 
     return (
         <div className={profilePage.innerDiv}>
@@ -57,59 +64,41 @@ const Profile: FC<ProfileProps> = ({userProfile, posts}) => {
                     {currentUserUid !== uid && <ProfileEngagementBar expanded={true}/>}
                 */}
                 <>
-                {
-                    realtimePosts
-                    ? realtimePosts?.docs.map((post) => (
-                        <PostCard
-                        key={post.id}
-                        id={post.id}
-                        authorUid={post.data().uid}
-                        name={post.data().name}
-                        message={post.data().message}
-                        description={post.data().description}
-                        isCompare={post.data().isCompare}
-                        email={post.data().email}
-                        timestamp={post.data().timestamp}
-                        postImage={post.data().postImage}
-                        comments={null}
-                        isCommentThread={false}
-                        />
-                    ))
-                    : // Render out the server-side rendered posts
-                    posts.map((post) => (
-                        <PostCard
-                        key={post.id}
-                        id={post.id}
-                        authorUid={post.uid}
-                        name={post.name}
-                        message={post.message}
-                        description={post.description}
-                        isCompare={post.isCompare}
-                        email={post.email}
-                        timestamp={post.timestamp}
-                        postImage={post.postImage}
-                        comments={null}
-                        isCommentThread={false}
-                        />
-                    ))
-                }
+                    {realtimePosts
+                        ? realtimePosts?.docs.map((post) => (
+                              <PostCard
+                                  key={post.id}
+                                  id={post.id}
+                                  authorUid={post.data().uid}
+                                  name={post.data().name}
+                                  message={post.data().message}
+                                  description={post.data().description}
+                                  isCompare={post.data().isCompare}
+                                  email={post.data().email}
+                                  timestamp={post.data().timestamp}
+                                  postImage={post.data().postImage}
+                                  comments={null}
+                                  isCommentThread={false}
+                              />
+                          ))
+                        : // Render out the server-side rendered posts
+                          posts.map((post) => (
+                              <PostCard
+                                  key={post.id}
+                                  id={post.id}
+                                  authorUid={post.uid}
+                                  name={post.name}
+                                  message={post.message}
+                                  description={post.description}
+                                  isCompare={post.isCompare}
+                                  email={post.email}
+                                  timestamp={post.timestamp}
+                                  postImage={post.postImage}
+                                  comments={null}
+                                  isCommentThread={false}
+                              />
+                          ))}
                 </>
-                {realtimePosts?.docs.map((post) => (
-                        <PostCard
-                            key={post.id}
-                            id={post.id}
-                            authorUid={post.data().uid}
-                            name={post.data().name}
-                            message={post.data().message}
-                            description={post.data().description}
-                            isCompare={post.data().isCompare}
-                            email={post.data().email}
-                            timestamp={post.data().timestamp}
-                            postImage={post.data().postImage}
-                            comments={null}
-                            isCommentThread={false}
-                        />))
-                }
             </div>
         </div>
     )
@@ -118,9 +107,16 @@ const Profile: FC<ProfileProps> = ({userProfile, posts}) => {
 export default Profile
 
 // Implement server side rendering for userProfile and posts
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext<ParsedUrlQuery, string | false | object | undefined>) => {
+export const getServerSideProps: GetServerSideProps = async (
+    context: GetServerSidePropsContext<
+        ParsedUrlQuery,
+        string | false | object | undefined
+    >
+) => {
     //Get userProfile of selected user from database.
-    const userProfile: DocumentData | undefined = (await getDoc(doc(db, "profiles", context?.query?.id as string || ''))).data();
+    const userProfile: DocumentData | undefined = (
+        await getDoc(doc(db, 'profiles', (context?.query?.id as string) || ''))
+    ).data()
 
     // Get the posts
     const postsRef = await db
