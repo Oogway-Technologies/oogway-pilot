@@ -6,10 +6,12 @@ import CommentEngagementBar from './CommentEngagementBar'
 import NewReplyForm from '../Forms/NewReplyForm'
 import RepliesAPI from '../Replies/RepliesAPI'
 import Modal from '../../Utils/Modal'
+import { useUser } from '@auth0/nextjs-auth0'
 
 // TODO: Needs type interface
 function Comment({ commentOwner, postId, commentId, comment }) {
-    const [isOpen, setIsOpen] = useState(false)
+    // Retrieve auth state
+    const { user } = useUser()
 
     // Track comment reply form visibility
     const [expandedReplyForm, setExpandedReplyForm] = useState(false)
@@ -18,12 +20,25 @@ function Comment({ commentOwner, postId, commentId, comment }) {
     const isMobile = useMediaQuery('(max-width: 500px)')
 
     // Modal helper functions
+    const [isOpen, setIsOpen] = useState(false)
+
     const openModal = () => {
         setIsOpen(true)
     }
 
     const closeModal = () => {
         setIsOpen(false)
+    }
+
+    // Reply button handler
+    const handleReply = () => {
+        if (!user) {
+            // TODO: Add a generic popover telling
+            // anonymous users they must login with a link to log-in
+            return null
+        } else {
+            isMobile ? openModal() : setExpandedReplyForm(!expandedReplyForm)
+        }
     }
 
     return (
@@ -57,11 +72,7 @@ function Comment({ commentOwner, postId, commentId, comment }) {
                 <CommentEngagementBar
                     postId={postId}
                     commentId={commentId}
-                    handleReply={
-                        isMobile
-                            ? openModal
-                            : () => setExpandedReplyForm(!expandedReplyForm)
-                    }
+                    handleReply={handleReply}
                     expanded={expandedReplyForm}
                 />
 

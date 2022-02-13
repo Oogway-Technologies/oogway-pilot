@@ -62,7 +62,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
         // Replies is a sub-collection of the comment, so we need to
         // retrieve all replies and delete them first.
         commentDoc.then((doc) => {
-            // Check if comments exists for this post
+            // Check if replies exists for this post
             const repliesCollection = getRepliesCollection(postId, commentId)
             repliesCollection
                 .then((sub) => {

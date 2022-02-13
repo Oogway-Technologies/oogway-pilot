@@ -1,5 +1,18 @@
-import { collection, getDocs, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
+
+/**
+ *
+ * @param postId post id
+ * @param commentId comment id
+ * @param replyId reply id
+ * @description Retrieves a static version of the comment document from firebase 
+ */
+ export const getReply = async (postId: string, commentId: string, replyId: string) => {
+    // Retrieve reference to parent post
+    const replyRef = doc(db, "posts", postId, "comments", commentId, "replies", replyId)
+    return await getDoc(replyRef);
+}
 
 /**
  *

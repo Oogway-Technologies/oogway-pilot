@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
     commentEngagementBarClass,
     replyEngagementBarClass,
 } from '../../../styles/feed'
 import Button from '../../Utils/Button'
 import { UilThumbsUp } from '@iconscout/react-unicons'
-import { auth, db } from '../../../firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { EngagementItems } from '../../../utils/types/global'
-import { getLikesForReplyEngagementBar } from '../../../lib/getLikesHelper'
+import { addLike } from '../../../lib/getLikesHelper'
+import { useUser } from '@auth0/nextjs-auth0'
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../../atoms/user'
+import { useReplyNumberLikes } from '../../../hooks/useNumberLikes'
+import { getReply } from '../../../lib/repliesHelper'
 
 type ReplyEngagementBarProps = {
     postId: string
@@ -21,50 +24,11 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
     commentId,
     replyId,
 }) => {
-    const [user] = useAuthState(auth)
-    const [numLikes, setNumLikes] = useState(0)
+    const { user } = useUser()
+    const userProfile = useRecoilValue(userProfileState)
 
-    useEffect(() => {
-        getLikesForReplyEngagementBar(postId, commentId, replyId, setNumLikes)
-        return () => {
-            setNumLikes(0)
-        }
-    }, [postId, commentId, replyId])
-
-    const addLike = (e) => {
-        e.preventDefault() // Don't think it is needed
-        db.collection('posts')
-            .doc(postId)
-            .collection('comments')
-            .doc(commentId)
-            .collection('replies')
-            .doc(replyId)
-            .get()
-            .then((doc) => {
-                // Here goes the logic for toggling likes from each user
-                if (doc.exists) {
-                    // Get a reference to the comment
-                    let tmp = doc.data()
-
-                    // Step 1: check if user.uid is in the list
-                    if (user.uid in tmp.likes) {
-                        // Negate what the user previously did
-                        tmp.likes[user.uid] = !tmp.likes[user.uid]
-                    } else {
-                        // The user liked the comment
-                        tmp.likes[user.uid] = true
-                    }
-
-                    // Update comment.
-                    // Note: a simple update here is fine.
-                    // No need for a transaction, since even if a like is lost,
-                    // That event is very rare and probably not so much of a pain
-                    doc.ref.update(tmp)
-                } else {
-                    console.log('Error comment not found: ' + commentId)
-                }
-            })
-    }
+    // Track number of likes
+    const [numLikes] = useReplyNumberLikes(postId, commentId, replyId)
 
     // Items
     const engagementItems: EngagementItems[] = [
@@ -73,7 +37,10 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
             text: `${
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
-            onClick: addLike,
+            onClick: () => {
+                if (!user) return null // TODO: add popover about logging in
+                addLike(user, userProfile, getReply(postId, commentId, replyId))
+            },
         },
         // {
         //     icon: <UilUpload/>,
@@ -92,7 +59,10 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
             {engagementItems.map((item, idx) => (
                 <Button
                     key={idx}
-                    addStyle={commentEngagementBarClass.engagementButton}
+                    addStyle={
+                        commentEngagementBarClass.engagementButton +
+                        (!user ? ' cursor-default' : '')
+                    }
                     type="button"
                     onClick={item.onClick}
                     icon={item.icon}

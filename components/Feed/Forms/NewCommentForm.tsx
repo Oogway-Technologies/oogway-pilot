@@ -20,11 +20,9 @@ import { commentFormClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
 
 // Form
-import useTimeout from '../../../hooks/useTimeout'
 import { useRouter } from 'next/router'
 import {
     UilCommentPlus,
-    UilExclamationTriangle,
     UilImagePlus,
     UilTimesCircle,
 } from '@iconscout/react-unicons'
@@ -35,6 +33,7 @@ import { useRecoilValue } from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 
 type NewCommentFormProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
@@ -74,39 +73,6 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         // clean up on unmount
         return () => unregister('comment')
     }, [unregister])
-
-    // Utility Component for warnings
-    // Will not work correctly as an export only as a nested component.
-    // Must have to do with state not being shared.
-    // TODO: Look into sharing context
-    const FlashErrorMessage = ({
-        message,
-        ms,
-        style,
-    }: {
-        message: string
-        ms: number
-        style: string
-    }) => {
-        // Tracks how long a form warning message has been displayed
-        const [warningHasElapsed, setWarningHasElapsed] = useState(false)
-
-        useTimeout(() => {
-            setWarningHasElapsed(true)
-        }, ms)
-
-        // If show is false the component will return null and stop here
-        if (warningHasElapsed) {
-            return null
-        }
-
-        // Otherwise, return warning
-        return (
-            <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4" /> {message}
-            </span>
-        )
-    }
 
     const addComment = async (e) => {
         e.preventDefault()
