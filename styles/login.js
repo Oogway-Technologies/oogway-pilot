@@ -27,7 +27,7 @@ export const loginButtons = {
     checkbox:
         'form-check-input appearance-none h-3 w-3 ring-2 ring-neutral-300 ring-offset-2 \
         rounded-sm bg-white checked:bg-primary checked:ring-primary focus:outline-none \
-        transition duration-200 bg-no-repeat bg-center bg-contain',
+        transition duration-200 bg-no-repeat bg-center bg-contain cursor-pointer',
 }
 
 export const loginImages = {

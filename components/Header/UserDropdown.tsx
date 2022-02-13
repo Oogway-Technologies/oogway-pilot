@@ -1,35 +1,41 @@
 import React from 'react'
-import {Avatar} from '@mui/material'
+import { Avatar } from '@mui/material'
 import SettingsButton from './SettingsButton'
 import ToggleTheme from './ToggleTheme'
 import LogoutButton from './LogoutButton'
 import DropdownMenu from '../Utils/DropdownMenu'
-import {userDropdownClass} from '../../styles/header'
+import { userDropdownClass } from '../../styles/header'
 // JSX and styling
 import Button from '../Utils/Button'
-import {loginButtons} from '../../styles/login'
+import { loginButtons } from '../../styles/login'
 
 // Auth0
-import {useUser} from '@auth0/nextjs-auth0';
-import {useRouter} from 'next/router'
+import { useUser } from '@auth0/nextjs-auth0'
+import { useRouter } from 'next/router'
 
 // Recoil state
-import {userProfileState} from '../../atoms/user'
-import {useRecoilValue} from 'recoil'
-import ProfileButton from "./ProfileButton";
+import { userProfileState } from '../../atoms/user'
+import { useRecoilValue } from 'recoil'
+import ProfileButton from './ProfileButton'
+import needsHook from '../../hooks/needsHook'
 
 const UserDropdown: React.FC = () => {
-    const router = useRouter();
-    const {user, isLoading} = useUser();
+    const router = useRouter()
+    const { user, isLoading } = useUser()
     const userProfile = useRecoilValue(userProfileState)
 
+    // Listen to userProfile rather than using static values from recoil
+    // Why? Recoil only updates state on refreshes so when the user first
+    // const [authorProfile] = useProfileData(authorUid)
+
     // Navigate to user settings
-    const goToUserSettings = () => {
-        router.push(`/settings/${userProfile.uid}`)
-    }
+    // TODO: Implement page
+    // const goToUserSettings = () => {
+    //     router.push(`/settings/${userProfile.uid}`)
+    // }
 
     const signIn = () => {
-        router.push("/api/auth/login");
+        router.push('/api/auth/login')
     }
 
     // Dropdown menu props
@@ -42,34 +48,32 @@ const UserDropdown: React.FC = () => {
     )
 
     const menuItems = [
-        <ProfileButton hasText={true} uid={userProfile.uid}/>,
-        <SettingsButton hasText={true} onClick={goToUserSettings}/>,
-        <LogoutButton hasText={true}/>,
-        <ToggleTheme hasText={true}/>,
+        <ProfileButton hasText={true} uid={userProfile.uid} />,
+        <SettingsButton hasText={true} onClick={needsHook} />,
+        <LogoutButton hasText={true} />,
+        <ToggleTheme hasText={true} />,
     ]
 
     //<button className="" onClick={signIn}>
     //    Sign In
     //</button>
 
-    return (
-        (!isLoading && !user) ? (
-            <Button
-                onClick={signIn}
-                addStyle={loginButtons.loginButtonWFullStyle}
-                text="Sign In"
-                keepText={true}
-                icon={null}
-                type="button"
-            />
-        ) : (
-            <DropdownMenu
-                menuButtonClass={userDropdownClass.menuButtonClass}
-                menuItemsClass={userDropdownClass.menuItemsClass}
-                menuButton={menuButton}
-                menuItems={menuItems}
-            />
-        )
+    return !isLoading && !user ? (
+        <Button
+            onClick={signIn}
+            addStyle={loginButtons.loginButtonWFullStyle}
+            text="Sign In"
+            keepText={true}
+            icon={null}
+            type="button"
+        />
+    ) : (
+        <DropdownMenu
+            menuButtonClass={userDropdownClass.menuButtonClass}
+            menuItemsClass={userDropdownClass.menuItemsClass}
+            menuButton={menuButton}
+            menuItems={menuItems}
+        />
     )
 }
 
