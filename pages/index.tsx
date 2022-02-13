@@ -16,7 +16,11 @@ export default function Home({ posts }) {
     // Call user Profile and check whether profile requires updating
     // Should only be called on user first log-in
     const userProfile = useRecoilValue(userProfileState)
-    const [show, setShow] = useState(userProfile.resetProfile)
+    console.log(userProfile.resetProfile)
+    const [show, setShow] = useState(
+        userProfile.resetProfile ? userProfile.resetProfile : false
+    )
+    console.log(show)
     const closeModal = () => {
         setShow(false)
     }

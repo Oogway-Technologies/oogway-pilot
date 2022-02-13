@@ -5,7 +5,7 @@ import { postCardClass } from '../../../styles/feed'
 import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
-import { streamPost } from '../../../lib/postsHelper'
+import { streamPostData } from '../../../lib/postsHelper'
 
 type PostVotingMechanismProps = {
     id: string
@@ -40,7 +40,7 @@ const PostVotingMechanism = ({
     }
 
     useEffect(() => {
-        const unsubscribe = streamPost(
+        const unsubscribe = streamPostData(
             id,
             (snapshot) => {
                 const postData = snapshot.data()

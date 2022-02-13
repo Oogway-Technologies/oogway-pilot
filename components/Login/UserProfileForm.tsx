@@ -124,7 +124,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                 closeModal()
 
                 // After update push the router to the feed
-                router.push(`/feed/${userProfile.uid}`)
+                router.push('/')
             })
             .catch((err) => {
                 console.log(err)
@@ -196,7 +196,11 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                     <Avatar
                         className={loginImages.avatar}
                         sx={sizeAvatar}
-                        src={imageToUpload ? imageToUpload : userProfile.profilePic}
+                        src={
+                            imageToUpload
+                                ? imageToUpload
+                                : userProfile.profilePic
+                        }
                     />
 
                     <div className={loginDivs.upload}>
