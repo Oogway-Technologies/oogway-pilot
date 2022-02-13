@@ -5,11 +5,28 @@ import AppsButton from './AppsButton'
 import NavLinks from './NavLinks'
 import UserDropdown from './UserDropdown'
 import { headerClass } from '../../styles/header'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from '../../firebase'
-import { useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../atoms/user'
 
 const Header = () => {
+    // Call UserProfile to pass uid into links
+    const userProfile = useRecoilValue(userProfileState)
+    const links = [
+        // TODO: Add as pages created
+        {
+            href: ['/#'], // change to /Search when search page created
+            text: 'Search',
+        },
+        {
+            href: [`/feed/${userProfile.uid}`],
+            text: 'Feed',
+        },
+        {
+            href: ['/#'], // change to Friends when created
+            text: 'Friends',
+        },
+    ]
+
     return (
         <div className={headerClass.div}>
             {/* Top: Toolbar */}
@@ -38,7 +55,7 @@ const Header = () => {
 
             {/* Bottom: Slug */}
             <div className={headerClass.slug}>
-                <NavLinks listStyle={headerClass.slugList} />
+                <NavLinks links={links} listStyle={headerClass.slugList} />
             </div>
         </div>
     )
