@@ -54,6 +54,7 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                     bio={bio}
                     location={location}
                     name={name}
+                    lastName={lastName}
                     profilePic={profilePic}
                     username={username}
                     uid={uid}

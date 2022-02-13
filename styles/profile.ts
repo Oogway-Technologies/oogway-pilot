@@ -21,8 +21,8 @@ export const profileCard = {
         border-solid border font-bold text-base leading-5 not-italic tracking-normal\
         hover:bg-neutral-300 \
         active:bg-neutral-300",
-    joinedAndLocationText: 'text-neutral-700 flex item-center font-normal text-sm md:text-base leading-6 tracking-normal text-gray-600',
-    bioText: 'text-neutral-700 font-normal text-sm md:text-base leading-6 text-left not-italic tracking-normal mx-3 md:mx-0',
+    joinedAndLocationText: 'text-neutral-700 flex item-center font-normal text-sm md:text-base leading-6 tracking-normal text-gray-600 pt-1',
+    bioText: 'text-neutral-700 font-normal text-sm md:text-base leading-6 text-left not-italic tracking-normal mx-3 md:mx-0 pt-1',
     usernameText: 'text-primary text-base',
 }
 

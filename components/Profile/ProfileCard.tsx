@@ -9,11 +9,11 @@ import { userProfileState } from '../../atoms/user'
 import { useMediaQuery } from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
-
 interface ProfileCardProps {
     bio?: string
     location?: string
     name?: string
+    lastName?: string
     profilePic: string
     username?: string
     uid?: string
@@ -21,7 +21,7 @@ interface ProfileCardProps {
 }
 
 export const ProfileCard: FC<ProfileCardProps> = (props) => {
-    const { bio, location, name, profilePic, username, uid, joinedAt } = props
+    const { bio, location, name, lastName, profilePic, username, uid, joinedAt } = props
     // recoil state to check if Profile card is for current user.
     const { uid: currentUserUid } = useRecoilValue(userProfileState)
 
@@ -52,8 +52,9 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                         {/*User profile name and buttons list*/}
                         <div className={'flex items-center mb-1'}>
                             <span className={profileCard.userProfileName}>
-                                {name}
+                                {name} {lastName}
                             </span>
+
                             <div
                                 className={
                                     'flex items-center justify-self-end space-x-2'
@@ -104,7 +105,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                         {/*username*/}
                         {username && (
                             <span className={profileCard.usernameText}>
-                                @{username}
+                                {username}
                             </span>
                         )}
                         {/*location and date of joining*/}
