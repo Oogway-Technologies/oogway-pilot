@@ -196,7 +196,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                     <Avatar
                         className={loginImages.avatar}
                         sx={sizeAvatar}
-                        src={imageToUpload}
+                        src={imageToUpload ? imageToUpload : userProfile.profilePic}
                     />
 
                     <div className={loginDivs.upload}>
