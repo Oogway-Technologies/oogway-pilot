@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
 import { db } from '../../../firebase'
 import PostOptionsDropdown from './PostOptionsDropdown'
-import {Avatar} from '@mui/material'
-import {postCardClass} from '../../../styles/feed'
+import { Avatar } from '@mui/material'
+import { postCardClass } from '../../../styles/feed'
 import Timestamp from '../../Utils/Timestamp'
 import { getUserDoc } from '../../../lib/userHelper'
 import { getCommentsCollection } from '../../../lib/commentsHelper'
@@ -20,11 +20,11 @@ type PostHeaderProps = {
 }
 
 const PostHeader: FC<PostHeaderProps> = ({
-                                             id,
-                                             name,
-                                             authorUid,
-                                             timestamp,
-                                         }) => {
+    id,
+    name,
+    authorUid,
+    timestamp,
+}) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
     // router from next.js to use location functions.
@@ -53,20 +53,22 @@ const PostHeader: FC<PostHeaderProps> = ({
     }
 
     // Deletes a post
-    const deletePost = () => {
+    const deletePost = async () => {
         const postDoc = getPost(id)
         // Before deleting the post, we need to delete the comments.
         // Comments is a sub-collection of the post, so we need to
         // retrieve all comments and delete them first.
-        postDoc.then(() => {
+        await postDoc.then(async () => {
             // Check if comments exists for this post
             const commentsCollection = getCommentsCollection(id)
-            commentsCollection
-                .then((sub) => {
+            await commentsCollection
+                .then(async (sub) => {
                     if (sub.docs.length > 0) {
                         // Comments are present, delete them
                         sub.forEach((com) => {
-                            com.ref.delete() // Check if issue with getDoc vs get in helpers
+                            deleteDoc(com?.ref).then((err) => {
+                                console.log('Cannot delete comment: ', err)
+                            })
                         })
                     }
 
@@ -82,7 +84,9 @@ const PostHeader: FC<PostHeaderProps> = ({
         return '/'
     }
 
-    const handleProfileAvatarClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleProfileAvatarClick = async (
+        e: React.MouseEvent<HTMLDivElement>
+    ) => {
         e.preventDefault()
         await router.push(`/profile/${authorUid}`)
     }
@@ -113,7 +117,7 @@ const PostHeader: FC<PostHeaderProps> = ({
                         {/* <p className={postCardClass.categoryP}>Education</p>
                         {bull} */}
                         {/* Time stamp */}
-                        <Timestamp timestamp={timestamp}/>
+                        <Timestamp timestamp={timestamp} />
                     </div>
                 </div>
             </div>

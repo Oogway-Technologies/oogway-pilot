@@ -1,19 +1,13 @@
 import Timestamp from '../../Utils/Timestamp'
 import React from 'react'
 import needsHook from '../../../hooks/needsHook'
-import {
-    avatarURL,
-    postCardClass,
-    replyHeaderClass,
-} from '../../../styles/feed'
+import { postCardClass, replyHeaderClass } from '../../../styles/feed'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 import { db } from '../../../firebase'
 import { Avatar } from '@mui/material'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
-import { useProfileData } from '../../../hooks/useProfileData'
-import { getReply } from '../../../lib/repliesHelper'
 import { getUserDoc } from '../../../lib/userHelper'
+import { useProfileData } from '../../../hooks/useProfileData'
 
 type ReplyHeaderProps = {
     postId: string | string[] | undefined
@@ -34,19 +28,14 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
     email,
     timestamp,
 }) => {
-    // Listen to real time author profile data
+    // Get author profile
     const [authorProfile] = useProfileData(authorUid)
 
     // Deletes a reply
     const deleteReplyEntry = async () => {
         const replyDocRef = doc(
             db,
-            'posts',
-            postId,
-            'comments',
-            commentId,
-            'replies',
-            replyId
+            `posts/${postId}/comments/${commentId}/replies/${replyId}`
         )
         await deleteDoc(replyDocRef).catch((err) => {
             console.log('Cannot delete reply: ', err)
@@ -57,7 +46,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
         await authorUserDoc.then(async (doc) => {
             if (doc?.exists()) {
                 let tmp = doc.data()
-                delete tmp.comments[commentId]
+                delete tmp.replies[replyId]
                 await updateDoc(doc?.ref, tmp)
             }
         })
