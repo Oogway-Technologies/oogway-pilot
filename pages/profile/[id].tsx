@@ -3,23 +3,23 @@ import {ParsedUrlQuery} from "querystring";
 import {FirebaseProfile} from "../../utils/types/firebase";
 import {profilePage,} from "../../styles/profile";
 import {GetServerSideProps, GetServerSidePropsContext} from "next";
+
+import {ProfileCard} from "../../components/Profile/ProfileCard";
+// import ProfileEngagementBar from "../../components/Profile/ProfileEngagementBar";
+import {useRecoilValue} from "recoil";
+import {userProfileState} from "../../atoms/user";
+
+// Firebase imports
 import firebase from "firebase/compat";
 import {doc, getDoc} from "firebase/firestore";
 import {db} from "../../firebase";
-import {ProfileCard} from "../../components/Profile/ProfileCard";
-import ProfileEngagementBar from "../../components/Profile/ProfileEngagementBar";
-import {useRecoilValue} from "recoil";
-import {userProfileState} from "../../atoms/user";
-import DocumentData = firebase.firestore.DocumentData;
-
 import { useCollection } from "react-firebase-hooks/firestore";
 import PostCard from "../../components/Feed/Post/Post";
 
+import DocumentData = firebase.firestore.DocumentData;
+
 import {
-    addDoc,
     collection,
-    serverTimestamp,
-    updateDoc,
     orderBy,
     where,
     query,
