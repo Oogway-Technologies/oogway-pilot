@@ -9,6 +9,7 @@ import { userProfileState } from '../../atoms/user'
 import { useMediaQuery } from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
+import { useProfileData } from '../../hooks/useProfileData'
 interface ProfileCardProps {
     bio?: string
     location?: string
@@ -21,9 +22,22 @@ interface ProfileCardProps {
 }
 
 export const ProfileCard: FC<ProfileCardProps> = (props) => {
-    const { bio, location, name, lastName, profilePic, username, uid, joinedAt } = props
+    const {
+        bio,
+        location,
+        name,
+        lastName,
+        profilePic,
+        username,
+        uid,
+        joinedAt,
+    } = props
     // recoil state to check if Profile card is for current user.
     const { uid: currentUserUid } = useRecoilValue(userProfileState)
+
+    // Listen to userProfile rather than using static values from recoil
+    // Why? Recoil only updates state on refreshes so when the user first
+    const [userProfileSnapshot] = useProfileData(uid)
 
     // hook to check is user is no mobile device or not.
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -45,7 +59,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                     <img
                         className={profileCard.profileImg}
                         alt={username}
-                        src={profilePic}
+                        src={userProfileSnapshot?.profilePic || profilePic}
                     />
                     {/*container for user details*/}
                     <div className={profileCard.userDetailsDiv}>

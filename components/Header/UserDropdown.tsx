@@ -27,10 +27,10 @@ const UserDropdown: React.FC = () => {
     const router = useRouter()
     const { user, isLoading } = useUser()
     const userProfile = useRecoilValue(userProfileState)
-    
+
     // Listen to userProfile rather than using static values from recoil
     // Why? Recoil only updates state on refreshes so when the user first
-    // const [authorProfile] = useProfileData(userProfile.uid)
+    const [userProfileSnapshot] = useProfileData(userProfile.uid)
 
     // Navigate to user settings
     // TODO: Implement page
@@ -47,7 +47,7 @@ const UserDropdown: React.FC = () => {
     const menuButton = (
         <Avatar
             className={userDropdownClass.avatar}
-            src={userProfile.profilePic || user?.picture || undefined}
+            src={userProfileSnapshot.profilePic || user?.picture || undefined}
         />
     )
 
