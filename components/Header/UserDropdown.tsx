@@ -1,40 +1,45 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Avatar } from '@mui/material'
 import SettingsButton from './SettingsButton'
 import ToggleTheme from './ToggleTheme'
 import LogoutButton from './LogoutButton'
 import DropdownMenu from '../Utils/DropdownMenu'
 import { userDropdownClass } from '../../styles/header'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { doc } from 'firebase/firestore'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
-import Modal from '../../components/Utils/Modal'
-import UserProfileForm from '../Login/UserProfileForm'
 
 // JSX and styling
 import Button from '../Utils/Button'
 import { loginButtons } from '../../styles/login'
 
 // Auth0
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 
 // Recoil state
 import { userProfileState } from '../../atoms/user'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
+import ProfileButton from './ProfileButton'
+import needsHook from '../../hooks/needsHook'
+
+// User profile
+import { useProfileData } from '../../hooks/useProfileData'
 
 const UserDropdown: React.FC = () => {
-    const router = useRouter();
-    const { user, isLoading } = useUser();
+    const router = useRouter()
+    const { user, isLoading } = useUser()
     const userProfile = useRecoilValue(userProfileState)
+    
+    // Listen to userProfile rather than using static values from recoil
+    // Why? Recoil only updates state on refreshes so when the user first
+    // const [authorProfile] = useProfileData(userProfile.uid)
 
     // Navigate to user settings
-    const goToUserSettings = () => {
-        router.push(`/settings/${userProfile.uid}`)
-    }
+    // TODO: Implement page
+    // const goToUserSettings = () => {
+    //     router.push(`/settings/${userProfile.uid}`)
+    // }
 
     const signIn = () => {
-        router.push("/api/auth/login");
+        router.push('/api/auth/login')
     }
 
     // Dropdown menu props
@@ -42,12 +47,13 @@ const UserDropdown: React.FC = () => {
     const menuButton = (
         <Avatar
             className={userDropdownClass.avatar}
-            src={userProfile ? userProfile.profilePic : (user ? user.picture : null)}
+            src={userProfile.profilePic || user?.picture || undefined}
         />
     )
-    
+
     const menuItems = [
-        <SettingsButton hasText={true} onClick={goToUserSettings} />,
+        <ProfileButton hasText={true} uid={userProfile.uid} />,
+        <SettingsButton hasText={true} onClick={needsHook} />,
         <LogoutButton hasText={true} />,
         <ToggleTheme hasText={true} />,
     ]
@@ -56,24 +62,22 @@ const UserDropdown: React.FC = () => {
     //    Sign In
     //</button>
 
-    return (
-        (!isLoading && !user) ? (
-            <Button
-                onClick={signIn}
-                addStyle={loginButtons.loginButtonWFullStyle}
-                text="Sign In"
-                keepText={true}
-                icon={null}
-                type="button"
-            />
-        ) : (
-            <DropdownMenu
-                menuButtonClass={userDropdownClass.menuButtonClass}
-                menuItemsClass={userDropdownClass.menuItemsClass}
-                menuButton={menuButton}
-                menuItems={menuItems}
-            />
-        )
+    return !isLoading && !user ? (
+        <Button
+            onClick={signIn}
+            addStyle={loginButtons.loginButtonWFullStyle}
+            text="Sign In"
+            keepText={true}
+            icon={null}
+            type="button"
+        />
+    ) : (
+        <DropdownMenu
+            menuButtonClass={userDropdownClass.menuButtonClass}
+            menuItemsClass={userDropdownClass.menuItemsClass}
+            menuButton={menuButton}
+            menuItems={menuItems}
+        />
     )
 }
 

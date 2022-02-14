@@ -231,7 +231,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     removeImage(0)
                 }
             )
-        } else if (isComparePost()) {
+        }
+
+        if (isComparePost()) {
             // This is a compare post and it is slightly more complex than the single image post
             // since now we need to upload two images and/or text to the DB and post
             let mediaObjectList: { type: string; value: string }[] = []
@@ -284,7 +286,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
             if (textToCompareRight) {
                 mediaObjectList.push({
                     type: 'text',
-                    value: textToCompareLeft,
+                    value: textToCompareRight,
                 })
                 votesObjMapList.push({})
             }

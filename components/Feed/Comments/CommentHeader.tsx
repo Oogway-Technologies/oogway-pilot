@@ -56,20 +56,22 @@ const CommentHeader: FC<CommentHeaderProps> = ({
     }
 
     // Deletes a comment
-    const deleteComment = () => {
+    const deleteComment = async () => {
         const commentDoc = getComment(postId, commentId)
         // Before deleting the comment, we need to delete the replies.
         // Replies is a sub-collection of the comment, so we need to
         // retrieve all replies and delete them first.
-        commentDoc.then((doc) => {
-            // Check if replies exists for this post
+        await commentDoc.then(async () => {
+            // Check if comments exists for this post
             const repliesCollection = getRepliesCollection(postId, commentId)
-            repliesCollection
-                .then((sub) => {
+            await repliesCollection
+                .then(async (sub) => {
                     if (sub.docs.length > 0) {
                         // Replies are present, delete them
                         sub.forEach((reply) => {
-                            reply.ref.delete()
+                            deleteDoc(reply?.ref).catch((err) => {
+                                console.log('Cannot delete reply: ', err)
+                            })
                         })
                     }
 
@@ -77,7 +79,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                     deleteCommentEntry()
                 })
                 .catch((err) => {
-                    console.log('Cannot delete comments: ', err)
+                    console.log('Cannot delete replies: ', err)
                 })
         })
 

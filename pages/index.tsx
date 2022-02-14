@@ -16,9 +16,9 @@ export default function Home({ posts }) {
     // Call user Profile and check whether profile requires updating
     // Should only be called on user first log-in
     const userProfile = useRecoilValue(userProfileState)
-    const [show, setShow] = useState(userProfile.resetProfile)
+    const [show, setShow] = useState(false)
     const closeModal = () => {
-         setShow(false)
+        setShow(false)
     }
 
     return (
@@ -29,13 +29,13 @@ export default function Home({ posts }) {
                 </Head>
                 <FeedAPI posts={posts} />
             </div>
-            
+
             {/* Modal for user profile */}
-            {/*<Modal
-                children={<UserProfileForm profile={userProfile}/>}
+            <Modal
+                children={<UserProfileForm closeModal={closeModal} />}
                 show={show}
                 onClose={closeModal}
-            />*/}
+            />
         </>
     )
 }

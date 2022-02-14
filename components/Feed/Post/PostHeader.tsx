@@ -1,10 +1,8 @@
 import React, { FC } from 'react'
-import needsHook from '../../../hooks/needsHook'
 import { db } from '../../../firebase'
 import PostOptionsDropdown from './PostOptionsDropdown'
 import { Avatar } from '@mui/material'
 import { postCardClass } from '../../../styles/feed'
-import bull from '../../Utils/Bullet'
 import Timestamp from '../../Utils/Timestamp'
 import { getUserDoc } from '../../../lib/userHelper'
 import { getCommentsCollection } from '../../../lib/commentsHelper'
@@ -12,6 +10,7 @@ import { getPost } from '../../../lib/postsHelper'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { deleteMedia } from '../../../lib/storageHelper'
+import { useRouter } from 'next/router'
 
 type PostHeaderProps = {
     id: string
@@ -28,6 +27,8 @@ const PostHeader: FC<PostHeaderProps> = ({
 }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
+    // router from next.js to use location functions.
+    const router = useRouter()
 
     // Delete the post entry from the DB.
     // Note: this post should NOT have any comments
@@ -52,20 +53,22 @@ const PostHeader: FC<PostHeaderProps> = ({
     }
 
     // Deletes a post
-    const deletePost = () => {
+    const deletePost = async () => {
         const postDoc = getPost(id)
         // Before deleting the post, we need to delete the comments.
         // Comments is a sub-collection of the post, so we need to
         // retrieve all comments and delete them first.
-        postDoc.then(() => {
+        await postDoc.then(async () => {
             // Check if comments exists for this post
             const commentsCollection = getCommentsCollection(id)
-            commentsCollection
-                .then((sub) => {
+            await commentsCollection
+                .then(async (sub) => {
                     if (sub.docs.length > 0) {
                         // Comments are present, delete them
                         sub.forEach((com) => {
-                            com.ref.delete() // Check if issue with getDoc vs get in helpers
+                            deleteDoc(com?.ref).then((err) => {
+                                console.log('Cannot delete comment: ', err)
+                            })
                         })
                     }
 
@@ -81,19 +84,22 @@ const PostHeader: FC<PostHeaderProps> = ({
         return '/'
     }
 
+    const handleProfileAvatarClick = async (
+        e: React.MouseEvent<HTMLDivElement>
+    ) => {
+        e.preventDefault()
+        await router.push(`/profile/${authorUid}`)
+    }
+
     return (
         <div className={postCardClass.header}>
             {/* Left content */}
             <div className={postCardClass.headerLeft}>
                 {/* Avatar */}
                 <Avatar
-                    onClick={needsHook}
+                    onClick={handleProfileAvatarClick}
                     className={postCardClass.avatar}
-                    src={
-                        authorProfile.profilePic
-                            ? authorProfile.profilePic
-                            : null
-                    }
+                    src={authorProfile?.profilePic || undefined}
                 />
 
                 {/* Split into two rows on mobile */}

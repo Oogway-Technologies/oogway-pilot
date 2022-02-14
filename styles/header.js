@@ -71,6 +71,14 @@ export const logoutButtonClass = {
     icon: 'mx-1',
 }
 
+export const profileButtonClass = {
+    a: 'inline-flex group-hover:text-black active:text-black \
+          dark:group-hover:text-neutralDark-50 dark:active:text-neutralDark-50 \
+          cursor-pointer items-center\
+          ',
+    icon: 'mx-1',
+}
+
 export const navLinksClass = {
     li: 'flex w-16 justify-around',
 }
