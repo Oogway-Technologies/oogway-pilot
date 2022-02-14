@@ -51,7 +51,7 @@ const PostHeader: FC<PostHeaderProps> = ({
         // Delete the post's media, if any
         deleteMedia(`posts/${id}`)
     }
-
+    // TO BE CHANGED
     // Deletes a post
     const deletePost = async () => {
         const postDoc = getPost(id)
@@ -71,13 +71,6 @@ const PostHeader: FC<PostHeaderProps> = ({
                             })
                         })
                     }
-
-                    // Proceed to delete the post
-                    await deletePostEntry()
-                })
-                .catch((err) => {
-                    console.log('Cannot delete comments: ', err)
-                })
         })
 
         // Return where the user should be routed

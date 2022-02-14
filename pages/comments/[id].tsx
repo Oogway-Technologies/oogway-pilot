@@ -50,7 +50,7 @@ function CommentPage({ post, comments }) {
                         timestamp={post.timestamp}
                         userImage={post.image}
                         postImage={post.postImage}
-                        comments={comments}
+                        // comments={comments} TO BE DELETED
                         isCommentThread={true}
                     />
                 </div>
@@ -79,11 +79,18 @@ export async function getServerSideProps(context) {
     }
 
     // Prepare the comments
-    const commentsRef = await ref
-        .collection('comments')
+    // TO BE DELETED
+    // const commentsRef = await ref
+    //     .collection('comments')
+    //     .orderBy('timestamp', 'asc')
+    //     .get()
+
+    const commentsRef = await db.collection('post-activity')
+        .where('postId', '==', post.id)
+        .where('isComment', '==', true)
         .orderBy('timestamp', 'asc')
         .get()
-
+        
     // Need to parse each comment and convert the timestamp
     // to a string due to server-side rendering
     const comments = commentsRef.docs

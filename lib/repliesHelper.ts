@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, onSnapshot, where, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 
 /**
@@ -22,7 +22,13 @@ import { db } from "../firebase";
  */
  export const getRepliesCollection = async (postId: string, commentId: string) => {
     // Retrieve reference to parent post
-    const repliesRef = collection(db, "posts", postId, "comments", commentId, "replies")
+    // TO BE DELETED
+    // const repliesRef = collection(db, "posts", postId, "comments", commentId, "replies")
+    // return await getDocs(repliesRef);
+    const repliesRef = query( collection(db, "post-activity"), 
+                                where('parentId', '==', commentId), 
+                                where('isComment', '==', false), 
+                            )
     return await getDocs(repliesRef);
 }
 
@@ -40,8 +46,15 @@ import { db } from "../firebase";
     snapshot: (snap: firebase.firestore.snapshot) => void, 
     error: (err: any) => void
 ) => {
-    const commentsRef = collection(db, "posts", postId, "comments", commentId, "replies")
-    const commentsQuery = query(commentsRef, orderBy('timestamp', 'asc'))
+    // TO BE DELETED
+    // const commentsRef = collection(db, "posts", postId, "comments", commentId, "replies")
+    // const commentsQuery = query(commentsRef, orderBy('timestamp', 'asc'))
+    // return onSnapshot(commentsQuery, snapshot, error)
+
+    const commentsQuery = query(collection(db, "post-activity"), 
+                                where('parentId', '==', commentId), 
+                                where('isComment', '==', true),
+                                orderBy('timestamp', 'asc'))
     return onSnapshot(commentsQuery, snapshot, error)
 }
 

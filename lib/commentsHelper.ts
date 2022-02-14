@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, onSnapshot, where, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 
 
@@ -10,7 +10,11 @@ import { db } from "../firebase";
  */
  export const getComment = async (postId: string, commentId: string) => {
     // Retrieve reference to parent post
-    const postRef = doc(db, "posts", postId, "comments", commentId)
+    // TO BE DELETED
+    // const postRef = doc(db, "posts", postId, "comments", commentId)
+    // return await getDoc(postRef);
+
+    const postRef = doc(db, "post-activity", commentId)
     return await getDoc(postRef);
 }
 
@@ -21,8 +25,12 @@ import { db } from "../firebase";
  */
 export const getCommentsCollection = async (id: string) => {
     // Retrieve reference to parent post
-    const commentsRef = collection(db, "posts", id, "comments")
-    return await getDocs(commentsRef);
+    // TO BE DELETED
+    // const commentsRef = collection(db, "posts", id, "comments")
+    // return await getDocs(commentsRef);
+    
+    return await getDocs(query(collection(db, "post-activity"), where("postId", "==", id)))
+    
 }
 
 /**
@@ -37,8 +45,15 @@ export const streamCommentsCollection = (
         snapshot: (snap: firebase.firestore.snapshot) => void, 
         error: (err: any) => void
     ) => {
-    const commentsRef = collection(db, "posts", id, "comments")
-    const commentsQuery = query(commentsRef, orderBy('timestamp', 'asc'))
+    // TO BE DELETED
+    // const commentsRef = collection(db, "posts", id, "comments")
+    // const commentsQuery = query(commentsRef, orderBy('timestamp', 'asc'))
+
+    const commentsQuery = query(collection(db, "post-activity"), 
+                                where("postId", '==', id),  
+                                where('isComment', '==', true),
+                                orderBy('timestamp', 'asc')
+                                )
     return onSnapshot(commentsQuery, snapshot, error)
 }
 

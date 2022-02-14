@@ -19,7 +19,7 @@ import { usePostNumberComments } from '../../../hooks/useNumberComments'
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
 }
-
+// TO BE DELETED
 const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
     // Retrieve user profile
     const userProfile = useRecoilValue(userProfileState)
