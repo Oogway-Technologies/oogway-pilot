@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, db } from '../../../firebase'
-import { postCardClass } from '../../../styles/feed'
-import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
-import { streamPostData } from '../../../lib/postsHelper'
+import React, {useEffect, useState} from 'react'
+import {db} from '../../../firebase'
+import {postCardClass} from '../../../styles/feed'
+import {UilCheckCircle, UilCircle} from '@iconscout/react-unicons'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
+import {streamPostData} from '../../../lib/postsHelper'
 
 type PostVotingMechanismProps = {
     id: string
@@ -14,15 +13,15 @@ type PostVotingMechanismProps = {
 }
 
 const PostVotingMechanism = ({
-    id,
-    compareData,
-    votesList,
-}: PostVotingMechanismProps) => {
+                                 id,
+                                 compareData,
+                                 votesList,
+                             }: PostVotingMechanismProps) => {
     const userProfile = useRecoilValue(userProfileState)
 
     // Track voting button state
-    const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle />)
-    const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle />)
+    const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle/>)
+    const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle/>)
 
     // Initialize correct voting button state
     const updateVoteButton = (idx) => {
@@ -30,12 +29,12 @@ const PostVotingMechanism = ({
         if (![0, 1].includes(idx)) return
         else if (idx == 0) {
             // If voting on left, set left to check and set right to empty
-            setVoteButtonLeft(<UilCheckCircle />)
-            setVoteButtonRight(<UilCircle />)
+            setVoteButtonLeft(<UilCheckCircle/>)
+            setVoteButtonRight(<UilCircle/>)
         } else {
             // Do the same for right
-            setVoteButtonRight(<UilCheckCircle />)
-            setVoteButtonLeft(<UilCircle />)
+            setVoteButtonRight(<UilCheckCircle/>)
+            setVoteButtonLeft(<UilCircle/>)
         }
     }
 
@@ -59,7 +58,7 @@ const PostVotingMechanism = ({
                         // Check if the user voted for an object in the past and
                         // update vote button state accordingly
                         if (
-                            userProfile.uid in
+                            userProfile?.uid in
                             postData.compare.votesObjMapList[i]
                         ) {
                             updateVoteButton(i)
@@ -103,10 +102,10 @@ const PostVotingMechanism = ({
                         // Case 1.b: the user voted again on different object -> switch votes
                         delete postData.compare.votesObjMapList[i][
                             userProfile.uid
-                        ]
+                            ]
                         postData.compare.votesObjMapList[objIdx][
                             userProfile.uid
-                        ] = true
+                            ] = true
                         transaction.update(docRef, postData)
                         return
                     }

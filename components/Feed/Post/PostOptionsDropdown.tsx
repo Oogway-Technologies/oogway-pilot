@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Button from '../../Utils/Button'
 import DropdownMenu from '../../Utils/DropdownMenu'
-import {
-    UilQuestionCircle,
-    UilExclamationCircle,
-    UilBan,
-    UilTrashAlt,
-    UilEllipsisH,
-} from '@iconscout/react-unicons'
+import {UilBan, UilEllipsisH, UilExclamationCircle, UilQuestionCircle, UilTrashAlt,} from '@iconscout/react-unicons'
 import Modal from '../../Utils/Modal'
-import { Dialog } from '@headlessui/react'
-import { postOptionsDropdownClass } from '../../../styles/feed'
+import {Dialog} from '@headlessui/react'
+import {postOptionsDropdownClass} from '../../../styles/feed'
 import needsHook from '../../../hooks/needsHook'
-import { useRouter } from 'next/router'
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
-import { getUserDoc } from '../../../lib/userHelper'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { db } from '../../../firebase'
+import {useRouter} from 'next/router'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
+import {getUserDoc} from '../../../lib/userHelper'
+import {updateDoc} from 'firebase/firestore'
 
 type PostOptionsDropdownProps = {
     authorUid: string // Post author id
@@ -26,12 +19,12 @@ type PostOptionsDropdownProps = {
 }
 
 const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
-    authorUid,
-    deletePost,
-    authorName,
-}) => {
+                                                                     authorUid,
+                                                                     deletePost,
+                                                                     authorName,
+                                                                 }) => {
     const userProfile = useRecoilValue(userProfileState) // Get user profile
-    const currentUserDoc = getUserDoc(userProfile.uid) // Get user document data
+    const currentUserDoc = getUserDoc(userProfile?.uid) // Get user document data
 
     // Track author blocked state
     // TODO: refactor to custom hook
@@ -57,7 +50,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     }
 
     const isUsersOwnPost = (authorUid: string) => {
-        return userProfile.uid === authorUid
+        return userProfile?.uid === authorUid
     }
 
     const isUserBlocked = async (authorUid: string) => {
@@ -164,7 +157,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
                     <Button
                         text="Yes, delete"
                         keepText={true}
-                        icon={<UilTrashAlt />}
+                        icon={<UilTrashAlt/>}
                         type="submit"
                         addStyle={postOptionsDropdownClass.modalConfirmButton}
                         onClick={deleteAndClose}
@@ -175,12 +168,12 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     }
 
     // Dropdown menu props
-    const menuButton = <UilEllipsisH />
+    const menuButton = <UilEllipsisH/>
     const ownPostMenuItems = [
         <Button
             text="Delete Post"
             keepText={true}
-            icon={<UilTrashAlt />}
+            icon={<UilTrashAlt/>}
             type="button"
             onClick={openModal}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
@@ -190,7 +183,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         <Button
             text="Not Interested in This Post"
             keepText={true}
-            icon={<UilQuestionCircle />}
+            icon={<UilQuestionCircle/>}
             type="button"
             onClick={needsHook}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
@@ -201,7 +194,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         <Button
             text={`${authorIsBlocked ? 'Unblock' : 'Block'} ${authorName}`}
             keepText={true}
-            icon={<UilBan />}
+            icon={<UilBan/>}
             type="button"
             onClick={authorIsBlocked ? unblockUser : blockUser}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
@@ -209,7 +202,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         <Button
             text="Report"
             keepText={true}
-            icon={<UilExclamationCircle />}
+            icon={<UilExclamationCircle/>}
             type="button"
             onClick={needsHook}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
@@ -229,7 +222,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
                 }
             />
             <Modal
-                children={<ConfirmDeletePost />}
+                children={<ConfirmDeletePost/>}
                 show={isOpen}
                 onClose={closeModal}
             />
