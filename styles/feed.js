@@ -195,6 +195,8 @@ export const commentFormClass = {
     commentTextArea:
         'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
         text-black dark:text-white text-sm md:text-base',
+    growingTextArea: 'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
+        text-black dark:text-white text-sm md:text-base h-[40px] max-h-[70px] scrollbar-hide',
     mobileSubmitDiv: 'inline-flex justify-between mt-sm',
     imageButton:
         'p-sm rounded-[20px] justify-self-end text-neutral-700 dark:text-neutralDark-150 \
@@ -219,7 +221,7 @@ export const commentClass = {
     outerDiv: 'flex flex-col pt-md pb-sm dark:bg-neutralDark-500',
     body: 'flex flex-col ml-xl mt-sm',
     bodyDescription:
-        'ml-md px-sm text-neutral-700 dark:text-neutralDark-150 text-sm',
+        'ml-md px-sm text-neutral-700 dark:text-neutralDark-150 text-sm break-words',
     media: 'flex ml-xl p-md',
     replyDropdown: 'inline-flex items-center ml-[44px] mt-sm',
 }
@@ -245,10 +247,10 @@ export const replyClass = {
     innerDiv: 'flex flex-row',
     dividerLeft:
         'ml-[14px] border-r-2 border-primary/25 dark:border-primaryDark/50',
-    dividerRight: 'grow',
+    dividerRight: 'w-full',
     body: 'flex flex-col mt-sm',
     bodyDescription:
-        'ml-md pl-md pr-sm text-neutral-700 dark:text-neutralDark-150 text-sm',
+        'ml-md pl-md pr-sm text-neutral-700 dark:text-neutralDark-150 text-sm break-words',
 }
 
 export const replyFormClass = {
@@ -269,6 +271,8 @@ export const replyFormClass = {
     replyTextArea:
         'w-full p-sm flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
             text-sm',
+    growingTextArea: 'w-full flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
+            text-sm h-[20px] max-h-[50px] scrollbar-hide',
     submitButton:
         'rounded-[20px] p-sm md:px-md md:space-x-2 \
             bg-primary dark:bg-primaryDark hover:bg-primaryActive \
