@@ -6,7 +6,7 @@ import React, { FC, useState } from 'react'
 import { UilLocationPoint, UilPen } from '@iconscout/react-unicons'
 import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../atoms/user'
-import { useMediaQuery } from '@mui/material'
+import { Avatar, useMediaQuery } from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
 interface ProfileCardProps {
@@ -21,7 +21,16 @@ interface ProfileCardProps {
 }
 
 export const ProfileCard: FC<ProfileCardProps> = (props) => {
-    const { bio, location, name, lastName, profilePic, username, uid, joinedAt } = props
+    const {
+        bio,
+        location,
+        name,
+        lastName,
+        profilePic,
+        username,
+        uid,
+        joinedAt,
+    } = props
     // recoil state to check if Profile card is for current user.
     const { uid: currentUserUid } = useRecoilValue(userProfileState)
 
@@ -37,23 +46,24 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
         setShowModal(false)
     }
 
+    const sizeAvatar = () => {
+        if (isMobile) return { height: 75, width: 75 }
+        return { height: 150, width: 150 }
+    }
+
     return (
         <>
-            <div className={'flex flex-col items-center'}>
+            <div className={'flex flex-col items-center mx-sm sm:mx-0'}>
                 <div className={profileCard.mainDiv}>
                     {/*profile image*/}
-                    <img
-                        className={profileCard.profileImg}
-                        alt={username}
-                        src={profilePic}
-                    />
+                    <Avatar sx={sizeAvatar} src={profilePic} alt={username} />
                     {/*container for user details*/}
                     <div className={profileCard.userDetailsDiv}>
                         {/*User profile name and buttons list*/}
                         <div className={'flex items-center mb-1'}>
-                            <span className={profileCard.userProfileName}>
+                            <div className={profileCard.userProfileName}>
                                 {name} {lastName}
-                            </span>
+                            </div>
 
                             <div
                                 className={
