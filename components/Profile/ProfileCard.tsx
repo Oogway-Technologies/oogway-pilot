@@ -10,6 +10,7 @@ import { useMediaQuery } from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
 import { useProfileData } from '../../hooks/useProfileData'
+import NewPostForm from '../Feed/Forms/NewPostForm'
 interface ProfileCardProps {
     bio?: string
     location?: string
@@ -42,13 +43,20 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
     // hook to check is user is no mobile device or not.
     const isMobile = useMediaQuery('(max-width: 965px)')
 
-    // Modal
-    const [showModal, setShowModal] = useState(false)
-    const openModal = () => {
-        setShowModal(true)
+    // Modals
+    const [showProfileModal, setShowProfileModal] = useState(false)
+    const [showPostModal, setShowPostModal] = useState(false)
+    const openProfileModal = () => {
+        setShowProfileModal(true)
     }
-    const closeModal = () => {
-        setShowModal(false)
+    const closeProfileModal = () => {
+        setShowProfileModal(false)
+    }
+    const openPostModal = () => {
+        setShowPostModal(true)
+    }
+    const closePostModal = () => {
+        setShowPostModal(false)
     }
 
     return (
@@ -88,7 +96,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                 ) : (
                                     <>
                                         <Button
-                                            onClick={openModal}
+                                            onClick={openProfileModal}
                                             text={'Edit Profile'}
                                             type={'button'}
                                             addStyle={profileCard.editButton}
@@ -96,9 +104,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                         />
                                         {!isMobile && (
                                             <Button
-                                                onClick={() => {
-                                                    alert('TODO: Add new post')
-                                                }}
+                                                onClick={openPostModal}
                                                 icon={
                                                     <UilPen
                                                         className={
@@ -117,9 +123,9 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                             </div>
                         </div>
                         {/*username*/}
-                        {username && (
+                        {(userProfileSnapshot.username || username) && (
                             <span className={profileCard.usernameText}>
-                                {username}
+                                {userProfileSnapshot.username || username}
                             </span>
                         )}
                         {/*location and date of joining*/}
@@ -131,31 +137,41 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                         {bull}
                                     </>
                                 )}
-                                {location && (
+                                {(userProfileSnapshot.location || location) && (
                                     <>
                                         <UilLocationPoint
                                             className={'h-6 w-6 mr-2'}
                                         />{' '}
-                                        {location}
+                                        {userProfileSnapshot.location ||
+                                            location}
                                     </>
                                 )}
                             </span>
                         )}
                         {/*user bio if not on mobile device*/}
-                        {bio && !isMobile && (
-                            <span className={profileCard.bioText}>{bio}</span>
+                        {(userProfileSnapshot.bio || bio) && !isMobile && (
+                            <span className={profileCard.bioText}>
+                                {userProfileSnapshot.bio || bio}
+                            </span>
                         )}
                     </div>
                 </div>
                 {/*user bio if on mobile device.*/}
-                {bio && isMobile && (
-                    <span className={profileCard.bioText}>{bio}</span>
+                {(userProfileSnapshot.bio || bio) && isMobile && (
+                    <span className={profileCard.bioText}>
+                        {userProfileSnapshot.bio || bio}
+                    </span>
                 )}
             </div>
             <Modal
-                children={<UserProfileForm closeModal={closeModal} />}
-                show={showModal}
-                onClose={closeModal}
+                children={<UserProfileForm closeModal={closeProfileModal} />}
+                show={showProfileModal}
+                onClose={closeProfileModal}
+            />
+            <Modal
+                children={<NewPostForm closeModal={closePostModal} />}
+                show={showPostModal}
+                onClose={closePostModal}
             />
         </>
     )
