@@ -32,6 +32,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
     const [authorProfile] = useProfileData(authorUid)
 
     // Deletes a reply
+    // TO BE CHANGED
     const deleteReplyEntry = async () => {
         const replyDocRef = doc(
             db,
