@@ -183,7 +183,7 @@ export const commentFormClass = {
     form: 'flex flex-col',
     body: 'inline-flex items-center space-x-md',
     commentBar:
-        'inline-flex rounded-[10px] items-center py-2 px-2 md:px-5 lg:w-96 xl:w-96 \
+        'inline-flex rounded-[10px] items-center py-2 pl-2 pr-1 md:pl-5 md:pr-3 lg:w-96 xl:w-96 \
         border-solid border-2 border-neutral-50 dark:border-neutralDark-150 \
         focus-within:border-primary focus-visible:border-primary \
         dark:focus-within:border-primary dark:focus-visible:border-primary \
@@ -199,7 +199,7 @@ export const commentFormClass = {
         text-black dark:text-white text-sm md:text-base h-[24px] max-h-[100px] scrollbar-hide p-0',
     mobileSubmitDiv: 'inline-flex justify-between mt-sm',
     imageButton:
-        'p-sm rounded-[20px] justify-self-end text-neutral-700 dark:text-neutralDark-150 \
+        'p-sm rounded-[20px] ml-1 justify-self-end text-neutral-700 dark:text-neutralDark-150 \
         hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
         hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
         hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
