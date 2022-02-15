@@ -5,12 +5,12 @@ import AppsButton from './AppsButton'
 import NavLinks from './NavLinks'
 import UserDropdown from './UserDropdown'
 import { headerClass } from '../../styles/header'
-import { useRecoilValue } from 'recoil'
-import { userProfileState } from '../../atoms/user'
+import { useUser } from '@auth0/nextjs-auth0'
+import { useEffect } from 'react'
 
 const Header = () => {
-    // Call UserProfile to pass uid into links
-    const userProfile = useRecoilValue(userProfileState)
+    const { user, isLoading } = useUser()
+
     const links = [
         // TODO: Add as pages created
         {
