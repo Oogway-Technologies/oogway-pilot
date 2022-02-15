@@ -40,6 +40,8 @@ export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
             }
             await setDoc(doc(db, "profiles", newlyAddedUserRef.id), newProfile);
 
+            // Create a new authenticated user in Firebase
+
             // Return the new profile
             return newProfile;
         }
