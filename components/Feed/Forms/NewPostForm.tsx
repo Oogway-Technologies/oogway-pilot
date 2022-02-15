@@ -8,7 +8,13 @@ import {getDownloadURL, ref, uploadString} from '@firebase/storage'
 // JSX components
 import Button from '../../Utils/Button'
 import {Dialog} from '@headlessui/react'
-import {UilColumns, UilExclamationTriangle, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
+import {
+    UilBalanceScale,
+    UilExclamationTriangle,
+    UilImagePlus,
+    UilNavigator,
+    UilTimesCircle,
+} from '@iconscout/react-unicons'
 import {Collapse} from '@mui/material'
 
 // Form management
@@ -22,6 +28,7 @@ import {useRecoilValue} from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
+import {Tooltip} from "../../Utils/Tooltip";
 
 type NewPostProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
@@ -30,26 +37,26 @@ type NewPostProps = {
 }
 
 const NewPostForm: React.FC<NewPostProps> = ({
-    closeModal,
-    questPlaceholder,
-    descPlaceholder,
-}) => {
+                                                 closeModal,
+                                                 questPlaceholder,
+                                                 descPlaceholder,
+                                             }) => {
     const userProfile = useRecoilValue(userProfileState)
 
     // Form management
     const {
         register,
         setError,
-        formState: { errors },
+        formState: {errors},
     } = useForm()
     const warningTime = 3000 // set warning to flash for 3 sec
 
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('question', { required: true })
+        register('question', {required: true})
     }, [])
     useEffect(() => {
-        register('compare', { required: true })
+        register('compare', {required: true})
     }, [])
 
     const [loading, setLoading] = useState(false)
@@ -86,10 +93,10 @@ const NewPostForm: React.FC<NewPostProps> = ({
     // Must have to do with state not being shared.
     // TODO: Look into sharing context
     const FlashErrorMessage = ({
-        message,
-        ms,
-        style,
-    }: {
+                                   message,
+                                   ms,
+                                   style,
+                               }: {
         message: string
         ms: number
         style: string
@@ -109,7 +116,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         // Otherwise, return warning
         return (
             <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4" /> {message}
+                <UilExclamationTriangle className="mr-1 h-4"/> {message}
             </span>
         )
     }
@@ -143,8 +150,8 @@ const NewPostForm: React.FC<NewPostProps> = ({
         if (inputRef && !inputRef.current.value) {
             setError(
                 'question',
-                { type: 'required', message: 'A question is required.' },
-                { shouldFocus: true }
+                {type: 'required', message: 'A question is required.'},
+                {shouldFocus: true}
             )
             return false // Whether to sendPost or not
         }
@@ -158,7 +165,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     message:
                         'You are missing required information to create a compare post.',
                 },
-                { shouldFocus: true }
+                {shouldFocus: true}
             )
             return false // Whether to send post or not
         }
@@ -295,9 +302,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
         setDoc(
             userDocRef,
             {
-                posts: { id: docRef.id },
+                posts: {id: docRef.id},
             },
-            { merge: true }
+            {merge: true}
         )
 
         // Everything is done
@@ -478,29 +485,35 @@ const NewPostForm: React.FC<NewPostProps> = ({
             {/* Upload Image OR compare*/}
             <div className={postFormClass.uploadBar}>
                 {/* Upload Image */}
-                <button
-                    onClick={() => filePickerRef.current.click()}
-                    className={postFormClass.imageButton}
-                >
-                    <UilImagePlus />
-                    <input
-                        ref={filePickerRef}
-                        onChange={handleImageUpload}
-                        type="file"
-                        onKeyPress={preventDefaultOnEnter}
-                        hidden
-                    />
-                </button>
+                <Tooltip toolTipText={'Upload Image'}>
+                    <button
+                        onClick={() => filePickerRef.current.click()}
+                        className={postFormClass.imageButton}
+                    >
+                        <UilImagePlus/>
+                        <input
+                            ref={filePickerRef}
+                            onChange={handleImageUpload}
+                            type="file"
+                            onKeyPress={preventDefaultOnEnter}
+                            hidden
+                        />
+                    </button>
+                </Tooltip>
 
                 {/* Trigger compare */}
-                <button
-                    onClick={handleCompareClick}
-                    className={postFormClass.imageButton}
-                    aria-expanded={expanded}
-                    aria-label="compare"
-                >
-                    <UilColumns />
-                </button>
+                <Tooltip toolTipText={'Compare'}>
+                    <button
+                        onClick={handleCompareClick}
+                        className={postFormClass.imageButton}
+                        aria-expanded={expanded}
+                        aria-label="compare"
+                    >
+                        <UilBalanceScale/>
+
+                    </button>
+                </Tooltip>
+
             </div>
 
             {/* Show preview of the image and click it to remove the image from the post */}
@@ -653,13 +666,13 @@ const NewPostForm: React.FC<NewPostProps> = ({
                             )}
                         </div>
                         {errors.compare &&
-                            errors.compare.type === 'required' && (
-                                <FlashErrorMessage
-                                    message={errors.compare.message}
-                                    ms={warningTime}
-                                    style={postFormClass.formAlert}
-                                />
-                            )}
+                        errors.compare.type === 'required' && (
+                            <FlashErrorMessage
+                                message={errors.compare.message}
+                                ms={warningTime}
+                                style={postFormClass.formAlert}
+                            />
+                        )}
                     </div>
                 </div>
             </Collapse>
@@ -677,7 +690,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                 <Button
                     text="Post"
                     keepText={true}
-                    icon={<UilNavigator />}
+                    icon={<UilNavigator/>}
                     type="submit"
                     addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}
