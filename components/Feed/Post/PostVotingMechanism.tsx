@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react'
-import {db} from '../../../firebase'
-import {postCardClass} from '../../../styles/feed'
-import {UilCheckCircle, UilCircle} from '@iconscout/react-unicons'
-import {userProfileState} from '../../../atoms/user'
-import {useRecoilValue} from 'recoil'
-import {streamPostData} from '../../../lib/postsHelper'
+import React, { useEffect, useState } from 'react'
+import { db } from '../../../firebase'
+import { postCardClass } from '../../../styles/feed'
+import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
+import { streamPostData } from '../../../lib/postsHelper'
+import {useUser} from '@auth0/nextjs-auth0'
 
 type PostVotingMechanismProps = {
     id: string
@@ -13,28 +14,32 @@ type PostVotingMechanismProps = {
 }
 
 const PostVotingMechanism = ({
-                                 id,
-                                 compareData,
-                                 votesList,
-                             }: PostVotingMechanismProps) => {
+    id,
+    compareData,
+    votesList,
+}: PostVotingMechanismProps) => {
+    const {user} = useUser()
     const userProfile = useRecoilValue(userProfileState)
 
     // Track voting button state
-    const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle/>)
-    const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle/>)
+    const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle />)
+    const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle />)
 
     // Initialize correct voting button state
     const updateVoteButton = (idx) => {
+        // Do not update the vote if user is not logged in 
+        if (!user) return
+
         // Exit early if the index doesn't map to left (0)/ right (1)
         if (![0, 1].includes(idx)) return
         else if (idx == 0) {
             // If voting on left, set left to check and set right to empty
-            setVoteButtonLeft(<UilCheckCircle/>)
-            setVoteButtonRight(<UilCircle/>)
+            setVoteButtonLeft(<UilCheckCircle />)
+            setVoteButtonRight(<UilCircle />)
         } else {
             // Do the same for right
-            setVoteButtonRight(<UilCheckCircle/>)
-            setVoteButtonLeft(<UilCircle/>)
+            setVoteButtonRight(<UilCheckCircle />)
+            setVoteButtonLeft(<UilCircle />)
         }
     }
 
@@ -78,6 +83,9 @@ const PostVotingMechanism = ({
     // Event hooks
     // TODO: refactor to firebase v9+
     const voteOnImage = (objIdx) => {
+        // Do not vote if user is not logged in
+        if (!user) return;
+
         // Add a vote, for this user, to one of the images
         var docRef = db.collection('posts').doc(id)
 
@@ -102,10 +110,10 @@ const PostVotingMechanism = ({
                         // Case 1.b: the user voted again on different object -> switch votes
                         delete postData.compare.votesObjMapList[i][
                             userProfile.uid
-                            ]
+                        ]
                         postData.compare.votesObjMapList[objIdx][
                             userProfile.uid
-                            ] = true
+                        ] = true
                         transaction.update(docRef, postData)
                         return
                     }
@@ -124,7 +132,7 @@ const PostVotingMechanism = ({
                     <div key={idx} className={postCardClass.voteContainer}>
                         {obj.type == 'image' ? (
                             <img
-                                className={postCardClass.imageVote}
+                                className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
                                 src={obj.value}
                                 onClick={() => {
                                     voteOnImage(idx)
@@ -134,7 +142,7 @@ const PostVotingMechanism = ({
                             />
                         ) : (
                             <p
-                                className={postCardClass.textVote}
+                                className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
                                 onClick={() => {
                                     voteOnImage(idx)
                                     updateVoteButton(idx)
@@ -145,7 +153,7 @@ const PostVotingMechanism = ({
                         )}
                         <div className={postCardClass.voteButtonContainer}>
                             <button
-                                className={postCardClass.voteButton}
+                                className={postCardClass.voteButton + (!user ? ' cursor-default' : '')}
                                 onClick={() => {
                                     voteOnImage(idx)
                                     updateVoteButton(idx)

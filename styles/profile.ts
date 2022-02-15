@@ -7,9 +7,9 @@ export const profilePage = {
 
 export const profileCard = {
     mainDiv: 'flex items-center mx-3 my-5 md:my-9 w-full',
-    userProfileName: 'mr-auto justify-self-start font-bold text-base md:text-2xl',
+    userProfileName: 'mr-auto justify-self-start font-bold text-2xl',
     userDetailsDiv: 'flex flex-col space-y-2 w-full h-full  ml-4',
-    profileImg: 'w-20 h-20 rounded-full self-start md:h-40 md:w-40',
+    profileImg: 'w-32 h-32 rounded-full self-start md:h-40 md:w-40',
     newPostButton:
         "rounded-[20px] flex items-center py-2 px-4 whitespace-no-wrap\
         bg-primary dark:bg-primaryDark hover:bg-primaryActive \
@@ -17,13 +17,13 @@ export const profileCard = {
         dark:active:bg-primaryActive \
         text-white font-bold text-base leading-5 not-italic tracking-normal",
     editButton:
-        "text-neutral-700 rounded-[20px] py-2 px-4 border-neutral-150 \
-        border-solid border font-bold text-base leading-5 not-italic tracking-normal\
-        hover:bg-neutral-300 \
+        "text-neutral-700 dark:text-neutralDark-300 rounded-[20px] py-2 px-4 border-neutral-150 \
+        border-solid border font-bold text-sm leading-5 not-italic tracking-normal\
+        dark:bg-neutral-300 hover:bg-neutral-300\
         active:bg-neutral-300",
-    joinedAndLocationText: 'text-neutral-700 flex item-center font-normal text-sm md:text-base leading-6 tracking-normal text-gray-600 pt-1',
-    bioText: 'text-neutral-700 font-normal text-sm md:text-base leading-6 text-left not-italic tracking-normal mx-3 md:mx-0 pt-1',
-    usernameText: 'text-primary text-base',
+    joinedAndLocationText: 'text-neutral-700 dark:text-neutralDark-300 flex item-center font-normal text-sm md:text-base leading-6 tracking-normal text-gray-600 pt-1',
+    bioText: 'text-neutral-700 dark:text-neutralDark-150 font-normal text-sm md:text-base leading-6 text-left not-italic tracking-normal mx-3 md:mx-0 pt-1',
+    usernameText: 'text-primary dark:text-primaryDark',
 }
 
 export const profileEngagementBarClass = {
