@@ -37,7 +37,6 @@ const PostVotingMechanism = ({
                     // to avoid issues during post deletion
                     // Only gets mounted when post isCompare so we don't need to worry
                     // that postData.compare does not exist
-
                     // if current user is a voter of left object
                     if( userProfile.uid in postData.compare.votesObjMapList[0]) {
                         setVoteButtonLeft(<UilCheckCircle />)
