@@ -47,12 +47,12 @@ const UserDropdown: React.FC = () => {
     const menuButton = (
         <Avatar
             className={userDropdownClass.avatar}
-            src={userProfile.profilePic || user?.picture || undefined}
+            src={userProfile?.profilePic || user?.picture || undefined}
         />
     )
 
     const menuItems = [
-        <ProfileButton hasText={true} uid={userProfile.uid} />,
+        <ProfileButton hasText={true} uid={userProfile?.uid} />,
         <SettingsButton hasText={true} onClick={needsHook} />,
         <LogoutButton hasText={true} />,
         <ToggleTheme hasText={true} />,

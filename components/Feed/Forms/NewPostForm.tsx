@@ -1,37 +1,24 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 // Database
-import { db, storage } from '../../../firebase'
-import {
-    addDoc,
-    collection,
-    serverTimestamp,
-    updateDoc,
-    doc,
-    setDoc,
-} from 'firebase/firestore'
-import { ref, getDownloadURL, uploadString } from '@firebase/storage'
+import {db, storage} from '../../../firebase'
+import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
-import { Dialog } from '@headlessui/react'
-import {
-    UilNavigator,
-    UilImagePlus,
-    UilTimesCircle,
-    UilChart,
-} from '@iconscout/react-unicons'
-import { Collapse } from '@mui/material'
+import {Dialog} from '@headlessui/react'
+import {UilColumns, UilExclamationTriangle, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
+import {Collapse} from '@mui/material'
 
 // Form management
-import { useForm } from 'react-hook-form'
+import {useForm} from 'react-hook-form'
 import useTimeout from '../../../hooks/useTimeout'
-import { UilExclamationTriangle } from '@iconscout/react-unicons'
-import { postFormClass } from '../../../styles/feed'
+import {postFormClass} from '../../../styles/feed'
 
 // Recoil states
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
@@ -512,7 +499,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     aria-expanded={expanded}
                     aria-label="compare"
                 >
-                    <UilChart />
+                    <UilColumns />
                 </button>
             </div>
 

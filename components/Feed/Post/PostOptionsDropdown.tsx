@@ -31,7 +31,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     authorName,
 }) => {
     const userProfile = useRecoilValue(userProfileState) // Get user profile
-    const currentUserDoc = getUserDoc(userProfile.uid) // Get user document data
+    const currentUserDoc = getUserDoc(userProfile?.uid) // Get user document data
 
     // Track author blocked state
     // TODO: refactor to custom hook
@@ -57,7 +57,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     }
 
     const isUsersOwnPost = (authorUid: string) => {
-        return userProfile.uid === authorUid
+        return userProfile?.uid === authorUid
     }
 
     const isUserBlocked = async (authorUid: string) => {

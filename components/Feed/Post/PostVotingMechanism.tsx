@@ -63,7 +63,7 @@ const PostVotingMechanism = ({
                         // Check if the user voted for an object in the past and
                         // update vote button state accordingly
                         if (
-                            userProfile.uid in
+                            userProfile?.uid in
                             postData.compare.votesObjMapList[i]
                         ) {
                             updateVoteButton(i)
