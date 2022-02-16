@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { postCardClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
 import { useRouter } from 'next/router'
@@ -11,6 +11,8 @@ import { useRecoilValue } from 'recoil'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { getPost } from '../../../lib/postsHelper'
 import { addLike } from '../../../lib/getLikesHelper'
+import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
+import { useOnCommmentsPage } from '../../../hooks/useOnCommentsPage'
 
 type PostEngagementBarProps = {
     id: string
@@ -20,11 +22,14 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({ id }) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
 
-    // Track number of likes and comments
+    // Track likes and comments
+    const [userHasLiked] = useUserHasLiked(`posts/${id}`, userProfile.uid)
     const [numLikes] = usePostNumberLikes(id)
     const [numComments] = usePostNumberComments(id)
 
     // Use the router to redirect the user to the comments page
+    // and track whether on comments paage
+    const [onCommentsPage] = useOnCommmentsPage(id)
     const router = useRouter()
 
     // Hooks
@@ -69,7 +74,13 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({ id }) => {
                     key={idx}
                     addStyle={
                         postCardClass.engagementButton +
-                        (!user && idx === 1 ? ' cursor-default' : '')
+                        (!user && idx === 1 ? ' cursor-default' : '') +
+                        (idx === 1 && userHasLiked
+                            ? ' text-secondary dark:text-secondaryDark font-bold'
+                            : ' text-neutral-700 dark:text-neutralDark-150') +
+                        (onCommentsPage && idx === 0
+                            ? ' text-primary/70 dark:text-primaryDark/70 font-bold'
+                            : ' text-neutral-700 dark:text-neutralDark-150')
                     }
                     type="button"
                     onClick={item.onClick}

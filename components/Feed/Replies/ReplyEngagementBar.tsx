@@ -12,6 +12,7 @@ import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../../atoms/user'
 import { useReplyNumberLikes } from '../../../hooks/useNumberLikes'
 import { getReply } from '../../../lib/repliesHelper'
+import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 
 type ReplyEngagementBarProps = {
     postId: string
@@ -27,7 +28,11 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
 
-    // Track number of likes
+    // Track likes
+    const [userHasLiked] = useUserHasLiked(
+        `posts/${postId}/comments/${commentId}/replies/${replyId}`,
+        userProfile.uid
+    )
     const [numLikes] = useReplyNumberLikes(postId, commentId, replyId)
 
     // Items
@@ -61,7 +66,10 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
                     key={idx}
                     addStyle={
                         commentEngagementBarClass.engagementButton +
-                        (!user ? ' cursor-default' : '')
+                        (!user ? ' cursor-default' : '') +
+                        (idx === 0 && userHasLiked
+                            ? ' text-secondary dark:text-secondaryDark font-bold'
+                            : ' text-neutral-700 dark:text-neutralDark-150')
                     }
                     type="button"
                     onClick={item.onClick}

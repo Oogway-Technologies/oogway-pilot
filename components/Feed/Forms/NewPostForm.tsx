@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {ChangeEvent, FC, MouseEventHandler, useEffect, useRef, useState} from 'react'
 
 // Database
 import {db, storage} from '../../../firebase'
@@ -27,16 +27,16 @@ import FlashErrorMessage from "../../Utils/FlashErrorMessage";
 import {warningTime} from "../../../utils/constants/global";
 
 type NewPostProps = {
-    closeModal: React.MouseEventHandler<HTMLButtonElement>
+    closeModal: MouseEventHandler<HTMLButtonElement>
     questPlaceholder: string // Placeholder text for question input in form
     descPlaceholder: string // Placeholder text for description input in form
 }
 
-const NewPostForm: React.FC<NewPostProps> = ({
-                                                 closeModal,
-                                                 questPlaceholder,
-                                                 descPlaceholder,
-                                             }) => {
+const NewPostForm: FC<NewPostProps> = ({
+                                           closeModal,
+                                           questPlaceholder,
+                                           descPlaceholder,
+                                       }) => {
     const userProfile = useRecoilValue(userProfileState)
 
     // Form management
@@ -82,7 +82,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
     const [textToCompareRight, setTextToCompareRight] = useState('')
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
     const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
-
     const [isImageSizeLarge, setIsImageSizeLarge] = useState(false);
 
     // Handler Functions
@@ -347,7 +346,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
@@ -359,20 +358,28 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const handleCompareLeftUpload = (e) => {
+    const handleCompareLeftUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
-        setTargetEvent(e)
-        addImageToCompareLeft(e)
+        if (checkFileSize(e.target.files)) {
+            setTargetEvent(e)
+            addImageToCompareLeft(e)
+        } else {
+            setIsImageSizeLarge(true)
+        }
     }
 
-    const handleCompareRightUpload = (e) => {
+    const handleCompareRightUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
-        setTargetEvent(e)
-        addImageToCompareRight(e)
+        if (checkFileSize(e.target.files)) {
+            setTargetEvent(e)
+            addImageToCompareRight(e)
+        } else {
+            setIsImageSizeLarge(true)
+        }
     }
 
     const removeImage = (idx) => {
@@ -528,7 +535,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <div className={postFormClass.imageComparisonDiv}>
                     <div className={postFormClass.form}>
-                        {/* Comparision A */}
+                        {/* Option A */}
                         <div className="inline-flex">
                             {imageToCompareLeft ? (
                                 <p className={postFormClass.imageSelectedText}>
@@ -564,7 +571,14 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                             value={textToCompareLeft}
                                         />
                                     </div>
-
+                                    {!isImageSizeLarge && (
+                                        <FlashErrorMessage
+                                            message={`Image should be less then 10 MB`}
+                                            ms={warningTime}
+                                            style={postFormClass.imageSizeAlert}
+                                            onClose={() => setIsImageSizeLarge(false)}
+                                        />
+                                    )}
                                     <p className={postFormClass.orText}>or</p>
 
                                     {/* Image input A */}
@@ -579,6 +593,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                             ref={filePickerCompareLeftRef}
                                             onChange={handleCompareLeftUpload}
                                             type="file"
+                                            accept="image/*"
                                             onKeyPress={preventDefaultOnEnter}
                                             hidden
                                         />
@@ -586,6 +601,14 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                 </>
                             )}
                         </div>
+                        {isImageSizeLarge && (
+                            <FlashErrorMessage
+                                message={`Image should be less then 10 MB`}
+                                ms={warningTime}
+                                style={postFormClass.imageSizeAlert}
+                                onClose={() => setIsImageSizeLarge(false)}
+                            />
+                        )}
                         {/* Option B */}
                         <div className="inline-flex">
                             {imageToCompareRight ? (
@@ -637,6 +660,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                             ref={filePickerCompareRightRef}
                                             onChange={handleCompareRightUpload}
                                             type="file"
+                                            accept="image/*"
                                             onKeyPress={preventDefaultOnEnter}
                                             hidden
                                         />
@@ -644,6 +668,14 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                 </>
                             )}
                         </div>
+                        {isImageSizeLarge && (
+                            <FlashErrorMessage
+                                message={`Image should be less then 10 MB`}
+                                ms={warningTime}
+                                style={postFormClass.imageSizeAlert}
+                                onClose={() => setIsImageSizeLarge(false)}
+                            />
+                        )}
                         {errors.compare &&
                         errors.compare.type === 'required' && (
                             <FlashErrorMessage

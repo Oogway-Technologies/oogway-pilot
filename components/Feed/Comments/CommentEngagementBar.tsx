@@ -10,6 +10,7 @@ import { useUser } from '@auth0/nextjs-auth0'
 import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../../atoms/user'
 import { getComment } from '../../../lib/commentsHelper'
+import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 
 type CommentEngagementBarProps = {
     postId: string
@@ -27,7 +28,11 @@ const CommentEngagementBar = ({
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
 
-    // Track number of likes and Comments
+    // Track likes and replies
+    const [userHasLiked] = useUserHasLiked(
+        `posts/${postId}/comments/${commentId}`,
+        userProfile.uid
+    )
     const [numLikes] = useCommentNumberLikes(postId, commentId)
     const [numReplies] = useCommentNumberReplies(postId, commentId)
 
@@ -48,7 +53,6 @@ const CommentEngagementBar = ({
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
             onClick: () => {
-                if (!user) return null // TODO: add popover about logging in
                 addLike(user, userProfile, getComment(postId, commentId))
             },
             expanded: expanded,
@@ -72,7 +76,10 @@ const CommentEngagementBar = ({
                     key={idx}
                     addStyle={
                         commentEngagementBarClass.engagementButton +
-                        (!user ? ' cursor-default' : '')
+                        (!user ? ' cursor-default' : '') +
+                        (idx === 1 && userHasLiked
+                            ? ' text-secondary dark:text-secondaryDark font-bold'
+                            : ' text-neutral-700 dark:text-neutralDark-150')
                     }
                     type="button"
                     onClick={item.onClick}
