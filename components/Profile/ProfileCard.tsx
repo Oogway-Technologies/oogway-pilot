@@ -9,6 +9,8 @@ import { userProfileState } from '../../atoms/user'
 import { Avatar, useMediaQuery } from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
+import { useProfileData } from '../../hooks/useProfileData'
+
 interface ProfileCardProps {
     bio?: string
     location?: string
@@ -33,6 +35,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
     } = props
     // recoil state to check if Profile card is for current user.
     const { uid: currentUserUid } = useRecoilValue(userProfileState)
+    const [userProfileSnapshot] = useProfileData(uid)
 
     // hook to check is user is no mobile device or not.
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -56,13 +59,18 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
             <div className={'flex flex-col items-center mx-sm sm:mx-0'}>
                 <div className={profileCard.mainDiv}>
                     {/*profile image*/}
-                    <Avatar sx={sizeAvatar} src={profilePic} alt={username} />
+                    <Avatar
+                        sx={sizeAvatar}
+                        src={userProfileSnapshot?.profilePic || profilePic}
+                        alt={username}
+                    />
                     {/*container for user details*/}
                     <div className={profileCard.userDetailsDiv}>
                         {/*User profile name and buttons list*/}
                         <div className={'flex items-center mb-1'}>
                             <div className={profileCard.userProfileName}>
-                                {name} {lastName}
+                                {userProfileSnapshot?.name || name}{' '}
+                                {userProfileSnapshot?.lastName || lastName}
                             </div>
 
                             <div
@@ -115,7 +123,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                         {/*username*/}
                         {username && (
                             <span className={profileCard.usernameText}>
-                                {username}
+                                {userProfileSnapshot?.username || username}
                             </span>
                         )}
                         {/*location and date of joining*/}
@@ -132,20 +140,25 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                         <UilLocationPoint
                                             className={'h-6 w-6 mr-2'}
                                         />{' '}
-                                        {location}
+                                        {userProfileSnapshot?.location ||
+                                            location}
                                     </>
                                 )}
                             </span>
                         )}
                         {/*user bio if not on mobile device*/}
                         {bio && !isMobile && (
-                            <span className={profileCard.bioText}>{bio}</span>
+                            <span className={profileCard.bioText}>
+                                {userProfileSnapshot?.bio || bio}
+                            </span>
                         )}
                     </div>
                 </div>
                 {/*user bio if on mobile device.*/}
                 {bio && isMobile && (
-                    <span className={profileCard.bioText}>{bio}</span>
+                    <span className={profileCard.bioText}>
+                        {userProfileSnapshot?.bio || bio}
+                    </span>
                 )}
             </div>
             <Modal
