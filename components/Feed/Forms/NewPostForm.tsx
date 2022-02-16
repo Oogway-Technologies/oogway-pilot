@@ -82,7 +82,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const [textToCompareRight, setTextToCompareRight] = useState('')
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
     const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
-    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false);
+    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false)
 
     // Handler Functions
     const isComparePost = () => {
@@ -501,7 +501,6 @@ const NewPostForm: FC<NewPostProps> = ({
                 )}
             </div>
 
-
             {/* Show preview of the image and click it to remove the image from the post */}
             {(imageToPost || imageToCompareLeft || imageToCompareRight) && (
                 <div className={postFormClass.previewDiv}>
@@ -571,14 +570,6 @@ const NewPostForm: FC<NewPostProps> = ({
                                             value={textToCompareLeft}
                                         />
                                     </div>
-                                    {!isImageSizeLarge && (
-                                        <FlashErrorMessage
-                                            message={`Image should be less then 10 MB`}
-                                            ms={warningTime}
-                                            style={postFormClass.imageSizeAlert}
-                                            onClose={() => setIsImageSizeLarge(false)}
-                                        />
-                                    )}
                                     <p className={postFormClass.orText}>or</p>
 
                                     {/* Image input A */}
