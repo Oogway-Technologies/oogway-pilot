@@ -3,6 +3,9 @@ import { DocumentData, DocumentSnapshot, updateDoc } from "firebase/firestore";
 import {db} from "../firebase";
 import {findLikes} from "../utils/helpers/common";
 import { FirebaseProfile } from "../utils/types/firebase";
+import { streamPostData } from "./postsHelper";
+import { streamCommentData } from './commentsHelper';
+import { streamReplyData } from './repliesHelper'
 
 /**
  *
@@ -10,40 +13,50 @@ import { FirebaseProfile } from "../utils/types/firebase";
  * @param setNumLikes setState function for saving likes
  * @description to fetch likes of the post from Firebase.
  */
-export const getLikes = (id: string, setNumLikes: (n: number) => void): void => {
-    // TODO: Refactor
-    db.collection("posts")
-        .doc(id)
-        .onSnapshot((snapshot) => {
-            findLikes(snapshot, setNumLikes)
-        });
+export const getLikes = (
+    id: string,
+    setNumLikes: (n: number) => void
+): void => {
+    streamPostData(
+        id,
+        (snapshot) => {findLikes(snapshot, setNumLikes)},
+        (err) => console.log(err)
+    )
 }
 
-export const getLikesForCommentEngagementBar = (postId: string, commentId: string, setNumLikes: (n: number) => void): void => {
-    // TODO: Refactor
-    db.collection("posts")
-        .doc(postId)
-        .collection("comments")
-        .doc(commentId)
-        .onSnapshot((snapshot) => {
-            findLikes(snapshot, setNumLikes)
-        });
+export const getLikesForCommentEngagementBar = (
+    postId: string,
+    commentId: string,
+    setNumLikes: (n: number) => void
+): void => {
+    streamCommentData(
+        postId,
+        commentId,
+        (snapshot) => {findLikes(snapshot, setNumLikes)},
+        (err) => console.log(err)
+    )
 }
 
-export const getLikesForReplyEngagementBar = (postId: string, commentId: string, replyId: string, setNumLikes: (n: number) => void): void => {
-    // TODO: Refactor
-    db.collection("posts")
-        .doc(postId)
-        .collection("comments")
-        .doc(commentId)
-        .collection("replies")
-        .doc(replyId)
-        .onSnapshot((snapshot) => {
-            findLikes(snapshot, setNumLikes)
-        });
+export const getLikesForReplyEngagementBar = (
+    postId: string,
+    commentId: string,
+    replyId: string,
+    setNumLikes: (n: number) => void
+): void => {
+    streamReplyData(
+        postId,
+        commentId,
+        replyId,
+        (snapshot) => {findLikes(snapshot, setNumLikes)},
+        (err) => console.log(err)
+    )
 }
 
-export const addLike = (user: UserProfile | undefined, userProfile: FirebaseProfile, docSnap: Promise<DocumentSnapshot<DocumentData>>) => {
+export const addLike = (
+    user: UserProfile | undefined,
+    userProfile: FirebaseProfile,
+    docSnap: Promise<DocumentSnapshot<DocumentData>>
+): void => {
         // Return early for unathenticated users
         // TODO: trigger a popover that tells users they must be
         // logged in to engage and point them to registration?
@@ -60,10 +73,11 @@ export const addLike = (user: UserProfile | undefined, userProfile: FirebaseProf
 
                 // Step 1: check if user.uid is in the list
                 if (userProfile.uid in tmp.likes) {
-                    // Negate what the user previously did
-                    tmp.likes[userProfile.uid] = !tmp.likes[userProfile.uid]
+                    // Remove user from map
+
+                    delete tmp.likes[userProfile.uid]
                 } else {
-                    // The user liked the comment
+                    // Add user to array
                     tmp.likes[userProfile.uid] = true
                 }
 

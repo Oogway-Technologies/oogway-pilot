@@ -71,8 +71,8 @@ export const postCardClass = {
     // Engagement
     engagementBar: 'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-sm',
     engagementButton:
-        'items-center space-x-2 text-neutral-700 dark:text-neutralDark-150 \
-            hover:text-neutral-800 dark:hover:text-neutralDark-50 focus:text-neutral-800 dark:focus:text-neutralDark-50 \
+        'items-center space-x-2  \
+            hover:text-neutral-800 dark:hover:text-neutralDark-50  \
             active:text-primary',
 }
 
@@ -195,7 +195,8 @@ export const commentFormClass = {
     commentTextArea:
         'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
         text-black dark:text-white text-sm md:text-base',
-    growingTextArea: 'w-full p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
+    growingTextArea:
+        'w-full p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
         text-black dark:text-white text-sm md:text-base h-[24px] max-h-[100px] scrollbar-hide p-0',
     mobileSubmitDiv: 'inline-flex justify-between mt-sm',
     imageButton:
@@ -229,8 +230,8 @@ export const commentClass = {
 export const commentEngagementBarClass = {
     engagementBar: 'flex px-md mt-md pb-md ml-xl w-3/5 space-x-md text-sm',
     engagementButton:
-        'inline-flex items-center space-x-2 text-neutral-700 dark:text-neutralDark-150 \
-            hover:text-neutral-800 dark:hover:text-neutralDark-50 focus:text-neutral-800 dark:focus:text-neutralDark-50 \
+        'inline-flex items-center space-x-2 \
+            hover:text-neutral-800 dark:hover:text-neutralDark-50 \
             active:text-primary',
 }
 
@@ -271,7 +272,8 @@ export const replyFormClass = {
     replyTextArea:
         'w-full p-sm flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
             text-sm',
-    growingTextArea: 'w-full flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
+    growingTextArea:
+        'w-full flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
             text-sm h-[20px] max-h-[80px] scrollbar-hide p-0',
     submitButton:
         'rounded-[20px] p-sm md:px-md md:space-x-2 \
