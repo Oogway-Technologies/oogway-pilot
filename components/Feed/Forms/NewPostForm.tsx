@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {ChangeEvent, FC, MouseEventHandler, useEffect, useRef, useState} from 'react'
 
 // Database
 import {db, storage} from '../../../firebase'
@@ -8,18 +8,11 @@ import {getDownloadURL, ref, uploadString} from '@firebase/storage'
 // JSX components
 import Button from '../../Utils/Button'
 import {Dialog} from '@headlessui/react'
-import {
-    UilBalanceScale,
-    UilExclamationTriangle,
-    UilImagePlus,
-    UilNavigator,
-    UilTimesCircle,
-} from '@iconscout/react-unicons'
+import {UilBalanceScale, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
 import {Collapse} from '@mui/material'
 
 // Form management
 import {useForm} from 'react-hook-form'
-import useTimeout from '../../../hooks/useTimeout'
 import {postFormClass} from '../../../styles/feed'
 
 // Recoil states
@@ -29,18 +22,21 @@ import {useRecoilValue} from 'recoil'
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import {Tooltip} from "../../Utils/Tooltip";
+import {checkFileSize} from "../../../utils/helpers/common";
+import FlashErrorMessage from "../../Utils/FlashErrorMessage";
+import {warningTime} from "../../../utils/constants/global";
 
 type NewPostProps = {
-    closeModal: React.MouseEventHandler<HTMLButtonElement>
+    closeModal: MouseEventHandler<HTMLButtonElement>
     questPlaceholder: string // Placeholder text for question input in form
     descPlaceholder: string // Placeholder text for description input in form
 }
 
-const NewPostForm: React.FC<NewPostProps> = ({
-                                                 closeModal,
-                                                 questPlaceholder,
-                                                 descPlaceholder,
-                                             }) => {
+const NewPostForm: FC<NewPostProps> = ({
+                                           closeModal,
+                                           questPlaceholder,
+                                           descPlaceholder,
+                                       }) => {
     const userProfile = useRecoilValue(userProfileState)
 
     // Form management
@@ -49,7 +45,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
         setError,
         formState: {errors},
     } = useForm()
-    const warningTime = 3000 // set warning to flash for 3 sec
 
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
@@ -72,54 +67,22 @@ const NewPostForm: React.FC<NewPostProps> = ({
     const [expanded, setExpanded] = useState(false)
 
     // Get a reference to the input text
-    const inputRef = useRef(null)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     // Get a reference to the description text
-    const descriptionRef = useRef(null)
+    const descriptionRef = useRef<HTMLTextAreaElement>(null)
 
     // Get a reference for the input image
-    const filePickerRef = useRef(null)
+    const filePickerRef = useRef<HTMLInputElement>(null)
 
     // Ref and data for left and right images
     const [imageToCompareLeft, setImageToCompareLeft] = useState(null)
     const [imageToCompareRight, setImageToCompareRight] = useState(null)
     const [textToCompareLeft, setTextToCompareLeft] = useState('')
     const [textToCompareRight, setTextToCompareRight] = useState('')
-    const filePickerCompareLeftRef = useRef(null)
-    const filePickerCompareRightRef = useRef(null)
-
-    // Utility Component for warnings
-    // Will not work correctly as an export only as a nested component.
-    // Must have to do with state not being shared.
-    // TODO: Look into sharing context
-    const FlashErrorMessage = ({
-                                   message,
-                                   ms,
-                                   style,
-                               }: {
-        message: string
-        ms: number
-        style: string
-    }) => {
-        // Tracks how long a form warning message has been displayed
-        const [warningHasElapsed, setWarningHasElapsed] = useState(false)
-
-        useTimeout(() => {
-            setWarningHasElapsed(true)
-        }, ms)
-
-        // If show is false the component will return null and stop here
-        if (warningHasElapsed) {
-            return null
-        }
-
-        // Otherwise, return warning
-        return (
-            <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4"/> {message}
-            </span>
-        )
-    }
+    const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
+    const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
+    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false)
 
     // Handler Functions
     const isComparePost = () => {
@@ -147,7 +110,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         e.preventDefault()
 
         // If the input is empty, return asap
-        if (inputRef && !inputRef.current.value) {
+        if (inputRef && !inputRef?.current?.value) {
             setError(
                 'question',
                 {type: 'required', message: 'A question is required.'},
@@ -182,8 +145,8 @@ const NewPostForm: React.FC<NewPostProps> = ({
 
         // Prepare the data to add as a post
         let postData = {
-            message: inputRef.current.value, // Leaving field name as message even though UI refers to it as a question
-            description: descriptionRef.current.value, // Optional description
+            message: inputRef?.current?.value, // Leaving field name as message even though UI refers to it as a question
+            description: descriptionRef?.current?.value, // Optional description
             name: userProfile.username, // Change this with username or incognito
             uid: userProfile.uid, // uid of the user that created this post
             isCompare: false, // Explicitly flag whether is compare type
@@ -299,7 +262,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
 
         // Store the reference to this post to the list of posts created by the current user
         const userDocRef = doc(db, 'users', userProfile.uid)
-        setDoc(
+        await setDoc(
             userDocRef,
             {
                 posts: {id: docRef.id},
@@ -383,28 +346,40 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
-        setTargetEvent(e)
-        addImageToPost(e)
+        if (checkFileSize(e.target.files)) {
+            setTargetEvent(e)
+            addImageToPost(e)
+        } else {
+            setIsImageSizeLarge(true)
+        }
     }
 
-    const handleCompareLeftUpload = (e) => {
+    const handleCompareLeftUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
-        setTargetEvent(e)
-        addImageToCompareLeft(e)
+        if (checkFileSize(e.target.files)) {
+            setTargetEvent(e)
+            addImageToCompareLeft(e)
+        } else {
+            setIsImageSizeLarge(true)
+        }
     }
 
-    const handleCompareRightUpload = (e) => {
+    const handleCompareRightUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
-        setTargetEvent(e)
-        addImageToCompareRight(e)
+        if (checkFileSize(e.target.files)) {
+            setTargetEvent(e)
+            addImageToCompareRight(e)
+        } else {
+            setIsImageSizeLarge(true)
+        }
     }
 
     const removeImage = (idx) => {
@@ -484,36 +459,46 @@ const NewPostForm: React.FC<NewPostProps> = ({
 
             {/* Upload Image OR compare*/}
             <div className={postFormClass.uploadBar}>
-                {/* Upload Image */}
-                <Tooltip toolTipText={'Upload Image'}>
-                    <button
-                        onClick={() => filePickerRef.current.click()}
-                        className={postFormClass.imageButton}
-                    >
-                        <UilImagePlus/>
-                        <input
-                            ref={filePickerRef}
-                            onChange={handleImageUpload}
-                            type="file"
-                            onKeyPress={preventDefaultOnEnter}
-                            hidden
-                        />
-                    </button>
-                </Tooltip>
+                <div className={'flex'}>
+                    {/* Upload Image */}
+                    <Tooltip toolTipText={'Upload Image'}>
+                        <button
+                            onClick={() => filePickerRef?.current?.click()}
+                            className={postFormClass.imageButton}
+                        >
+                            <UilImagePlus/>
+                            <input
+                                ref={filePickerRef}
+                                onChange={handleImageUpload}
+                                type="file"
+                                accept="image/*"
+                                onKeyPress={preventDefaultOnEnter}
+                                hidden
+                            />
+                        </button>
+                    </Tooltip>
 
-                {/* Trigger compare */}
-                <Tooltip toolTipText={'Compare'}>
-                    <button
-                        onClick={handleCompareClick}
-                        className={postFormClass.imageButton}
-                        aria-expanded={expanded}
-                        aria-label="compare"
-                    >
-                        <UilBalanceScale/>
+                    {/* Trigger compare */}
+                    <Tooltip toolTipText={'Compare'}>
+                        <button
+                            onClick={handleCompareClick}
+                            className={postFormClass.imageButton}
+                            aria-expanded={expanded}
+                            aria-label="compare"
+                        >
+                            <UilBalanceScale/>
 
-                    </button>
-                </Tooltip>
-
+                        </button>
+                    </Tooltip>
+                </div>
+                {isImageSizeLarge && (
+                    <FlashErrorMessage
+                        message={`Image should be less then 10 MB`}
+                        ms={warningTime}
+                        style={postFormClass.imageSizeAlert}
+                        onClose={() => setIsImageSizeLarge(false)}
+                    />
+                )}
             </div>
 
             {/* Show preview of the image and click it to remove the image from the post */}
@@ -549,7 +534,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <div className={postFormClass.imageComparisonDiv}>
                     <div className={postFormClass.form}>
-                        {/* Comparision A */}
+                        {/* Option A */}
                         <div className="inline-flex">
                             {imageToCompareLeft ? (
                                 <p className={postFormClass.imageSelectedText}>
@@ -585,14 +570,13 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                             value={textToCompareLeft}
                                         />
                                     </div>
-
                                     <p className={postFormClass.orText}>or</p>
 
                                     {/* Image input A */}
                                     <button
                                         className={postFormClass.compareUpload}
                                         onClick={() =>
-                                            filePickerCompareLeftRef.current.click()
+                                            filePickerCompareLeftRef?.current?.click()
                                         }
                                     >
                                         Upload Image
@@ -600,6 +584,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                             ref={filePickerCompareLeftRef}
                                             onChange={handleCompareLeftUpload}
                                             type="file"
+                                            accept="image/*"
                                             onKeyPress={preventDefaultOnEnter}
                                             hidden
                                         />
@@ -607,6 +592,14 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                 </>
                             )}
                         </div>
+                        {isImageSizeLarge && (
+                            <FlashErrorMessage
+                                message={`Image should be less then 10 MB`}
+                                ms={warningTime}
+                                style={postFormClass.imageSizeAlert}
+                                onClose={() => setIsImageSizeLarge(false)}
+                            />
+                        )}
                         {/* Option B */}
                         <div className="inline-flex">
                             {imageToCompareRight ? (
@@ -650,7 +643,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                     <button
                                         className={postFormClass.compareUpload}
                                         onClick={() =>
-                                            filePickerCompareRightRef.current.click()
+                                            filePickerCompareRightRef?.current?.click()
                                         }
                                     >
                                         Upload Image
@@ -658,6 +651,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                             ref={filePickerCompareRightRef}
                                             onChange={handleCompareRightUpload}
                                             type="file"
+                                            accept="image/*"
                                             onKeyPress={preventDefaultOnEnter}
                                             hidden
                                         />
@@ -665,6 +659,14 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                 </>
                             )}
                         </div>
+                        {isImageSizeLarge && (
+                            <FlashErrorMessage
+                                message={`Image should be less then 10 MB`}
+                                ms={warningTime}
+                                style={postFormClass.imageSizeAlert}
+                                onClose={() => setIsImageSizeLarge(false)}
+                            />
+                        )}
                         {errors.compare &&
                         errors.compare.type === 'required' && (
                             <FlashErrorMessage

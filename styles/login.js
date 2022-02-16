@@ -32,6 +32,8 @@ export const loginButtons = {
 
 export const loginImages = {
     avatar: 'bg-neutral-700 dark:bg-white text-white dark:text-neutralDark-300',
+    imageSizeAlert: 'inline-flex items-center mt-1 text-sm text-alert dark:text-alert',
+
 }
 
 export const loginInputs = {

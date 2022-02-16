@@ -1,30 +1,28 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useRef, useState } from 'react'
-import { db, storage } from '../../firebase'
-import {
-    loginButtons,
-    loginDivs,
-    loginImages,
-    loginInputs,
-} from '../../styles/login'
+import {useRouter} from 'next/router'
+import React, {FC, useRef, useState} from 'react'
+import {db, storage} from '../../firebase'
+import {loginButtons, loginDivs, loginImages, loginInputs,} from '../../styles/login'
 import Button from '../Utils/Button'
-import { Avatar, useMediaQuery } from '@mui/material'
-import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
+import {Avatar, useMediaQuery} from '@mui/material'
+import {UilImagePlus, UilTrashAlt} from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 // Firebase
-import { doc, updateDoc } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
-import { userProfileState } from '../../atoms/user'
-import { useRecoilState } from 'recoil'
-import { getProfileDoc } from '../../lib/profileHelper'
+import {doc, updateDoc} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
+import {userProfileState} from '../../atoms/user'
+import {useRecoilState} from 'recoil'
+import {getProfileDoc} from '../../lib/profileHelper'
+import {checkFileSize} from "../../utils/helpers/common";
+import FlashErrorMessage from "../Utils/FlashErrorMessage";
+import {warningTime} from "../../utils/constants/global";
 
 type UserProfileFormProps = {
     closeModal: () => void
 }
 
-const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
+const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
     // Get current user profile
     const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
@@ -38,9 +36,11 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
     const [profilePic] = useState(userProfile.profilePic || '')
 
     // Picture state
-    const profilePicRef = useRef(null)
+    const profilePicRef = useRef<HTMLInputElement>(null)
     const [imageToUpload, setImageToUpload] = useState(null)
     const [targetEvent, setTargetEvent] = useState(null)
+    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false);
+
 
     // Router
     const router = useRouter()
@@ -89,7 +89,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                         profilePic: downloadURL,
                     })
 
-                    // Upadate the user's data as well
+                    // Update the user's data as well
                     await updateDoc(doc(db, 'users', userProfile.uid), {
                         name: name.trim(),
                         username: username,
@@ -154,8 +154,13 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
-        setTargetEvent(e)
-        addImageToUpload(e)
+
+        if (checkFileSize(e.target.files)) {
+            setTargetEvent(e)
+            addImageToUpload(e)
+        } else {
+            setIsImageSizeLarge(true)
+        }
     }
 
     const handleRemoveImage = () => {
@@ -176,7 +181,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
         } else {
             size = 150
         }
-        return { width: size, height: size }
+        return {width: size, height: size}
     }
 
     return (
@@ -206,9 +211,9 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                     <div className={loginDivs.upload}>
                         <button
                             className={loginButtons.uploadImage}
-                            onClick={() => profilePicRef.current.click()}
+                            onClick={() => profilePicRef?.current?.click()}
                         >
-                            <UilImagePlus />
+                            <UilImagePlus/>
                             <span>Upload Image</span>
                             <input
                                 ref={profilePicRef}
@@ -216,6 +221,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                                 type="file"
                                 onKeyPress={preventDefaultOnEnter}
                                 hidden
+                                accept="image/*"
                             />
                         </button>
                         <button
@@ -230,11 +236,19 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ closeModal }) => {
                             disabled={!imageToUpload}
                             onClick={handleRemoveImage}
                         >
-                            <UilTrashAlt />
+                            <UilTrashAlt/>
                             <span>Remove Image</span>
                         </button>
                     </div>
                 </div>
+                {isImageSizeLarge && (
+                    <FlashErrorMessage
+                        message={`Image should be less then 10 MB`}
+                        ms={warningTime}
+                        style={loginImages.imageSizeAlert}
+                        onClose={() => setIsImageSizeLarge(false)}
+                    />
+                )}
             </div>
 
             {/* User Profile Form */}

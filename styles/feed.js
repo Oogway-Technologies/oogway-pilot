@@ -121,7 +121,8 @@ export const postFormClass = {
     formDescriptionInput:
         'resize-none w-full h-28 bg-transparent flex-grow py-2 px-5\
             focus:outline-none text-sm',
-    uploadBar: 'inline-flex w-full space-x-3 px-2 pt-md pb-xl',
+    uploadBar: 'inline-flex flex-col w-full space-y-3 px-2 pt-md pb-xl',
+    imageSizeAlert: 'inline-flex items-center m-0 text-sm text-alert dark:text-alert',
     formCompareText:
         'border-solid border-[1px] border-neutral-300 w-36 lg:w-96 xl:w-96 \
             focus-within:border-primary focus-visible:border-primary active:border-neutral-300\
@@ -211,6 +212,7 @@ export const commentFormClass = {
       bg-primary dark:bg-primaryDark hover:bg-primaryActive \
       active:bg-primaryActive dark:hover:bg-primaryActive \
       dark:active:bg-primaryActive text-white font-bold items-center',
+    imageSizeAlert: 'inline-flex items-center m-0 text-sm text-alert dark:text-alert mt-1',
     formAlert:
         'inline-flex pt-sm ml-sm items-center text-sm text-alert dark:text-alert',
     previewDiv: 'inline-flex px-2 pt-sm space-x-md',
