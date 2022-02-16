@@ -44,3 +44,23 @@ import { db } from "../firebase";
     const commentsQuery = query(commentsRef, orderBy('timestamp', 'asc'))
     return onSnapshot(commentsQuery, snapshot, error)
 }
+
+/**
+ *
+ * @param postId parent post id
+ * @param commentId comment id
+ * @param replyId reply id
+ * @param snapshot a side-effect function to be called using the returned snapshot
+ * @param error a function specifying how to handle error retrieving the snapshot
+ * @description streams the reply data real time and performs the snapshot function on it.
+ */
+ export const streamReplyData = (
+    postId: string,
+    commentId: string, 
+    replyId: string,
+    snapshot: (snap: firebase.firestore.snapshot) => void, 
+    error: (err: any) => void
+) => {
+    const replyRef = doc(db, `posts/${postId}/comments/${commentId}/replies/${replyId}`)
+    return onSnapshot(replyRef, snapshot, error)
+}
