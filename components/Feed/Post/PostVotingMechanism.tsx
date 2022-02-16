@@ -5,7 +5,7 @@ import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
 import { streamPostData } from '../../../lib/postsHelper'
-import {useUser} from '@auth0/nextjs-auth0'
+import { useUser } from '@auth0/nextjs-auth0'
 
 type PostVotingMechanismProps = {
     id: string
@@ -18,10 +18,11 @@ const PostVotingMechanism = ({
     compareData,
     votesList,
 }: PostVotingMechanismProps) => {
-    const {user} = useUser()
+    const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
 
     // Track voting button state
+    const [userVoteChoice, setUserVoteChoice] = useState(-1) // Instantiate to value that's never in index
     const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle />)
     const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle />)
 
@@ -30,25 +31,32 @@ const PostVotingMechanism = ({
             id,
             (snapshot) => {
                 const postData = snapshot.data()
+                // prevent error on compare post deletion
                 if (postData) {
-                    // prevent error on compare post deletion
                     // Probably not a permanent fix, may want to
                     // look at listening only for changes in the children elements
                     // to avoid issues during post deletion
                     // Only gets mounted when post isCompare so we don't need to worry
                     // that postData.compare does not exist
                     // if current user is a voter of left object
-                    if( userProfile.uid in postData.compare.votesObjMapList[0]) {
+                    if (
+                        userProfile.uid in postData.compare.votesObjMapList[0]
+                    ) {
+                        setUserVoteChoice(0)
                         setVoteButtonLeft(<UilCheckCircle />)
                         setVoteButtonRight(<UilCircle />)
                     }
                     // if current user is a voter of right object
-                    else if( userProfile.uid in postData.compare.votesObjMapList[1]) {
+                    else if (
+                        userProfile.uid in postData.compare.votesObjMapList[1]
+                    ) {
+                        setUserVoteChoice(1)
                         setVoteButtonRight(<UilCheckCircle />)
                         setVoteButtonLeft(<UilCircle />)
                     }
-                    // if current user is not a voter 
+                    // if current user is not a voter
                     else {
+                        setUserVoteChoice(-1)
                         setVoteButtonLeft(<UilCircle />)
                         setVoteButtonRight(<UilCircle />)
                     }
@@ -67,7 +75,7 @@ const PostVotingMechanism = ({
     // TODO: refactor to firebase v9+
     const voteOnImage = (objIdx: number) => {
         // Do not vote if user is not logged in
-        if (!user) return;
+        if (!user) return
         // Add a vote, for this user, to one of the images
         var docRef = db.collection('posts').doc(id)
 
@@ -81,7 +89,9 @@ const PostVotingMechanism = ({
                     delete postData.compare.votesObjMapList[i][userProfile.uid]
                     if (i !== objIdx) {
                         // if new index is different from old index, set vote
-                        postData.compare.votesObjMapList[objIdx][userProfile.uid] = true
+                        postData.compare.votesObjMapList[objIdx][
+                            userProfile.uid
+                        ] = true
                     }
                     transaction.update(docRef, postData)
                     return
@@ -100,7 +110,10 @@ const PostVotingMechanism = ({
                     <div key={idx} className={postCardClass.voteContainer}>
                         {obj.type == 'image' ? (
                             <img
-                                className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
+                                className={
+                                    postCardClass.imageVote +
+                                    (!user ? ' cursor-default' : '')
+                                }
                                 src={obj.value}
                                 onClick={() => {
                                     voteOnImage(idx)
@@ -108,18 +121,38 @@ const PostVotingMechanism = ({
                                 alt=""
                             />
                         ) : (
-                            <p
-                                className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
+                            <div
+                                className={
+                                    postCardClass.voteLabelCard +
+                                    (user
+                                        ? ' cursor-pointer'
+                                        : ' cursor-default')
+                                }
                                 onClick={() => {
                                     voteOnImage(idx)
                                 }}
                             >
-                                {obj.value}
-                            </p>
+                                <div
+                                    className={
+                                        postCardClass.textVote +
+                                        (userVoteChoice === idx
+                                            ? ' text-primary dark:text-primaryDark font-bold'
+                                            : ' text-neutral-700 dark:text-neutralDark-150')
+                                    }
+                                >
+                                    {obj.value}
+                                </div>
+                            </div>
                         )}
                         <div className={postCardClass.voteButtonContainer}>
                             <button
-                                className={postCardClass.voteButton + (!user ? ' cursor-default' : '')}
+                                className={
+                                    postCardClass.voteButton +
+                                    (!user && ' cursor-default') +
+                                    (userVoteChoice === idx
+                                        ? ' text-primary dark:text-primaryDark'
+                                        : ' text-neutral-700 dark:text-neutralDark-150')
+                                }
                                 onClick={() => {
                                     voteOnImage(idx)
                                 }}
