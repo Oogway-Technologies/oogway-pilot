@@ -24,6 +24,8 @@ import {useRecoilValue} from 'recoil'
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
+import {checkFileSize} from "../../../utils/helpers/common";
+import {warningTime} from "../../../utils/constants/global";
 
 type NewCommentFormProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
@@ -49,6 +51,9 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
     // Track upload
     const [loading, setLoading] = useState(false)
 
+    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false);
+
+
     // Form management
     const {
         register,
@@ -56,7 +61,6 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         setError,
         formState: {errors},
     } = useForm()
-    const warningTime = 3000 // set warning to flash for 3 sec
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
         register('comment', {required: true})
@@ -197,8 +201,12 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
-        setTargetEvent(e)
-        addImageToPost(e)
+        if (checkFileSize(e.target.files)) {
+            setTargetEvent(e)
+            addImageToPost(e)
+        } else {
+            setIsImageSizeLarge(true)
+        }
     }
 
     const addAndClose = async (e) => {
@@ -246,6 +254,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                                 ref={filePickerRef}
                                 onChange={handleImageUpload}
                                 type="file"
+                                accept="image/*"
                                 hidden
                             />
                         </button>
@@ -283,6 +292,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                             ref={filePickerRef}
                             onChange={handleImageUpload}
                             type="file"
+                            accept="image/*"
                             onKeyPress={preventDefaultOnEnter}
                             hidden
                         />
@@ -296,6 +306,14 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                         addStyle={commentFormClass.submitButton}
                     />
                 </div>
+            )}
+            {isImageSizeLarge && (
+                <FlashErrorMessage
+                    message={`Image should be less then 10 MB`}
+                    ms={warningTime}
+                    style={commentFormClass.imageSizeAlert}
+                    onClose={() => setIsImageSizeLarge(false)}
+                />
             )}
 
             {/* Show preview of the image and click it to remove the image from the post */}
