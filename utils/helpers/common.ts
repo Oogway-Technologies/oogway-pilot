@@ -1,3 +1,4 @@
+// count number of like in snapshot
 export const findLikes = (snapshot: any, setNumLikes: (n: number) => void) => {
     if (snapshot.data()) {
         // Get the likes map
