@@ -55,16 +55,18 @@ export const postCardClass = {
         'font-bold mb-[8px] text-md text-neutral-800 dark:text-neutralDark-50',
     bodyDescription: 'text-neutral-700 dark:text-neutralDark-150 text-sm',
     // Media
-    voteDiv: 'flex px-2 space-x-md',
-    voteContainer: 'flex flex-col w-full items-center ',
-    imageVote:
-        'flex rounded-[8px]  object-contain cursor-pointer justify-self-center mt-auto',
-    voteButtonContainer: 'flex flex-col items-center justify-self-end mt-auto',
-    textVote:
-        'flex rounded-[8px] border border-solid border-primary p-xl \
-            text-sm text-primary dark:text-primaryDark',
+    voteDiv: 'flex px-md space-x-lg ml-xl',
+    voteContainer: 'flex flex-col w-full items-center space-y-md',
+    voteLabelCard:
+        'inline-flex w-full justify-center p-sm \
+        bg-neutral-50 dark:bg-neutralDark-400 \
+        shadow-sm shadow-black/30  dark:shadow-black/50',
+    imageVote: 'flex rounded-[8px]  object-contain cursor-pointer m-auto',
+    voteButtonContainer:
+        'flex flex-col items-center justify-self-end mt-auto w-full',
+    textVote: 'flex flex-wrap',
     voteButton:
-        'p-sm justify-center text-neutral-700 dark:text-neutralDark-150 \
+        'p-sm justify-center \
             hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary \
             focus:text-primary dark:focus:text-primary text-sm',
     voteCounter: 'text-sm text-neutral-700 dark:text-neutralDark-150',
