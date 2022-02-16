@@ -183,7 +183,7 @@ export const commentFormClass = {
     form: 'flex flex-col',
     body: 'inline-flex items-center space-x-md',
     commentBar:
-        'inline-flex rounded-full items-center py-1 px-2 md:px-5 lg:w-96 xl:w-96 \
+        'inline-flex rounded-[10px] items-center py-2 pl-2 pr-1 md:pl-5 md:pr-3 lg:w-96 xl:w-96 \
         border-solid border-2 border-neutral-50 dark:border-neutralDark-150 \
         focus-within:border-primary focus-visible:border-primary \
         dark:focus-within:border-primary dark:focus-visible:border-primary \
@@ -195,9 +195,11 @@ export const commentFormClass = {
     commentTextArea:
         'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
         text-black dark:text-white text-sm md:text-base',
+    growingTextArea: 'w-full p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
+        text-black dark:text-white text-sm md:text-base h-[24px] max-h-[100px] scrollbar-hide p-0',
     mobileSubmitDiv: 'inline-flex justify-between mt-sm',
     imageButton:
-        'p-sm rounded-[20px] justify-self-end text-neutral-700 dark:text-neutralDark-150 \
+        'p-sm rounded-[20px] ml-1 justify-self-end text-neutral-700 dark:text-neutralDark-150 \
         hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
         hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
         hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
@@ -219,7 +221,7 @@ export const commentClass = {
     outerDiv: 'flex flex-col pt-md pb-sm dark:bg-neutralDark-500',
     body: 'flex flex-col ml-xl mt-sm',
     bodyDescription:
-        'ml-md px-sm text-neutral-700 dark:text-neutralDark-150 text-sm',
+        'ml-md px-sm text-neutral-700 dark:text-neutralDark-150 text-sm break-words',
     media: 'flex ml-xl p-md',
     replyDropdown: 'inline-flex items-center ml-[44px] mt-sm',
 }
@@ -245,10 +247,10 @@ export const replyClass = {
     innerDiv: 'flex flex-row',
     dividerLeft:
         'ml-[14px] border-r-2 border-primary/25 dark:border-primaryDark/50',
-    dividerRight: 'grow',
+    dividerRight: 'w-full',
     body: 'flex flex-col mt-sm',
     bodyDescription:
-        'ml-md pl-md pr-sm text-neutral-700 dark:text-neutralDark-150 text-sm',
+        'ml-md pl-md pr-sm text-neutral-700 dark:text-neutralDark-150 text-sm break-words',
 }
 
 export const replyFormClass = {
@@ -257,7 +259,7 @@ export const replyFormClass = {
     avatar: 'h-[45px] w-[45px] ring-1 ring-black/25 dark:ring-neutralDark-50/25\
         hover:opacity-80 hover:scale-125',
     replyBar:
-        'rounded-full items-center py-1 px-2 md:px-5 lg:w-80 \
+        'rounded-[10px] items-center py-2 px-2 md:px-5 lg:w-80 \
           border-solid border-2 border-neutral-50 dark:border-neutralDark-150 \
           focus-within:border-primary focus-visible:border-primary \
           dark:focus-within:border-primary dark:focus-visible:border-primary \
@@ -269,6 +271,8 @@ export const replyFormClass = {
     replyTextArea:
         'w-full p-sm flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
             text-sm',
+    growingTextArea: 'w-full flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
+            text-sm h-[20px] max-h-[80px] scrollbar-hide p-0',
     submitButton:
         'rounded-[20px] p-sm md:px-md md:space-x-2 \
             bg-primary dark:bg-primaryDark hover:bg-primaryActive \

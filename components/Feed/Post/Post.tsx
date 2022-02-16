@@ -6,6 +6,7 @@ import PostEngagementBar from './PostEngagementBar'
 import PostHeader from './PostHeader'
 import PostVotingMechanism from './PostVotingMechanism'
 import CommentsAPI from '../Comments/CommentsAPI'
+import { streamPostData } from '../../../lib/postsHelper'
 
 interface PostProps {
     authorUid: string
@@ -44,9 +45,9 @@ const PostCard: React.FC<PostProps> = ({
     // post
     useEffect(() => {
         // Store reference to snapshot
-        db.collection('posts')
-            .doc(id)
-            .onSnapshot((snapshot) => {
+        const unsubscribe = streamPostData(
+            id,
+            (snapshot) => {
                 const postData = snapshot.data()
                 if (postData) {
                     // prevent error on compare post deletion
@@ -72,8 +73,14 @@ const PostCard: React.FC<PostProps> = ({
                         setCompareData(postData.compare.objList)
                     }
                 }
-            })
-    }, [])
+            },
+            (err) => {
+                console.log(err)
+            }
+        )
+
+        return () => unsubscribe()
+    }, [id])
 
     const isComparePost = (postData) => {
         return 'compare' in postData
