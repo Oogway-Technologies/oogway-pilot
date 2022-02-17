@@ -26,6 +26,7 @@ function PostsAPI({ posts }) {
                 postImage={post.data().postImage}
                 comments={null}
                 isCommentThread={false}
+                previewImage={post.data().previewImage}
                 />
             ))
             : // Render out the server-side rendered posts
@@ -43,6 +44,7 @@ function PostsAPI({ posts }) {
                 postImage={post.postImage}
                 comments={null}
                 isCommentThread={false}
+                previewImage={post.previewImage}
                 />
             ))}
         </>
