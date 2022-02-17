@@ -452,7 +452,6 @@ const NewPostForm: FC<NewPostProps> = ({
                         ref={descriptionRef}
                         placeholder={descPlaceholder}
                         className={postFormClass.formDescriptionInput}
-                        onKeyPress={preventDefaultOnEnter}
                     />
                 </div>
             </form>

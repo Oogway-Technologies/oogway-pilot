@@ -1,13 +1,14 @@
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import FeedAPI from '../../components/Feed/FeedAPI'
+import {useState} from 'react'
 import UserProfileForm from '../../components/Login/UserProfileForm'
 import Modal from '../../components/Utils/Modal'
-import { auth, db } from '../../firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { useRouter } from 'next/router'
+import {db} from '../../firebase'
+import {useRouter} from 'next/router'
+import {GetServerSideProps, GetServerSidePropsContext} from "next";
+import {ParsedUrlQuery} from "querystring";
+import {doc, DocumentData, getDoc} from "firebase/firestore";
 
-const Settings = ({ userProfile, referer }) => {
+const Settings = ({userProfile, referer}) => {
     const router = useRouter()
 
     // Block unauthorized users
@@ -54,19 +55,22 @@ const Settings = ({ userProfile, referer }) => {
 
 export default Settings
 
-// Implement server side rendering for posts
-export async function getServerSideProps(context) {
-    // Get profile
-    const profile = await db.collection('profiles').doc(context.query.id).get()
-    const userProfile = profile.data()
+// Implement server side rendering for userProfile and posts
+export const getServerSideProps: GetServerSideProps = async (
+    context: GetServerSidePropsContext<ParsedUrlQuery,
+        string | false | object | undefined>
+) => {
 
+    //Get userProfile of selected user from database.
+    const userProfile: DocumentData | undefined = (
+        await getDoc(doc(db, 'profiles', (context?.query?.id as string) || ''))
+    ).data()
     // Track outgoing url
     const referer = context.req.headers.referer
-
     return {
         props: {
-            userProfile: userProfile,
-            referer: referer,
+            referer,
+            userProfile, // pass the userProfile back to the front-end
         },
     }
 }
