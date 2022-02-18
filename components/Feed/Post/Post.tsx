@@ -7,17 +7,18 @@ import PostHeader from './PostHeader'
 import PostVotingMechanism from './PostVotingMechanism'
 import CommentsAPI from '../Comments/CommentsAPI'
 import { streamPostData } from '../../../lib/postsHelper'
+import { FirebasePost } from '../../../utils/types/firebase'
+import { FieldValue } from 'firebase/firestore'
 
 interface PostProps {
     authorUid: string
-    id: string
+    id: string | undefined
     name: string
     message: string
     description: string | null
-    email: string
     isCompare: boolean
-    postImage: string | null
-    timestamp: Date
+    postImage: string | null | undefined
+    timestamp: FieldValue
     isCommentThread: boolean
     comments: null | any // Should be json object
 }
@@ -28,7 +29,6 @@ const PostCard: React.FC<PostProps> = ({
     name,
     message,
     description,
-    email,
     isCompare,
     postImage,
     timestamp,
@@ -82,7 +82,7 @@ const PostCard: React.FC<PostProps> = ({
         return () => unsubscribe()
     }, [id])
 
-    const isComparePost = (postData) => {
+    const isComparePost = (postData: FirebasePost) => {
         return 'compare' in postData
     }
 

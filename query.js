@@ -8,7 +8,7 @@
 export const queryClientConfig = {
     defaultOptions: {
         queries: {
-            staleTime: 20 * 60 * 1000, // Set to 20 minutes by default
+            staleTime: 30 * 1000, // Set to 30 seconds by default
         },
     },
 }

@@ -3,7 +3,7 @@ import FeedToolbar from './FeedToolbar'
 import PostsAPI from './Post/PostsAPI'
 import { feedApiClass } from '../../styles/feed'
 
-const FeedAPI = ({ posts }) => {
+const FeedAPI = () => {
     return (
         <>
             <div className={feedApiClass.toolbarDiv}>
@@ -12,10 +12,10 @@ const FeedAPI = ({ posts }) => {
                 </div>
             </div>
 
-            <div className={feedApiClass.innerDiv}>
+            <div id="infiniteScrollTarget" className={feedApiClass.innerDiv}>
                 {/* Posts */}
                 <div className={feedApiClass.contentDiv}>
-                    <PostsAPI posts={posts} />
+                    <PostsAPI />
                 </div>
             </div>
         </>
