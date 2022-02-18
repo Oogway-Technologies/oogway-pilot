@@ -1,18 +1,23 @@
-import FeedAPI from '../components/Feed/FeedAPI'
+// Next and react
+import { useState } from 'react'
 import Head from 'next/head'
 
-// Database
-import { db } from '../firebase'
-
+// Components and styling
+import FeedAPI from '../components/Feed/FeedAPI'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
-import { useState } from 'react'
 
 // Recoil states
 import { userProfileState } from '../atoms/user'
 import { useRecoilValue } from 'recoil'
 
-export default function Home({ posts }) {
+// Queries
+import { QueryClient, dehydrate } from 'react-query'
+import API from '../axios'
+import { queryClientConfig } from '../query'
+import { getPosts } from '../queries/posts'
+
+export default function Home() {
     // Call user Profile and check whether profile requires updating
     // Should only be called on user first log-in
     const userProfile = useRecoilValue(userProfileState)
@@ -27,7 +32,7 @@ export default function Home({ posts }) {
                 <Head>
                     <title>Oogway | Social - Wisdom of the crowd</title>
                 </Head>
-                <FeedAPI posts={posts} />
+                <FeedAPI />
             </div>
 
             {/* Modal for user profile */}
@@ -42,21 +47,16 @@ export default function Home({ posts }) {
 
 // Implement server side rendering for posts
 export async function getServerSideProps() {
-    // Get the posts
-    const posts = await db
-        .collection('posts')
-        .orderBy('timestamp', 'desc')
-        .get()
+    const queryClient = new QueryClient(queryClientConfig)
 
-    const docs = posts.docs.map((post) => ({
-        id: post.id,
-        ...post.data(),
-        timestamp: null, // DO NOT prefetch timestamp
-    }))
+    // Get the posts
+    await queryClient.prefetchQuery('posts', getPosts)
 
     return {
         props: {
-            posts: docs, // pass the posts back as docs
+            dehhydratedState: dehydrate(queryClient),
+            // posts: response?.data.posts, // pass the posts back as a list
+            // lastTimestamp: response?.data.lastTimestamp,
         },
     }
 }
