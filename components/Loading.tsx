@@ -4,9 +4,12 @@ function Loading() {
     // ========== TODO: redo according to design ========== //
 
     return (
-        <div className="auto-colos-max place-items-center h-screen">
+        <div className="flex m-auto">
             <div>
-                <Circle color="#3CBC28" size={60} />
+                <Circle
+                    className="text-primary/60 dark:text-primaryDark/60"
+                    size={60}
+                />
             </div>
         </div>
     )
