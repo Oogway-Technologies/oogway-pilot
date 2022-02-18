@@ -1,13 +1,20 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 // Database
-import {db, storage} from '../../../firebase'
-import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
-import {getDownloadURL, ref, uploadString} from '@firebase/storage'
+import { db, storage } from '../../../firebase'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+} from 'firebase/firestore'
+import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
-import {Dialog} from '@headlessui/react'
+import { Dialog } from '@headlessui/react'
 import {
     UilBalanceScale,
     UilExclamationTriangle,
@@ -15,20 +22,24 @@ import {
     UilNavigator,
     UilTimesCircle,
 } from '@iconscout/react-unicons'
-import {Collapse} from '@mui/material'
+import { Collapse } from '@mui/material'
 
 // Form management
-import {useForm} from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import useTimeout from '../../../hooks/useTimeout'
-import {postFormClass} from '../../../styles/feed'
+import { postFormClass } from '../../../styles/feed'
 
 // Recoil states
-import {userProfileState} from '../../../atoms/user'
-import {useRecoilValue} from 'recoil'
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import {Tooltip} from "../../Utils/Tooltip";
+import { Tooltip } from '../../Utils/Tooltip'
+import { FirebasePost } from '../../../utils/types/firebase'
+import { refetchPostsState } from '../../../atoms/query'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
+import { useQueryClient } from 'react-query'
 
 type NewPostProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
@@ -37,26 +48,30 @@ type NewPostProps = {
 }
 
 const NewPostForm: React.FC<NewPostProps> = ({
-                                                 closeModal,
-                                                 questPlaceholder,
-                                                 descPlaceholder,
-                                             }) => {
+    closeModal,
+    questPlaceholder,
+    descPlaceholder,
+}) => {
+    // Track current user profile dataa
     const userProfile = useRecoilValue(userProfileState)
+
+    // For triggering posts refetch on form submissiono
+    const queryClient = useQueryClient()
 
     // Form management
     const {
         register,
         setError,
-        formState: {errors},
+        formState: { errors },
     } = useForm()
     const warningTime = 3000 // set warning to flash for 3 sec
 
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('question', {required: true})
+        register('question', { required: true })
     }, [])
     useEffect(() => {
-        register('compare', {required: true})
+        register('compare', { required: true })
     }, [])
 
     const [loading, setLoading] = useState(false)
@@ -88,39 +103,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
     const filePickerCompareLeftRef = useRef(null)
     const filePickerCompareRightRef = useRef(null)
 
-    // Utility Component for warnings
-    // Will not work correctly as an export only as a nested component.
-    // Must have to do with state not being shared.
-    // TODO: Look into sharing context
-    const FlashErrorMessage = ({
-                                   message,
-                                   ms,
-                                   style,
-                               }: {
-        message: string
-        ms: number
-        style: string
-    }) => {
-        // Tracks how long a form warning message has been displayed
-        const [warningHasElapsed, setWarningHasElapsed] = useState(false)
-
-        useTimeout(() => {
-            setWarningHasElapsed(true)
-        }, ms)
-
-        // If show is false the component will return null and stop here
-        if (warningHasElapsed) {
-            return null
-        }
-
-        // Otherwise, return warning
-        return (
-            <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4"/> {message}
-            </span>
-        )
-    }
-
     // Handler Functions
     const isComparePost = () => {
         // Utility function, returns true if it is a compare post,
@@ -150,8 +132,8 @@ const NewPostForm: React.FC<NewPostProps> = ({
         if (inputRef && !inputRef.current.value) {
             setError(
                 'question',
-                {type: 'required', message: 'A question is required.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'A question is required.' },
+                { shouldFocus: true }
             )
             return false // Whether to sendPost or not
         }
@@ -165,7 +147,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     message:
                         'You are missing required information to create a compare post.',
                 },
-                {shouldFocus: true}
+                { shouldFocus: true }
             )
             return false // Whether to send post or not
         }
@@ -181,7 +163,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         // 4) get the dowanload URL for the image and update the original post with image url
 
         // Prepare the data to add as a post
-        let postData = {
+        let postData: FirebasePost = {
             message: inputRef.current.value, // Leaving field name as message even though UI refers to it as a question
             description: descriptionRef.current.value, // Optional description
             name: userProfile.username, // Change this with username or incognito
@@ -302,9 +284,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
         setDoc(
             userDocRef,
             {
-                posts: {id: docRef.id},
+                posts: { id: docRef.id },
             },
-            {merge: true}
+            { merge: true }
         )
 
         // Everything is done
@@ -429,6 +411,10 @@ const NewPostForm: React.FC<NewPostProps> = ({
         if (await success) {
             closeModal(e)
         }
+
+        // Trigger a post refetch with a timeout to give the database
+        // time to register the new post
+        setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
     }
 
     const handleCompareClick = () => {
@@ -490,7 +476,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                         onClick={() => filePickerRef.current.click()}
                         className={postFormClass.imageButton}
                     >
-                        <UilImagePlus/>
+                        <UilImagePlus />
                         <input
                             ref={filePickerRef}
                             onChange={handleImageUpload}
@@ -509,11 +495,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
                         aria-expanded={expanded}
                         aria-label="compare"
                     >
-                        <UilBalanceScale/>
-
+                        <UilBalanceScale />
                     </button>
                 </Tooltip>
-
             </div>
 
             {/* Show preview of the image and click it to remove the image from the post */}
@@ -666,13 +650,13 @@ const NewPostForm: React.FC<NewPostProps> = ({
                             )}
                         </div>
                         {errors.compare &&
-                        errors.compare.type === 'required' && (
-                            <FlashErrorMessage
-                                message={errors.compare.message}
-                                ms={warningTime}
-                                style={postFormClass.formAlert}
-                            />
-                        )}
+                            errors.compare.type === 'required' && (
+                                <FlashErrorMessage
+                                    message={errors.compare.message}
+                                    ms={warningTime}
+                                    style={postFormClass.formAlert}
+                                />
+                            )}
                     </div>
                 </div>
             </Collapse>
@@ -690,7 +674,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
                 <Button
                     text="Post"
                     keepText={true}
-                    icon={<UilNavigator/>}
+                    icon={<UilNavigator />}
                     type="submit"
                     addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}

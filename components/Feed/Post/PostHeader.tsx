@@ -127,7 +127,7 @@ const PostHeader: FC<PostHeaderProps> = ({
                 <PostOptionsDropdown
                     authorUid={authorUid}
                     authorName={
-                        authorProfile.username ? authorProfile.username : name
+                        authorProfile?.username ? authorProfile?.username : name
                     }
                     deletePost={deletePost}
                 />

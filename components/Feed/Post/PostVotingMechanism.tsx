@@ -91,24 +91,34 @@ const PostVotingMechanism = ({
         return db.runTransaction(async (transaction) => {
             const doc = await transaction.get(docRef)
             const postData = doc.data()
-            for (var i = 0; i < postData.compare.votesObjMapList.length; i++) {
-                // Case 1: the user voted for an object in the past
-                if (userProfile.uid in postData.compare.votesObjMapList[i]) {
-                    // delete vote for the old index
-                    delete postData.compare.votesObjMapList[i][userProfile.uid]
-                    if (i !== objIdx) {
-                        // if new index is different from old index, set vote
-                        postData.compare.votesObjMapList[objIdx][
+            if (postData) {
+                for (
+                    var i = 0;
+                    i < postData.compare.votesObjMapList.length;
+                    i++
+                ) {
+                    // Case 1: the user voted for an object in the past
+                    if (
+                        userProfile.uid in postData.compare.votesObjMapList[i]
+                    ) {
+                        // delete vote for the old index
+                        delete postData.compare.votesObjMapList[i][
                             userProfile.uid
-                        ] = true
+                        ]
+                        if (i !== objIdx) {
+                            // if new index is different from old index, set vote
+                            postData.compare.votesObjMapList[objIdx][
+                                userProfile.uid
+                            ] = true
+                        }
+                        transaction.update(docRef, postData)
+                        return
                     }
-                    transaction.update(docRef, postData)
-                    return
                 }
+                // Case 2: this is the first time for the user voting on this object
+                postData.compare.votesObjMapList[objIdx][userProfile.uid] = true
+                transaction.update(docRef, postData)
             }
-            // Case 2: this is the first time for the user voting on this object
-            postData.compare.votesObjMapList[objIdx][userProfile.uid] = true
-            transaction.update(docRef, postData)
         })
     }
 

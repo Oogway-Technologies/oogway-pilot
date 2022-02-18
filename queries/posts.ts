@@ -2,35 +2,34 @@ import API from '../axios';
 import { FirebasePost } from '../utils/types/firebase';
 import { useQuery, useInfiniteQuery } from 'react-query'
 
+type jsonTimeObj = {
+    seconds: number,
+    nanoseconds: number
+}
+
 type getPostsPayload = {
     posts: ReadonlyArray<FirebasePost>
-    lastTimestamp: Date
-    firstTimestamp: Date
+    lastTimestamp: jsonTimeObj
+    firstTimestamp: jsonTimeObj
+    hasNextPage: boolean
 }
 
-interface getPostsProps {
-    index: 'timestamp' | 'uid',
-    order: 'asc' | 'desc',
-    after: number,
-    size: number,
+type getPostsParams = {
+    _index: 'timestamp' | 'uid',
+    _order: 'asc' | 'desc',
+    _after: number,
+    _size: number,
 }
-
 
 // API fetch wrapper
-export const getPosts = async ({
-    after,
-    size = 10,     
-    index = 'timestamp', 
-    order = 'desc'   
-    }: getPostsProps
-): Promise<getPostsPayload> => {
-    console.log(after)
+export const getPosts = async ({ pageParam = Math.floor(Date.now() / 1000) }): Promise<getPostsPayload> => {
+
     // Create params
-    const params = {
-        _index: index,
-        _order: order,
-        _after: after,
-        _size: size
+    const params: getPostsParams = {
+        _index: 'timestamp',
+        _order: 'desc',
+        _after: pageParam,
+        _size: 10
     }
     
     // Call api
@@ -42,10 +41,11 @@ export const getPosts = async ({
 export const usePostsQuery = () => useQuery('posts-all', getPosts)
 
 export  const useInfinitePostsQuery = () => useInfiniteQuery(
-    'posts-infinite',
-    ({pageParam = 0 }) => getPosts(pageParam),
+    ['posts', 'infinite'],
+    getPosts,
     {
-        getPreviousPageParam: firstPage => firstPage.firstTimestamp.seconds ?? false,
-        getNextPageParam: lastPage => lastPage.lastTimestamp.seconds ?? false,
+        // refetchInterval: 2 * 1000,
+        // getPreviousPageParam: firstPage => firstPage.firstTimestamp.seconds ?? undefined,
+        getNextPageParam: lastPage => (lastPage.hasNextPage && lastPage.lastTimestamp.seconds) || undefined,
     }
 )
