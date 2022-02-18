@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {ChangeEvent, FC, MouseEventHandler, useEffect, useRef, useState} from 'react'
 
 // Database
 import {db, storage} from '../../../firebase'
@@ -27,16 +27,16 @@ import {warningTime} from "../../../utils/constants/global";
 import FlashErrorMessage from "../../Utils/FlashErrorMessage";
 
 type NewPostProps = {
-    closeModal: any
+    closeModal: MouseEventHandler<HTMLButtonElement>
     questPlaceholder: string // Placeholder text for question input in form
     descPlaceholder: string // Placeholder text for description input in form
 }
 
-const NewPostForm: React.FC<NewPostProps> = ({
-                                                 closeModal,
-                                                 questPlaceholder,
-                                                 descPlaceholder,
-                                             }) => {
+const NewPostForm: FC<NewPostProps> = ({
+                                           closeModal,
+                                           questPlaceholder,
+                                           descPlaceholder,
+                                       }) => {
     const userProfile = useRecoilValue(userProfileState)
 
     // Form management
@@ -57,11 +57,11 @@ const NewPostForm: React.FC<NewPostProps> = ({
     const [loading, setLoading] = useState(false)
 
     // The image to post and to display as preview
-    const [imageToPost, setImageToPost] = useState<any>(null)
+    const [imageToPost, setImageToPost] = useState(null)
 
     // This is a trick I need to use to reset the state and allow the user
     // to load the same image twice
-    const [targetEvent, setTargetEvent] = useState<any>(null)
+    const [targetEvent, setTargetEvent] = useState(null)
 
     // Track whether comparison form or not
     const [expanded, setExpanded] = useState(false)
@@ -76,8 +76,8 @@ const NewPostForm: React.FC<NewPostProps> = ({
     const filePickerRef = useRef<HTMLInputElement>(null)
 
     // Ref and data for left and right images
-    const [imageToCompareLeft, setImageToCompareLeft] = useState<any>(null)
-    const [imageToCompareRight, setImageToCompareRight] = useState<any>(null)
+    const [imageToCompareLeft, setImageToCompareLeft] = useState<string>(null)
+    const [imageToCompareRight, setImageToCompareRight] = useState<string>(null)
     const [textToCompareLeft, setTextToCompareLeft] = useState('')
     const [textToCompareRight, setTextToCompareRight] = useState('')
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
@@ -117,7 +117,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
 
     useEffect(() => {
         if (previewImage) {
-            sendPost();
+            (async () => {
+                await sendPost();
+            })()
         }
     }, [previewImage]);
 
@@ -274,10 +276,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
                     leftMediaObject.image = downloadURL
-                    // mediaObjectList.push({
-                    //     type: 'image',
-                    //     value: downloadURL,
-                    // })
                     votesObjMapList.push({})
                 })
             } else {
@@ -295,10 +293,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
                     rightMediaObject.image = downloadURL
-                    // mediaObjectList.push({
-                    //     type: 'image',
-                    //     value: downloadURL,
-                    // })
                     votesObjMapList.push({})
                 })
             } else {
@@ -307,19 +301,11 @@ const NewPostForm: React.FC<NewPostProps> = ({
 
             if (textToCompareLeft) {
                 leftMediaObject.text = textToCompareLeft
-                // mediaObjectList.push({
-                //     type: 'text',
-                //     value: textToCompareLeft,
-                // })
                 votesObjMapList.push({})
             }
 
             if (textToCompareRight) {
                 rightMediaObject.text = textToCompareRight
-                // mediaObjectList.push({
-                //     type: 'text',
-                //     value: textToCompareRight,
-                // })
                 votesObjMapList.push({})
             }
 
@@ -364,7 +350,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         closeModal();
     }
 
-    const addImageToCompareLeft = (e: any) => {
+    const addImageToCompareLeft = (e) => {
         const reader = new FileReader()
         if (e.target.files[0]) {
             // Read the file
@@ -383,7 +369,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const addImageToCompareRight = (e: any) => {
+    const addImageToCompareRight = (e) => {
         const reader = new FileReader()
         if (e.target.files[0]) {
             // Read the file
@@ -402,7 +388,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const addImageToPost = (e: any) => {
+    const addImageToPost = (e) => {
         const reader = new FileReader()
         if (e.target.files[0]) {
             // Read the file
@@ -422,8 +408,8 @@ const NewPostForm: React.FC<NewPostProps> = ({
     }
 
     const removeCompareObjects = () => {
-        setImageToCompareLeft(null)
-        setImageToCompareRight(null)
+        setImageToCompareLeft('')
+        setImageToCompareRight('')
         setTextToCompareLeft('')
         setTextToCompareRight('')
         if (targetEvent) {
@@ -431,7 +417,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const handleImageUpload = (e: any) => {
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
@@ -443,7 +429,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const handleCompareLeftUpload = (e: any) => {
+    const handleCompareLeftUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
@@ -453,10 +439,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
         } else {
             setIsImageSizeLarge(true)
         }
-
     }
 
-    const handleCompareRightUpload = (e: any) => {
+    const handleCompareRightUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
@@ -468,7 +453,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const removeImage = (idx: any) => {
+    const removeImage = (idx) => {
         // Easiest way to generalize image removal during when
         // mapping over array, but doesn't scale well to more than
         // three images
@@ -484,7 +469,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const sendAndClose = async (e: any) => {
+    const sendAndClose = async (e) => {
         e.preventDefault()
 
         if (isComparePost()) {
@@ -519,7 +504,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         setExpanded(!expanded)
     }
 
-    const handleKeyPress = (e: any) => {
+    const handleKeyPress = (e) => {
         // Trigger on enter key
         if (e.keyCode === 13) {
             sendAndClose(e)
@@ -643,7 +628,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <div className={postFormClass.imageComparisonDiv}>
                     <div className={postFormClass.form}>
-                        {/* Comparision A */}
+                        {/* Option A */}
                         <div className="inline-flex">
                             {imageToCompareLeft ? (
                                 <p className={postFormClass.imageSelectedText}>
@@ -679,7 +664,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                             value={textToCompareLeft}
                                         />
                                     </div>
-
                                     <p className={postFormClass.orText}>or</p>
 
                                     {/* Image input A */}
@@ -769,20 +753,20 @@ const NewPostForm: React.FC<NewPostProps> = ({
                                 </>
                             )}
                         </div>
-                        {errors.compare &&
-                        errors.compare.type === 'required' && (
-                            <FlashErrorMessage
-                                message={errors.compare.message}
-                                ms={warningTime}
-                                style={postFormClass.formAlert}
-                            />
-                        )}
                         {isImageSizeLarge && (
                             <FlashErrorMessage
                                 message={`Image should be less then 10 MB`}
                                 ms={warningTime}
                                 style={postFormClass.imageSizeAlert}
                                 onClose={() => setIsImageSizeLarge(false)}
+                            />
+                        )}
+                        {errors.compare &&
+                        errors.compare.type === 'required' && (
+                            <FlashErrorMessage
+                                message={errors.compare.message}
+                                ms={warningTime}
+                                style={postFormClass.formAlert}
                             />
                         )}
                     </div>
