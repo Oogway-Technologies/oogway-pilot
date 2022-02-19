@@ -15,7 +15,6 @@
     "@mui/material": "^5.2.8",
     "axios": "^0.26.0",
     "babel-plugin-superjson-next": "^0.4.2",
-    "better-react-spinkit": "^2.0.4",
     "crypto-random-string": "^4.0.0",
     "email-validator": "^2.0.4",
     "firebase": "^9.6.3",
@@ -24,6 +23,7 @@
     "next": "latest",
     "next-themes": "^0.0.15",
     "react": "^17.0.2",
+    "react-content-loader": "^6.1.0",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
     "react-firebase-hooks": "^4.0.2",
@@ -32,7 +32,6 @@
     "react-query": "^3.34.15",
     "recoil": "^0.5.2",
     "safe-json-stringify": "^1.2.0",
-    "spinners-react": "^1.0.6",
     "tailwind-scrollbar-hide": "^1.1.7",
     "unique-names-generator": "^4.6.0",
     "uuid": "^8.3.2"
