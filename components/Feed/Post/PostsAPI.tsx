@@ -2,25 +2,25 @@ import React, { useRef } from 'react'
 
 // Styles and components
 import PostCard from './Post'
-import Loading from '../../Loading'
+import Loading from '../../Utils/Loading'
 
 // Custoom hook
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver'
 
 // Queries
-import { useInfinitePostsQuery, usePostsQuery } from '../../../queries/posts'
+import { useInfinitePostsQuery } from '../../../queries/posts'
+import {
+    GeneratePostCardLoaders,
+    PostCardLoader,
+} from '../../Loaders/PostContentLoader'
+import EndOfFeedMessage from '../../Utils/EndOfFeedMessage'
 
 function PostsAPI() {
-    // Retrieve postts
-    // const { status, data, error } = usePostsQuery()
-
     // Instantiate infinite posts query
     const {
         status,
         data,
         error,
-        refetch,
-        isFetching,
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
@@ -37,11 +37,14 @@ function PostsAPI() {
     return (
         <>
             {status === 'loading' ? (
-                <Loading />
+                // Post Placeholders While Content Fetching
+                <GeneratePostCardLoaders n={5} />
             ) : status === 'error' ? (
-                <div>Error: {error.message}</div> // TODO: need nicer error component
+                // TODO: need nicer error component
+                <div>Error: {error.message}</div>
             ) : (
                 <>
+                    {/* Infinite Scroller / Lazy Loader */}
                     {data?.pages.map((page) => (
                         <React.Fragment key={page.lastTimestamp.seconds}>
                             {page.posts.map((post) => (
@@ -61,19 +64,13 @@ function PostsAPI() {
                             ))}
                         </React.Fragment>
                     ))}
-                    <div>
-                        <button
-                            ref={loadMoreRef}
-                            onClick={() => fetchNextPage()}
-                            disabled={!hasNextPage || isFetchingNextPage}
-                        >
-                            {isFetchingNextPage
-                                ? 'Loading more...'
-                                : hasNextPage
-                                ? 'Load Older'
-                                : 'Nothing more to load'}
-                        </button>
-                    </div>
+
+                    {/* Lazy Loader Sentinel and End of Feed*/}
+                    {isFetchingNextPage || hasNextPage ? (
+                        <PostCardLoader ref={loadMoreRef} />
+                    ) : (
+                        <EndOfFeedMessage />
+                    )}
                 </>
             )}
         </>

@@ -12,6 +12,14 @@ export const feedApiClass = {
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
 }
 
+export const endOfFeedMessageClass = {
+    outerDiv:
+        'flex flex-col m-md align-items-center text-sm text-neutral-700 \
+    dark:text-neutralDark-150',
+    topMessage: 'm-auto p-sm',
+    bottomMessage: 'm-auto',
+}
+
 // Feed toolbar
 export const feedToolbarClass = {
     div: 'grid grid-cols-2',
