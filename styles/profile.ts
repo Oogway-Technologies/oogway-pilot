@@ -22,7 +22,7 @@ export const profileCard = {
         dark:bg-neutral-300 hover:bg-neutral-300\
         active:bg-neutral-300",
     joinedAndLocationText: 'text-neutral-700 dark:text-neutralDark-300 flex item-center font-normal text-sm md:text-base leading-6 tracking-normal text-gray-600 pt-1',
-    bioText: 'text-neutral-700 dark:text-neutralDark-150 font-normal text-sm md:text-base leading-6 text-left not-italic tracking-normal mx-3 md:mx-0 pt-1',
+    bioText: 'text-neutral-700 dark:text-neutralDark-150 font-normal text-sm md:text-base leading-6 text-left not-italic tracking-normal mx-3 md:mx-0 pt-1 whitespace-pre-line',
     usernameText: 'text-primary dark:text-primaryDark',
 }
 
