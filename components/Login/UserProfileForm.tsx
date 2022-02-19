@@ -333,15 +333,16 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
 
                 <div className={loginInputs.inputHeader}>Bio</div>
                 <div className={loginInputs.inputBorder}>
-                    <input
+                    <textarea
                         onChange={(e) => {
+                            e.target.style.height = '0px';
+                            e.target.style.height = e.target.scrollHeight + 'px'
                             setBio(e.target.value)
                         }}
-                        onKeyPress={preventDefaultOnEnter}
                         defaultValue={userProfile.bio || ''}
-                        className={loginInputs.inputField}
+                        className={loginInputs.textArea}
+                        rows={1}
                         placeholder="About me..."
-                        type="text"
                     />
                 </div>
 

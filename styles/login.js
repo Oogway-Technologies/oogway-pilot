@@ -46,6 +46,9 @@ export const loginInputs = {
     inputField:
         'justify-self-start w-full p-2 h-10 outline-0 text-neutral-700 dark:text-white\
         text-xs md:text-base focus:outline-none bg-transparent',
+    textArea:
+        'w-full flex-wrap resize-none focus:outline-none border-none bg-transparent text-neutral-700 dark:text-white \
+            text-xs md:text-base h-[40px] max-h-[100px] scrollbar-hide justify-self-start w-full p-2 h-10',
     formAlert:
         'inline-flex pt-sm ml-sm items-center text-sm text-alert dark:text-alert',
 }
