@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, MouseEventHandler, useEffect, useRef, useState} from 'react'
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react'
 
 // Database
 import {db, storage} from '../../../firebase'
@@ -23,20 +23,20 @@ import {useRecoilValue} from 'recoil'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import {Tooltip} from "../../Utils/Tooltip";
 import {checkFileSize, fetcher, isValidURL} from "../../../utils/helpers/common";
-import {warningTime} from "../../../utils/constants/global";
 import FlashErrorMessage from "../../Utils/FlashErrorMessage";
+import {warningTime} from "../../../utils/constants/global";
 
 type NewPostProps = {
-    closeModal: MouseEventHandler<HTMLButtonElement>
+    closeModal: any
     questPlaceholder: string // Placeholder text for question input in form
     descPlaceholder: string // Placeholder text for description input in form
 }
 
-const NewPostForm: FC<NewPostProps> = ({
-                                           closeModal,
-                                           questPlaceholder,
-                                           descPlaceholder,
-                                       }) => {
+const NewPostForm: React.FC<NewPostProps> = ({
+                                                 closeModal,
+                                                 questPlaceholder,
+                                                 descPlaceholder,
+                                             }) => {
     const userProfile = useRecoilValue(userProfileState)
 
     // Form management
@@ -57,7 +57,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const [loading, setLoading] = useState(false)
 
     // The image to post and to display as preview
-    const [imageToPost, setImageToPost] = useState(null)
+    const [imageToPost, setImageToPost] = useState<string | null>('')
 
     // This is a trick I need to use to reset the state and allow the user
     // to load the same image twice
@@ -76,20 +76,20 @@ const NewPostForm: FC<NewPostProps> = ({
     const filePickerRef = useRef<HTMLInputElement>(null)
 
     // Ref and data for left and right images
-    const [imageToCompareLeft, setImageToCompareLeft] = useState<string>(null)
-    const [imageToCompareRight, setImageToCompareRight] = useState<string>(null)
+    const [imageToCompareLeft, setImageToCompareLeft] = useState<string | null>('')
+    const [imageToCompareRight, setImageToCompareRight] = useState<string | null>('')
     const [textToCompareLeft, setTextToCompareLeft] = useState('')
     const [textToCompareRight, setTextToCompareRight] = useState('')
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
     const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
-    const [previewImage, setPreviewImage] = useState<any>('');
-    const [leftComparePreviewImage, setLeftComparePreviewImage] = useState<any>('');
-    const [rightComparePreviewImage, setRightComparePreviewImage] = useState<any>('');
+    const [previewImage, setPreviewImage] = useState<string>('');
+    const [leftComparePreviewImage, setLeftComparePreviewImage] = useState<string>('');
+    const [rightComparePreviewImage, setRightComparePreviewImage] = useState<string>('');
     const [isImageSizeLarge, setIsImageSizeLarge] = useState(false);
 
 
     //Processing the images received from backend for description field
-    const previewImagecallBack = async (res: any) => {
+    const previewImagecallBack = async (res: string[]) => {
         if (res.length > 0) {
             setPreviewImage(res[0]);
         } else {
@@ -98,7 +98,7 @@ const NewPostForm: FC<NewPostProps> = ({
     };
 
     //Processing the images received from backend for left compare Link field
-    const leftComparePreviewImagecallBack = async (res: any) => {
+    const leftComparePreviewImagecallBack = async (res: string[]) => {
         if (res.length > 0) {
             setLeftComparePreviewImage(res[0]);
         } else {
@@ -107,7 +107,7 @@ const NewPostForm: FC<NewPostProps> = ({
     };
 
     //Processing the images received from backend for right compare Link field
-    const rightComparePreviewImagecallBack = async (res: any) => {
+    const rightComparePreviewImagecallBack = async (res: string[]) => {
         if (res.length > 0) {
             setRightComparePreviewImage(res[0]);
         } else {
@@ -124,8 +124,8 @@ const NewPostForm: FC<NewPostProps> = ({
     }, [previewImage]);
 
 
-    const checkPreviewImage = (url: any) => {
-        return fetcher(`/api/hello?urlToHit=${url}`);
+    const checkPreviewImage = (url: string) => {
+        return fetcher(`/api/fetchPreviewData?urlToHit=${url}`);
     };
 
     // Utility Component for warnings
@@ -390,7 +390,7 @@ const NewPostForm: FC<NewPostProps> = ({
 
     const addImageToPost = (e) => {
         const reader = new FileReader()
-        if (e.target.files[0]) {
+        if (e?.target?.files[0]) {
             // Read the file
             reader.readAsDataURL(e.target.files[0])
         }

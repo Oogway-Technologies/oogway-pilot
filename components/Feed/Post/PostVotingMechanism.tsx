@@ -11,8 +11,8 @@ import {isValidURL} from "../../../utils/helpers/common";
 
 type PostVotingMechanismProps = {
     id: string
-    compareData: Array<any>
-    votesList: Array<any>
+    compareData: Array<T>
+    votesList: Array<T>
 }
 
 const PostVotingMechanism = ({
@@ -26,7 +26,6 @@ const PostVotingMechanism = ({
     // Track voting button state
     const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle/>)
     const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle/>)
-    const [URL, setURL] = useState<string>('');
 
     useEffect(() => {
         const unsubscribe = streamPostData(
@@ -34,12 +33,6 @@ const PostVotingMechanism = ({
             (snapshot) => {
                 const postData = snapshot.data()
                 if (postData) {
-
-                    postData?.compare?.objList.map((item: any) => {
-                        if (item.type === 'text') {
-                            setURL(isValidURL(item.value));
-                        }
-                    });
                     // prevent error on compare post deletion
                     // Probably not a permanent fix, may want to
                     // look at listening only for changes in the children elements
@@ -82,7 +75,7 @@ const PostVotingMechanism = ({
 
         return db.runTransaction(async (transaction) => {
             const doc = await transaction.get(docRef)
-            const postData: any = doc.data()
+            const postData = doc.data()
 
             for (var i = 0; i < postData?.compare?.votesObjMapList?.length; i++) {
                 // Case 1: the user voted for an object in the past
@@ -108,18 +101,32 @@ const PostVotingMechanism = ({
             {compareData.map((obj, idx) => {
                 return (
                     <div key={idx} className={postCardClass.voteContainer}>
-                        {(obj.image && obj.image.length > 1) ?
-                            (
-                                <img
-                                    className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
-                                    src={obj.image}
-                                    onClick={() => {
-                                        voteOnImage(idx)
-                                    }}
-                                    alt=""
-                                />
-                            ) : isValidURL(obj.text) ?
-                                (
+                        <div>
+                            {
+                                (obj.image && obj.image.length > 1) ? (
+                                    <img
+                                        className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
+                                        src={obj.image}
+                                        onClick={() => {
+                                            voteOnImage(idx)
+                                        }}
+                                        alt=""
+                                    />
+                                ) : (obj.previewImage && obj.previewImage.length > 1) && (
+                                    <img
+                                        className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
+                                        src={obj.previewImage}
+                                        onClick={() => {
+                                            voteOnImage(idx)
+                                        }}
+                                        alt=""
+                                    />
+                                )
+                            }
+                        </div>
+                        <div>
+                            {
+                                isValidURL(obj.text) ? (
                                     <Linkify componentDecorator={(decoratedHref, decoratedText, key) => (
                                         <a className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
                                            target="blank" href={decoratedHref}
@@ -132,18 +139,17 @@ const PostVotingMechanism = ({
                                         </a>
                                     )}
                                     >{obj.text}</Linkify>
-                                ) :
-                                (
-                                    <p
-                                        className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
-                                        onClick={() => {
-                                            voteOnImage(idx)
-                                        }}
+                                ) : (obj.text && obj.text.length > 0) && (
+                                    <p className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
+                                       onClick={() => {
+                                           voteOnImage(idx)
+                                       }}
                                     >
                                         {obj.text}
                                     </p>
                                 )
-                        }
+                            }
+                        </div>
                         <div className={postCardClass.voteButtonContainer}>
                             <button
                                 className={postCardClass.voteButton + (!user ? ' cursor-default' : '')}
