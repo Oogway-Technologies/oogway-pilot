@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { streamProfileData } from '../lib/profileHelper'
+import {useEffect, useState} from 'react'
+import {streamProfileData} from '../lib/profileHelper'
 
 
 export const useProfileData = (id: string | undefined) => {
@@ -20,11 +20,13 @@ export const useProfileData = (id: string | undefined) => {
                     })
                 }
             },
-            (error) => {console.log(error)}
+            (error) => {
+                console.log(error)
+            }
         )
         return () => {
             setProfileData({})
-            unsubscribe
+            unsubscribe()
         }
 
     }, [id])
