@@ -40,3 +40,6 @@ yarn-error.log*
 # packages
 package-lock.json
 yarn.lock
+
+# Firebase functions
+firebase-key.json
