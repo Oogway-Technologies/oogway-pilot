@@ -14,6 +14,7 @@ import { useUser } from '@auth0/nextjs-auth0'
 import { collection, orderBy, query } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '../../../firebase'
+import { usePostNumberComments } from '../../../hooks/useNumberComments'
 
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
@@ -32,6 +33,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
             orderBy('timestamp', 'asc')
         )
     )
+    const [numComments] = usePostNumberComments(router.query.id)
 
     // Track mobile state
     const isMobile = useMediaQuery('(max-width: 500px)')
@@ -128,10 +130,11 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
 
                 {/* Comment counter */}
                 <p className={commentsApiClass.counter}>
-                    {commentsSnapshot
-                        ? commentsSnapshot.length
-                        : JSON.parse(comments).length}{' '}
-                    Answers
+                    {numComments === 0
+                        ? `No Answers. Be the first.`
+                        : numComments === 1
+                        ? `${numComments} Answer`
+                        : `${numComments} Answers`}
                 </p>
 
                 {/* Post's Comments */}
