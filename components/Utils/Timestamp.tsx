@@ -16,7 +16,10 @@ const Timestamp = ({ timestamp }: Props) => {
         // If timestamp is a JSON time object, convert to date
         // Otherwise assume it has already been converted on pre-fetch
         if (!(timestamp instanceof Date) && timestamp instanceof Object) {
-            timestamp = Date(timestamp)
+            if (!('seconds' in timestamp)) {
+                return 'Cannot fetch time'
+            }
+            timestamp = new Date(timestamp.seconds * 1000)
         }
 
         // Convert to fromNow time

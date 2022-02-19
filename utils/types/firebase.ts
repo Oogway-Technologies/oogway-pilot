@@ -17,15 +17,15 @@ export type compare = {
 }
 
 export interface FirebasePost {
-    id: string
+    id?: string
     compare?: compare
     description: string
     message: string
     isCompare: boolean
     likes: userMap
     name: string 
-    timestamp: Date
-    postImage: string | null
+    timestamp: FieldValue
+    postImage?: string | null
     previewImage?: string
     uid: string
 }
