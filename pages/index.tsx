@@ -13,7 +13,6 @@ import { useRecoilValue } from 'recoil'
 
 // Queries
 import { QueryClient, dehydrate } from 'react-query'
-import API from '../axios'
 import { queryClientConfig } from '../query'
 import { getPosts } from '../queries/posts'
 
@@ -50,7 +49,7 @@ export async function getServerSideProps() {
     const queryClient = new QueryClient(queryClientConfig)
 
     // Get the posts
-    await queryClient.prefetchQuery('posts', getPosts)
+    await queryClient.prefetchQuery(['posts', 'infinite'], getPosts)
 
     return {
         props: {
