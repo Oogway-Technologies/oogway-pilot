@@ -40,17 +40,18 @@ const PostVotingMechanism = ({
                     // Only gets mounted when post isCompare so we don't need to worry
                     // that postData.compare does not exist
                     // if current user is a voter of left object
-                    if (userProfile.uid in postData.compare.votesObjMapList[0]) {
-                        setVoteButtonLeft(<UilCheckCircle/>)
-                        setVoteButtonRight(<UilCircle/>)
-                    }
-                    // if current user is a voter of right object
-                    else if (userProfile.uid in postData.compare.votesObjMapList[1]) {
-                        setVoteButtonRight(<UilCheckCircle/>)
-                        setVoteButtonLeft(<UilCircle/>)
-                    }
-                    // if current user is not a voter
-                    else {
+                    if (postData.compare.votesObjMapList[0] && postData.compare.votesObjMapList[1]) {
+                        if (userProfile.uid in postData.compare.votesObjMapList[0]) {
+                            setVoteButtonLeft(<UilCheckCircle/>)
+                            setVoteButtonRight(<UilCircle/>)
+                        }
+                        // if current user is a voter of right object
+                        else if (userProfile.uid in postData.compare.votesObjMapList[1]) {
+                            setVoteButtonRight(<UilCheckCircle/>)
+                            setVoteButtonLeft(<UilCircle/>)
+                        }
+                    } else {
+                        // if current user is not a voter
                         setVoteButtonLeft(<UilCircle/>)
                         setVoteButtonRight(<UilCircle/>)
                     }
@@ -71,7 +72,7 @@ const PostVotingMechanism = ({
         // Do not vote if user is not logged in
         if (!user) return;
         // Add a vote, for this user, to one of the images
-        var docRef = db.collection('posts').doc(id)
+        let docRef = db.collection('posts').doc(id)
 
         return db.runTransaction(async (transaction) => {
             const doc = await transaction.get(docRef)
@@ -101,55 +102,51 @@ const PostVotingMechanism = ({
             {compareData.map((obj, idx) => {
                 return (
                     <div key={idx} className={postCardClass.voteContainer}>
-                        <div>
-                            {
-                                (obj.image && obj.image.length > 1) ? (
-                                    <img
-                                        className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
-                                        src={obj.image}
-                                        onClick={() => {
-                                            voteOnImage(idx)
-                                        }}
-                                        alt=""
-                                    />
-                                ) : (obj.previewImage && obj.previewImage.length > 1) && (
-                                    <img
-                                        className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
-                                        src={obj.previewImage}
-                                        onClick={() => {
-                                            voteOnImage(idx)
-                                        }}
-                                        alt=""
-                                    />
-                                )
-                            }
-                        </div>
-                        <div>
-                            {
-                                isValidURL(obj.text) ? (
-                                    <Linkify componentDecorator={(decoratedHref, decoratedText, key) => (
-                                        <a className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
-                                           target="blank" href={decoratedHref}
-                                           key={key}
-                                           onClick={() => {
-                                               voteOnImage(idx)
-                                           }}
-                                        >
-                                            {decoratedText}
-                                        </a>
-                                    )}
-                                    >{obj.text}</Linkify>
-                                ) : (obj.text && obj.text.length > 0) && (
-                                    <p className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
+                        {
+                            (obj.image && obj.image.length > 1) ? (
+                                <img
+                                    className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
+                                    src={obj.image}
+                                    onClick={() => {
+                                        voteOnImage(idx)
+                                    }}
+                                    alt=""
+                                />
+                            ) : (obj.previewImage && obj.previewImage.length > 1) && (
+                                <img
+                                    className={postCardClass.imageVote + (!user ? ' cursor-default' : '')}
+                                    src={obj.previewImage}
+                                    onClick={() => {
+                                        voteOnImage(idx)
+                                    }}
+                                    alt=""
+                                />
+                            )
+                        }
+                        {
+                            isValidURL(obj.text) ? (
+                                <Linkify componentDecorator={(decoratedHref, decoratedText, key) => (
+                                    <a className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
+                                       target="blank" href={decoratedHref}
+                                       key={key}
                                        onClick={() => {
                                            voteOnImage(idx)
                                        }}
                                     >
-                                        {obj.text}
-                                    </p>
-                                )
-                            }
-                        </div>
+                                        {decoratedText}
+                                    </a>
+                                )}
+                                >{obj.text}</Linkify>
+                            ) : (obj.text && obj.text.length > 0) && (
+                                <span className={postCardClass.textVote + (!user ? ' cursor-default' : '')}
+                                      onClick={() => {
+                                          voteOnImage(idx)
+                                      }}
+                                >
+                                    {obj.text}
+                                </span>
+                            )
+                        }
                         <div className={postCardClass.voteButtonContainer}>
                             <button
                                 className={postCardClass.voteButton + (!user ? ' cursor-default' : '')}

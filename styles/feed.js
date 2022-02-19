@@ -55,14 +55,14 @@ export const postCardClass = {
         'font-bold mb-[8px] text-md text-neutral-800 dark:text-neutralDark-50',
     bodyDescription: 'text-neutral-700 dark:text-neutralDark-150 text-sm',
     // Media
-    voteDiv: 'flex px-2 space-x-md',
-    voteContainer: 'flex flex-col w-full items-center ',
+    voteDiv: 'flex px-2 space-x-md w-5/5 justify-center ml-xl p-md',
+    voteContainer: 'flex flex-col w-2/5 items-center',
     imageVote:
-        'flex rounded-[4px] object-fill h-48 w-96 cursor-pointer justify-self-center mt-auto',
+        'flex rounded-[4px] object-contain cursor-pointer justify-self-center mt-auto mb-2',
     voteButtonContainer: 'flex flex-col items-center justify-self-end mt-auto',
     textVote:
-        'flex rounded-[4px] border border-solid border-primary p-2 truncate w-60 text-ellipsis \
-            text-sm text-primary dark:text-primaryDark mt-2',
+        'rounded-[4px] border border-solid border-primary px-2 py-1 text-center w-3/5 truncate \
+            text-sm text-primary dark:text-primaryDark mt-auto ',
     voteButton:
         'p-sm justify-center \
             hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary \
