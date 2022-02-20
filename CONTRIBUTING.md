@@ -48,7 +48,7 @@ Let's build some awesome stuff together and have fun!
 
 ### **Tool Stack**
 
-The app is built with NextJS + Firebase + Recoil + Auth0. You don't need to be an expert on all four to contribute, but you should at least familiarize yourself with them.
+The app is built with NextJS + + TailwindCSS + Firebase + Recoil + Auth0. You don't need to be an expert on all four to contribute, but you should at least familiarize yourself with them.
 
 | Tool                                                                        | Purpose                                      |
 | :-------------------------------------------------------------------------- | :------------------------------------------- |
