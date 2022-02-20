@@ -26,14 +26,15 @@ const NavLinks = ({ links, listStyle }: NavLinksProps) => {
                     <li key={idx} className={navLinksClass.li}>
                         <Link href={link.href[0]} passHref>
                             <a
+                                data-text={link.text}
                                 className={`${
                                     link.href.includes(
-                                        router.pathname.split('?')[0]
+                                        router.asPath.split('?')[0]
                                     )
                                         ? 'text-primary font-bold underline underline-offset-8'
                                         : 'text-neutral-700 dark:text-neutralDark-150'
                                 } 
-                                    text-xs pt-2 pb-[6px] md:text-base hover:font-bold`}
+                                    buttonText`}
                             >
                                 {link.text}
                             </a>
