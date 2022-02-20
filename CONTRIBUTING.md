@@ -53,6 +53,7 @@ The app is built with NextJS + Firebase + Recoil + Auth0. You don't need to be a
 | Tool                                                                        | Purpose                                      |
 | :-------------------------------------------------------------------------- | :------------------------------------------- |
 | [NextJS](https://nextjs.org/docs/getting-started)                           | Front-end, middleware, server-side rendering |
+| [TailwindCSS](https://tailwindcss.com/docs/installation)                    | Styles                                       |
 | [Firebase](https://firebase.google.com/docs/database)                       | Back-end realtime database and storage       |
 | [Recoil](https://firebase.google.com/docs/database)                         | Global state management                      |
 | [Auth0](https://auth0.com/blog/ultimate-guide-nextjs-authentication-auth0/) | User authentication                          |
