@@ -1,5 +1,6 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
+import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 
 const setFirebaseCustomToken = async (token) => {
     // Fetchm the Firebase custom token from the Auth0 user
@@ -28,6 +29,14 @@ const afterCallback = async (req, res, session, state) => {
         const errorMessage = error.message
         console.log('error:', errorMessage)
     })
+
+    // Everything is good, get (or create) user and profile in firebase on login
+    // prior to redirecting to page
+    console.log(session.user)
+    //const userProfile = await getOrCreateUserFromFirebase(session.user)
+
+    // Append firebase uid to auth0 UserProfile
+    //session.user.uid = userProfile.uid
 
     // Note: session.user already contains the Auth0 user
     // as Session.user.sub. This should be the same as
