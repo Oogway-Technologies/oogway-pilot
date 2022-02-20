@@ -159,7 +159,7 @@ const PostVotingMechanism = ({
                             className={
                                 postCardClass.voteButtonContainer +
                                 (winningChoice === idx &&
-                                    ' shadow-lg shadow-black/10')
+                                    ' shadow-lg shadow-black/10 dark:shadow-neutralDark-150/20')
                             }
                         >
                             <button
