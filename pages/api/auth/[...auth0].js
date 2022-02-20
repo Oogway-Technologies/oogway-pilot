@@ -1,4 +1,4 @@
-import { handleAuth, handleCallback } from '@auth0/nextjs-auth0'
+import { handleAuth, handleCallback, handleLogin } from '@auth0/nextjs-auth0'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
 import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 
@@ -25,18 +25,35 @@ const afterCallback = async (req, res, session, state) => {
         auth,
         firebaseResponse.firebaseToken
     ).catch((error) => {
-        // TODO: block signing in?
+        // Something went wrong trying to authenticate with Firebase
         const errorMessage = error.message
         console.log('error:', errorMessage)
+
+        // Redirect to the login page, i.e., logout the user
+        state.returnTo = '/api/auth/logout'
+
+        // Return the session as-is
+        return session
     })
+
+    if (userCredential && session.user.sub !== userCredential.user.uid) {
+        // Something's fishy here...log out the user
+        console.log(
+            'Mismatch between Auth0 user and Firebase auth user. This could be serious.'
+        )
+
+        state.returnTo = '/api/auth/logout'
+
+        // Return the session as-is
+        return session
+    }
 
     // Everything is good, get (or create) user and profile in firebase on login
     // prior to redirecting to page
-    console.log(session.user)
-    //const userProfile = await getOrCreateUserFromFirebase(session.user)
+    const userProfile = await getOrCreateUserFromFirebase(session.user)
 
     // Append firebase uid to auth0 UserProfile
-    //session.user.uid = userProfile.uid
+    session.user.uid = userProfile.uid
 
     // Note: session.user already contains the Auth0 user
     // as Session.user.sub. This should be the same as
@@ -44,25 +61,23 @@ const afterCallback = async (req, res, session, state) => {
     // if (userCredential) {
     //    session.user.sub === userCredential.user.uid
     // }
-    // TODO: check and/or assert the above condition?
-    if (userCredential && session.user.sub !== userCredential.user.uid) {
-        console.log(
-            'Mismatch between Auth0 user and Firebase auth user. This could be serious.'
-        )
-    }
 
     // Return the session
     return session
 }
 
 export default handleAuth({
+    // Auth0 callback:
+    // Use this function for validating additional claims on the user's ID Token or adding removing items
+    // from the session after login.
+    // For more information, see https://auth0.github.io/nextjs-auth0/modules/handlers_callback.html#handlecallback
     async callback(req, res) {
         try {
-            await handleCallback(req, res, { afterCallback })
+            await handleCallback(req, res, {
+                afterCallback,
+            })
         } catch (error) {
             res.status(error.status || 500).end(error.message)
         }
     },
 })
-
-// export default handleAuth()

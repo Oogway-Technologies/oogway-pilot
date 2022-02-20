@@ -7,6 +7,7 @@ import {FirebaseProfile, FirebaseUser} from "../utils/types/firebase";
 export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
     try {
         // Check if the Auth0-Firebase mapping is available
+        // TODO: Check if the user is in the database and/or is defined
         const checkIfUserExists = await getDocs(query(collection(db, "users"), where("auth0", "==", user.sub)));
 
         // Create user if it doesn't already exist
