@@ -1,0 +1,4 @@
+node_modules/
+
+# Firebase functions
+firebase-key.json
