@@ -2,9 +2,9 @@ import Logo from '../Logo'
 import Link from 'next/link'
 import NavLinks from './NavLinks'
 import UserDropdown from './UserDropdown'
-import {headerClass} from '../../styles/header'
-import {useRecoilValue} from 'recoil'
-import {userProfileState} from '../../atoms/user'
+import { headerClass } from '../../styles/header'
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../atoms/user'
 
 const Header = () => {
     // Call UserProfile to pass uid into links
@@ -18,6 +18,10 @@ const Header = () => {
         {
             href: ['/'],
             text: 'Feed',
+        },
+        {
+            href: [`/profile/${userProfile.uid}`],
+            text: 'My Profile',
         },
         // {
         //     href: ['/#'], // change to Friends when created
@@ -33,7 +37,7 @@ const Header = () => {
                 <div className={headerClass.logo}>
                     <Link href="/" passHref>
                         <a>
-                            <Logo fill="currentColor"/>
+                            <Logo fill="currentColor" />
                         </a>
                     </Link>
                 </div>
@@ -48,13 +52,13 @@ const Header = () => {
                 <div className={headerClass.user}>
                     {/* Uncomment Apps when we have hook */}
                     {/* <AppsButton /> */}
-                    <UserDropdown/>
+                    <UserDropdown />
                 </div>
             </div>
 
             {/* Bottom: Slug */}
             <div className={headerClass.slug}>
-                <NavLinks links={links} listStyle={headerClass.slugList}/>
+                <NavLinks links={links} listStyle={headerClass.slugList} />
             </div>
         </div>
     )
