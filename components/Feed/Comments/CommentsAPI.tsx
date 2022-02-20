@@ -19,7 +19,6 @@ import { usePostNumberComments } from '../../../hooks/useNumberComments'
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
 }
-// TO BE DELETED
 const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
     // Retrieve user profile
     const userProfile = useRecoilValue(userProfileState)
@@ -127,7 +126,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                         </div>
                     )}
                 </div>
-
+                {console.log(comments)}
                 {/* Comment counter */}
                 <p className={commentsApiClass.counter}>
                     {numComments === 0

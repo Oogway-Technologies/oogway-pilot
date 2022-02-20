@@ -102,7 +102,7 @@ export async function getServerSideProps(context) {
             ...comments,
             timestamp: comments.timestamp.toDate().getTime(),
         }))
-
+        console.log("enters into getServerSideProps", comments)
     return {
         props: {
             post: post, // pass the post back as a doc
