@@ -5,11 +5,13 @@ import UserDropdown from './UserDropdown'
 import { headerClass } from '../../styles/header'
 import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../atoms/user'
+import { useUser } from '@auth0/nextjs-auth0'
 
 const Header = () => {
     // Call UserProfile to pass uid into links
+    const { user, isLoading } = useUser()
     const userProfile = useRecoilValue(userProfileState)
-    const links = [
+    let links = [
         // TODO: Add as pages created
         // {
         //     href: ['/#'], // change to /Search when search page created
@@ -19,6 +21,8 @@ const Header = () => {
             href: ['/'],
             text: 'Feed',
         },
+    ]
+    const userOnlyLinks = [
         {
             href: [`/profile/${userProfile.uid}`],
             text: 'My Profile',
@@ -28,6 +32,11 @@ const Header = () => {
         //     text: 'Friends',
         // },
     ]
+
+    // Add auth-only components for logged in users
+    if (!isLoading && user) {
+        links = links.concat(userOnlyLinks)
+    }
 
     return (
         <div className={headerClass.div}>

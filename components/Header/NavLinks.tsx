@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -27,14 +28,14 @@ const NavLinks = ({ links, listStyle }: NavLinksProps) => {
                         <Link href={link.href[0]} passHref>
                             <a
                                 data-text={link.text}
-                                className={`${
-                                    link.href.includes(
+                                className={
+                                    'buttonText ' +
+                                    (link.href.includes(
                                         router.asPath.split('?')[0]
                                     )
                                         ? 'text-primary font-bold underline underline-offset-8'
-                                        : 'text-neutral-700 dark:text-neutralDark-150'
-                                } 
-                                    buttonText`}
+                                        : 'text-neutral-700 dark:text-neutralDark-150')
+                                }
                             >
                                 {link.text}
                             </a>
