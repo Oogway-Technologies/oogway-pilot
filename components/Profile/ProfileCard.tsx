@@ -1,14 +1,15 @@
 import Button from '../Utils/Button'
-import { profileCard } from '../../styles/profile'
+import {profileCard} from '../../styles/profile'
 import bull from '../Utils/Bullet'
-import React, { FC, useState } from 'react'
+import React, {FC, useState} from 'react'
 // @ts-ignore
-import { UilLocationPoint, UilPen } from '@iconscout/react-unicons'
-import { useRecoilValue } from 'recoil'
-import { userProfileState } from '../../atoms/user'
-import { Avatar, useMediaQuery } from '@mui/material'
+import {UilLocationPoint, UilPen} from '@iconscout/react-unicons'
+import {useRecoilValue} from 'recoil'
+import {userProfileState} from '../../atoms/user'
+import {Avatar, useMediaQuery} from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
+
 interface ProfileCardProps {
     bio?: string
     location?: string
@@ -32,7 +33,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
         joinedAt,
     } = props
     // recoil state to check if Profile card is for current user.
-    const { uid: currentUserUid } = useRecoilValue(userProfileState)
+    const {uid: currentUserUid} = useRecoilValue(userProfileState)
 
     // hook to check is user is no mobile device or not.
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -47,8 +48,8 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
     }
 
     const sizeAvatar = () => {
-        if (isMobile) return { height: 75, width: 75 }
-        return { height: 150, width: 150 }
+        if (isMobile) return {height: 75, width: 75}
+        return {height: 150, width: 150}
     }
 
     return (
@@ -56,7 +57,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
             <div className={'flex flex-col items-center mx-sm sm:mx-0'}>
                 <div className={profileCard.mainDiv}>
                     {/*profile image*/}
-                    <Avatar sx={sizeAvatar} src={profilePic} alt={username} />
+                    <Avatar sx={sizeAvatar} src={profilePic} alt={username}/>
                     {/*container for user details*/}
                     <div className={profileCard.userDetailsDiv}>
                         {/*User profile name and buttons list*/}
@@ -72,14 +73,15 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                             >
                                 {uid !== currentUserUid ? (
                                     <>
-                                        <Button
-                                            onClick={() => {
-                                                alert('TODO: Follow')
-                                            }}
-                                            text={'Follow'}
-                                            keepText={true}
-                                            addStyle={profileCard.newPostButton}
-                                        />
+                                        {/*TODO: uncomment FOLLOW button when its done. */}
+                                        {/*<Button*/}
+                                        {/*    onClick={() => {*/}
+                                        {/*        alert('TODO: Follow')*/}
+                                        {/*    }}*/}
+                                        {/*    text={'Follow'}*/}
+                                        {/*    keepText={true}*/}
+                                        {/*    addStyle={profileCard.newPostButton}*/}
+                                        {/*/>*/}
                                     </>
                                 ) : (
                                     <>
@@ -90,24 +92,25 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                             addStyle={profileCard.editButton}
                                             keepText={true}
                                         />
-                                        {!isMobile && (
-                                            <Button
-                                                onClick={() => {
-                                                    alert('TODO: Add new post')
-                                                }}
-                                                icon={
-                                                    <UilPen
-                                                        className={
-                                                            'h-5 w-5 mr-1'
-                                                        }
-                                                    />
-                                                }
-                                                text={'New Post'}
-                                                addStyle={
-                                                    profileCard.newPostButton
-                                                }
-                                            />
-                                        )}
+                                        {/*TODO: uncomment Post button when its done. */}
+                                        {/*{!isMobile && (*/}
+                                        {/*    <Button*/}
+                                        {/*        onClick={() => {*/}
+                                        {/*            alert('TODO: Add new post')*/}
+                                        {/*        }}*/}
+                                        {/*        icon={*/}
+                                        {/*            <UilPen*/}
+                                        {/*                className={*/}
+                                        {/*                    'h-5 w-5 mr-1'*/}
+                                        {/*                }*/}
+                                        {/*            />*/}
+                                        {/*        }*/}
+                                        {/*        text={'New Post'}*/}
+                                        {/*        addStyle={*/}
+                                        {/*            profileCard.newPostButton*/}
+                                        {/*        }*/}
+                                        {/*    />*/}
+                                        {/*)}*/}
                                     </>
                                 )}
                             </div>
@@ -149,7 +152,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                 )}
             </div>
             <Modal
-                children={<UserProfileForm closeModal={closeModal} />}
+                children={<UserProfileForm closeModal={closeModal}/>}
                 show={showModal}
                 onClose={closeModal}
             />

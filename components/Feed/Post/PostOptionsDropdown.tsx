@@ -209,24 +209,28 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         />,
     ]
 
-    return (
-        <>
-            <DropdownMenu
-                menuButtonClass={postOptionsDropdownClass.menuButtonClass}
-                menuItemsClass={postOptionsDropdownClass.menuItemsClass}
-                menuButton={menuButton}
-                menuItems={
-                    isUsersOwnPost(authorUid)
+    {/*TODO: change menu items to
+                        isUsersOwnPost(authorUid)
                         ? ownPostMenuItems
-                        : otherPostMenuItems
-                }
-            />
-            <Modal
-                children={<ConfirmDeletePost/>}
-                show={isOpen}
-                onClose={closeModal}
-            />
-        </>
+                        : otherPostMenuItems when its done
+                        and remove  isUsersOwnPost(authorUid) condition*/
+    }
+
+    return (
+        isUsersOwnPost(authorUid) ?
+            <>
+                <DropdownMenu
+                    menuButtonClass={postOptionsDropdownClass.menuButtonClass}
+                    menuItemsClass={postOptionsDropdownClass.menuItemsClass}
+                    menuButton={menuButton}
+                    menuItems={ownPostMenuItems}
+                />
+                <Modal
+                    children={<ConfirmDeletePost/>}
+                    show={isOpen}
+                    onClose={closeModal}
+                />
+            </> : <></>
     )
 }
 
