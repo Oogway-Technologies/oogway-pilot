@@ -23,7 +23,7 @@
     "link-preview-js": "^2.1.13",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "next": "latest",
+    "next": "^12.1.0",
     "next-themes": "^0.0.15",
     "react": "^17.0.2",
     "react-content-loader": "^6.1.0",

@@ -111,7 +111,7 @@ export async function getServerSideProps(context: { query: { id: string | undefi
             // @ts-ignore
             timestamp: comments.timestamp.toDate().getTime(),
         }))
-
+        console.log("enters into getServerSideProps", comments)
     return {
         props: {
             post: post, // pass the post back as a doc
