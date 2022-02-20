@@ -80,14 +80,15 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                             >
                                 {uid !== currentUserUid ? (
                                     <>
-                                        <Button
-                                            onClick={() => {
-                                                alert('TODO: Follow')
-                                            }}
-                                            text={'Follow'}
-                                            keepText={true}
-                                            addStyle={profileCard.newPostButton}
-                                        />
+                                        {/*TODO: uncomment FOLLOW button when its done. */}
+                                        {/*<Button*/}
+                                        {/*    onClick={() => {*/}
+                                        {/*        alert('TODO: Follow')*/}
+                                        {/*    }}*/}
+                                        {/*    text={'Follow'}*/}
+                                        {/*    keepText={true}*/}
+                                        {/*    addStyle={profileCard.newPostButton}*/}
+                                        {/*/>*/}
                                     </>
                                 ) : (
                                     <>
@@ -98,24 +99,25 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                             addStyle={profileCard.editButton}
                                             keepText={true}
                                         />
-                                        {!isMobile && (
-                                            <Button
-                                                onClick={() => {
-                                                    alert('TODO: Add new post')
-                                                }}
-                                                icon={
-                                                    <UilPen
-                                                        className={
-                                                            'h-5 w-5 mr-1'
-                                                        }
-                                                    />
-                                                }
-                                                text={'New Post'}
-                                                addStyle={
-                                                    profileCard.newPostButton
-                                                }
-                                            />
-                                        )}
+                                        {/*TODO: uncomment Post button when its done. */}
+                                        {/*{!isMobile && (*/}
+                                        {/*    <Button*/}
+                                        {/*        onClick={() => {*/}
+                                        {/*            alert('TODO: Add new post')*/}
+                                        {/*        }}*/}
+                                        {/*        icon={*/}
+                                        {/*            <UilPen*/}
+                                        {/*                className={*/}
+                                        {/*                    'h-5 w-5 mr-1'*/}
+                                        {/*                }*/}
+                                        {/*            />*/}
+                                        {/*        }*/}
+                                        {/*        text={'New Post'}*/}
+                                        {/*        addStyle={*/}
+                                        {/*            profileCard.newPostButton*/}
+                                        {/*        }*/}
+                                        {/*    />*/}
+                                        {/*)}*/}
                                     </>
                                 )}
                             </div>

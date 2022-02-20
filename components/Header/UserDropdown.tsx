@@ -1,6 +1,5 @@
 import React from 'react'
 import {Avatar} from '@mui/material'
-import SettingsButton from './SettingsButton'
 import ToggleTheme from './ToggleTheme'
 import LogoutButton from './LogoutButton'
 import DropdownMenu from '../Utils/DropdownMenu'
@@ -18,7 +17,6 @@ import {useRouter} from 'next/router'
 import {userProfileState} from '../../atoms/user'
 import {useRecoilValue} from 'recoil'
 import ProfileButton from './ProfileButton'
-import needsHook from '../../hooks/needsHook'
 
 // User profile
 
@@ -50,9 +48,11 @@ const UserDropdown: React.FC = () => {
         />
     )
 
+    {/*TODO: uncomment settings when its done. */
+    }
     const menuItems = [
         <ProfileButton hasText={true} uid={userProfile?.uid}/>,
-        <SettingsButton hasText={true} onClick={needsHook}/>,
+        // <SettingsButton hasText={true} onClick={needsHook}/>,
         <LogoutButton hasText={true}/>,
         <ToggleTheme hasText={true}/>,
     ]
