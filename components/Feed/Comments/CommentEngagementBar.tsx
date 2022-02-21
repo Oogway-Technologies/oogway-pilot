@@ -31,7 +31,7 @@ const CommentEngagementBar = ({
 
     // Track likes and replies
     const [userHasLiked] = useUserHasLiked(
-        `posts/${postId}/comments/${commentId}`,
+        `post-activity/${commentId}`,
         userProfile.uid
     )
     const [numLikes] = useCommentNumberLikes(postId, commentId)
