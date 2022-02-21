@@ -11,6 +11,7 @@ export const defaultProfile = {
     resetProfile: true,
     username: '',
     uid: '',
+    termAndConditions: false
 }
 
 // userProfileState is an Atom, a global state

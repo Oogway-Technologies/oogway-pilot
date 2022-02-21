@@ -17,6 +17,9 @@ import {getProfileDoc} from '../../lib/profileHelper'
 import {checkFileSize} from "../../utils/helpers/common";
 import FlashErrorMessage from "../Utils/FlashErrorMessage";
 import {warningTime} from "../../utils/constants/global";
+import Modal from "../Utils/Modal";
+import TermsConditions from "./TermsConditions";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 type UserProfileFormProps = {
     closeModal: () => void
@@ -34,12 +37,18 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
     const [location, setLocation] = useState(userProfile.location || '')
     const [bio, setBio] = useState(userProfile.bio || '')
     const [profilePic] = useState(userProfile.profilePic || '')
+    const [termAndConditions, setTermAndConditions] = useState(userProfile.termAndConditions || false)
+
 
     // Picture state
     const profilePicRef = useRef<HTMLInputElement>(null)
     const [imageToUpload, setImageToUpload] = useState(null)
     const [targetEvent, setTargetEvent] = useState(null)
     const [isImageSizeLarge, setIsImageSizeLarge] = useState(false);
+
+    //modals
+    const [termsPopUp, setTermsPopUp] = useState<boolean>(false)
+    const [privacyPolicyPopUp, setPrivacyPolicyPopUp] = useState<boolean>(false)
 
 
     // Router
@@ -63,6 +72,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
             resetProfile: false,
             profilePic: profilePic,
             dm: dm,
+            termAndConditions: termAndConditions
         }
         // Update recoil state
         setUserProfile({
@@ -356,6 +366,21 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
                     />
                     <div>Allow other users to send me a Direct Message</div>
                 </div>
+                <div className={loginDivs.checkbox}>
+                    <input
+                        type="checkbox"
+                        className={loginButtons.checkbox}
+                        checked={termAndConditions}
+                        onChange={() => setTermAndConditions(!termAndConditions)}
+                        onKeyPress={preventDefaultOnEnter}
+                    />
+                    <div className={'flex items-center'}>I agree to the <span
+                        className={'text-primary hover:underline-offset-4 mx-2 cursor-pointer'}
+                        onClick={() => setTermsPopUp(true)}>Teams and conditions</span>and <span
+                        className={'text-primary hover:underline-offset-4 mx-2 cursor-pointer'}
+                        onClick={() => setPrivacyPolicyPopUp(true)}>privacy policy's</span>
+                    </div>
+                </div>
             </form>
 
             {/* Form buttons */}
@@ -379,6 +404,16 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
                     type="submit"
                 />
             </div>
+            <Modal
+                children={<TermsConditions/>}
+                show={termsPopUp}
+                onClose={() => setTermsPopUp(false)}
+            />
+            <Modal
+                children={<PrivacyPolicy/>}
+                show={privacyPolicyPopUp}
+                onClose={() => setPrivacyPolicyPopUp(false)}
+            />
         </div>
     )
 }

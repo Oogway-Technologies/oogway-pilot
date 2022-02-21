@@ -1,10 +1,10 @@
 import {FieldValue} from "firebase/firestore";
 
-export type blockedUsersMap = {[id: string] : boolean}
+export type blockedUsersMap = { [id: string]: boolean }
 
-export type postsMap = {[id: string] : boolean}
+export type postsMap = { [id: string]: boolean }
 
-export type userMap = {[uid: string]: boolean}
+export type userMap = { [uid: string]: boolean }
 
 export type compareObj = {
     type: 'text' | 'image'
@@ -23,7 +23,7 @@ export interface FirebasePost {
     message: string
     isCompare: boolean
     likes: userMap
-    name: string 
+    name: string
     timestamp: FieldValue
     postImage?: string | null
     previewImage?: string
@@ -50,4 +50,5 @@ export interface FirebaseProfile {
     resetProfile: boolean;
     username: string;
     uid: string;
+    termAndConditions: boolean
 }

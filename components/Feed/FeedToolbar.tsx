@@ -7,6 +7,7 @@ import {feedToolbarClass} from '../../styles/feed';
 
 // Auth0
 import {useUser} from '@auth0/nextjs-auth0';
+import {AreTermsAccepted} from "../Utils/AreTermsAccepted";
 
 const FeedToolbar = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -54,11 +55,12 @@ const FeedToolbar = () => {
                 {/* Right: new post button */}
                 {user && (
                     <div className={feedToolbarClass.rightDiv}>
-                        <Button text="New Post" keepText={false} icon={<UilPen/>}
-                                type='button'
-                                addStyle={feedToolbarClass.newPostButton}
-                                onClick={openModal}
-                        />
+                        <AreTermsAccepted children={<Button text="New Post" keepText={false} icon={<UilPen/>}
+                                                            type='button'
+                                                            addStyle={feedToolbarClass.newPostButton}
+                                                            onClick={openModal}
+                        />}/>
+
                     </div>
                 )}
             </div>

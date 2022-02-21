@@ -1,6 +1,6 @@
-import { handleAuth, handleCallback, handleLogin } from '@auth0/nextjs-auth0'
-import { getAuth, signInWithCustomToken } from 'firebase/auth'
-import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
+import {handleAuth, handleCallback} from '@auth0/nextjs-auth0'
+import {getAuth, signInWithCustomToken} from 'firebase/auth'
+import {getOrCreateUserFromFirebase} from '../../../lib/userHelper'
 
 const setFirebaseCustomToken = async (token) => {
     // Fetchm the Firebase custom token from the Auth0 user

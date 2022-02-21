@@ -1,11 +1,14 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import Header from './Header/Header'
 import {useUser} from '@auth0/nextjs-auth0'
 import {userProfileState} from '../atoms/user'
-import {useSetRecoilState} from 'recoil'
+import {useRecoilState, useSetRecoilState} from 'recoil'
 import {getOrCreateUserFromFirebase} from '../lib/userHelper'
 import {FirebaseProfile} from "../utils/types/firebase";
 import firebase from "firebase/compat";
+import Modal from "./Utils/Modal";
+import UserProfileForm from "./Login/UserProfileForm";
+import {termsAndConditionsPopUpState} from "../atoms/termsAndConditons";
 import DocumentData = firebase.firestore.DocumentData;
 
 interface LayoutProps {
@@ -14,9 +17,13 @@ interface LayoutProps {
 
 const Layout = ({children}: LayoutProps) => {
     const {user, isLoading} = useUser()
+    const [userProfilePopup, setUserProfilePopup] = useState<boolean>(false)
 
     // Get userProfileState state from recoil.
     const setUserProfileState = useSetRecoilState(userProfileState)
+
+    // Get Terms modal state form recoil
+    const [termsModal, setTermsModal] = useRecoilState(termsAndConditionsPopUpState);
 
     // This useEffect will run everytime the page is reloaded
     // to fetch the user profile information from the backend.
@@ -29,6 +36,9 @@ const Layout = ({children}: LayoutProps) => {
         if (!isLoading && user) {
             getOrCreateUserFromFirebase(user).then((data: FirebaseProfile | DocumentData | undefined) => {
                 setUserProfileState(data as FirebaseProfile)
+                if (!data?.termAndConditions) {
+                    setUserProfilePopup(true)
+                }
             })
         }
     }, [isLoading, user])
@@ -41,6 +51,16 @@ const Layout = ({children}: LayoutProps) => {
             <div className="">
                 <main>{children}</main>
             </div>
+            <Modal
+                children={<UserProfileForm closeModal={() => setUserProfilePopup(false)}/>}
+                show={userProfilePopup}
+                onClose={() => setUserProfilePopup(false)}
+            />
+            <Modal
+                children={<div>Model here</div>}
+                show={termsModal}
+                onClose={() => setTermsModal(false)}
+            />
         </div>
     )
 }
