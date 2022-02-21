@@ -12,6 +12,10 @@ import { useProfileData } from '../../../hooks/useProfileData'
 import { deleteMedia } from '../../../lib/storageHelper'
 import { useRouter } from 'next/router'
 
+import { app } from '../../../firebase'
+import { initializeApp } from 'firebase/app';
+import { getFunctions, httpsCallable } from "firebase/functions";
+
 type PostHeaderProps = {
     id: string
     authorUid: string
@@ -55,9 +59,27 @@ const PostHeader: FC<PostHeaderProps> = ({
     // Deletes a post
     const deletePost = async () => {
         const postDoc = getPost(id)
+
+
+        
+        console.log('------ Deleting post: ', id)
+        const path = "'posts/" + id + "'"
+
+        const functions = getFunctions(app);
+        const deleteFn = httpsCallable(functions, 'recursiveDelete');
+        deleteFn({ path: path })
+        .then(function(result) {
+            console.log('Delete success: ' + JSON.stringify(result));
+        })
+        .catch(function(err) {
+            console.log('Delete failed, see console,');
+            console.warn(err);
+        });
+
         // Before deleting the post, we need to delete the comments.
         // Comments is a sub-collection of the post, so we need to
-        // retrieve all comments and delete them first.
+        // retrieve all comments and delete them first
+        
         await postDoc.then(async () => {
             // Check if comments exists for this post
             const commentsCollection = getCommentsCollection(id)
