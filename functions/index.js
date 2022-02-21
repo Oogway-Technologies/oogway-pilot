@@ -88,21 +88,14 @@ exports.recursiveDelete = functions
         memory: '2GB',
     })
     .https.onCall(async (data, context) => {
-        // Only allow admin users to execute this function.
-        if (!context.auth) {
-            throw new functions.https.HttpsError('permission-denied')
-        }
-
         const path = data.path
-        console.log(
-            `User ${context.auth.uid} has requested to delete path ${path}`
-        )
+        console.log(`User has requested to delete path ${path}`)
 
         // Run a recursive delete on the given document or collection path.
         // The 'token' must be set in the functions config, and can be generated
         // at the command line by running 'firebase login:ci'.
         await firebase_tools.firestore.delete(path, {
-            project: process.env.GCLOUD_PROJECT,
+            project: 'oogway-pilot',
             recursive: true,
             yes: true,
             token: functions.config().fb.token,
