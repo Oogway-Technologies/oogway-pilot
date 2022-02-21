@@ -1,5 +1,6 @@
-import {collection, doc, getDoc, getDocs, where, onSnapshot, orderBy, query} from "firebase/firestore";
-import {db} from "../firebase";
+import { collection, doc, getDoc, getDocs, onSnapshot, where, orderBy, query } from "firebase/firestore";
+import { db } from "../firebase";
+
 /**
  *
  * @param postId post id
@@ -9,7 +10,7 @@ import {db} from "../firebase";
  */
 export const getReply = async (postId: string, commentId: string, replyId: string) => {
     // Retrieve reference to parent post
-    const replyRef = doc(db, "posts", postId, "comments", commentId, "replies", replyId)
+    const replyRef = doc(db, "post-activity", replyId)
     return await getDoc(replyRef);
 }
 
@@ -21,9 +22,6 @@ export const getReply = async (postId: string, commentId: string, replyId: strin
  */
 export const getRepliesCollection = async (postId: string, commentId: string) => {
     // Retrieve reference to parent post
-    // TO BE DELETED
-    // const repliesRef = collection(db, "posts", postId, "comments", commentId, "replies")
-    // return await getDocs(repliesRef);
     const repliesRef = query( collection(db, "post-activity"), 
                                 where('parentId', '==', commentId), 
                                 where('isComment', '==', false), 
@@ -45,16 +43,12 @@ export const streamRepliesCollection = (
     snapshot: (snap: any) => void,
     error: (err: any) => void
 ) => {
-    // TO BE DELETED
-    // const commentsRef = collection(db, "posts", postId, "comments", commentId, "replies")
-    // const commentsQuery = query(commentsRef, orderBy('timestamp', 'asc'))
-    // return onSnapshot(commentsQuery, snapshot, error)
-
-    const commentsQuery = query(collection(db, "post-activity"), 
+    const repliesQuery = query(collection(db, "post-activity"), 
                                 where('parentId', '==', commentId), 
-                                where('isComment', '==', true),
+                                where('isComment', '==', false),
                                 orderBy('timestamp', 'asc'))
-    return onSnapshot(commentsQuery, snapshot, error)
+    
+    return onSnapshot(repliesQuery, snapshot, error)
 }
 
 /**
@@ -73,6 +67,6 @@ export const streamReplyData = (
     snapshot: (snap: any) => void,
     error: (err: any) => void
 ) => {
-    const replyRef = doc(db, `posts/${postId}/comments/${commentId}/replies/${replyId}`)
+    const replyRef = doc(db, `post-activity/${replyId}`)
     return onSnapshot(replyRef, snapshot, error)
 }

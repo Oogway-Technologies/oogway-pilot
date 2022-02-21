@@ -23,14 +23,13 @@ export const getLikes = (
         (err) => console.log(err)
     )
 }
-// TO BE CHANGED
+
 export const getLikesForCommentEngagementBar = (
     postId: string,
     commentId: string,
     setNumLikes: (n: number) => void
 ): void => {
     streamCommentData(
-        postId,
         commentId,
         (snapshot) => {findLikes(snapshot, setNumLikes)},
         (err) => console.log(err)
