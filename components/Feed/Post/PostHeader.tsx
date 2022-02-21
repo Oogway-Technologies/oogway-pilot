@@ -1,16 +1,16 @@
-import React, {FC} from 'react'
-import {db} from '../../../firebase'
+import React, { FC } from 'react'
+import { db } from '../../../firebase'
 import PostOptionsDropdown from './PostOptionsDropdown'
-import {Avatar} from '@mui/material'
-import {postCardClass} from '../../../styles/feed'
+import { Avatar } from '@mui/material'
+import { postCardClass } from '../../../styles/feed'
 import Timestamp from '../../Utils/Timestamp'
-import {getUserDoc} from '../../../lib/userHelper'
-import {getCommentsCollection} from '../../../lib/commentsHelper'
-import {getPost} from '../../../lib/postsHelper'
-import {deleteDoc, doc, updateDoc} from 'firebase/firestore'
-import {useProfileData} from '../../../hooks/useProfileData'
-import {deleteMedia} from '../../../lib/storageHelper'
-import {useRouter} from 'next/router'
+import { getUserDoc } from '../../../lib/userHelper'
+import { getCommentsCollection } from '../../../lib/commentsHelper'
+import { getPost } from '../../../lib/postsHelper'
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { useProfileData } from '../../../hooks/useProfileData'
+import { deleteMedia } from '../../../lib/storageHelper'
+import { useRouter } from 'next/router'
 
 type PostHeaderProps = {
     id: string
@@ -20,16 +20,15 @@ type PostHeaderProps = {
 }
 
 const PostHeader: FC<PostHeaderProps> = ({
-                                             id,
-                                             name,
-                                             authorUid,
-                                             timestamp,
-                                         }) => {
+    id,
+    name,
+    authorUid,
+    timestamp,
+}) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
     // router from next.js to use location functions.
     const router = useRouter()
-    const {id: userId} = router.query;
 
     // Delete the post entry from the DB.
     // Note: this post should NOT have any comments
@@ -82,7 +81,15 @@ const PostHeader: FC<PostHeaderProps> = ({
         })
 
         // Return where the user should be routed
-        return `/profile/${userId}`
+        // If the user deletes the parent post from
+        // its comments page, they need to be routed back to
+        // the main feed. Otherwise, they need to be kept
+        // on their current page
+        if (router.asPath === `/comments/${id}`) {
+            return '/'
+        } else {
+            return router.asPath
+        }
     }
 
     const handleProfileAvatarClick = async (
@@ -118,7 +125,7 @@ const PostHeader: FC<PostHeaderProps> = ({
                         {/* <p className={postCardClass.categoryP}>Education</p>
                         {bull} */}
                         {/* Time stamp */}
-                        <Timestamp timestamp={timestamp}/>
+                        <Timestamp timestamp={timestamp} />
                     </div>
                 </div>
             </div>
