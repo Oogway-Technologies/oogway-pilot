@@ -687,7 +687,6 @@ const NewPostForm: FC<NewPostProps> = ({
                                 </>
                             )}
                         </div>
-<<<<<<< HEAD
                         {isImageSizeLarge && (
                             <FlashErrorMessage
                                 message={`Image should be less then 10 MB`}
@@ -696,8 +695,6 @@ const NewPostForm: FC<NewPostProps> = ({
                                 onClose={() => setIsImageSizeLarge(false)}
                             />
                         )}
-=======
->>>>>>> f60413c08b380496dae9d103f218bb20df1d0f5e
                         {errors.compare &&
                             errors.compare.type === 'required' && (
                                 <FlashErrorMessage
