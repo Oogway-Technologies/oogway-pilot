@@ -33,8 +33,12 @@ export const getPosts = async ({ pageParam = Math.floor(Date.now() / 1000) }): P
     }
     
     // Call api
-    const { data } = await API.get('posts', { params: params })
-    return data
+    const response = await API.get('posts', { params: params }, ).catch((error) => {
+        console.log(error.toJSON())
+        return { data: "There was an error" }
+    })
+
+    return response.data
 }
 
 // Custom Query hooks
