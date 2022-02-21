@@ -56,7 +56,7 @@ const CommentPage:FC<CommentPageProps> = ({ post, comments }:CommentPageProps)=>
                         isCompare={post.isCompare}
                         timestamp={post.timestamp}
                         postImage={post.postImage}
-                        // comments={comments} TO BE DELETED
+                        comments={comments}
                         isCommentThread={true}
                         previewImage={null}
                     />
@@ -111,7 +111,6 @@ export async function getServerSideProps(context: { query: { id: string | undefi
             // @ts-ignore
             timestamp: comments.timestamp.toDate().getTime(),
         }))
-        console.log("enters into getServerSideProps", comments)
     return {
         props: {
             post: post, // pass the post back as a doc
