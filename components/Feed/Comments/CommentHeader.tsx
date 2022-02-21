@@ -8,12 +8,12 @@ import {Avatar} from '@mui/material'
 // @ts-ignore
 import {UilCornerUpLeftAlt} from '@iconscout/react-unicons'
 
-import {useProfileData} from '../../../hooks/useProfileData'
-import {deleteDoc, doc, FieldValue, updateDoc} from 'firebase/firestore'
-import {getUserDoc} from '../../../lib/userHelper'
-import {getComment} from '../../../lib/commentsHelper'
-import {getRepliesCollection} from '../../../lib/repliesHelper'
-import {deleteMedia} from '../../../lib/storageHelper'
+import { useProfileData } from '../../../hooks/useProfileData'
+import { collection, where, query, deleteDoc, doc, getDocs, updateDoc, FieldValue} from 'firebase/firestore'
+import { getUserDoc } from '../../../lib/userHelper'
+import { getComment } from '../../../lib/commentsHelper'
+import { getRepliesCollection } from '../../../lib/repliesHelper'
+import { deleteMedia } from '../../../lib/storageHelper'
 
 type CommentHeaderProps = {
     postId: string
@@ -35,19 +35,9 @@ const CommentHeader: FC<CommentHeaderProps> = ({
 
     // Deletes a post
     const deleteCommentEntry = async () => {
-        const commentDocRef = doc(db, 'posts', postId, 'comments', commentId)
+        const commentDocRef = doc(db, 'post-activity', commentId)
         await deleteDoc(commentDocRef).catch((err) => {
             console.log('Cannot delete coment: ', err)
-        })
-
-        // Update the user's comment map
-        const authorUserDoc = getUserDoc(authorUid)
-        await authorUserDoc.then(async (doc) => {
-            if (doc?.exists()) {
-                let tmp = doc.data()
-                delete tmp.comments[commentId]
-                await updateDoc(doc?.ref, tmp)
-            }
         })
 
         // Delete the comment's media, if any
@@ -56,33 +46,22 @@ const CommentHeader: FC<CommentHeaderProps> = ({
 
     // Deletes a comment
     const deleteComment = async () => {
-        const commentDoc = getComment(postId, commentId)
-        // Before deleting the comment, we need to delete the replies.
-        // Replies is a sub-collection of the comment, so we need to
-        // retrieve all replies and delete them first.
-        await commentDoc.then(async () => {
-            // Check if comments exists for this post
-            const repliesCollection = getRepliesCollection(postId, commentId)
-            await repliesCollection
-                .then(async (sub) => {
-                    if (sub.docs.length > 0) {
-                        // Replies are present, delete them
-                        sub.forEach((reply) => {
-                            deleteDoc(reply?.ref).catch((err) => {
-                                console.log('Cannot delete reply: ', err)
-                            })
-                        })
-                    }
-
-                    // Proceed to delete the post
-                    await deleteCommentEntry()
+        let repliesQuery = query( 
+                        collection(db, "post-activity"), 
+                        where("parentId", '==', commentId)
+                    )
+        
+        getDocs(repliesQuery).then(async (sub) => {
+            sub.forEach((reply) => {
+                deleteDoc(reply?.ref).catch((err) => {
+                    console.log('Cannot delete reply: ', err)
                 })
-                .catch((err) => {
-                    console.log('Cannot delete replies: ', err)
-                })
+            })
+            deleteCommentEntry()
         })
-
-        // Return where the user should be routed
+        .catch((err) => {
+            console.log('Cannot delete replies: ', err)
+        })
         return `/comments/${postId}`
     }
 
