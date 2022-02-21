@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { streamProfileData } from '../lib/profileHelper'
 
 
-export const useProfileData = (id: string) => {
+export const useProfileData = (id: string | undefined) => {
     // Track profile data
     const [profileData, setProfileData] = useState({})
 
