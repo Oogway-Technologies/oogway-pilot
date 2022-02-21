@@ -50,7 +50,7 @@ function CommentPage({ post, comments }) {
                         timestamp={post.timestamp}
                         userImage={post.image}
                         postImage={post.postImage}
-                        // comments={comments} TO BE DELETED
+                        comments={comments}
                         isCommentThread={true}
                     />
                 </div>
@@ -102,7 +102,6 @@ export async function getServerSideProps(context) {
             ...comments,
             timestamp: comments.timestamp.toDate().getTime(),
         }))
-        console.log("enters into getServerSideProps", comments)
     return {
         props: {
             post: post, // pass the post back as a doc
