@@ -11,7 +11,7 @@ import Modal from '../../Utils/Modal'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
 import { useUser } from '@auth0/nextjs-auth0'
-import { collection, orderBy, query } from 'firebase/firestore'
+import { collection, where, orderBy, query } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '../../../firebase'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
@@ -27,8 +27,9 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
     // Get a snapshot of the comments from the DB
     const router = useRouter()
     const [commentsSnapshot] = useCollection(
-        query(
-            collection(db, `posts/${router.query.id}/comments`),
+        query(collection(db, "post-activity"), 
+            where("postId", '==', router.query.id),  
+            where('isComment', '==', true),
             orderBy('timestamp', 'asc')
         )
     )

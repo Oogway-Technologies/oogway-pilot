@@ -79,12 +79,6 @@ export async function getServerSideProps(context) {
     }
 
     // Prepare the comments
-    // TO BE DELETED
-    // const commentsRef = await ref
-    //     .collection('comments')
-    //     .orderBy('timestamp', 'asc')
-    //     .get()
-
     const commentsRef = await db.collection('post-activity')
         .where('postId', '==', post.id)
         .where('isComment', '==', true)

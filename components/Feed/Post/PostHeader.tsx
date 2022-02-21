@@ -4,13 +4,13 @@ import PostOptionsDropdown from './PostOptionsDropdown'
 import { Avatar } from '@mui/material'
 import { postCardClass } from '../../../styles/feed'
 import Timestamp from '../../Utils/Timestamp'
-import { getUserDoc } from '../../../lib/userHelper'
-import { getCommentsCollection } from '../../../lib/commentsHelper'
-import { getPost } from '../../../lib/postsHelper'
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
-import { useProfileData } from '../../../hooks/useProfileData'
-import { deleteMedia } from '../../../lib/storageHelper'
-import { useRouter } from 'next/router'
+import {getUserDoc} from '../../../lib/userHelper'
+import {getCommentsCollection} from '../../../lib/commentsHelper'
+import {getPost} from '../../../lib/postsHelper'
+import {query, getDocs, collection, where, deleteDoc, doc, updateDoc} from 'firebase/firestore'
+import {useProfileData} from '../../../hooks/useProfileData'
+import {deleteMedia} from '../../../lib/storageHelper'
+import {useRouter} from 'next/router'
 
 type PostHeaderProps = {
     id: string
@@ -38,39 +38,28 @@ const PostHeader: FC<PostHeaderProps> = ({
             console.log('Cannot delete post: ', err)
         })
 
-        // Update the user's posts list
-        const authorUserDoc = getUserDoc(authorUid)
-        await authorUserDoc.then(async (doc) => {
-            if (doc?.exists()) {
-                let tmp = doc.data()
-                delete tmp.posts[id]
-                await updateDoc(doc.ref, tmp)
-            }
-        })
-
         // Delete the post's media, if any
         deleteMedia(`posts/${id}`)
     }
-    // TO BE CHANGED
+
     // Deletes a post
     const deletePost = async () => {
-        const postDoc = getPost(id)
-        // Before deleting the post, we need to delete the comments.
-        // Comments is a sub-collection of the post, so we need to
-        // retrieve all comments and delete them first.
-        await postDoc.then(async () => {
-            // Check if comments exists for this post
-            const commentsCollection = getCommentsCollection(id)
-            await commentsCollection
-                .then(async (sub) => {
-                    if (sub.docs.length > 0) {
-                        // Comments are present, delete them
-                        sub.forEach((com) => {
-                            deleteDoc(com?.ref).then((err) => {
-                                console.log('Cannot delete comment: ', err)
-                            })
-                        })
-                    }
+
+        let activitiesQuery = query( 
+            collection(db, "post-activity"), 
+            where("postId", '==', id)
+        )
+
+        getDocs(activitiesQuery).then(async (sub) => {
+            sub.forEach((activity) => {
+                deleteDoc(activity?.ref).catch((err) => {
+                    console.log('Cannot delete activity: ', err)
+                })
+            })
+            deletePostEntry()
+        })
+        .catch((err) => {
+        console.log('Cannot delete activities: ', err)
         })
 
         // Return where the user should be routed

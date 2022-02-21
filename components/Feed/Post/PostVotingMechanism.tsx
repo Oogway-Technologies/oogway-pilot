@@ -5,10 +5,7 @@ import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
 import { streamPostData } from '../../../lib/postsHelper'
-<<<<<<< HEAD
 import { useUser } from '@auth0/nextjs-auth0'
-=======
->>>>>>> Style: Debug errors
 
 type PostVotingMechanismProps = {
     id: string

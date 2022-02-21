@@ -10,10 +10,6 @@ import { db } from "../firebase";
  */
  export const getComment = async (postId: string, commentId: string) => {
     // Retrieve reference to parent post
-    // TO BE DELETED
-    // const postRef = doc(db, "posts", postId, "comments", commentId)
-    // return await getDoc(postRef);
-
     const postRef = doc(db, "post-activity", commentId)
     return await getDoc(postRef);
 }
@@ -25,10 +21,6 @@ import { db } from "../firebase";
  */
 export const getCommentsCollection = async (id: string) => {
     // Retrieve reference to parent post
-    // TO BE DELETED
-    // const commentsRef = collection(db, "posts", id, "comments")
-    // return await getDocs(commentsRef);
-    
     return await getDocs(query(collection(db, "post-activity"), where("postId", "==", id)))
     
 }
@@ -45,9 +37,6 @@ export const streamCommentsCollection = (
         snapshot: (snap: firebase.firestore.snapshot) => void, 
         error: (err: any) => void
     ) => {
-    // TO BE DELETED
-    // const commentsRef = collection(db, "posts", id, "comments")
-    // const commentsQuery = query(commentsRef, orderBy('timestamp', 'asc'))
 
     const commentsQuery = query(collection(db, "post-activity"), 
                                 where("postId", '==', id),  
@@ -65,12 +54,13 @@ export const streamCommentsCollection = (
  * @param error a function specifying how to handle error retrieving the snapshot
  * @description streams the comment data real time and performs the snapshot function on it.
  */
+
  export const streamCommentData = (
-    postId: string,
     commentId: string, 
     snapshot: (snap: firebase.firestore.snapshot) => void, 
     error: (err: any) => void
 ) => {
-    const commentRef = doc(db, `posts/${postId}/comments/${commentId}`)
+    
+    const commentRef = doc(db, `post-activity/${commentId}`)
     return onSnapshot(commentRef, snapshot, error)
 }

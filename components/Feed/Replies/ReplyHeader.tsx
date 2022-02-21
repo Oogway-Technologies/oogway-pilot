@@ -32,24 +32,13 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
     const [authorProfile] = useProfileData(authorUid)
 
     // Deletes a reply
-    // TO BE CHANGED
     const deleteReplyEntry = async () => {
         const replyDocRef = doc(
             db,
-            `posts/${postId}/comments/${commentId}/replies/${replyId}`
+            `post-activity/${replyId}`
         )
         await deleteDoc(replyDocRef).catch((err) => {
             console.log('Cannot delete reply: ', err)
-        })
-
-        // Update the user's reply map
-        const authorUserDoc = getUserDoc(authorUid)
-        await authorUserDoc.then(async (doc) => {
-            if (doc?.exists()) {
-                let tmp = doc.data()
-                delete tmp.replies[replyId]
-                await updateDoc(doc?.ref, tmp)
-            }
         })
 
         // Return where the user should be routed

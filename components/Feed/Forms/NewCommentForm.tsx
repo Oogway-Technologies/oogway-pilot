@@ -95,21 +95,6 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             },
             {merge: true}
         )
-        // TO BE DELETED
-        // // Now add a new comment for this post
-        // let commentData = {
-        //     timestamp: serverTimestamp(),
-        //     message: inputRef.current.value,
-        //     author: userProfile.username,
-        //     authorUid: userProfile.uid,
-        //     likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
-        // }
-        // const docRef = await addDoc(
-        //     collection(db, `posts/${router.query.id}/comments`),
-        //     commentData
-        // )
-
-        // Now add a new comment for this post
         let commentData = {
             postId : router.query.id,
             parentId: null,
