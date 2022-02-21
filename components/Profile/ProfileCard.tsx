@@ -9,6 +9,9 @@ import { userProfileState } from '../../atoms/user'
 import { Avatar, useMediaQuery } from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
+import { useProfileData } from '../../hooks/useProfileData'
+import NewPostForm from '../Feed/Forms/NewPostForm'
+
 interface ProfileCardProps {
     bio?: string
     location?: string
@@ -33,17 +36,28 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
     } = props
     // recoil state to check if Profile card is for current user.
     const { uid: currentUserUid } = useRecoilValue(userProfileState)
+    const [userProfileSnapshot] = useProfileData(uid)
 
     // hook to check is user is no mobile device or not.
     const isMobile = useMediaQuery('(max-width: 965px)')
 
-    // Modal
-    const [showModal, setShowModal] = useState(false)
-    const openModal = () => {
-        setShowModal(true)
+    // Profile Form Modal
+    const [showProfileForm, setShowProfileForm] = useState(false)
+    const openProfileModal = () => {
+        setShowProfileForm(true)
     }
-    const closeModal = () => {
-        setShowModal(false)
+    const closeProfileModal = () => {
+        setShowProfileForm(false)
+    }
+
+    // Modal helper functions
+    const [showNewPostForm, setShowNewPostForm] = useState(false)
+    const openPostModal = () => {
+        setShowNewPostForm(true)
+    }
+
+    const closePostModal = () => {
+        setShowNewPostForm(false)
     }
 
     const sizeAvatar = () => {
@@ -56,13 +70,18 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
             <div className={'flex flex-col items-center mx-sm sm:mx-0'}>
                 <div className={profileCard.mainDiv}>
                     {/*profile image*/}
-                    <Avatar sx={sizeAvatar} src={profilePic} alt={username} />
+                    <Avatar
+                        sx={sizeAvatar}
+                        src={userProfileSnapshot?.profilePic || profilePic}
+                        alt={username}
+                    />
                     {/*container for user details*/}
                     <div className={profileCard.userDetailsDiv}>
                         {/*User profile name and buttons list*/}
                         <div className={'flex items-center mb-1'}>
                             <div className={profileCard.userProfileName}>
-                                {name} {lastName}
+                                {userProfileSnapshot?.name || name}{' '}
+                                {userProfileSnapshot?.lastName || lastName}
                             </div>
 
                             <div
@@ -72,19 +91,20 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                             >
                                 {uid !== currentUserUid ? (
                                     <>
-                                        <Button
-                                            onClick={() => {
-                                                alert('TODO: Follow')
-                                            }}
-                                            text={'Follow'}
-                                            keepText={true}
-                                            addStyle={profileCard.newPostButton}
-                                        />
+                                        {/*TODO: uncomment FOLLOW button when its done. */}
+                                        {/*<Button*/}
+                                        {/*    onClick={() => {*/}
+                                        {/*        alert('TODO: Follow')*/}
+                                        {/*    }}*/}
+                                        {/*    text={'Follow'}*/}
+                                        {/*    keepText={true}*/}
+                                        {/*    addStyle={profileCard.newPostButton}*/}
+                                        {/*/>*/}
                                     </>
                                 ) : (
                                     <>
                                         <Button
-                                            onClick={openModal}
+                                            onClick={openProfileModal}
                                             text={'Edit Profile'}
                                             type={'button'}
                                             addStyle={profileCard.editButton}
@@ -92,9 +112,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                         />
                                         {!isMobile && (
                                             <Button
-                                                onClick={() => {
-                                                    alert('TODO: Add new post')
-                                                }}
+                                                onClick={openPostModal}
                                                 icon={
                                                     <UilPen
                                                         className={
@@ -115,7 +133,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                         {/*username*/}
                         {username && (
                             <span className={profileCard.usernameText}>
-                                {username}
+                                {userProfileSnapshot?.username || username}
                             </span>
                         )}
                         {/*location and date of joining*/}
@@ -132,26 +150,36 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                         <UilLocationPoint
                                             className={'h-6 w-6 mr-2'}
                                         />{' '}
-                                        {location}
+                                        {userProfileSnapshot?.location ||
+                                            location}
                                     </>
                                 )}
                             </span>
                         )}
                         {/*user bio if not on mobile device*/}
                         {bio && !isMobile && (
-                            <span className={profileCard.bioText}>{bio}</span>
+                            <span className={profileCard.bioText}>
+                                {userProfileSnapshot?.bio || bio}
+                            </span>
                         )}
                     </div>
                 </div>
                 {/*user bio if on mobile device.*/}
                 {bio && isMobile && (
-                    <span className={profileCard.bioText}>{bio}</span>
+                    <span className={profileCard.bioText}>
+                        {userProfileSnapshot?.bio || bio}
+                    </span>
                 )}
             </div>
             <Modal
-                children={<UserProfileForm closeModal={closeModal} />}
-                show={showModal}
-                onClose={closeModal}
+                children={<UserProfileForm closeModal={closeProfileModal} />}
+                show={showProfileForm}
+                onClose={closeProfileModal}
+            />
+            <Modal
+                children={<NewPostForm closeModal={closePostModal} />}
+                show={showNewPostForm}
+                onClose={closePostModal}
             />
         </>
     )

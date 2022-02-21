@@ -1,16 +1,35 @@
-import React, {useEffect, useState} from 'react'
+// React
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+
+// Styles and Coomponents
 import Button from '../../Utils/Button'
 import DropdownMenu from '../../Utils/DropdownMenu'
-import {UilBan, UilEllipsisH, UilExclamationCircle, UilQuestionCircle, UilTrashAlt,} from '@iconscout/react-unicons'
+// @ts-ignore
+import {
+    UilBan,
+    UilEllipsisH,
+    UilExclamationCircle,
+    UilQuestionCircle,
+    UilTrashAlt,
+} from '@iconscout/react-unicons'
 import Modal from '../../Utils/Modal'
-import {Dialog} from '@headlessui/react'
-import {postOptionsDropdownClass} from '../../../styles/feed'
+import { Dialog } from '@headlessui/react'
+import { postOptionsDropdownClass } from '../../../styles/feed'
+
+// Recoil
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
+
+// Database
+import { getUserDoc } from '../../../lib/userHelper'
+import { updateDoc } from 'firebase/firestore'
+
+// Queries
+import { useQueryClient } from 'react-query'
+
+// Utils
 import needsHook from '../../../hooks/needsHook'
-import {useRouter} from 'next/router'
-import {userProfileState} from '../../../atoms/user'
-import {useRecoilValue} from 'recoil'
-import {getUserDoc} from '../../../lib/userHelper'
-import {updateDoc} from 'firebase/firestore'
 
 type PostOptionsDropdownProps = {
     authorUid: string // Post author id
@@ -19,12 +38,15 @@ type PostOptionsDropdownProps = {
 }
 
 const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
-                                                                     authorUid,
-                                                                     deletePost,
-                                                                     authorName,
-                                                                 }) => {
+    authorUid,
+    deletePost,
+    authorName,
+}) => {
     const userProfile = useRecoilValue(userProfileState) // Get user profile
     const currentUserDoc = getUserDoc(userProfile?.uid) // Get user document data
+
+    // For triggering posts refetch on form submission
+    const queryClient = useQueryClient()
 
     // Track author blocked state
     // TODO: refactor to custom hook
@@ -37,14 +59,11 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
 
     const router = useRouter()
 
-    // Modal state
+    // Modal state management
     const [isOpen, setIsOpen] = useState(false)
-
-    // Helper Functions
     const openModal = () => {
         setIsOpen(true)
     }
-
     const closeModal = () => {
         setIsOpen(false)
     }
@@ -130,6 +149,10 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         if (router.asPath !== (await nextUrl)) {
             router.push(await nextUrl)
         }
+
+        // Trigger a post refetch with a timeout to give the database
+        // time to register the delete
+        setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
     }
 
     // Confirm delete post modal component
@@ -157,7 +180,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
                     <Button
                         text="Yes, delete"
                         keepText={true}
-                        icon={<UilTrashAlt/>}
+                        icon={<UilTrashAlt />}
                         type="submit"
                         addStyle={postOptionsDropdownClass.modalConfirmButton}
                         onClick={deleteAndClose}
@@ -168,12 +191,12 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     }
 
     // Dropdown menu props
-    const menuButton = <UilEllipsisH/>
+    const menuButton = <UilEllipsisH />
     const ownPostMenuItems = [
         <Button
             text="Delete Post"
             keepText={true}
-            icon={<UilTrashAlt/>}
+            icon={<UilTrashAlt />}
             type="button"
             onClick={openModal}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
@@ -183,7 +206,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         <Button
             text="Not Interested in This Post"
             keepText={true}
-            icon={<UilQuestionCircle/>}
+            icon={<UilQuestionCircle />}
             type="button"
             onClick={needsHook}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
@@ -194,7 +217,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         <Button
             text={`${authorIsBlocked ? 'Unblock' : 'Block'} ${authorName}`}
             keepText={true}
-            icon={<UilBan/>}
+            icon={<UilBan />}
             type="button"
             onClick={authorIsBlocked ? unblockUser : blockUser}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
@@ -202,31 +225,37 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         <Button
             text="Report"
             keepText={true}
-            icon={<UilExclamationCircle/>}
+            icon={<UilExclamationCircle />}
             type="button"
             onClick={needsHook}
             addStyle={postOptionsDropdownClass.buttonAddStyle}
         />,
     ]
 
-    return (
+    {
+        /*TODO: change menu items to
+                        isUsersOwnPost(authorUid)
+                        ? ownPostMenuItems
+                        : otherPostMenuItems when its done
+                        and remove  isUsersOwnPost(authorUid) condition*/
+    }
+
+    return isUsersOwnPost(authorUid) ? (
         <>
             <DropdownMenu
                 menuButtonClass={postOptionsDropdownClass.menuButtonClass}
                 menuItemsClass={postOptionsDropdownClass.menuItemsClass}
                 menuButton={menuButton}
-                menuItems={
-                    isUsersOwnPost(authorUid)
-                        ? ownPostMenuItems
-                        : otherPostMenuItems
-                }
+                menuItems={ownPostMenuItems}
             />
             <Modal
-                children={<ConfirmDeletePost/>}
+                children={<ConfirmDeletePost />}
                 show={isOpen}
                 onClose={closeModal}
             />
         </>
+    ) : (
+        <></>
     )
 }
 

@@ -12,6 +12,14 @@ export const feedApiClass = {
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
 }
 
+export const endOfFeedMessageClass = {
+    outerDiv:
+        'flex flex-col m-md align-items-center text-sm text-neutral-700 \
+    dark:text-neutralDark-150',
+    topMessage: 'm-auto p-sm',
+    bottomMessage: 'm-auto',
+}
+
 // Feed toolbar
 export const feedToolbarClass = {
     div: 'grid grid-cols-2',
@@ -53,7 +61,7 @@ export const postCardClass = {
     body: 'flex flex-col ml-xl',
     bodyQuestion:
         'font-bold mb-[8px] text-md text-neutral-800 dark:text-neutralDark-50',
-    bodyDescription: 'text-neutral-700 dark:text-neutralDark-150 text-sm',
+    bodyDescription: 'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line',
     // Media
     voteDiv: 'flex px-2 space-x-md w-5/5 justify-center ml-xl p-md',
     voteContainer: 'flex flex-col w-2/5 items-center',
@@ -61,7 +69,7 @@ export const postCardClass = {
         'flex rounded-[4px] object-contain cursor-pointer justify-self-center mt-auto mb-2',
     voteButtonContainer: 'flex flex-col items-center justify-self-end mt-auto',
     textVote:
-        'rounded-[4px] border border-solid border-primary px-2 py-1 text-center w-3/5 truncate \
+        'rounded-[4px] border border-solid border-primary px-2 py-2 text-center w-3/5 truncate \
             text-sm text-primary dark:text-primaryDark mt-auto ',
     voteButton:
         'p-sm justify-center \
@@ -224,7 +232,7 @@ export const commentClass = {
     outerDiv: 'flex flex-col pt-md pb-sm dark:bg-neutralDark-500',
     body: 'flex flex-col ml-xl mt-sm',
     bodyDescription:
-        'ml-md px-sm text-neutral-700 dark:text-neutralDark-150 text-sm break-words',
+        'ml-md px-sm text-neutral-700 dark:text-neutralDark-150 text-sm break-words whitespace-pre-line',
     media: 'flex ml-xl p-md',
     replyDropdown: 'inline-flex items-center ml-[44px] mt-sm',
 }
@@ -253,7 +261,7 @@ export const replyClass = {
     dividerRight: 'w-full',
     body: 'flex flex-col mt-sm',
     bodyDescription:
-        'ml-md pl-md pr-sm text-neutral-700 dark:text-neutralDark-150 text-sm break-words',
+        'ml-md pl-md pr-sm text-neutral-700 dark:text-neutralDark-150 text-sm break-words whitespace-pre-line',
 }
 
 export const replyFormClass = {

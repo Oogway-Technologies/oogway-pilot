@@ -227,14 +227,12 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                                 ref={inputRef}
                                 className={commentFormClass.commentTextArea}
                                 placeholder={placeholder}
-                                onKeyPress={preventDefaultOnEnter}
                             />
                         ) : (
                             <textarea
                                 ref={inputRef}
                                 className={commentFormClass.growingTextArea}
                                 placeholder={placeholder}
-                                onKeyPress={preventDefaultOnEnter}
                                 rows={1}
                                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                                     e.target.style.height = '0px';

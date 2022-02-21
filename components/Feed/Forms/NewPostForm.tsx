@@ -1,57 +1,83 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from 'react'
+import React, {
+    ChangeEvent,
+    FC,
+    MouseEventHandler,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 
 // Database
-import {db, storage} from '../../../firebase'
-import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
-import {getDownloadURL, ref, uploadString} from '@firebase/storage'
+import { db, storage } from '../../../firebase'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+} from 'firebase/firestore'
+import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
-import {Dialog} from '@headlessui/react'
-import {UilBalanceScale, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
-import {Collapse} from '@mui/material'
+import { Dialog } from '@headlessui/react'
+import {
+    UilBalanceScale,
+    UilImagePlus,
+    UilNavigator,
+    UilTimesCircle,
+} from '@iconscout/react-unicons'
+import { Collapse } from '@mui/material'
 
 // Form management
-import {useForm} from 'react-hook-form'
-import {postFormClass} from '../../../styles/feed'
+import { useForm } from 'react-hook-form'
+import { postFormClass } from '../../../styles/feed'
 
 // Recoil states
-import {userProfileState} from '../../../atoms/user'
-import {useRecoilValue} from 'recoil'
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
+import { FirebasePost } from '../../../utils/types/firebase'
+
+// Queries
+import { useQueryClient } from 'react-query'
 import {Tooltip} from "../../Utils/Tooltip";
 import {checkFileSize, fetcher, isValidURL} from "../../../utils/helpers/common";
 import FlashErrorMessage from "../../Utils/FlashErrorMessage";
 import {warningTime} from "../../../utils/constants/global";
 
 type NewPostProps = {
-    closeModal: any
+    closeModal: MouseEventHandler<HTMLButtonElement>
     questPlaceholder: string // Placeholder text for question input in form
     descPlaceholder: string // Placeholder text for description input in form
 }
 
-const NewPostForm: React.FC<NewPostProps> = ({
-                                                 closeModal,
-                                                 questPlaceholder,
-                                                 descPlaceholder,
-                                             }) => {
+const NewPostForm: FC<NewPostProps> = ({
+    closeModal,
+    questPlaceholder,
+    descPlaceholder,
+}) => {
+    // Track current user profile data
     const userProfile = useRecoilValue(userProfileState)
+
+    // For triggering posts refetch on form submissiono
+    const queryClient = useQueryClient()
 
     // Form management
     const {
         register,
         setError,
-        formState: {errors},
+        formState: { errors },
     } = useForm()
-
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('question', {required: true})
+        register('question', { required: true })
     }, [])
     useEffect(() => {
-        register('compare', {required: true})
+        register('compare', { required: true })
     }, [])
 
     const [loading, setLoading] = useState(false)
@@ -160,8 +186,8 @@ const NewPostForm: React.FC<NewPostProps> = ({
         if (inputRef && !inputRef?.current?.value) {
             setError(
                 'question',
-                {type: 'required', message: 'A question is required.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'A question is required.' },
+                { shouldFocus: true }
             )
             return false // Whether to sendPost or not
         }
@@ -201,9 +227,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
         // 4) get the dowanload URL for the image and update the original post with image url
 
         // Prepare the data to add as a post
-        let postData = {
-            message: inputRef?.current?.value, // Leaving field name as message even though UI refers to it as a question
-            description: descriptionRef?.current?.value, // Optional description
+        let postData:FirebasePost = {
+            message: inputRef?.current?.value || '', // Leaving field name as message even though UI refers to it as a question
+            description: descriptionRef?.current?.value || '', // Optional description
             previewImage: previewImage, // Saves preview Image from Link
             name: userProfile.username, // Change this with username or incognito
             uid: userProfile.uid, // uid of the user that created this post
@@ -335,9 +361,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
         await setDoc(
             userDocRef,
             {
-                posts: {id: docRef.id},
+                posts: { id: docRef.id },
             },
-            {merge: true}
+            { merge: true }
         )
 
         // Everything is done
@@ -453,7 +479,7 @@ const NewPostForm: React.FC<NewPostProps> = ({
         }
     }
 
-    const removeImage = (idx) => {
+    const removeImage = (idx: number) => {
         // Easiest way to generalize image removal during when
         // mapping over array, but doesn't scale well to more than
         // three images
@@ -487,8 +513,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
                 });
             }
         }
-
-
         const url = isValidURL(descriptionRef?.current?.value || '');
         if (url && url.length > 1 && !imageToPost) {
             await checkPreviewImage(url).then(async (res) => {
@@ -497,6 +521,9 @@ const NewPostForm: React.FC<NewPostProps> = ({
         } else {
             setPreviewImage(' ');
         }
+        // Trigger a post refetch with a timeout to give the database
+        // time to register the new post
+        setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
 
     }
 
@@ -546,7 +573,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
                         ref={descriptionRef}
                         placeholder={descPlaceholder}
                         className={postFormClass.formDescriptionInput}
-                        onKeyPress={preventDefaultOnEnter}
                     />
                 </div>
             </form>
@@ -593,7 +619,6 @@ const NewPostForm: React.FC<NewPostProps> = ({
                     />
                 )}
             </div>
-
 
             {/* Show preview of the image and click it to remove the image from the post */}
             {(imageToPost || imageToCompareLeft || imageToCompareRight) && (

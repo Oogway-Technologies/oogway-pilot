@@ -9,7 +9,6 @@ import Button from '../../Utils/Button'
 import needsHook from '../../../hooks/needsHook'
 import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
 import {Avatar} from '@mui/material'
-import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import {useRecoilValue} from 'recoil'
 import {userProfileState} from '../../../atoms/user'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
@@ -167,14 +166,12 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                                 ref={inputRef}
                                 className={replyFormClass.replyTextArea}
                                 placeholder={placeholder}
-                                onKeyPress={preventDefaultOnEnter}
                             />
                         ) : (
                             <textarea
                                 ref={inputRef}
                                 className={replyFormClass.growingTextArea}
                                 placeholder={placeholder}
-                                onKeyPress={preventDefaultOnEnter}
                                 rows={1}
                                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                                     e.target.style.height = '0px';
