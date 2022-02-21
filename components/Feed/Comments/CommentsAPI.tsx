@@ -138,7 +138,6 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                         </div>
                     )}
                 </div>
-                {console.log(comments)}
                 {/* Comment counter */}
                 <p className={commentsApiClass.counter}>
                     {numComments === 0
