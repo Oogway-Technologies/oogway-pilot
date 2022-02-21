@@ -1,31 +1,42 @@
 import Logo from '../Logo'
 import Link from 'next/link'
-import SearchBar from './SearchBar'
-import AppsButton from './AppsButton'
 import NavLinks from './NavLinks'
 import UserDropdown from './UserDropdown'
 import { headerClass } from '../../styles/header'
 import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../atoms/user'
+import { useUser } from '@auth0/nextjs-auth0'
 
 const Header = () => {
     // Call UserProfile to pass uid into links
+    const { user, isLoading } = useUser()
     const userProfile = useRecoilValue(userProfileState)
-    const links = [
+    let links = [
         // TODO: Add as pages created
-        {
-            href: ['/#'], // change to /Search when search page created
-            text: 'Search',
-        },
+        // {
+        //     href: ['/#'], // change to /Search when search page created
+        //     text: 'Search',
+        // },
         {
             href: ['/'],
             text: 'Feed',
         },
-        {
-            href: ['/#'], // change to Friends when created
-            text: 'Friends',
-        },
     ]
+    const userOnlyLinks = [
+        {
+            href: [`/profile/${userProfile.uid}`],
+            text: 'My Profile',
+        },
+        // {
+        //     href: ['/#'], // change to Friends when created
+        //     text: 'Friends',
+        // },
+    ]
+
+    // Add auth-only components for logged in users
+    if (!isLoading && user) {
+        links = links.concat(userOnlyLinks)
+    }
 
     return (
         <div className={headerClass.div}>
@@ -42,7 +53,8 @@ const Header = () => {
 
                 {/* Center: Search */}
                 <div className={headerClass.search}>
-                    <SearchBar placeholder="What's your question?" />
+                    {/*TODO: uncomment search bar when its done. */}
+                    {/*<SearchBar placeholder="What's your question?"/>*/}
                 </div>
 
                 {/* Right: User */}

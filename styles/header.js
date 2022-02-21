@@ -13,7 +13,7 @@ export const headerClass = {
           px-1 md:ml-auto text-neutral-700 dark:text-neutralDark-150',
     slug: 'flex w-full items-center justify-center bg-white \
           dark:bg-neutralDark-500 px-3',
-    slugList: 'inline-flex',
+    slugList: 'inline-flex m-auto space-x-sm md:space-x-md',
 }
 
 export const searchBarClass = {
@@ -80,7 +80,7 @@ export const profileButtonClass = {
 }
 
 export const navLinksClass = {
-    li: 'flex w-16 justify-around',
+    li: 'flex text-xs pt-2 pb-[6px] md:text-base hover:font-bold',
 }
 
 export const userDropdownClass = {

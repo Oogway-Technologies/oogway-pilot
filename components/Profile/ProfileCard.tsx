@@ -10,6 +10,7 @@ import { Avatar, useMediaQuery } from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
 import { useProfileData } from '../../hooks/useProfileData'
+import NewPostForm from '../Feed/Forms/NewPostForm'
 
 interface ProfileCardProps {
     bio?: string
@@ -40,13 +41,23 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
     // hook to check is user is no mobile device or not.
     const isMobile = useMediaQuery('(max-width: 965px)')
 
-    // Modal
-    const [showModal, setShowModal] = useState(false)
-    const openModal = () => {
-        setShowModal(true)
+    // Profile Form Modal
+    const [showProfileForm, setShowProfileForm] = useState(false)
+    const openProfileModal = () => {
+        setShowProfileForm(true)
     }
-    const closeModal = () => {
-        setShowModal(false)
+    const closeProfileModal = () => {
+        setShowProfileForm(false)
+    }
+
+    // Modal helper functions
+    const [showNewPostForm, setShowNewPostForm] = useState(false)
+    const openPostModal = () => {
+        setShowNewPostForm(true)
+    }
+
+    const closePostModal = () => {
+        setShowNewPostForm(false)
     }
 
     const sizeAvatar = () => {
@@ -80,19 +91,20 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                             >
                                 {uid !== currentUserUid ? (
                                     <>
-                                        <Button
-                                            onClick={() => {
-                                                alert('TODO: Follow')
-                                            }}
-                                            text={'Follow'}
-                                            keepText={true}
-                                            addStyle={profileCard.newPostButton}
-                                        />
+                                        {/*TODO: uncomment FOLLOW button when its done. */}
+                                        {/*<Button*/}
+                                        {/*    onClick={() => {*/}
+                                        {/*        alert('TODO: Follow')*/}
+                                        {/*    }}*/}
+                                        {/*    text={'Follow'}*/}
+                                        {/*    keepText={true}*/}
+                                        {/*    addStyle={profileCard.newPostButton}*/}
+                                        {/*/>*/}
                                     </>
                                 ) : (
                                     <>
                                         <Button
-                                            onClick={openModal}
+                                            onClick={openProfileModal}
                                             text={'Edit Profile'}
                                             type={'button'}
                                             addStyle={profileCard.editButton}
@@ -100,9 +112,7 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                                         />
                                         {!isMobile && (
                                             <Button
-                                                onClick={() => {
-                                                    alert('TODO: Add new post')
-                                                }}
+                                                onClick={openPostModal}
                                                 icon={
                                                     <UilPen
                                                         className={
@@ -162,9 +172,14 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                 )}
             </div>
             <Modal
-                children={<UserProfileForm closeModal={closeModal} />}
-                show={showModal}
-                onClose={closeModal}
+                children={<UserProfileForm closeModal={closeProfileModal} />}
+                show={showProfileForm}
+                onClose={closeProfileModal}
+            />
+            <Modal
+                children={<NewPostForm closeModal={closePostModal} />}
+                show={showNewPostForm}
+                onClose={closePostModal}
             />
         </>
     )
