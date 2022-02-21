@@ -1,30 +1,53 @@
-import React, {ChangeEvent, FC, MouseEventHandler, useEffect, useRef, useState} from 'react'
+import React, {
+    ChangeEvent,
+    FC,
+    MouseEventHandler,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 
 // Database
-import {db, storage} from '../../../firebase'
-import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
-import {getDownloadURL, ref, uploadString} from '@firebase/storage'
+import { db, storage } from '../../../firebase'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+} from 'firebase/firestore'
+import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
-import {Dialog} from '@headlessui/react'
-import {UilBalanceScale, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
-import {Collapse} from '@mui/material'
+import { Dialog } from '@headlessui/react'
+import {
+    UilBalanceScale,
+    UilImagePlus,
+    UilNavigator,
+    UilTimesCircle,
+} from '@iconscout/react-unicons'
+import { Collapse } from '@mui/material'
 
 // Form management
-import {useForm} from 'react-hook-form'
-import {postFormClass} from '../../../styles/feed'
+import { useForm } from 'react-hook-form'
+import { postFormClass } from '../../../styles/feed'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
+import { warningTime } from '../../../utils/constants/global'
+import { checkFileSize } from '../../../utils/helpers/common'
 
 // Recoil states
-import {userProfileState} from '../../../atoms/user'
-import {useRecoilValue} from 'recoil'
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import {Tooltip} from "../../Utils/Tooltip";
-import {checkFileSize} from "../../../utils/helpers/common";
-import FlashErrorMessage from "../../Utils/FlashErrorMessage";
-import {warningTime} from "../../../utils/constants/global";
+import { Tooltip } from '../../Utils/Tooltip'
+import { FirebasePost } from '../../../utils/types/firebase'
+
+// Queries
+import { useQueryClient } from 'react-query'
 
 type NewPostProps = {
     closeModal: MouseEventHandler<HTMLButtonElement>
@@ -33,25 +56,28 @@ type NewPostProps = {
 }
 
 const NewPostForm: FC<NewPostProps> = ({
-                                           closeModal,
-                                           questPlaceholder,
-                                           descPlaceholder,
-                                       }) => {
+    closeModal,
+    questPlaceholder,
+    descPlaceholder,
+}) => {
+    // Track current user profile dataa
     const userProfile = useRecoilValue(userProfileState)
+
+    // For triggering posts refetch on form submissiono
+    const queryClient = useQueryClient()
 
     // Form management
     const {
         register,
         setError,
-        formState: {errors},
+        formState: { errors },
     } = useForm()
-
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('question', {required: true})
+        register('question', { required: true })
     }, [])
     useEffect(() => {
-        register('compare', {required: true})
+        register('compare', { required: true })
     }, [])
 
     const [loading, setLoading] = useState(false)
@@ -113,8 +139,8 @@ const NewPostForm: FC<NewPostProps> = ({
         if (inputRef && !inputRef?.current?.value) {
             setError(
                 'question',
-                {type: 'required', message: 'A question is required.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'A question is required.' },
+                { shouldFocus: true }
             )
             return false // Whether to sendPost or not
         }
@@ -128,7 +154,7 @@ const NewPostForm: FC<NewPostProps> = ({
                     message:
                         'You are missing required information to create a compare post.',
                 },
-                {shouldFocus: true}
+                { shouldFocus: true }
             )
             return false // Whether to send post or not
         }
@@ -144,9 +170,9 @@ const NewPostForm: FC<NewPostProps> = ({
         // 4) get the dowanload URL for the image and update the original post with image url
 
         // Prepare the data to add as a post
-        let postData = {
-            message: inputRef?.current?.value, // Leaving field name as message even though UI refers to it as a question
-            description: descriptionRef?.current?.value, // Optional description
+        let postData: FirebasePost = {
+            message: inputRef.current.value, // Leaving field name as message even though UI refers to it as a question
+            description: descriptionRef.current.value, // Optional description
             name: userProfile.username, // Change this with username or incognito
             uid: userProfile.uid, // uid of the user that created this post
             isCompare: false, // Explicitly flag whether is compare type
@@ -265,9 +291,9 @@ const NewPostForm: FC<NewPostProps> = ({
         await setDoc(
             userDocRef,
             {
-                posts: {id: docRef.id},
+                posts: { id: docRef.id },
             },
-            {merge: true}
+            { merge: true }
         )
 
         // Everything is done
@@ -382,7 +408,7 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }
 
-    const removeImage = (idx) => {
+    const removeImage = (idx: number) => {
         // Easiest way to generalize image removal during when
         // mapping over array, but doesn't scale well to more than
         // three images
@@ -404,6 +430,10 @@ const NewPostForm: FC<NewPostProps> = ({
         if (await success) {
             closeModal(e)
         }
+
+        // Trigger a post refetch with a timeout to give the database
+        // time to register the new post
+        setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
     }
 
     const handleCompareClick = () => {
@@ -465,7 +495,7 @@ const NewPostForm: FC<NewPostProps> = ({
                             onClick={() => filePickerRef?.current?.click()}
                             className={postFormClass.imageButton}
                         >
-                            <UilImagePlus/>
+                            <UilImagePlus />
                             <input
                                 ref={filePickerRef}
                                 onChange={handleImageUpload}
@@ -485,8 +515,7 @@ const NewPostForm: FC<NewPostProps> = ({
                             aria-expanded={expanded}
                             aria-label="compare"
                         >
-                            <UilBalanceScale/>
-
+                            <UilBalanceScale />
                         </button>
                     </Tooltip>
                 </div>
@@ -658,6 +687,7 @@ const NewPostForm: FC<NewPostProps> = ({
                                 </>
                             )}
                         </div>
+<<<<<<< HEAD
                         {isImageSizeLarge && (
                             <FlashErrorMessage
                                 message={`Image should be less then 10 MB`}
@@ -666,14 +696,16 @@ const NewPostForm: FC<NewPostProps> = ({
                                 onClose={() => setIsImageSizeLarge(false)}
                             />
                         )}
+=======
+>>>>>>> f60413c08b380496dae9d103f218bb20df1d0f5e
                         {errors.compare &&
-                        errors.compare.type === 'required' && (
-                            <FlashErrorMessage
-                                message={errors.compare.message}
-                                ms={warningTime}
-                                style={postFormClass.formAlert}
-                            />
-                        )}
+                            errors.compare.type === 'required' && (
+                                <FlashErrorMessage
+                                    message={errors.compare.message}
+                                    ms={warningTime}
+                                    style={postFormClass.formAlert}
+                                />
+                            )}
                     </div>
                 </div>
             </Collapse>
@@ -691,7 +723,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 <Button
                     text="Post"
                     keepText={true}
-                    icon={<UilNavigator/>}
+                    icon={<UilNavigator />}
                     type="submit"
                     addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}

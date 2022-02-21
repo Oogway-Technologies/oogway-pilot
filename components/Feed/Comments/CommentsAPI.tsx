@@ -10,8 +10,11 @@ import Button from '../../Utils/Button'
 import Modal from '../../Utils/Modal'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
-import { useComments } from '../../../hooks/useComments'
 import { useUser } from '@auth0/nextjs-auth0'
+import { collection, orderBy, query } from 'firebase/firestore'
+import { useCollection } from 'react-firebase-hooks/firestore'
+import { db } from '../../../firebase'
+import { usePostNumberComments } from '../../../hooks/useNumberComments'
 
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
@@ -24,7 +27,13 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
 
     // Get a snapshot of the comments from the DB
     const router = useRouter()
-    const [commentsSnapshot] = useComments(router.query.id)
+    const [commentsSnapshot] = useCollection(
+        query(
+            collection(db, `posts/${router.query.id}/comments`),
+            orderBy('timestamp', 'asc')
+        )
+    )
+    const [numComments] = usePostNumberComments(router.query.id)
 
     // Track mobile state
     const isMobile = useMediaQuery('(max-width: 500px)')
@@ -44,7 +53,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
         // if so show the comments.
         // If not, show the props comments
         if (commentsSnapshot) {
-            return commentsSnapshot.map((comment) => (
+            return commentsSnapshot?.docs.map((comment) => (
                 <Comment
                     key={comment.id}
                     commentOwner={comment.data().authorUid}
@@ -121,10 +130,11 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
 
                 {/* Comment counter */}
                 <p className={commentsApiClass.counter}>
-                    {commentsSnapshot
-                        ? commentsSnapshot.length
-                        : JSON.parse(comments).length}{' '}
-                    Answers
+                    {numComments === 0
+                        ? `No Answers. Be the first.`
+                        : numComments === 1
+                        ? `${numComments} Answer`
+                        : `${numComments} Answers`}
                 </p>
 
                 {/* Post's Comments */}
