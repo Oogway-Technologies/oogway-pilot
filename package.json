@@ -29,7 +29,11 @@
     "react-firebase-hooks": "^4.0.2",
     "react-hook-form": "^7.25.0",
     "react-popper": "^2.2.5",
+<<<<<<< HEAD
     "react-query": "^3.34.16",
+=======
+    "react-query": "^3.34.15",
+>>>>>>> f60413c08b380496dae9d103f218bb20df1d0f5e
     "recoil": "^0.5.2",
     "safe-json-stringify": "^1.2.0",
     "tailwind-scrollbar-hide": "^1.1.7",
