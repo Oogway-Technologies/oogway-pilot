@@ -63,16 +63,14 @@ export const postCardClass = {
         'font-bold mb-[8px] text-md text-neutral-800 dark:text-neutralDark-50',
     bodyDescription: 'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line',
     // Media
-    voteDiv: 'flex px-md space-x-lg ml-xl',
-    voteContainer: 'flex flex-col w-full items-center space-y-md',
-    voteLabelCard:
-        'inline-flex w-full justify-center p-sm \
-        bg-neutral-50 dark:bg-neutralDark-400 \
-        shadow-sm shadow-black/30  dark:shadow-black/50',
-    imageVote: 'flex rounded-[8px]  object-contain cursor-pointer m-auto',
-    voteButtonContainer:
-        'flex flex-col items-center justify-self-end mt-auto w-full',
-    textVote: 'flex flex-wrap',
+    voteDiv: 'flex px-2 space-x-md w-5/5 justify-center ml-xl p-md',
+    voteContainer: 'flex flex-col w-2/5 items-center',
+    imageVote:
+        'flex rounded-[4px] object-contain cursor-pointer justify-self-center mt-auto mb-2',
+    voteButtonContainer: 'flex flex-col items-center justify-self-end mt-auto',
+    textVote:
+        'rounded-[4px] border border-solid border-primary px-2 py-2 text-center w-3/5 truncate \
+            text-sm text-primary dark:text-primaryDark mt-auto ',
     voteButton:
         'p-sm justify-center \
             hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary \
@@ -162,7 +160,7 @@ export const postFormClass = {
     removeImageButton:
         'flex my-md cursor-pointer text-neutral-700 hover:text-error',
     compareUpload:
-        'inline-block items-center text-primary dark:text-primaryDark text-sm',
+        'inline-block items-center text-primary dark:text-primaryDark text-sm disabled:text-neutral-700',
 }
 
 // Comments

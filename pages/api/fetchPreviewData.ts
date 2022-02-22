@@ -22,17 +22,17 @@ type ResponseURL = {
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<any>
+  res: NextApiResponse<string[]>
 ) {
 
   const urlToHit = req?.query?.urlToHit || '';
   if(!urlToHit){
-    return res.status(400).json({});
+    return res.status(400).json([]);
   }
 
   //GET metadata of link 
   getLinkPreview(`${urlToHit}`, {imagesPropertyType: "og"}).then((data: ResponseURL) => {
-    const image = data.images;
+    const image: string[] = data.images || [];
     return res.status(200).json(image);
   });
 }

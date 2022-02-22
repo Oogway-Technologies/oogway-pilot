@@ -1,19 +1,16 @@
-import React, { useRef } from 'react'
+import React, {useRef} from 'react'
 
 // Styles and components
 import PostCard from './Post'
-import Loading from '../../Utils/Loading'
 
-// Custoom hook
+// Custom hook
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver'
 
 // Queries
-import { useInfinitePostsQuery } from '../../../queries/posts'
-import {
-    GeneratePostCardLoaders,
-    PostCardLoader,
-} from '../../Loaders/PostContentLoader'
+import {useInfinitePostsQuery} from '../../../queries/posts'
+import {GeneratePostCardLoaders, PostCardLoader,} from '../../Loaders/PostContentLoader'
 import EndOfFeedMessage from '../../Utils/EndOfFeedMessage'
+import {FirebasePost} from "../../../utils/types/firebase";
 
 function PostsAPI() {
     // Instantiate infinite posts query
@@ -38,7 +35,7 @@ function PostsAPI() {
         <>
             {status === 'loading' ? (
                 // Post Placeholders While Content Fetching
-                <GeneratePostCardLoaders n={5} />
+                <GeneratePostCardLoaders n={5}/>
             ) : status === 'error' ? (
                 // TODO: need nicer error component
                 <div>Error: {error.message}</div>
@@ -47,7 +44,7 @@ function PostsAPI() {
                     {/* Infinite Scroller / Lazy Loader */}
                     {data?.pages.map((page) => (
                         <React.Fragment key={page.lastTimestamp.seconds}>
-                            {page.posts.map((post) => (
+                            {page.posts.map((post: FirebasePost) => (
                                 <PostCard
                                     key={post.id}
                                     id={post.id}
@@ -60,6 +57,7 @@ function PostsAPI() {
                                     postImage={post.postImage}
                                     comments={null}
                                     isCommentThread={false}
+                                    previewImage={post?.previewImage || ''}
                                 />
                             ))}
                         </React.Fragment>
@@ -67,9 +65,9 @@ function PostsAPI() {
 
                     {/* Lazy Loader Sentinel and End of Feed*/}
                     {isFetchingNextPage || hasNextPage ? (
-                        <PostCardLoader ref={loadMoreRef} />
+                        <PostCardLoader ref={loadMoreRef}/>
                     ) : (
-                        <EndOfFeedMessage />
+                        <EndOfFeedMessage/>
                     )}
                 </>
             )}

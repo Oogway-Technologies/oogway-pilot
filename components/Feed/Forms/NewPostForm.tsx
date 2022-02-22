@@ -1,53 +1,35 @@
-import React, {
-    ChangeEvent,
-    FC,
-    MouseEventHandler,
-    useEffect,
-    useRef,
-    useState,
-} from 'react'
+import React, {ChangeEvent, FC, MouseEventHandler, useEffect, useRef, useState,} from 'react'
 
 // Database
-import { db, storage } from '../../../firebase'
-import {
-    addDoc,
-    collection,
-    doc,
-    serverTimestamp,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
+import {db, storage} from '../../../firebase'
+import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
-import { Dialog } from '@headlessui/react'
-import {
-    UilBalanceScale,
-    UilImagePlus,
-    UilNavigator,
-    UilTimesCircle,
-} from '@iconscout/react-unicons'
-import { Collapse } from '@mui/material'
+import {Dialog} from '@headlessui/react'
+import {UilBalanceScale, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
+import {Collapse} from '@mui/material'
 
 // Form management
-import { useForm } from 'react-hook-form'
-import { postFormClass } from '../../../styles/feed'
-import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { warningTime } from '../../../utils/constants/global'
-import { checkFileSize } from '../../../utils/helpers/common'
+import {useForm} from 'react-hook-form'
+import {postFormClass} from '../../../styles/feed'
 
 // Recoil states
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import { Tooltip } from '../../Utils/Tooltip'
-import { FirebasePost } from '../../../utils/types/firebase'
+import {FirebasePost} from '../../../utils/types/firebase'
 
 // Queries
-import { useQueryClient } from 'react-query'
+import {useQueryClient} from 'react-query'
+import {Tooltip} from "../../Utils/Tooltip";
+import {checkFileSize, fetcher, isValidURL} from "../../../utils/helpers/common";
+import FlashErrorMessage from "../../Utils/FlashErrorMessage";
+import {warningTime} from "../../../utils/constants/global";
+import {MediaObject} from "../../../utils/types/global";
 
 type NewPostProps = {
     closeModal: MouseEventHandler<HTMLButtonElement>
@@ -60,7 +42,7 @@ const NewPostForm: FC<NewPostProps> = ({
     questPlaceholder,
     descPlaceholder,
 }) => {
-    // Track current user profile dataa
+    // Track current user profile data
     const userProfile = useRecoilValue(userProfileState)
 
     // For triggering posts refetch on form submissiono
@@ -83,7 +65,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const [loading, setLoading] = useState(false)
 
     // The image to post and to display as preview
-    const [imageToPost, setImageToPost] = useState(null)
+    const [imageToPost, setImageToPost] = useState<string | null>('')
 
     // This is a trick I need to use to reset the state and allow the user
     // to load the same image twice
@@ -96,19 +78,67 @@ const NewPostForm: FC<NewPostProps> = ({
     const inputRef = useRef<HTMLInputElement>(null)
 
     // Get a reference to the description text
-    const descriptionRef = useRef<HTMLTextAreaElement>(null)
+    const descriptionRef = useRef<HTMLInputElement>(null)
 
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
 
     // Ref and data for left and right images
-    const [imageToCompareLeft, setImageToCompareLeft] = useState(null)
-    const [imageToCompareRight, setImageToCompareRight] = useState(null)
+    const [imageToCompareLeft, setImageToCompareLeft] = useState<string | null>('')
+    const [imageToCompareRight, setImageToCompareRight] = useState<string | null>('')
     const [textToCompareLeft, setTextToCompareLeft] = useState('')
     const [textToCompareRight, setTextToCompareRight] = useState('')
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
     const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
-    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false)
+    const [previewImage, setPreviewImage] = useState<string>('');
+    const [leftComparePreviewImage, setLeftComparePreviewImage] = useState<string>('');
+    const [rightComparePreviewImage, setRightComparePreviewImage] = useState<string>('');
+    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false);
+
+
+    //Processing the images received from backend for description field
+    const previewImagecallBack = async (res: string[]) => {
+        if (res.length > 0) {
+            setPreviewImage(res[0]);
+        } else {
+            setPreviewImage(' ');
+        }
+    };
+
+    //Processing the images received from backend for left compare Link field
+    const leftComparePreviewImagecallBack = async (res: string[]) => {
+        if (res.length > 0) {
+            setLeftComparePreviewImage(res[0]);
+        } else {
+            setLeftComparePreviewImage(' ');
+        }
+    };
+
+    //Processing the images received from backend for right compare Link field
+    const rightComparePreviewImagecallBack = async (res: string[]) => {
+        if (res.length > 0) {
+            setRightComparePreviewImage(res[0]);
+        } else {
+            setRightComparePreviewImage(' ');
+        }
+    };
+
+    useEffect(() => {
+        if (previewImage) {
+            (async () => {
+                await sendPost();
+            })()
+        }
+    }, [previewImage]);
+
+
+    const checkPreviewImage = (url: string) => {
+        return fetcher(`/api/fetchPreviewData?urlToHit=${url}`);
+    };
+
+    // Utility Component for warnings
+    // Will not work correctly as an export only as a nested component.
+    // Must have to do with state not being shared.
 
     // Handler Functions
     const isComparePost = () => {
@@ -132,8 +162,7 @@ const NewPostForm: FC<NewPostProps> = ({
         )
     }
 
-    const sendPost = async (e) => {
-        e.preventDefault()
+    const sendPost = async () => {
 
         // If the input is empty, return asap
         if (inputRef && !inputRef?.current?.value) {
@@ -141,6 +170,16 @@ const NewPostForm: FC<NewPostProps> = ({
                 'question',
                 { type: 'required', message: 'A question is required.' },
                 { shouldFocus: true }
+            )
+            return false // Whether to sendPost or not
+        }
+
+        // If the input is link, return asap
+        if (isValidURL(inputRef?.current?.value)) {
+            setError(
+                'question',
+                {type: 'required', message: 'Question can not have link.'},
+                {shouldFocus: true}
             )
             return false // Whether to sendPost or not
         }
@@ -154,7 +193,7 @@ const NewPostForm: FC<NewPostProps> = ({
                     message:
                         'You are missing required information to create a compare post.',
                 },
-                { shouldFocus: true }
+                {shouldFocus: true}
             )
             return false // Whether to send post or not
         }
@@ -170,9 +209,10 @@ const NewPostForm: FC<NewPostProps> = ({
         // 4) get the dowanload URL for the image and update the original post with image url
 
         // Prepare the data to add as a post
-        let postData: FirebasePost = {
-            message: inputRef.current.value, // Leaving field name as message even though UI refers to it as a question
-            description: descriptionRef.current.value, // Optional description
+        let postData:FirebasePost = {
+            message: inputRef?.current?.value || '', // Leaving field name as message even though UI refers to it as a question
+            description: descriptionRef?.current?.value || '', // Optional description
+            previewImage: previewImage, // Saves preview Image from Link
             name: userProfile.username, // Change this with username or incognito
             uid: userProfile.uid, // uid of the user that created this post
             isCompare: false, // Explicitly flag whether is compare type
@@ -219,7 +259,18 @@ const NewPostForm: FC<NewPostProps> = ({
         if (isComparePost()) {
             // This is a compare post and it is slightly more complex than the single image post
             // since now we need to upload two images and/or text to the DB and post
-            let mediaObjectList: { type: string; value: string }[] = []
+            //let mediaObjectList: { type: string; value: string }[] = []
+            let leftMediaObject: MediaObject = {
+                text: '',
+                image: '',
+                previewImage: '',
+            }
+            let rightMediaObject: MediaObject = {
+                text: '',
+                image: '',
+                previewImage: '',
+            }
+            let mediaObjectList: MediaObject[] = []
             let votesObjMapList: {}[] = [] // TODO: remove and fix likes
 
             // Upload the left image, if there is one
@@ -232,12 +283,11 @@ const NewPostForm: FC<NewPostProps> = ({
                 ).then(async (snapshot) => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
-                    mediaObjectList.push({
-                        type: 'image',
-                        value: downloadURL,
-                    })
+                    leftMediaObject.image = downloadURL
                     votesObjMapList.push({})
                 })
+            } else {
+                leftMediaObject.previewImage = leftComparePreviewImage
             }
 
             // Upload the right image, if there is one
@@ -250,29 +300,31 @@ const NewPostForm: FC<NewPostProps> = ({
                 ).then(async () => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
-                    mediaObjectList.push({
-                        type: 'image',
-                        value: downloadURL,
-                    })
+                    rightMediaObject.image = downloadURL
                     votesObjMapList.push({})
                 })
+            } else {
+                rightMediaObject.previewImage = rightComparePreviewImage
             }
 
             if (textToCompareLeft) {
-                mediaObjectList.push({
-                    type: 'text',
-                    value: textToCompareLeft,
-                })
+                leftMediaObject.text = textToCompareLeft
                 votesObjMapList.push({})
             }
 
             if (textToCompareRight) {
-                mediaObjectList.push({
-                    type: 'text',
-                    value: textToCompareRight,
-                })
+                rightMediaObject.text = textToCompareRight
                 votesObjMapList.push({})
             }
+
+            mediaObjectList.push({
+                ...leftMediaObject
+            });
+
+            mediaObjectList.push({
+                ...rightMediaObject
+            });
+
 
             // Update the post with the image URLs and text
             await updateDoc(doc(db, 'posts', docRef.id), {
@@ -302,7 +354,8 @@ const NewPostForm: FC<NewPostProps> = ({
             inputRef.current.value = ''
         }
 
-        return true
+        setPreviewImage('');
+        closeModal();
     }
 
     const addImageToCompareLeft = (e) => {
@@ -315,7 +368,8 @@ const NewPostForm: FC<NewPostProps> = ({
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
         reader.onload = (readerEvent) => {
-            setImageToCompareLeft(readerEvent.target.result)
+            setImageToCompareLeft(readerEvent?.target?.result)
+            setTextToCompareLeft('')
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice
@@ -334,7 +388,8 @@ const NewPostForm: FC<NewPostProps> = ({
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
         reader.onload = (readerEvent) => {
-            setImageToCompareRight(readerEvent.target.result)
+            setImageToCompareRight(readerEvent?.target?.result)
+            setTextToCompareRight('')
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice
@@ -345,7 +400,7 @@ const NewPostForm: FC<NewPostProps> = ({
 
     const addImageToPost = (e) => {
         const reader = new FileReader()
-        if (e.target.files[0]) {
+        if (e?.target?.files[0]) {
             // Read the file
             reader.readAsDataURL(e.target.files[0])
         }
@@ -353,7 +408,7 @@ const NewPostForm: FC<NewPostProps> = ({
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
         reader.onload = (readerEvent) => {
-            setImageToPost(readerEvent.target.result)
+            setImageToPost(readerEvent?.target?.result)
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice
@@ -363,8 +418,8 @@ const NewPostForm: FC<NewPostProps> = ({
     }
 
     const removeCompareObjects = () => {
-        setImageToCompareLeft(null)
-        setImageToCompareRight(null)
+        setImageToCompareLeft('')
+        setImageToCompareRight('')
         setTextToCompareLeft('')
         setTextToCompareRight('')
         if (targetEvent) {
@@ -426,14 +481,34 @@ const NewPostForm: FC<NewPostProps> = ({
 
     const sendAndClose = async (e) => {
         e.preventDefault()
-        const success = sendPost(e)
-        if (await success) {
-            closeModal(e)
-        }
 
+        if (isComparePost()) {
+            const leftUrl = isValidURL(textToCompareLeft || '');
+            if (leftUrl && leftUrl.length > 1 && !imageToCompareLeft) {
+                await checkPreviewImage(leftUrl).then(async (res) => {
+                    await leftComparePreviewImagecallBack(res)
+                });
+            }
+
+            const rightUrl = isValidURL(textToCompareRight || '');
+            if (rightUrl && rightUrl.length > 1 && !imageToCompareRight) {
+                await checkPreviewImage(rightUrl).then(async (res) => {
+                    await rightComparePreviewImagecallBack(res)
+                });
+            }
+        }
+        const url = isValidURL(descriptionRef?.current?.value || '');
+        if (url && url.length > 1 && !imageToPost) {
+            await checkPreviewImage(url).then(async (res) => {
+                await previewImagecallBack(res)
+            });
+        } else {
+            setPreviewImage(' ');
+        }
         // Trigger a post refetch with a timeout to give the database
         // time to register the new post
         setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
+
     }
 
     const handleCompareClick = () => {
@@ -495,7 +570,7 @@ const NewPostForm: FC<NewPostProps> = ({
                             onClick={() => filePickerRef?.current?.click()}
                             className={postFormClass.imageButton}
                         >
-                            <UilImagePlus />
+                            <UilImagePlus/>
                             <input
                                 ref={filePickerRef}
                                 onChange={handleImageUpload}
@@ -506,7 +581,6 @@ const NewPostForm: FC<NewPostProps> = ({
                             />
                         </button>
                     </Tooltip>
-
                     {/* Trigger compare */}
                     <Tooltip toolTipText={'Compare'}>
                         <button
@@ -515,7 +589,8 @@ const NewPostForm: FC<NewPostProps> = ({
                             aria-expanded={expanded}
                             aria-label="compare"
                         >
-                            <UilBalanceScale />
+                            <UilBalanceScale/>
+
                         </button>
                     </Tooltip>
                 </div>
@@ -598,25 +673,28 @@ const NewPostForm: FC<NewPostProps> = ({
                                             value={textToCompareLeft}
                                         />
                                     </div>
-                                    <p className={postFormClass.orText}>or</p>
 
                                     {/* Image input A */}
-                                    <button
-                                        className={postFormClass.compareUpload}
-                                        onClick={() =>
-                                            filePickerCompareLeftRef?.current?.click()
-                                        }
-                                    >
-                                        Upload Image
-                                        <input
-                                            ref={filePickerCompareLeftRef}
-                                            onChange={handleCompareLeftUpload}
-                                            type="file"
-                                            accept="image/*"
-                                            onKeyPress={preventDefaultOnEnter}
-                                            hidden
-                                        />
-                                    </button>
+                                    {!textToCompareLeft && <>
+                                        <p className={postFormClass.orText}>or</p>
+                                        <button
+                                            className={postFormClass.compareUpload}
+                                            onClick={() =>
+                                                filePickerCompareLeftRef?.current?.click()
+                                            }
+                                        >
+                                            Upload Image
+                                            <input
+                                                ref={filePickerCompareLeftRef}
+                                                onChange={handleCompareLeftUpload}
+                                                type="file"
+                                                accept="image/*"
+                                                onKeyPress={preventDefaultOnEnter}
+                                                hidden
+                                            />
+                                        </button>
+                                    </>}
+
                                 </>
                             )}
                         </div>
@@ -665,10 +743,13 @@ const NewPostForm: FC<NewPostProps> = ({
                                             value={textToCompareRight}
                                         />
                                     </div>
-                                    <p className={postFormClass.orText}>or</p>
+
 
                                     {/* Image input B */}
-                                    <button
+                                    {!textToCompareRight &&
+                                        <>
+                                        <p className={postFormClass.orText}>or</p>
+                                        <button
                                         className={postFormClass.compareUpload}
                                         onClick={() =>
                                             filePickerCompareRightRef?.current?.click()
@@ -684,6 +765,7 @@ const NewPostForm: FC<NewPostProps> = ({
                                             hidden
                                         />
                                     </button>
+                                        </>}
                                 </>
                             )}
                         </div>
@@ -696,13 +778,13 @@ const NewPostForm: FC<NewPostProps> = ({
                             />
                         )}
                         {errors.compare &&
-                            errors.compare.type === 'required' && (
-                                <FlashErrorMessage
-                                    message={errors.compare.message}
-                                    ms={warningTime}
-                                    style={postFormClass.formAlert}
-                                />
-                            )}
+                        errors.compare.type === 'required' && (
+                            <FlashErrorMessage
+                                message={errors.compare.message}
+                                ms={warningTime}
+                                style={postFormClass.formAlert}
+                            />
+                        )}
                     </div>
                 </div>
             </Collapse>
@@ -720,7 +802,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 <Button
                     text="Post"
                     keepText={true}
-                    icon={<UilNavigator />}
+                    icon={<UilNavigator/>}
                     type="submit"
                     addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}
