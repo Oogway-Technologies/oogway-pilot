@@ -145,14 +145,14 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         const nextUrl = deletePost()
         closeModal()
 
-        // Reroute user back to homepage if not already there
-        if (router.asPath !== (await nextUrl)) {
-            router.push(await nextUrl)
-        }
-
         // Trigger a post refetch with a timeout to give the database
         // time to register the delete
         setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
+
+        // Reroute user to the correct location
+        if (router.asPath !== (await nextUrl)) {
+            router.push(await nextUrl)
+        }
     }
 
     // Confirm delete post modal component
