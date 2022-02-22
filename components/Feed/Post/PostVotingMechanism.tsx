@@ -50,23 +50,23 @@ const PostVotingMechanism = ({
                     // Only gets mounted when post isCompare so we don't need to worry
                     // that postData.compare does not exist
                     // if current user is a voter of left object
-                    if (
-                        userProfile.uid in postData.compare.votesObjMapList[0]
-                    ) {
-                        setUserVoteChoice(0)
-                        setVoteButtonLeft(<UilCheckCircle/>)
-                        setVoteButtonRight(<UilCircle/>)
-                    }
-                    // if current user is a voter of right object
-                    else if (
-                        userProfile.uid in postData.compare.votesObjMapList[1]
-                    ) {
-                        setUserVoteChoice(1)
-                        setVoteButtonRight(<UilCheckCircle/>)
-                        setVoteButtonLeft(<UilCircle/>)
-                    }
-                    // if current user is not a voter
-                    else {
+                        if (
+                            postData.compare.votesObjMapList[0] && userProfile.uid in postData.compare.votesObjMapList[0]
+                        ) {
+                            setUserVoteChoice(0)
+                            setVoteButtonLeft(<UilCheckCircle/>)
+                            setVoteButtonRight(<UilCircle/>)
+                        }
+                        // if current user is a voter of right object
+                        else if (
+                            postData.compare.votesObjMapList[1] && userProfile.uid in postData.compare.votesObjMapList[1]
+                        ) {
+                            setUserVoteChoice(1)
+                            setVoteButtonRight(<UilCheckCircle/>)
+                            setVoteButtonLeft(<UilCircle/>)
+                        }
+                        // if current user is not a voter
+                        else {
                         setUserVoteChoice(-1)
                         setVoteButtonLeft(<UilCircle/>)
                         setVoteButtonRight(<UilCircle/>)
