@@ -82,7 +82,12 @@ const PostHeader: FC<PostHeaderProps> = ({
         })
 
         // Return where the user should be routed
-        return `/profile/${userId}`
+        if(router.pathname.includes('profile')){
+            return `/profile/${userId}`
+        }
+        else{
+            return '/'
+        }
     }
 
     const handleProfileAvatarClick = async (
