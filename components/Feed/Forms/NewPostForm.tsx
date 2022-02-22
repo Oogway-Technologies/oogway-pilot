@@ -673,25 +673,28 @@ const NewPostForm: FC<NewPostProps> = ({
                                             value={textToCompareLeft}
                                         />
                                     </div>
-                                    <p className={postFormClass.orText}>or</p>
 
                                     {/* Image input A */}
-                                    <button
-                                        className={postFormClass.compareUpload}
-                                        onClick={() =>
-                                            filePickerCompareLeftRef?.current?.click()
-                                        }
-                                    >
-                                        Upload Image
-                                        <input
-                                            ref={filePickerCompareLeftRef}
-                                            onChange={handleCompareLeftUpload}
-                                            type="file"
-                                            accept="image/*"
-                                            onKeyPress={preventDefaultOnEnter}
-                                            hidden
-                                        />
-                                    </button>
+                                    {!textToCompareLeft && <>
+                                        <p className={postFormClass.orText}>or</p>
+                                        <button
+                                            className={postFormClass.compareUpload}
+                                            onClick={() =>
+                                                filePickerCompareLeftRef?.current?.click()
+                                            }
+                                        >
+                                            Upload Image
+                                            <input
+                                                ref={filePickerCompareLeftRef}
+                                                onChange={handleCompareLeftUpload}
+                                                type="file"
+                                                accept="image/*"
+                                                onKeyPress={preventDefaultOnEnter}
+                                                hidden
+                                            />
+                                        </button>
+                                    </>}
+
                                 </>
                             )}
                         </div>
@@ -740,10 +743,13 @@ const NewPostForm: FC<NewPostProps> = ({
                                             value={textToCompareRight}
                                         />
                                     </div>
-                                    <p className={postFormClass.orText}>or</p>
+
 
                                     {/* Image input B */}
-                                    <button
+                                    {!textToCompareRight &&
+                                        <>
+                                        <p className={postFormClass.orText}>or</p>
+                                        <button
                                         className={postFormClass.compareUpload}
                                         onClick={() =>
                                             filePickerCompareRightRef?.current?.click()
@@ -759,6 +765,7 @@ const NewPostForm: FC<NewPostProps> = ({
                                             hidden
                                         />
                                     </button>
+                                        </>}
                                 </>
                             )}
                         </div>

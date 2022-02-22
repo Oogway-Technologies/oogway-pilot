@@ -160,7 +160,7 @@ export const postFormClass = {
     removeImageButton:
         'flex my-md cursor-pointer text-neutral-700 hover:text-error',
     compareUpload:
-        'inline-block items-center text-primary dark:text-primaryDark text-sm',
+        'inline-block items-center text-primary dark:text-primaryDark text-sm disabled:text-neutral-700',
 }
 
 // Comments
