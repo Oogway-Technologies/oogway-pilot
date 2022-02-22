@@ -1,53 +1,35 @@
-import React, {
-    ChangeEvent,
-    FC,
-    MouseEventHandler,
-    useEffect,
-    useRef,
-    useState,
-} from 'react'
+import React, {ChangeEvent, FC, MouseEventHandler, useEffect, useRef, useState,} from 'react'
 
 // Database
-import { db, storage } from '../../../firebase'
-import {
-    addDoc,
-    collection,
-    doc,
-    serverTimestamp,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
+import {db, storage} from '../../../firebase'
+import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
-import { Dialog } from '@headlessui/react'
-import {
-    UilBalanceScale,
-    UilImagePlus,
-    UilNavigator,
-    UilTimesCircle,
-} from '@iconscout/react-unicons'
-import { Collapse } from '@mui/material'
+import {Dialog} from '@headlessui/react'
+import {UilBalanceScale, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
+import {Collapse} from '@mui/material'
 
 // Form management
-import { useForm } from 'react-hook-form'
-import { postFormClass } from '../../../styles/feed'
+import {useForm} from 'react-hook-form'
+import {postFormClass} from '../../../styles/feed'
 
 // Recoil states
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import { FirebasePost } from '../../../utils/types/firebase'
+import {FirebasePost} from '../../../utils/types/firebase'
 
 // Queries
-import { useQueryClient } from 'react-query'
+import {useQueryClient} from 'react-query'
 import {Tooltip} from "../../Utils/Tooltip";
 import {checkFileSize, fetcher, isValidURL} from "../../../utils/helpers/common";
 import FlashErrorMessage from "../../Utils/FlashErrorMessage";
 import {warningTime} from "../../../utils/constants/global";
+import {MediaObject} from "../../../utils/types/global";
 
 type NewPostProps = {
     closeModal: MouseEventHandler<HTMLButtonElement>
@@ -278,17 +260,17 @@ const NewPostForm: FC<NewPostProps> = ({
             // This is a compare post and it is slightly more complex than the single image post
             // since now we need to upload two images and/or text to the DB and post
             //let mediaObjectList: { type: string; value: string }[] = []
-            let leftMediaObject: { text: string, image: string, previewImage: string } = {
+            let leftMediaObject: MediaObject = {
                 text: '',
                 image: '',
                 previewImage: '',
             }
-            let rightMediaObject: { text: string, image: string, previewImage: string } = {
+            let rightMediaObject: MediaObject = {
                 text: '',
                 image: '',
                 previewImage: '',
             }
-            let mediaObjectList: Array<object> = []
+            let mediaObjectList: MediaObject[] = []
             let votesObjMapList: {}[] = [] // TODO: remove and fix likes
 
             // Upload the left image, if there is one
@@ -387,6 +369,7 @@ const NewPostForm: FC<NewPostProps> = ({
         // to set the loaded image from the reader
         reader.onload = (readerEvent) => {
             setImageToCompareLeft(readerEvent?.target?.result)
+            setTextToCompareLeft('')
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice
@@ -406,6 +389,7 @@ const NewPostForm: FC<NewPostProps> = ({
         // to set the loaded image from the reader
         reader.onload = (readerEvent) => {
             setImageToCompareRight(readerEvent?.target?.result)
+            setTextToCompareRight('')
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice

@@ -4,3 +4,9 @@ export interface EngagementItems {
     onClick: any,
     expanded?: any
 }
+
+export interface MediaObject{
+    text: string,
+    image: string,
+    previewImage: string
+}
