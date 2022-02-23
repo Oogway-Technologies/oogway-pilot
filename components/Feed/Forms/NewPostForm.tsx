@@ -46,7 +46,7 @@ const NewPostForm: FC<NewPostProps> = ({
     // Track current user profile data
     const userProfile = useRecoilValue(userProfileState)
 
-    // For triggering posts refetch on form submissiono
+    // For triggering posts refetch on form submission
     const queryClient = useQueryClient()
 
     // Form management
@@ -559,7 +559,14 @@ const NewPostForm: FC<NewPostProps> = ({
                         aria-invalid={errors.question ? 'true' : 'false'}
                         ref={inputRef}
                         placeholder={questPlaceholder}
+                        maxLength={300}
                         onKeyPress={preventDefaultOnEnter}
+                        onChange={(e) => {
+                            const isURL = isValidURL(e.target.value)
+                            if (isURL) {
+                                e.target.value = e.target.value.replace(isURL, '')
+                            }
+                        }}
                     />
                 </div>
 
@@ -578,6 +585,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         ref={descriptionRef}
                         placeholder={descPlaceholder}
                         className={postFormClass.formDescriptionInput}
+                        maxLength={40000}
                     />
                 </div>
             </form>
@@ -691,6 +699,7 @@ const NewPostForm: FC<NewPostProps> = ({
                                                 )
                                             }}
                                             value={textToCompareLeft}
+                                            maxLength={300}
                                         />
                                     </div>
 
@@ -772,6 +781,7 @@ const NewPostForm: FC<NewPostProps> = ({
                                                 )
                                             }}
                                             value={textToCompareRight}
+                                            maxLength={300}
                                         />
                                     </div>
 
