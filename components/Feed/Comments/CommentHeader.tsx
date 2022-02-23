@@ -6,10 +6,11 @@ import bull from '../../Utils/Bullet'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 import { db } from '../../../firebase'
 import { Avatar } from '@mui/material'
+// @ts-ignore
 import { UilCornerUpLeftAlt } from '@iconscout/react-unicons'
 
 import { useProfileData } from '../../../hooks/useProfileData'
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { deleteDoc, doc, FieldValue, updateDoc } from 'firebase/firestore'
 import { getUserDoc } from '../../../lib/userHelper'
 import { getComment } from '../../../lib/commentsHelper'
 import { getRepliesCollection } from '../../../lib/repliesHelper'
@@ -19,9 +20,8 @@ type CommentHeaderProps = {
     postId: string
     commentId: string
     authorUid: string
-    name: string | null
-    email: string
-    timestamp: Date | null
+    name: string
+    timestamp: FieldValue
 }
 
 const CommentHeader: FC<CommentHeaderProps> = ({
@@ -98,7 +98,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                     src={
                         authorProfile?.profilePic
                             ? authorProfile.profilePic
-                            : null
+                            : undefined
                     }
                 />
 
@@ -107,7 +107,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            {authorProfile.username
+                            {authorProfile?.username
                                 ? authorProfile.username
                                 : name}
                         </span>
@@ -126,7 +126,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                 <PostOptionsDropdown
                     authorUid={authorUid}
                     authorName={
-                        authorProfile.username ? authorProfile.username : name
+                        authorProfile?.username ? authorProfile.username : name
                     }
                     deletePost={deleteComment}
                 />

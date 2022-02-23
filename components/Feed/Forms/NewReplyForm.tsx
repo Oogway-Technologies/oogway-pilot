@@ -1,18 +1,27 @@
-import React, {useEffect, useRef, useState} from 'react'
-import {useForm} from 'react-hook-form'
-import {db} from '../../../firebase'
-import {UilCommentPlus} from '@iconscout/react-unicons'
-import {useRouter} from 'next/router'
+import React, { useEffect, useRef, useState, MouseEvent } from 'react'
+import { useForm } from 'react-hook-form'
+import { db } from '../../../firebase'
+// @ts-ignore
+import { UilCommentPlus } from '@iconscout/react-unicons'
+import { useRouter } from 'next/router'
 import firebase from 'firebase/compat/app'
-import {replyFormClass} from '../../../styles/feed'
+import { replyFormClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
 import needsHook from '../../../hooks/needsHook'
-import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
-import {Avatar} from '@mui/material'
-import {useRecoilValue} from 'recoil'
-import {userProfileState} from '../../../atoms/user'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+} from 'firebase/firestore'
+import { Avatar } from '@mui/material'
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../../atoms/user'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import {getUserDoc} from '../../../lib/userHelper'
+import { getUserDoc } from '../../../lib/userHelper'
+import { repliesMap } from '../../../utils/types/firebase'
 
 type NewReplyFormProps = {
     commentId: string
@@ -22,11 +31,11 @@ type NewReplyFormProps = {
 }
 
 const NewReplyForm: React.FC<NewReplyFormProps> = ({
-                                                       commentId,
-                                                       closeModal,
-                                                       isMobile,
-                                                       placeholder,
-                                                   }) => {
+    commentId,
+    closeModal,
+    isMobile,
+    placeholder,
+}) => {
     const userProfile = useRecoilValue(userProfileState)
     const router = useRouter()
 
@@ -41,25 +50,25 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         register,
         unregister,
         setError,
-        formState: {errors},
+        formState: { errors },
     } = useForm()
     const warningTime = 3000 // set warning to flash for 3 sec
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('reply', {required: true})
+        register('reply', { required: true })
         // clean up on unmount
         return () => unregister('reply')
     }, [unregister])
 
-    const addReply = async (e) => {
+    const addReply = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
         // Return asap if no input
         if (inputRef && !inputRef?.current?.value) {
             setError(
                 'reply',
-                {type: 'required', message: 'A reply is required.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'A reply is required.' },
+                { shouldFocus: true }
             )
             return false
         }
@@ -76,7 +85,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             {
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             },
-            {merge: true}
+            { merge: true }
         )
 
         // Now add a new reply for this post
@@ -107,17 +116,20 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     // a sub-collection under comments, we must use a map to
                     // store comments where the key is the comment id and the value
                     // it points to is the parent post id it resides under.
+                    const { id: postId } = router.query
                     if ('replies' in tmp) {
                         tmp.replies[doc.id] = {
                             comment: commentId,
-                            post: router.query.id,
+                            post: postId,
                         }
                     } else {
                         // Add a new entry
-                        let newReplies = {}
+                        let newReplies: repliesMap = {}
+                        // @ts-ignore
                         newReplies[doc.id] = {
                             comment: commentId,
-                            post: router.query.id,
+                            // @ts-ignore
+                            post: postId,
                         }
                         tmp['replies'] = newReplies
                     }
@@ -137,7 +149,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         return true // Return true on a successful submission
     }
 
-    const addAndClose = async (e) => {
+    const addAndClose = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         const success = addReply(e)
         if (await success) {
@@ -173,9 +185,12 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                                 className={replyFormClass.growingTextArea}
                                 placeholder={placeholder}
                                 rows={1}
-                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                                    e.target.style.height = '0px';
-                                    e.target.style.height = e.target.scrollHeight + 'px'
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLTextAreaElement>
+                                ) => {
+                                    e.target.style.height = '0px'
+                                    e.target.style.height =
+                                        e.target.scrollHeight + 'px'
                                 }}
                             />
                         )}
@@ -185,7 +200,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus/>}
+                        icon={<UilCommentPlus />}
                         type="submit"
                         onClick={addReply}
                         addStyle={replyFormClass.submitButton}
@@ -211,7 +226,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus/>}
+                        icon={<UilCommentPlus />}
                         type="submit"
                         onClick={addAndClose}
                         addStyle={replyFormClass.submitButton}

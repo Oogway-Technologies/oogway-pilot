@@ -10,3 +10,7 @@ export interface MediaObject{
     image: string,
     previewImage: string
 }
+
+export interface HTMLInputEvent extends Event {
+    target: HTMLInputElement & EventTarget;
+}

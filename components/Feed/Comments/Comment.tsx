@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import { commentClass } from '../../../styles/feed'
 import { CardMedia, Collapse, useMediaQuery } from '@mui/material'
 import CommentHeader from './CommentHeader'
@@ -7,9 +7,21 @@ import NewReplyForm from '../Forms/NewReplyForm'
 import RepliesAPI from '../Replies/RepliesAPI'
 import Modal from '../../Utils/Modal'
 import { useUser } from '@auth0/nextjs-auth0'
+import { FirebaseComment } from '../../../utils/types/firebase'
 
-// TODO: Needs type interface
-function Comment({ commentOwner, postId, commentId, comment }) {
+interface CommentProps {
+    commentOwner: string
+    postId: string
+    commentId: string
+    comment: FirebaseComment
+}
+
+const Comment: FC<CommentProps> = ({
+    commentOwner,
+    postId,
+    commentId,
+    comment,
+}) => {
     // Retrieve auth state
     const { user } = useUser()
 
@@ -50,7 +62,6 @@ function Comment({ commentOwner, postId, commentId, comment }) {
                     commentId={commentId}
                     authorUid={commentOwner}
                     name={comment.author}
-                    email={comment.email}
                     timestamp={comment.timestamp}
                 />
 

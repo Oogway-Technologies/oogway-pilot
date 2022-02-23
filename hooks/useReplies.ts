@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 import { streamRepliesCollection } from '../lib/repliesHelper'
 
 
-export const useReplies = (postId: string | string[] | undefined, commentId: string) => {
-    if (!postId || !commentId) {
-        return
-    }
+export const useReplies = (postId: string , commentId: string) => {
     // track replies
     const [repliesSnapshot, setRepliesSnapshot] = useState()
 
