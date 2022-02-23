@@ -1,11 +1,17 @@
 import Head from 'next/head'
-import {useRouter} from 'next/router'
-import React, {FC, useRef, useState} from 'react'
-import {db, storage} from '../../firebase'
-import {loginButtons, loginDivs, loginImages, loginInputs,} from '../../styles/login'
+import { useRouter } from 'next/router'
+import React, { FC, useRef, useState } from 'react'
+import { db, storage } from '../../firebase'
+import {
+    loginButtons,
+    loginDivs,
+    loginImages,
+    loginInputs,
+} from '../../styles/login'
 import Button from '../Utils/Button'
-import {Avatar, useMediaQuery} from '@mui/material'
-import {UilImagePlus, UilTrashAlt} from '@iconscout/react-unicons'
+import { Avatar, useMediaQuery } from '@mui/material'
+//@ts-ignore
+import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 // Firebase
@@ -25,7 +31,7 @@ type UserProfileFormProps = {
     closeModal: () => void
 }
 
-const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
+const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
     // Get current user profile
     const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
@@ -123,22 +129,25 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
         await profileDoc
             .then(async (doc) => {
                 if (doc?.exists()) {
-                    let tmp = doc.data()
-                    tmp.resetProfile = false
-                    await updateDoc(doc?.ref, tmp)
+                    // If profile needs reseting mark as reset
+                    // i.e. upon registration
+                    if (doc.data().resetProfile) {
+                        let tmp = doc.data()
+                        tmp.resetProfile = false
+                        await updateDoc(doc?.ref, tmp)
+                    }
+                    // Else return early
+                    return
                 } else {
                     console.log('Error: userProfile.resetProfile not updated')
                 }
-
-                // Close modal
-                closeModal()
-
-                // After update push the router to the feed
-                router.push('/')
             })
             .catch((err) => {
                 console.log(err)
             })
+
+        // Close modal
+        closeModal()
     }
 
     const addImageToUpload = (e) => {
@@ -191,7 +200,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
         } else {
             size = 150
         }
-        return {width: size, height: size}
+        return { width: size, height: size }
     }
 
     return (
@@ -223,7 +232,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
                             className={loginButtons.uploadImage}
                             onClick={() => profilePicRef?.current?.click()}
                         >
-                            <UilImagePlus/>
+                            <UilImagePlus />
                             <span>Upload Image</span>
                             <input
                                 ref={profilePicRef}
@@ -246,7 +255,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
                             disabled={!imageToUpload}
                             onClick={handleRemoveImage}
                         >
-                            <UilTrashAlt/>
+                            <UilTrashAlt />
                             <span>Remove Image</span>
                         </button>
                     </div>
@@ -345,7 +354,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
                 <div className={loginInputs.inputBorder}>
                     <textarea
                         onChange={(e) => {
-                            e.target.style.height = '0px';
+                            e.target.style.height = '0px'
                             e.target.style.height = e.target.scrollHeight + 'px'
                             setBio(e.target.value)
                         }}

@@ -26,3 +26,24 @@ export const checkFileSize = (files: FileList | null) => {
     }
     return false
 }
+
+//To connect frontend with backend
+export const fetcher = (url: string) => fetch(url).then((res) => {
+    return res.json()
+});
+
+//To detect a valid URL and return first URL found
+export const isValidURL = (string: string | undefined) => {
+    const res: Array<string> = string?.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) ?? [''];
+    return res[0];
+};
+
+export const parseYoutubeVideoId = (videoUrl: string | undefined) => {
+    const YOUTUBE_URL_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-z0-9_-]{11})/gi
+
+    const validVideoUrl = (videoUrl)?.match(YOUTUBE_URL_REGEX);
+
+    if (!validVideoUrl) return null;
+
+    return validVideoUrl[0].match(/[a-zA-z0-9-]+$/)[0];
+}
