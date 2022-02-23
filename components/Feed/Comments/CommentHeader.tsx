@@ -1,20 +1,19 @@
 import Timestamp from '../../Utils/Timestamp'
-import React, { FC } from 'react'
+import React, {FC} from 'react'
 import needsHook from '../../../hooks/needsHook'
-import { postCardClass } from '../../../styles/feed'
-import bull from '../../Utils/Bullet'
+import {postCardClass} from '../../../styles/feed'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
-import { db } from '../../../firebase'
-import { Avatar } from '@mui/material'
+import {db} from '../../../firebase'
+import {Avatar} from '@mui/material'
 // @ts-ignore
-import { UilCornerUpLeftAlt } from '@iconscout/react-unicons'
+import {UilCornerUpLeftAlt} from '@iconscout/react-unicons'
 
-import { useProfileData } from '../../../hooks/useProfileData'
-import { deleteDoc, doc, FieldValue, updateDoc } from 'firebase/firestore'
-import { getUserDoc } from '../../../lib/userHelper'
-import { getComment } from '../../../lib/commentsHelper'
-import { getRepliesCollection } from '../../../lib/repliesHelper'
-import { deleteMedia } from '../../../lib/storageHelper'
+import {useProfileData} from '../../../hooks/useProfileData'
+import {deleteDoc, doc, FieldValue, updateDoc} from 'firebase/firestore'
+import {getUserDoc} from '../../../lib/userHelper'
+import {getComment} from '../../../lib/commentsHelper'
+import {getRepliesCollection} from '../../../lib/repliesHelper'
+import {deleteMedia} from '../../../lib/storageHelper'
 
 type CommentHeaderProps = {
     postId: string
@@ -76,7 +75,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                     }
 
                     // Proceed to delete the post
-                    deleteCommentEntry()
+                    await deleteCommentEntry()
                 })
                 .catch((err) => {
                     console.log('Cannot delete replies: ', err)

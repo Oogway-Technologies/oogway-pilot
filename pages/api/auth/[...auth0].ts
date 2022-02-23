@@ -1,8 +1,10 @@
-import { handleAuth, handleCallback, handleLogin } from '@auth0/nextjs-auth0'
-import { getAuth, signInWithCustomToken } from 'firebase/auth'
-import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
+import {handleAuth, handleCallback} from '@auth0/nextjs-auth0'
+import {getAuth, signInWithCustomToken} from 'firebase/auth'
+import {getOrCreateUserFromFirebase} from '../../../lib/userHelper'
+import {NextApiRequest, NextApiResponse} from "next";
+import { UserProfile } from '@auth0/nextjs-auth0/src/frontend/use-user';
 
-const setFirebaseCustomToken = async (token) => {
+const setFirebaseCustomToken = async (token: string) => {
     // Fetchm the Firebase custom token from the Auth0 user
     const response = await fetch(
         'https://us-central1-oogway-pilot.cloudfunctions.net/getFirebaseToken',
@@ -15,7 +17,8 @@ const setFirebaseCustomToken = async (token) => {
     return response.json()
 }
 
-const afterCallback = async (req, res, session, state) => {
+// TODO: check these parameters and create types for them to remove any.
+const afterCallback = async (req: any, res: any, session:any, state:any) => {
     // Retrieve the Firebase custom token from the Auth0 user
     const firebaseResponse = await setFirebaseCustomToken(session.idToken)
 
@@ -53,7 +56,7 @@ const afterCallback = async (req, res, session, state) => {
     const userProfile = await getOrCreateUserFromFirebase(session.user)
 
     // Append firebase uid to auth0 UserProfile
-    session.user.uid = userProfile.uid
+    session.user.uid = userProfile?.uid
 
     // Note: session.user already contains the Auth0 user
     // as Session.user.sub. This should be the same as
@@ -71,12 +74,13 @@ export default handleAuth({
     // Use this function for validating additional claims on the user's ID Token or adding removing items
     // from the session after login.
     // For more information, see https://auth0.github.io/nextjs-auth0/modules/handlers_callback.html#handlecallback
-    async callback(req, res) {
+    async callback(req: NextApiRequest, res:NextApiResponse) {
         try {
             await handleCallback(req, res, {
                 afterCallback,
             })
-        } catch (error) {
+        } catch (err) {
+            const error= err as {status:number,message:string}
             res.status(error.status || 500).end(error.message)
         }
     },

@@ -1,62 +1,36 @@
-import React, {
-    ChangeEvent,
-    FC,
-    MouseEventHandler,
-    KeyboardEvent,
-    MouseEvent,
-    useEffect,
-    useRef,
-    useState,
-    KeyboardEventHandler,
-} from 'react'
+import React, {ChangeEvent, FC, KeyboardEvent, MouseEvent, useEffect, useRef, useState,} from 'react'
 
 // Database
-import { db, storage } from '../../../firebase'
-import {
-    addDoc,
-    collection,
-    doc,
-    serverTimestamp,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
+import {db, storage} from '../../../firebase'
+import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
-import { Dialog } from '@headlessui/react'
-import {
-    UilBalanceScale,
-    UilImagePlus,
-    UilNavigator,
-    UilTimesCircle,
-    // @ts-ignore
-} from '@iconscout/react-unicons'
-import { Collapse } from '@mui/material'
+import {Dialog} from '@headlessui/react'
+// @ts-ignore
+import {UilBalanceScale, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
+import {Collapse} from '@mui/material'
 
 // Form management
-import { useForm } from 'react-hook-form'
-import { postFormClass } from '../../../styles/feed'
+import {useForm} from 'react-hook-form'
+import {postFormClass} from '../../../styles/feed'
 
 // Recoil states
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import { FirebasePost } from '../../../utils/types/firebase'
+import {FirebasePost} from '../../../utils/types/firebase'
 
 // Queries
-import { useQueryClient } from 'react-query'
-import { Tooltip } from '../../Utils/Tooltip'
-import {
-    checkFileSize,
-    fetcher,
-    isValidURL,
-} from '../../../utils/helpers/common'
+import {useQueryClient} from 'react-query'
+import {Tooltip} from '../../Utils/Tooltip'
+import {checkFileSize, fetcher, isValidURL,} from '../../../utils/helpers/common'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { warningTime } from '../../../utils/constants/global'
-import { MediaObject } from '../../../utils/types/global'
+import {warningTime} from '../../../utils/constants/global'
+import {MediaObject} from '../../../utils/types/global'
 
 type NewPostProps = {
     closeModal: () => void
@@ -273,8 +247,7 @@ const NewPostForm: FC<NewPostProps> = ({
             const imageRef = ref(storage, `posts/${docRef.id}/image`)
 
             // Upload the image
-            // @ts-ignore
-            await uploadString(imageRef, imageToPost, 'data_url').then(
+            await uploadString(imageRef, imageToPost as string, 'data_url').then(
                 async () => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
@@ -310,10 +283,9 @@ const NewPostForm: FC<NewPostProps> = ({
             // Upload the left image, if there is one
             if (imageToCompareLeft) {
                 const imageRef = ref(storage, `posts/${docRef.id}/imageLeft`)
-                // @ts-ignore
                 await uploadString(
                     imageRef,
-                    imageToCompareLeft,
+                    imageToCompareLeft as string,
                     'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
@@ -328,10 +300,9 @@ const NewPostForm: FC<NewPostProps> = ({
             // Upload the right image, if there is one
             if (imageToCompareRight) {
                 const imageRef = ref(storage, `posts/${docRef.id}/imageRight`)
-                // @ts-ignore
                 await uploadString(
                     imageRef,
-                    imageToCompareRight,
+                    imageToCompareRight as string,
                     'data_url'
                 ).then(async () => {
                     // Get the download URL for the image

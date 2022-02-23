@@ -1,7 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { collection, orderBy, query, limit, startAfter, getDocs, OrderByDirection } from 'firebase/firestore'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { db } from '../../firebase'
+import {collection, getDocs, limit, orderBy, OrderByDirection, query, startAfter} from 'firebase/firestore'
+import type {NextApiRequest, NextApiResponse} from 'next'
+import {db} from '../../firebase'
+import {PostTimeStamp} from "../../utils/types/global";
 
 
 /**
@@ -87,12 +88,14 @@ export default async function postsHandler(
                 res.status(404).end('No Results Found. Please check the query parameters.')
             }
 
+            const lastTime = posts[posts.length-1] as PostTimeStamp
+            const firstTime = posts[0] as PostTimeStamp
             // Return payload
             const payload = {
                 posts: posts,
-                lastTimestamp: posts[posts.length-1].timestamp,
-                firstTimestamp: posts[0].timestamp,
-                hasNextPage: (posts.length === limitSize) // If full limit reached there there may be another page, edge case is modulo 0
+                lastTimestamp: lastTime?.timestamp || 0,
+                firstTimestamp: firstTime?.timestamp || 0,
+                hasNextPage: (posts.length === limitSize) // If full limit reached there may be another page, edge case is modulo 0
             }
             res.status(200).json(payload)
             break

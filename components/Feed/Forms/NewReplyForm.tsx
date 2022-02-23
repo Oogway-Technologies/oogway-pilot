@@ -1,27 +1,20 @@
-import React, { useEffect, useRef, useState, MouseEvent } from 'react'
-import { useForm } from 'react-hook-form'
-import { db } from '../../../firebase'
+import React, {MouseEvent, useEffect, useRef, useState} from 'react'
+import {useForm} from 'react-hook-form'
+import {db} from '../../../firebase'
 // @ts-ignore
-import { UilCommentPlus } from '@iconscout/react-unicons'
-import { useRouter } from 'next/router'
+import {UilCommentPlus} from '@iconscout/react-unicons'
+import {useRouter} from 'next/router'
 import firebase from 'firebase/compat/app'
-import { replyFormClass } from '../../../styles/feed'
+import {replyFormClass} from '../../../styles/feed'
 import Button from '../../Utils/Button'
 import needsHook from '../../../hooks/needsHook'
-import {
-    addDoc,
-    collection,
-    doc,
-    serverTimestamp,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore'
-import { Avatar } from '@mui/material'
-import { useRecoilValue } from 'recoil'
-import { userProfileState } from '../../../atoms/user'
+import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
+import {Avatar} from '@mui/material'
+import {useRecoilValue} from 'recoil'
+import {userProfileState} from '../../../atoms/user'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { getUserDoc } from '../../../lib/userHelper'
-import { FirebaseReply, repliesMap } from '../../../utils/types/firebase'
+import {getUserDoc} from '../../../lib/userHelper'
+import {FirebaseReply, repliesMap} from '../../../utils/types/firebase'
 
 type NewReplyFormProps = {
     commentId: string
@@ -125,11 +118,9 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     } else {
                         // Add a new entry
                         let newReplies: repliesMap = {}
-                        // @ts-ignore
                         newReplies[doc.id] = {
                             comment: commentId,
-                            // @ts-ignore
-                            post: postId,
+                            post: postId as string,
                         }
                         tmp['replies'] = newReplies
                     }

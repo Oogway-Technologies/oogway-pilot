@@ -39,8 +39,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
             orderBy('timestamp', 'asc')
         )
     )
-    // @ts-ignore
-    const [numComments] = usePostNumberComments(router.query.id)
+    const [numComments] = usePostNumberComments(router.query.id as string)
 
     // Track mobile state
     const isMobile = useMediaQuery('(max-width: 500px)')
@@ -65,8 +64,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                     <Comment
                         key={comment.id}
                         commentOwner={comment.data().authorUid}
-                        // @ts-ignore
-                        postId={router.query.id}
+                        postId={router.query.id as string}
                         commentId={comment.id}
                         comment={{
                             ...comment.data(),
@@ -82,8 +80,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                     <Comment
                         key={comment.id}
                         commentOwner={comment.authorUid}
-                        // @ts-ignore
-                        postId={router.query.id}
+                        postId={router.query.id as string}
                         commentId={comment.id!}
                         comment={comment}
                     />

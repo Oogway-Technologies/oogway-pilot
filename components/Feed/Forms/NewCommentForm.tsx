@@ -1,52 +1,32 @@
-import React, {
-    ChangeEvent,
-    MouseEvent,
-    useEffect,
-    useRef,
-    useState,
-} from 'react'
-import { useForm } from 'react-hook-form'
+import React, {ChangeEvent, MouseEvent, useEffect, useRef, useState,} from 'react'
+import {useForm} from 'react-hook-form'
 
 // Database
-import { db, storage } from '../../../firebase'
+import {db, storage} from '../../../firebase'
 import firebase from 'firebase/compat/app'
-import {
-    addDoc,
-    collection,
-    doc,
-    serverTimestamp,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
-import { getUserDoc } from '../../../lib/userHelper'
+import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
+import {getUserDoc} from '../../../lib/userHelper'
 
 // JSX and Styles
-import { commentFormClass } from '../../../styles/feed'
+import {commentFormClass} from '../../../styles/feed'
 import Button from '../../Utils/Button'
 
 // Form
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 // @ts-ignore
-import {
-    UilCommentPlus,
-    UilImagePlus,
-    UilTimesCircle,
-    //@ts-ignore
-} from '@iconscout/react-unicons'
+import {UilCommentPlus, UilImagePlus, UilTimesCircle,} from '@iconscout/react-unicons'
 
 // Recoil states
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { checkFileSize } from '../../../utils/helpers/common'
-import { warningTime } from '../../../utils/constants/global'
-import { commentsMap, FirebaseComment } from '../../../utils/types/firebase'
-import { HTMLInputEvent } from '../../../utils/types/global'
-import { tabPanelUnstyledClasses } from '@mui/base'
+import {checkFileSize} from '../../../utils/helpers/common'
+import {warningTime} from '../../../utils/constants/global'
+import {commentsMap, FirebaseComment} from '../../../utils/types/firebase'
 
 type NewCommentFormProps = {
     closeModal: () => void
@@ -137,8 +117,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             const imageRef = ref(storage, `comments/${docRef.id}/image`)
 
             // Upload the image
-            // @ts-ignore
-            await uploadString(imageRef, imageToPost, 'data_url').then(
+            await uploadString(imageRef, imageToPost as string, 'data_url').then(
                 async () => {
                     // Get the downloaded URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
@@ -172,14 +151,13 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                     // a sub-collection under individual posts, we must use a map to
                     // store comments where the key is the comment id and the value
                     // it points to is the parent post id it resides under.
-                    const commentId = docRef.id!
+                    const commentId = docRef.id
                     if ('comments' in tmp) {
                         tmp.comments[commentId] = router.query.id
                     } else {
                         // Add a new entry
                         let newComments: commentsMap = {}
-                        // @ts-ignore
-                        newComments[commentId] = router.query.id
+                        newComments[commentId] = router.query.id as string
                         tmp['comments'] = newComments
                     }
                     await updateDoc(doc?.ref, tmp)

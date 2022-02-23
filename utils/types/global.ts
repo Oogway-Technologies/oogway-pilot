@@ -14,3 +14,8 @@ export interface MediaObject{
 export interface HTMLInputEvent extends Event {
     target: HTMLInputElement & EventTarget;
 }
+
+export interface PostTimeStamp {
+    id:string,
+    timestamp:number
+}

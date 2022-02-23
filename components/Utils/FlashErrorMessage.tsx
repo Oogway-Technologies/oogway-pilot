@@ -7,7 +7,7 @@ export type FlashErrorMessageProps = {
     message: string
     ms: number
     style: string
-    onClose?: (arg?: any) => void
+    onClose?: (arg?: string|boolean|number) => void
 }
 
 const FlashErrorMessage: React.FC<FlashErrorMessageProps> = ({

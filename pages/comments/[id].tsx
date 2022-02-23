@@ -1,12 +1,20 @@
-import { db } from '../../firebase'
-import { useRouter } from 'next/router'
+import {db} from '../../firebase'
+import {useRouter} from 'next/router'
 import Head from 'next/head'
 import PostCard from '../../components/Feed/Post/Post'
 import Button from '../../components/Utils/Button'
-import { UilArrowCircleLeft } from '@iconscout/react-unicons'
-import { commentsPageClass } from '../../styles/feed'
+// @ts-ignore
+import {UilArrowCircleLeft} from '@iconscout/react-unicons'
+import {commentsPageClass} from '../../styles/feed'
+import {FirebaseComment, FirebasePost} from "../../utils/types/firebase";
+import {FC} from "react";
 
-function CommentPage({ post, comments }) {
+interface CommentPageProps{
+    post:FirebasePost
+    comments:FirebaseComment[] | []
+}
+
+const CommentPage:FC<CommentPageProps> = ({ post, comments }:CommentPageProps)=> {
     // Use the router to go back on the stack
     const router = useRouter()
 
@@ -40,18 +48,17 @@ function CommentPage({ post, comments }) {
                 <div className={commentsPageClass.contentDiv}>
                     {/* Post w/ comments */}
                     <PostCard
-                        id={post.id}
+                        id={post.id || ''}
                         authorUid={post.uid}
                         name={post.name}
                         message={post.message}
                         description={post.description}
                         isCompare={post.isCompare}
-                        email={post.email}
                         timestamp={post.timestamp}
-                        userImage={post.image}
                         postImage={post.postImage}
                         comments={comments}
                         isCommentThread={true}
+                        previewImage={null}
                     />
                 </div>
             </div>
@@ -62,7 +69,7 @@ function CommentPage({ post, comments }) {
 export default CommentPage
 
 // Prefetch the data prepared by the server
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: { query: { id: string | undefined } }) {
     // Two things to prepare here:
     // 1. prepare the post (clone from what it is coming from);
     // 2. prepare the comments
@@ -75,6 +82,7 @@ export async function getServerSideProps(context) {
     const post = {
         id: postRes.id,
         ...postRes.data(),
+        // @ts-ignore
         timestamp: postRes.data().timestamp.toDate().getTime(),
     }
 
@@ -93,6 +101,7 @@ export async function getServerSideProps(context) {
         }))
         .map((comments) => ({
             ...comments,
+            // @ts-ignore
             timestamp: comments.timestamp.toDate().getTime(),
         }))
 

@@ -1,39 +1,32 @@
-import React, { FC } from 'react'
-import { ParsedUrlQuery } from 'querystring'
-import { FirebaseProfile } from '../../utils/types/firebase'
-import { profilePage } from '../../styles/profile'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import React, {FC} from 'react'
+import {ParsedUrlQuery} from 'querystring'
+import {FirebasePost, FirebaseProfile} from '../../utils/types/firebase'
+import {profilePage} from '../../styles/profile'
+import {GetServerSideProps, GetServerSidePropsContext} from 'next'
 
-import { ProfileCard } from '../../components/Profile/ProfileCard'
-// import ProfileEngagementBar from "../../components/Profile/ProfileEngagementBar";
-import { useRecoilValue } from 'recoil'
-import { userProfileState } from '../../atoms/user'
+import {ProfileCard} from '../../components/Profile/ProfileCard'
 
 // Firebase imports
 import firebase from 'firebase/compat'
-import { doc, getDoc } from 'firebase/firestore'
-import { db } from '../../firebase'
-import { useCollection } from 'react-firebase-hooks/firestore'
+import {collection, doc, getDoc, orderBy, query, where} from 'firebase/firestore'
+import {db} from '../../firebase'
+import {useCollection} from 'react-firebase-hooks/firestore'
 import PostCard from '../../components/Feed/Post/Post'
-
-import DocumentData = firebase.firestore.DocumentData
-
-import { collection, orderBy, where, query } from 'firebase/firestore'
+import DocumentData = firebase.firestore.DocumentData;
 
 interface ProfileProps {
     userProfile: FirebaseProfile
+    posts: FirebasePost[]
 }
 
 const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
     const {
         bio,
         profilePic,
-        resetProfile,
         uid,
         username,
         name,
         lastName,
-        dm,
         location,
     } = userProfile
 
@@ -75,28 +68,28 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                                   message={post.data().message}
                                   description={post.data().description}
                                   isCompare={post.data().isCompare}
-                                  email={post.data().email}
                                   timestamp={post.data().timestamp}
                                   postImage={post.data().postImage}
                                   comments={null}
                                   isCommentThread={false}
+                                  previewImage={null}
                               />
                           ))
                         : // Render out the server-side rendered posts
                           posts.map((post) => (
                               <PostCard
                                   key={post.id}
-                                  id={post.id}
+                                  id={post.id || ''}
                                   authorUid={post.uid}
                                   name={post.name}
                                   message={post.message}
                                   description={post.description}
                                   isCompare={post.isCompare}
-                                  email={post.email}
                                   timestamp={post.timestamp}
                                   postImage={post.postImage}
                                   comments={null}
                                   isCommentThread={false}
+                                  previewImage={null}
                               />
                           ))}
                 </>

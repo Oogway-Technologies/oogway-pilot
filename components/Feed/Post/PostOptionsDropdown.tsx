@@ -1,33 +1,26 @@
 // React
-import React, { useEffect, useState, MouseEvent } from 'react'
-import { useRouter } from 'next/router'
+import React, {MouseEvent, useEffect, useState} from 'react'
+import {useRouter} from 'next/router'
 
 // Styles and Coomponents
 import Button from '../../Utils/Button'
 import DropdownMenu from '../../Utils/DropdownMenu'
 // @ts-ignore
-import {
-    UilBan,
-    UilEllipsisH,
-    UilExclamationCircle,
-    UilQuestionCircle,
-    UilTrashAlt,
-    // @ts-ignore
-} from '@iconscout/react-unicons'
+import {UilBan, UilEllipsisH, UilExclamationCircle, UilQuestionCircle, UilTrashAlt,} from '@iconscout/react-unicons'
 import Modal from '../../Utils/Modal'
-import { Dialog } from '@headlessui/react'
-import { postOptionsDropdownClass } from '../../../styles/feed'
+import {Dialog} from '@headlessui/react'
+import {postOptionsDropdownClass} from '../../../styles/feed'
 
 // Recoil
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
 
 // Database
-import { getUserDoc } from '../../../lib/userHelper'
-import { updateDoc } from 'firebase/firestore'
+import {getUserDoc} from '../../../lib/userHelper'
+import {updateDoc} from 'firebase/firestore'
 
 // Queries
-import { useQueryClient } from 'react-query'
+import {useQueryClient} from 'react-query'
 
 // Utils
 import needsHook from '../../../hooks/needsHook'
