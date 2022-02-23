@@ -1,23 +1,26 @@
-import React, {useRef, useEffect} from 'react';
+import { useEffect, useRef } from 'react'
+import useIsomorphicLayoutEffect from "./useIsomorphicLayoutEffect";
 
-// A react-friendly wrapper around setTimeout
-export default function useTimeout(callback, delay: number) {
-    const timeoutRef: React.Ref<T> = useRef(null);
-    const savedCallback: React.Ref<T> = useRef(callback);
+function useTimeout(callback: () => void, delay: number | null) {
+    const savedCallback = useRef(callback)
 
+    // Remember the latest callback if it changes.
+    useIsomorphicLayoutEffect(() => {
+        savedCallback.current = callback
+    }, [callback])
+
+    // Set up the timeout.
     useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
+        // Don't schedule if no delay is specified.
+        // Note: 0 is a valid value for delay.
+        if (!delay && delay !== 0) {
+            return
+        }
 
-    useEffect(() => {
-      const tick = () => savedCallback.current();
+        const id = setTimeout(() => savedCallback.current(), delay)
 
-      if (typeof delay === 'number') {
-        timeoutRef.current = window.setTimeout(tick, delay);
+        return () => clearTimeout(id)
+    }, [delay])
+}
 
-        return () => window.clearTimeout(timeoutRef.current);
-      }
-    }, [delay]);
-
-    return timeoutRef;
-  };
+export default useTimeout

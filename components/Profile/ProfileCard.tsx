@@ -1,15 +1,15 @@
 import Button from '../Utils/Button'
-import { profileCard } from '../../styles/profile'
+import {profileCard} from '../../styles/profile'
 import bull from '../Utils/Bullet'
-import React, { FC, useState } from 'react'
+import React, {FC, useState} from 'react'
 // @ts-ignore
-import { UilLocationPoint, UilPen } from '@iconscout/react-unicons'
-import { useRecoilValue } from 'recoil'
-import { userProfileState } from '../../atoms/user'
-import { Avatar, useMediaQuery } from '@mui/material'
+import {UilLocationPoint, UilPen} from '@iconscout/react-unicons'
+import {useRecoilValue} from 'recoil'
+import {userProfileState} from '../../atoms/user'
+import {Avatar, useMediaQuery} from '@mui/material'
 import UserProfileForm from '../Login/UserProfileForm'
 import Modal from '../Utils/Modal'
-import { useProfileData } from '../../hooks/useProfileData'
+import {useProfileData} from '../../hooks/useProfileData'
 import NewPostForm from '../Feed/Forms/NewPostForm'
 
 interface ProfileCardProps {
@@ -35,8 +35,8 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
         joinedAt,
     } = props
     // recoil state to check if Profile card is for current user.
-    const { uid: currentUserUid } = useRecoilValue(userProfileState)
-    const [userProfileSnapshot] = useProfileData(uid)
+    const {uid: currentUserUid} = useRecoilValue(userProfileState)
+    const [userProfileSnapshot] = useProfileData(uid as string)
 
     // hook to check is user is no mobile device or not.
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -61,8 +61,8 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
     }
 
     const sizeAvatar = () => {
-        if (isMobile) return { height: 75, width: 75 }
-        return { height: 150, width: 150 }
+        if (isMobile) return {height: 75, width: 75}
+        return {height: 150, width: 150}
     }
 
     return (
@@ -172,12 +172,12 @@ export const ProfileCard: FC<ProfileCardProps> = (props) => {
                 )}
             </div>
             <Modal
-                children={<UserProfileForm closeModal={closeProfileModal} />}
+                children={<UserProfileForm closeModal={closeProfileModal}/>}
                 show={showProfileForm}
                 onClose={closeProfileModal}
             />
             <Modal
-                children={<NewPostForm closeModal={closePostModal} />}
+                children={<NewPostForm closeModal={closePostModal}/>}
                 show={showNewPostForm}
                 onClose={closePostModal}
             />

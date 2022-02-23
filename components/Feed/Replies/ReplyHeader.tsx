@@ -1,13 +1,13 @@
 import Timestamp from '../../Utils/Timestamp'
 import React from 'react'
 import needsHook from '../../../hooks/needsHook'
-import { postCardClass, replyHeaderClass } from '../../../styles/feed'
+import {postCardClass, replyHeaderClass} from '../../../styles/feed'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
-import { db } from '../../../firebase'
-import { Avatar } from '@mui/material'
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
-import { getUserDoc } from '../../../lib/userHelper'
-import { useProfileData } from '../../../hooks/useProfileData'
+import {db} from '../../../firebase'
+import {Avatar} from '@mui/material'
+import {deleteDoc, doc, updateDoc} from 'firebase/firestore'
+import {getUserDoc} from '../../../lib/userHelper'
+import {useProfileData} from '../../../hooks/useProfileData'
 
 type ReplyHeaderProps = {
     postId: string

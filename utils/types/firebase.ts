@@ -1,6 +1,5 @@
 import {DocumentData, FieldValue, QueryDocumentSnapshot, SnapshotOptions} from "firebase/firestore";
-import { MediaObject } from "./global";
-import Timestamp from '../../components/Utils/Timestamp';
+import {MediaObject} from "./global";
 
 
 /**

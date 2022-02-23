@@ -1,5 +1,5 @@
 // Next and react
-import { useState } from 'react'
+import {useState} from 'react'
 import Head from 'next/head'
 
 // Components and styling
@@ -8,13 +8,13 @@ import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 
 // Recoil states
-import { userProfileState } from '../atoms/user'
-import { useRecoilValue } from 'recoil'
+import {userProfileState} from '../atoms/user'
+import {useRecoilValue} from 'recoil'
 
 // Queries
-import { QueryClient, dehydrate } from 'react-query'
-import { queryClientConfig } from '../query'
-import { getPosts } from '../queries/posts'
+import {dehydrate, QueryClient} from 'react-query'
+import {queryClientConfig} from '../query'
+import {getPosts} from '../queries/posts'
 
 export default function Home() {
     // Call user Profile and check whether profile requires updating

@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {useState} from 'react'
+import {FC, useState} from 'react'
 import UserProfileForm from '../../components/Login/UserProfileForm'
 import Modal from '../../components/Utils/Modal'
 import {db} from '../../firebase'
@@ -7,8 +7,13 @@ import {useRouter} from 'next/router'
 import {GetServerSideProps, GetServerSidePropsContext} from "next";
 import {ParsedUrlQuery} from "querystring";
 import {doc, DocumentData, getDoc} from "firebase/firestore";
+import {FirebaseProfile} from "../../utils/types/firebase";
 
-const Settings = ({userProfile, referer}) => {
+interface SettingsProps {
+    userProfile:FirebaseProfile
+    referer?:string
+}
+const Settings:FC<SettingsProps> = ({userProfile, referer}:SettingsProps) => {
     const router = useRouter()
 
     // Block unauthorized users
@@ -26,7 +31,7 @@ const Settings = ({userProfile, referer}) => {
     const [showModal, setShowModal] = useState(true)
     const closeModal = () => {
         setShowModal(false)
-        router.push(referer)
+        referer && router.push(referer)
     }
     const openModal = () => {
         setShowModal(true)
@@ -42,7 +47,6 @@ const Settings = ({userProfile, referer}) => {
             <Modal
                 children={
                     <UserProfileForm
-                        profile={userProfile}
                         closeModal={closeModal}
                     />
                 }
