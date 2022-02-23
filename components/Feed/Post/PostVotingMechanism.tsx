@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../../../firebase'
 import { postCardClass } from '../../../styles/feed'
+// @ts-ignore
 import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
@@ -8,11 +9,12 @@ import { streamPostData } from '../../../lib/postsHelper'
 import { useUser } from '@auth0/nextjs-auth0'
 import Linkify from 'react-linkify'
 import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
+import { MediaObject } from '../../../utils/types/global'
 
 type PostVotingMechanismProps = {
     id: string
-    compareData: Array<T>
-    votesList: Array<T>
+    compareData: Array<MediaObject>
+    votesList: number[]
 }
 
 const PostVotingMechanism = ({

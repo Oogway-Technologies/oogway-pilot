@@ -5,12 +5,15 @@ import {
     UilEye,
     UilEyeSlash,
     UilExclamationTriangle,
+    //@ts-ignore
 } from '@iconscout/react-unicons'
 import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
 
 // Form
 import { useForm } from 'react-hook-form'
-import { FlashErrorMessageProps } from '../Utils/FlashErrorMessage'
+import FlashErrorMessage, {
+    FlashErrorMessageProps,
+} from '../Utils/FlashErrorMessage'
 import useTimeout from '../../hooks/useTimeout'
 import { useRouter } from 'next/router'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
@@ -29,8 +32,8 @@ const LoginForm: FC<LoginFormProps> = ({
     // Router
     const router = useRouter()
 
-    const inputEmailRef = useRef(null)
-    const inputPasswordRef = useRef(null)
+    const inputEmailRef = useRef<HTMLInputElement>(null)
+    const inputPasswordRef = useRef<HTMLInputElement>(null)
     const [showPassword, setShowPassword] = useState(false)
 
     // Form management
@@ -54,7 +57,7 @@ const LoginForm: FC<LoginFormProps> = ({
     }, [])
 
     const logIn = () => {
-        if (!inputEmailRef.current.value) {
+        if (!inputEmailRef?.current?.value) {
             setError(
                 'email',
                 { type: 'required', message: 'Missing email.' },
@@ -63,7 +66,7 @@ const LoginForm: FC<LoginFormProps> = ({
             return false
         }
 
-        if (!inputPasswordRef.current.value) {
+        if (!inputPasswordRef?.current?.value) {
             setError(
                 'password',
                 { type: 'required', message: 'Missing password.' },
@@ -72,61 +75,30 @@ const LoginForm: FC<LoginFormProps> = ({
             return false
         }
 
-        if (inputEmailRef.current.value && inputPasswordRef.current.value) {
-            firebase
-                .auth()
-                .signInWithEmailAndPassword(
-                    inputEmailRef.current.value,
-                    inputPasswordRef.current.value
-                )
-                .then((userCredential) => {
-                    // Signed in: not much to do here
-                    // redirection happend on shate change from the _app
-                    const user = userCredential.user
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(
+                inputEmailRef.current.value,
+                inputPasswordRef.current.value
+            )
+            .then((userCredential) => {
+                // Signed in: not much to do here
+                // redirection happend on shate change from the _app
+                const user = userCredential.user
+            })
+            .catch(() => {
+                setError('form', {
+                    type: 'required', // Actually a validation error, but since manually checking any will do
+                    message:
+                        'Either email or password are incorrect. Please retry.',
                 })
-                .catch((e) => {
-                    setError('form', {
-                        type: 'required', // Actually a validation error, but since manually checking any will do
-                        message:
-                            'Either email or password are incorrect. Please retry.',
-                    })
-                })
-        }
+            })
 
         // Clear the input
         inputPasswordRef.current.value = ''
         inputEmailRef.current.value = ''
 
         return true
-    }
-
-    const FlashErrorMessage: FC<FlashErrorMessageProps> = ({
-        message,
-        ms,
-        style,
-        error,
-    }) => {
-        // Tracks how long a form warning message has been displayed
-        const [warningHasElapsed, setWarningHasElapsed] = useState(false)
-
-        useTimeout(() => {
-            setWarningHasElapsed(true)
-        }, ms)
-
-        // If show is false the component will return null and stop here
-        if (warningHasElapsed) {
-            if (error) {
-                clearErrors(error)
-            }
-            return null
-        }
-
-        // Otherwise, return warning
-        return (
-            <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4" /> {message}
-            </span>
-        )
     }
 
     const handleLogin = () => {
@@ -157,7 +129,6 @@ const LoginForm: FC<LoginFormProps> = ({
                         message={errors.email.message}
                         ms={warningTime}
                         style={loginInputs.formAlert}
-                        error="email"
                     />
                 )}
                 <div className={loginInputs.inputHeader}>Password</div>
@@ -192,7 +163,6 @@ const LoginForm: FC<LoginFormProps> = ({
                         message={errors.password.message}
                         ms={warningTime}
                         style={loginInputs.formAlert}
-                        error="password"
                     />
                 )}
                 <div className={loginDivs.customLink} onClick={goToResetPW}>
@@ -225,7 +195,6 @@ const LoginForm: FC<LoginFormProps> = ({
                     message={errors.form.message}
                     ms={warningTime}
                     style={loginInputs.formAlert}
-                    error="form"
                 />
             )}
 

@@ -1,16 +1,17 @@
-import React, {useState} from 'react';
-import Button from '../Utils/Button';
-import {UilPen} from '@iconscout/react-unicons'
-import Modal from '../Utils/Modal';
-import NewPostForm from './Forms/NewPostForm';
-import {feedToolbarClass} from '../../styles/feed';
+import React, { useState } from 'react'
+import Button from '../Utils/Button'
+//@ts-ignore
+import { UilPen } from '@iconscout/react-unicons'
+import Modal from '../Utils/Modal'
+import NewPostForm from './Forms/NewPostForm'
+import { feedToolbarClass } from '../../styles/feed'
 
 // Auth0
-import {useUser} from '@auth0/nextjs-auth0';
+import { useUser } from '@auth0/nextjs-auth0'
 
 const FeedToolbar = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const {user, isLoading} = useUser();
+    const { user, isLoading } = useUser()
 
     // Modal helper functions
     const openModal = () => {
@@ -54,22 +55,25 @@ const FeedToolbar = () => {
                 {/* Right: new post button */}
                 {user && (
                     <div className={feedToolbarClass.rightDiv}>
-                        <Button text="New Post" keepText={false} icon={<UilPen/>}
-                                type='button'
-                                addStyle={feedToolbarClass.newPostButton}
-                                onClick={openModal}
+                        <Button
+                            text="New Post"
+                            keepText={false}
+                            icon={<UilPen />}
+                            type="button"
+                            addStyle={feedToolbarClass.newPostButton}
+                            onClick={openModal}
                         />
                     </div>
                 )}
             </div>
 
             <Modal
-                children={<NewPostForm closeModal={closeModal}/>}
+                children={<NewPostForm closeModal={closeModal} />}
                 show={isOpen}
                 onClose={closeModal}
             />
         </>
-    );
-};
+    )
+}
 
-export default FeedToolbar;
+export default FeedToolbar

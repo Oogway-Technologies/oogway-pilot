@@ -1,15 +1,18 @@
-import { FC, Element, useState, useRef, useEffect } from 'react'
+import { FC, useState, useRef, useEffect, MouseEvent } from 'react'
 
 // JSX and styling
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'
 import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
+//@ts-ignore
 import { UilExclamationTriangle } from '@iconscout/react-unicons'
 
 // Form
 import * as EmailValidator from 'email-validator'
 import { useForm } from 'react-hook-form'
-import { FlashErrorMessageProps } from '../Utils/FlashErrorMessage'
+import FlashErrorMessage, {
+    FlashErrorMessageProps,
+} from '../Utils/FlashErrorMessage'
 import useTimeout from '../../hooks/useTimeout'
 
 // db
@@ -22,14 +25,13 @@ type PWFormProps = {
 }
 
 const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
-    const recoveryEmailRef = useRef(null)
+    const recoveryEmailRef = useRef<HTMLInputElement>(null)
     const [showEmailSent, setShowEmailSent] = useState(false)
 
     // Form management
     const {
         register,
         setError,
-        clearErrors,
         formState: { errors },
     } = useForm()
     const warningTime = 3000 // set warning to flash for 3 sec
@@ -39,37 +41,8 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
         register('email', { required: true })
     }, [])
 
-    const FlashErrorMessage: FC<FlashErrorMessageProps> = ({
-        message,
-        ms,
-        style,
-        error,
-    }) => {
-        // Tracks how long a form warning message has been displayed
-        const [warningHasElapsed, setWarningHasElapsed] = useState(false)
-
-        useTimeout(() => {
-            setWarningHasElapsed(true)
-        }, ms)
-
-        // If show is false the component will return null and stop here
-        if (warningHasElapsed) {
-            if (error) {
-                clearErrors(error)
-            }
-            return null
-        }
-
-        // Otherwise, return warning
-        return (
-            <span className={style} role="alert">
-                <UilExclamationTriangle className="mr-1 h-4" /> {message}
-            </span>
-        )
-    }
-
     const sendReset = () => {
-        if (!recoveryEmailRef.current.value) {
+        if (!recoveryEmailRef?.current?.value) {
             setError(
                 'email',
                 { type: 'required', message: 'Missing email.' },
@@ -103,7 +76,7 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
         return true
     }
 
-    const sendAndClose = (e) => {
+    const sendAndClose = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         const success = sendReset()
         if (success) {
@@ -112,7 +85,7 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
         }
     }
 
-    const ForgotPWMessage: Element = () => {
+    const ForgotPWMessage = () => {
         // Otherwise return message
         return (
             <div>
@@ -144,7 +117,7 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
         )
     }
 
-    const ForgotPWForm: Element = () => {
+    const ForgotPWForm = () => {
         return (
             <div>
                 <div className={loginDivs.modalHeader}>Forgot Password</div>
@@ -169,7 +142,6 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
                             message={errors.email.message}
                             ms={warningTime}
                             style={loginInputs.formAlert}
-                            error="email"
                         />
                     )}
                 </div>

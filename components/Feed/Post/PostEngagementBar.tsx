@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react'
 import { postCardClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
 import { useRouter } from 'next/router'
+// @ts-ignore
 import { UilComment, UilThumbsUp } from '@iconscout/react-unicons'
 import { EngagementItems } from '../../../utils/types/global'
 import { usePostNumberLikes } from '../../../hooks/useNumberLikes'

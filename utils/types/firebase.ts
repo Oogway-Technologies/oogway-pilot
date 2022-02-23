@@ -1,4 +1,6 @@
 import {DocumentData, FieldValue, QueryDocumentSnapshot, SnapshotOptions} from "firebase/firestore";
+import { MediaObject } from "./global";
+import Timestamp from '../../components/Utils/Timestamp';
 
 
 /**
@@ -18,13 +20,8 @@ export type repliesMap = { [replyId: string] : {
 
 export type userMap = { [uid: string]: boolean }
 
-export type compareObj = {
-    type: 'text' | 'image'
-    value: string
-}
-
 export type compare = {
-    objList: Array<compareObj>
+    objList: Array<MediaObject>
     votesObjMapList: Array<userMap>
 }
 
@@ -32,6 +29,15 @@ export type compare = {
 /**
  * Fire base collection interfaces
  */
+export interface FirebaseReply {
+    id?: string
+    message: string
+    author: string
+    authorUid: string
+    timestamp: FieldValue
+    likes: userMap
+}
+
 export interface FirebaseComment {
     id?: string
     message: string | undefined
@@ -109,6 +115,33 @@ export const commmentConverter = {
             authorUid: data.authorUid,
             likes: data.likes,
             postImage: data.postImage ? data.postImage : null,
+            timestamp: data.timestamp
+        }
+    }
+}
+
+export const replyConverter = {
+    toFirestore(reply: FirebaseReply) : DocumentData {
+        return {
+            id: reply.id,
+            message: reply.message,
+            author: reply.author,
+            authorUid: reply.authorUid,
+            likes: reply.likes,
+            timestamp: reply.timestamp
+        }
+    },
+    fromFirestore(
+        snapshot: QueryDocumentSnapshot,
+        options: SnapshotOptions
+    ): FirebaseReply {
+        const data = snapshot.data(options)
+        return {
+            id: data.id,
+            message: data.message,
+            author: data.author,
+            authorUid: data.authorUid,
+            likes: data.likes,
             timestamp: data.timestamp
         }
     }

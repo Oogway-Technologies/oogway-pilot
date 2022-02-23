@@ -60,8 +60,8 @@ import { MediaObject } from '../../../utils/types/global'
 
 type NewPostProps = {
     closeModal: () => void
-    questPlaceholder: string // Placeholder text for question input in form
-    descPlaceholder: string // Placeholder text for description input in form
+    questPlaceholder?: string // Placeholder text for question input in form
+    descPlaceholder?: string // Placeholder text for description input in form
 }
 
 const NewPostForm: FC<NewPostProps> = ({

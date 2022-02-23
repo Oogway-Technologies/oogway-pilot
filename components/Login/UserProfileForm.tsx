@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { FC, useRef, useState } from 'react'
+import React, { FC, useRef, useState, MouseEvent, ChangeEvent } from 'react'
 import { db, storage } from '../../firebase'
 import {
     loginButtons,
@@ -43,9 +43,12 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
 
     // Picture state
     const profilePicRef = useRef<HTMLInputElement>(null)
-    const [imageToUpload, setImageToUpload] = useState(null)
-    const [targetEvent, setTargetEvent] = useState(null)
-    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false)
+    const [imageToUpload, setImageToUpload] = useState<
+        string | ArrayBuffer | null | undefined
+    >(null)
+    const [targetEvent, setTargetEvent] =
+        useState<ChangeEvent<HTMLInputElement>>()
+    const [isImageSizeLarge, setIsImageSizeLarge] = useState<boolean>(false)
 
     // Router
     const router = useRouter()
@@ -84,6 +87,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
         // Note: path to image is profiles/<profile_id>/image
         if (imageToUpload) {
             const imageRef = ref(storage, `profiles/${userProfile.uid}/image`)
+            //@ts-ignore
             await uploadString(imageRef, imageToUpload, 'data_url').then(
                 async () => {
                     // Get the download URL for the image
@@ -110,7 +114,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
         closeModal()
     }
 
-    const cancelAndContinue = async (e) => {
+    const cancelAndContinue = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
         // Set the profile so that it doesn't need reset
@@ -139,17 +143,22 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
         closeModal()
     }
 
-    const addImageToUpload = (e) => {
+    const addImageToUpload = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault()
         const reader = new FileReader()
-        if (e.target.files[0]) {
-            // Read the file
-            reader.readAsDataURL(e.target.files[0])
+        const { target } = e
+        if (!target) {
+            return
         }
-
+        // Extract file if it exists and read it
+        const file = (target?.files && target?.files[0]) ?? null
+        if (file) {
+            reader.readAsDataURL(file)
+        }
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
         reader.onload = (readEvent) => {
-            setImageToUpload(readEvent.target.result)
+            setImageToUpload(readEvent?.target?.result)
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice
@@ -158,7 +167,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
         }
     }
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
         // Store the event to reset its state later
         // and allow the user to load the same image twice
         // if needed
@@ -211,8 +220,8 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
                         sx={sizeAvatar}
                         src={
                             imageToUpload
-                                ? imageToUpload
-                                : userProfile.profilePic
+                                ? (imageToUpload as string)
+                                : userProfile?.profilePic
                         }
                     />
 

@@ -21,7 +21,7 @@ import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../../atoms/user'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import { getUserDoc } from '../../../lib/userHelper'
-import { repliesMap } from '../../../utils/types/firebase'
+import { FirebaseReply, repliesMap } from '../../../utils/types/firebase'
 
 type NewReplyFormProps = {
     commentId: string
@@ -89,9 +89,9 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         )
 
         // Now add a new reply for this post
-        let replyData = {
+        let replyData: FirebaseReply = {
             timestamp: serverTimestamp(),
-            message: inputRef?.current?.value,
+            message: inputRef?.current?.value || '',
             author: userProfile.username,
             authorUid: userProfile.uid,
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user

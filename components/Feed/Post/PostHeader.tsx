@@ -7,17 +7,17 @@ import Timestamp from '../../Utils/Timestamp'
 import { getUserDoc } from '../../../lib/userHelper'
 import { getCommentsCollection } from '../../../lib/commentsHelper'
 import { getPost } from '../../../lib/postsHelper'
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { deleteDoc, doc, FieldValue, updateDoc } from 'firebase/firestore'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { deleteMedia } from '../../../lib/storageHelper'
 import { useRouter } from 'next/router'
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 type PostHeaderProps = {
     id: string
     authorUid: string
     name: string
-    timestamp: Date | null
+    timestamp: FieldValue
 }
 
 const PostHeader: FC<PostHeaderProps> = ({
@@ -33,19 +33,16 @@ const PostHeader: FC<PostHeaderProps> = ({
 
     // Deletes a post
     const deletePost = async () => {
-        const postDoc = getPost(id)
-
         // Get the path to the post to delete
         const path = `posts/${id}`
 
         // Get the delete function and call it on the path
-        const functions = getFunctions();
-        const deleteFn = httpsCallable(functions, 'recursiveDelete');
-        deleteFn({ path: path })
-        .catch(function(err) {
-            console.log('Delete failed, see console,');
-            console.warn(err);
-        });
+        const functions = getFunctions()
+        const deleteFn = httpsCallable(functions, 'recursiveDelete')
+        deleteFn({ path: path }).catch(function (err) {
+            console.log('Delete failed, see console,')
+            console.warn(err)
+        })
 
         // Delete the post's media, if any
         deleteMedia(`posts/${id}`)
@@ -85,8 +82,8 @@ const PostHeader: FC<PostHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            {authorProfile.username
-                                ? authorProfile.username
+                            {authorProfile?.username
+                                ? authorProfile?.username
                                 : name}
                         </span>
                     </div>

@@ -1,4 +1,3 @@
-import { useUser } from '@auth0/nextjs-auth0'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'

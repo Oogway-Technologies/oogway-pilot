@@ -23,11 +23,13 @@ export const PostContent: FC = (props) => (
     </ContentLoader>
 )
 
-export const PostCardLoader = forwardRef((props, ref) => (
-    <Card className={postCardClass.card} {...props} ref={ref}>
-        <PostContent />
-    </Card>
-))
+export const PostCardLoader = forwardRef(
+    (props, ref: React.Ref<HTMLDivElement>) => (
+        <Card className={postCardClass.card} {...props} ref={ref}>
+            <PostContent />
+        </Card>
+    )
+)
 
 interface GeneratePostCardLoaderProps {
     n: number // number of place holder cards to generate

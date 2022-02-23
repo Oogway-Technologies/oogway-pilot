@@ -10,11 +10,11 @@ import { getUserDoc } from '../../../lib/userHelper'
 import { useProfileData } from '../../../hooks/useProfileData'
 
 type ReplyHeaderProps = {
-    postId: string | string[] | undefined
+    postId: string
     commentId: string
     replyId: string
     authorUid: string
-    name: string | null
+    name: string
     email: string
     timestamp: Date | null
 }
@@ -66,7 +66,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                     src={
                         authorProfile?.profilePic
                             ? authorProfile.profilePic
-                            : null
+                            : undefined
                     }
                 />
 
@@ -75,8 +75,8 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            {authorProfile.username
-                                ? authorProfile.username
+                            {authorProfile?.username
+                                ? authorProfile?.username
                                 : name}
                         </span>
                     </div>
@@ -93,7 +93,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                 <PostOptionsDropdown
                     authorUid={authorUid}
                     authorName={
-                        authorProfile.username ? authorProfile.username : name
+                        authorProfile?.username ? authorProfile?.username : name
                     }
                     deletePost={deleteReplyEntry}
                 />

@@ -1,23 +1,24 @@
-import React from 'react'
-import SearchBarButton from './SearchBarButton';
-import { searchBarClass } from '../../styles/header';
+import React, { FC } from 'react'
+import SearchBarButton from './SearchBarButton'
+import { searchBarClass } from '../../styles/header'
 
 interface SearchBarProps {
     placeholder: string
 }
 
-const SearchBar = ({ placeholder }: SearchBarProps) => {
+const SearchBar: FC<SearchBarProps> = ({ placeholder }) => {
     return (
         <form className={searchBarClass.form}>
             <div className={searchBarClass.formBody}>
                 <div className={searchBarClass.inputBar}>
-                    <input 
-                    className={searchBarClass.inputField}
-                    type="text" placeholder={placeholder}/>
+                    <input
+                        className={searchBarClass.inputField}
+                        type="text"
+                        placeholder={placeholder}
+                    />
                 </div>
-                <SearchBarButton type="submit"/>
+                <SearchBarButton type="submit" />
             </div>
-            
         </form>
     )
 }

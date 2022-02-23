@@ -1,5 +1,5 @@
 // React
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, MouseEvent } from 'react'
 import { useRouter } from 'next/router'
 
 // Styles and Coomponents
@@ -12,6 +12,7 @@ import {
     UilExclamationCircle,
     UilQuestionCircle,
     UilTrashAlt,
+    // @ts-ignore
 } from '@iconscout/react-unicons'
 import Modal from '../../Utils/Modal'
 import { Dialog } from '@headlessui/react'
@@ -84,7 +85,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     }
 
     // Handler functions
-    const blockUser = async (e) => {
+    const blockUser = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault() // Not sure if necessary
 
         // Return early if user already blocked
@@ -112,7 +113,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         setAuthorIsBlocked(true)
     }
 
-    const unblockUser = async (e) => {
+    const unblockUser = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
         // Return early if user not blocked
@@ -140,7 +141,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         setAuthorIsBlocked(false)
     }
 
-    const deleteAndClose = async (e) => {
+    const deleteAndClose = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         const nextUrl = deletePost()
         closeModal()

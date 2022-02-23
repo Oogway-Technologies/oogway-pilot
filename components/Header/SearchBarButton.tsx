@@ -1,33 +1,37 @@
-import React, { useState }  from 'react'
+import React from 'react'
 import { Search } from 'react-feather'
+//@ts-ignore
 import { UilExchange } from '@iconscout/react-unicons'
-import needsHook from '../../hooks/needsHook';
-import { searchBarButtonClass } from '../../styles/header';
+import needsHook from '../../hooks/needsHook'
+import { searchBarButtonClass } from '../../styles/header'
 
-interface SearchBarButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    type: 'submit' | 'reset' | 'button' | undefined;
+interface SearchBarButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    type: 'submit' | 'reset' | 'button' | undefined
 }
 
 const SearchBarButton = ({ type }: SearchBarButtonProps) => {
     return (
-        <button 
+        <button
             type={type}
             className={searchBarButtonClass.button}
             onClick={needsHook}
         >
-            <span 
-            className={searchBarButtonClass.magnifyingGlassSpan}>
-                <Search className={searchBarButtonClass.magnifyingGlass}/>
+            <span className={searchBarButtonClass.magnifyingGlassSpan}>
+                <Search className={searchBarButtonClass.magnifyingGlass} />
             </span>
             <span className={searchBarButtonClass.switchSpan}>
-                <UilExchange className={searchBarButtonClass.switch} color="currentColor"/>
+                <UilExchange
+                    className={searchBarButtonClass.switch}
+                    color="currentColor"
+                />
             </span>
         </button>
     )
 }
 
 SearchBarButton.defaultProps = {
-    type: "button"
+    type: 'button',
 }
 
 export default SearchBarButton
