@@ -47,7 +47,7 @@ function PostsAPI() {
                 <>
                     {/* Infinite Scroller / Lazy Loader */}
                     {data?.pages.map((page) => (
-                        <React.Fragment key={page.lastTimestamp.seconds}>
+                        <React.Fragment key={page?.lastTimestamp?.seconds}>
                             {/* If posts collection exists */}
                             {page.posts ? (
                                 page.posts.map((post: FirebasePost) => (

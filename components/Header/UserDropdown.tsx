@@ -51,10 +51,10 @@ const UserDropdown: React.FC = () => {
     {/*TODO: uncomment settings when its done. */
     }
     const menuItems = [
-        <ProfileButton hasText={true} uid={userProfile?.uid}/>,
+        <ProfileButton key={"ProfileButton"} hasText={true} uid={userProfile?.uid}/>,
         // <SettingsButton hasText={true} onClick={needsHook}/>,
-        <LogoutButton hasText={true}/>,
-        <ToggleTheme hasText={true}/>,
+        <LogoutButton key={"LogoutButton"} hasText={true}/>,
+        <ToggleTheme key={"ToggleTheme"} hasText={true}/>,
     ]
 
     //<button className="" onClick={signIn}>

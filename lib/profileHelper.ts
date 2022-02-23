@@ -1,10 +1,10 @@
-import { doc, getDoc, onSnapshot } from "firebase/firestore"
-import { db } from "../firebase"
+import {doc, getDoc, onSnapshot} from "firebase/firestore"
+import {db} from "../firebase"
 
 /**
  *
  * @param id profile id
- * @description Retrieves a promise of the profile document from firebase 
+ * @description Retrieves a promise of the profile document from firebase
  */
 export const getProfileDoc = async (id: string) => {
     const profileDocRef = doc(db, "profiles", id)
@@ -14,9 +14,9 @@ export const getProfileDoc = async (id: string) => {
 /**
  *
  * @param id profile id
- * @description Retrieves a promise of profile document data from firebase 
+ * @description Retrieves a promise of profile document data from firebase
  */
- export const getProfileDocData = async (id: string) => {
+export const getProfileDocData = async (id: string) => {
     const profileDocRef = doc(db, "profiles", id)
     const profileDocSnap = await getDoc(profileDocRef)
     return profileDocSnap.data()
@@ -29,11 +29,11 @@ export const getProfileDoc = async (id: string) => {
  * @param error a function specifying how to handle error retrieving the snapshot
  * @description streams the profile real time and performs the snapshot function on it.
  */
- export const streamProfileData = (
-    id: string, 
-    snapshot: (snap: firebase.firestore.snapshot) => void, 
+export const streamProfileData = (
+    id: string,
+    snapshot: (snap: any) => void,
     error: (err: any) => void
-    ) => {
+) => {
     const profileRef = doc(db, "profiles", id)
     return onSnapshot(profileRef, snapshot, error)
 }

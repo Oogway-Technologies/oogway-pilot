@@ -1,62 +1,36 @@
-import React, {
-    ChangeEvent,
-    FC,
-    MouseEventHandler,
-    KeyboardEvent,
-    MouseEvent,
-    useEffect,
-    useRef,
-    useState,
-    KeyboardEventHandler,
-} from 'react'
+import React, {ChangeEvent, FC, KeyboardEvent, MouseEvent, useEffect, useRef, useState,} from 'react'
 
 // Database
-import { db, storage } from '../../../firebase'
-import {
-    addDoc,
-    collection,
-    doc,
-    serverTimestamp,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
+import {db, storage} from '../../../firebase'
+import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
+import {getDownloadURL, ref, uploadString} from '@firebase/storage'
 
 // JSX components
 import Button from '../../Utils/Button'
-import { Dialog } from '@headlessui/react'
-import {
-    UilBalanceScale,
-    UilImagePlus,
-    UilNavigator,
-    UilTimesCircle,
-    // @ts-ignore
-} from '@iconscout/react-unicons'
-import { Collapse } from '@mui/material'
+import {Dialog} from '@headlessui/react'
+// @ts-ignore
+import {UilBalanceScale, UilImagePlus, UilNavigator, UilTimesCircle,} from '@iconscout/react-unicons'
+import {Collapse} from '@mui/material'
 
 // Form management
-import { useForm } from 'react-hook-form'
-import { postFormClass } from '../../../styles/feed'
+import {useForm} from 'react-hook-form'
+import {postFormClass} from '../../../styles/feed'
 
 // Recoil states
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
+import {userProfileState} from '../../../atoms/user'
+import {useRecoilValue} from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import { FirebasePost } from '../../../utils/types/firebase'
+import {FirebasePost} from '../../../utils/types/firebase'
 
 // Queries
-import { useQueryClient } from 'react-query'
-import { Tooltip } from '../../Utils/Tooltip'
-import {
-    checkFileSize,
-    fetcher,
-    isValidURL,
-} from '../../../utils/helpers/common'
+import {useQueryClient} from 'react-query'
+import {Tooltip} from '../../Utils/Tooltip'
+import {checkFileSize, fetcher, isValidURL,} from '../../../utils/helpers/common'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { warningTime } from '../../../utils/constants/global'
-import { MediaObject } from '../../../utils/types/global'
+import {warningTime} from '../../../utils/constants/global'
+import {MediaObject} from '../../../utils/types/global'
 
 type NewPostProps = {
     closeModal: () => void
@@ -65,10 +39,10 @@ type NewPostProps = {
 }
 
 const NewPostForm: FC<NewPostProps> = ({
-    closeModal,
-    questPlaceholder,
-    descPlaceholder,
-}) => {
+                                           closeModal,
+                                           questPlaceholder,
+                                           descPlaceholder,
+                                       }) => {
     // Track current user profile data
     const userProfile = useRecoilValue(userProfileState)
 
@@ -79,22 +53,20 @@ const NewPostForm: FC<NewPostProps> = ({
     const {
         register,
         setError,
-        formState: { errors },
+        formState: {errors},
     } = useForm()
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('question', { required: true })
+        register('question', {required: true})
     }, [])
     useEffect(() => {
-        register('compare', { required: true })
+        register('compare', {required: true})
     }, [])
 
     const [loading, setLoading] = useState(false)
 
     // The image to post and to display as preview
-    const [imageToPost, setImageToPost] = useState<
-        string | ArrayBuffer | null | undefined
-    >(null)
+    const [imageToPost, setImageToPost] = useState<string | ArrayBuffer | null | undefined>(null)
 
     // This is a trick I need to use to reset the state and allow the user
     // to load the same image twice
@@ -114,12 +86,8 @@ const NewPostForm: FC<NewPostProps> = ({
     const filePickerRef = useRef<HTMLInputElement>(null)
 
     // Ref and data for left and right images
-    const [imageToCompareLeft, setImageToCompareLeft] = useState<
-        string | ArrayBuffer | null | undefined
-    >(null)
-    const [imageToCompareRight, setImageToCompareRight] = useState<
-        string | ArrayBuffer | null | undefined
-    >(null)
+    const [imageToCompareLeft, setImageToCompareLeft] = useState<string | ArrayBuffer | null | undefined>(null)
+    const [imageToCompareRight, setImageToCompareRight] = useState<string | ArrayBuffer | null | undefined>(null)
     const [textToCompareLeft, setTextToCompareLeft] = useState<string>('')
     const [textToCompareRight, setTextToCompareRight] = useState<string>('')
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
@@ -201,8 +169,8 @@ const NewPostForm: FC<NewPostProps> = ({
         if (inputRef && !inputRef?.current?.value) {
             setError(
                 'question',
-                { type: 'required', message: 'A question is required.' },
-                { shouldFocus: true }
+                {type: 'required', message: 'A question is required.'},
+                {shouldFocus: true}
             )
             return false // Whether to sendPost or not
         }
@@ -211,8 +179,8 @@ const NewPostForm: FC<NewPostProps> = ({
         if (isValidURL(inputRef?.current?.value)) {
             setError(
                 'question',
-                { type: 'required', message: 'Question can not have link.' },
-                { shouldFocus: true }
+                {type: 'required', message: 'Question can not have link.'},
+                {shouldFocus: true}
             )
             return false // Whether to sendPost or not
         }
@@ -226,7 +194,7 @@ const NewPostForm: FC<NewPostProps> = ({
                     message:
                         'You are missing required information to create a compare post.',
                 },
-                { shouldFocus: true }
+                {shouldFocus: true}
             )
             return false // Whether to send post or not
         }
@@ -273,8 +241,7 @@ const NewPostForm: FC<NewPostProps> = ({
             const imageRef = ref(storage, `posts/${docRef.id}/image`)
 
             // Upload the image
-            // @ts-ignore
-            await uploadString(imageRef, imageToPost, 'data_url').then(
+            await uploadString(imageRef, imageToPost as string, 'data_url').then(
                 async () => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
@@ -310,10 +277,9 @@ const NewPostForm: FC<NewPostProps> = ({
             // Upload the left image, if there is one
             if (imageToCompareLeft) {
                 const imageRef = ref(storage, `posts/${docRef.id}/imageLeft`)
-                // @ts-ignore
                 await uploadString(
                     imageRef,
-                    imageToCompareLeft,
+                    imageToCompareLeft as string,
                     'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
@@ -328,10 +294,9 @@ const NewPostForm: FC<NewPostProps> = ({
             // Upload the right image, if there is one
             if (imageToCompareRight) {
                 const imageRef = ref(storage, `posts/${docRef.id}/imageRight`)
-                // @ts-ignore
                 await uploadString(
                     imageRef,
-                    imageToCompareRight,
+                    imageToCompareRight as string,
                     'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
@@ -378,9 +343,9 @@ const NewPostForm: FC<NewPostProps> = ({
         await setDoc(
             userDocRef,
             {
-                posts: { id: docRef.id },
+                posts: {id: docRef.id},
             },
-            { merge: true }
+            {merge: true}
         )
 
         // Everything is done
@@ -395,7 +360,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const addImageToCompareLeft = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const reader = new FileReader()
-        const { target } = e
+        const {target} = e
         if (!target) {
             return
         }
@@ -421,7 +386,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const addImageToCompareRight = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const reader = new FileReader()
-        const { target } = e
+        const {target} = e
         if (!target) {
             return
         }
@@ -447,7 +412,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const addImageToPost = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const reader = new FileReader()
-        const { target } = e
+        const {target} = e
         if (!target) {
             return
         }
@@ -581,7 +546,7 @@ const NewPostForm: FC<NewPostProps> = ({
     return (
         <div className={postFormClass.modalDiv}>
             <Dialog.Title as="div" className={postFormClass.dialogTitle}>
-                What's your question?
+                What&rsquo;s your question?
             </Dialog.Title>
 
             {/* Question form */}
@@ -626,7 +591,7 @@ const NewPostForm: FC<NewPostProps> = ({
                             onClick={() => filePickerRef?.current?.click()}
                             className={postFormClass.imageButton}
                         >
-                            <UilImagePlus />
+                            <UilImagePlus/>
                             <input
                                 ref={filePickerRef}
                                 onChange={handleImageUpload}
@@ -645,7 +610,7 @@ const NewPostForm: FC<NewPostProps> = ({
                             aria-expanded={expanded}
                             aria-label="compare"
                         >
-                            <UilBalanceScale />
+                            <UilBalanceScale/>
                         </button>
                     </Tooltip>
                 </div>
@@ -854,13 +819,13 @@ const NewPostForm: FC<NewPostProps> = ({
                             />
                         )}
                         {errors.compare &&
-                            errors.compare.type === 'required' && (
-                                <FlashErrorMessage
-                                    message={errors.compare.message}
-                                    ms={warningTime}
-                                    style={postFormClass.formAlert}
-                                />
-                            )}
+                        errors.compare.type === 'required' && (
+                            <FlashErrorMessage
+                                message={errors.compare.message}
+                                ms={warningTime}
+                                style={postFormClass.formAlert}
+                            />
+                        )}
                     </div>
                 </div>
             </Collapse>
@@ -878,7 +843,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 <Button
                     text="Post"
                     keepText={true}
-                    icon={<UilNavigator />}
+                    icon={<UilNavigator/>}
                     type="submit"
                     addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}

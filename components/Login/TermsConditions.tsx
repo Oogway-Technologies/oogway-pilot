@@ -12,8 +12,9 @@ const TermsConditions = () => {
                     (collectively the &ldquo;Service&rdquo;) are provided by Oogway Technologies Corp., a Delaware
                     corporation.</p>
                 <p className={privacyDivs.paragraph}>These Terms of Use are a legally binding agreement made between
-                    you ("you," "your," or "yourself")
-                    and Oogway Technologies Corp., (&ldquo;Provider&rdquo;, "we," "us" or "our"), and set forth the
+                    you (&rdquo;you,&rdquo; &rdquo;your,&rdquo; or &rdquo;yourself&rdquo;)
+                    and Oogway Technologies Corp.,
+                    (&ldquo;Provider&rdquo;, &rdquo;we,&rdquo; &rdquo;us&rdquo; or &rdquo;our&rdquo;), and set forth the
                     applicable terms and conditions governing the use of our Service, so please review them carefully.
                     By creating a Service account with us, you also accept and agree to be subject to and abide by our
                     Privacy Policy, which is incorporated herein by reference. &nbsp;</p>
@@ -180,7 +181,8 @@ const TermsConditions = () => {
                     your Content. The rights you grant to us are for the limited purpose of operating and providing
                     the
                     Service and producing revenue therefrom, marketing and improving the Service, and allowing us to
-                    develop new services. The reference in this license to "derivative works'' is not intended to
+                    develop new services. The reference in this license to &rdquo;derivative works&rdquo; is not
+                    intended to
                     give
                     us a right to make substantive changes or derivations to your Content, but does enable other
                     users
@@ -261,7 +263,7 @@ const TermsConditions = () => {
                     accuracy, completeness, or usefulness of any information on the Service. We also do not adopt or
                     endorse, nor are we responsible for the accuracy or reliability of any opinion, advice, or statement
                     made by parties other than us. Under no circumstances will we be responsible for any loss or damage
-                    resulting from anyone's reliance on information or other Content posted on the Service, or
+                    resulting from anyone&rdquo;s reliance on information or other Content posted on the Service, or
                     transmitted to users. </p>
                 <p className={privacyDivs.subheading}>9. Booking</p>
                 <p className={privacyDivs.paragraph}>You can access features through the Service that allow you to book,
@@ -304,7 +306,7 @@ const TermsConditions = () => {
                     <li> Upload, post, email, transmit or otherwise make available any Content that is unlawful,
                         harmful, threatening, abusive, harassing, tortious, defamatory, vulgar, obscene, libelous,
                         invasive
-                        of another's privacy, hateful, or racially, ethnically or otherwise objectionable.
+                        of another&rdquo;s privacy, hateful, or racially, ethnically or otherwise objectionable.
                     </li>
                     <li> Express or imply that any statements you make are endorsed by us, without our specific
                         prior
@@ -312,7 +314,8 @@ const TermsConditions = () => {
                     </li>
                     <li> Use any robot, spider, site search/retrieval application, or other manual or automatic
                         device
-                        or process to retrieve, index, "data mine", or in any way reproduce or circumvent the
+                        or process to retrieve, index, &rdquo;data mine&rdquo;, or in any way reproduce or circumvent
+                        the
                         presentation
                         of the Service.
                     </li>
@@ -327,7 +330,8 @@ const TermsConditions = () => {
                         business
                         reasons.
                     </li>
-                    <li> "Frame" or "mirror" any part of the Service, or use meta tags or code or other devices
+                    <li> &rdquo;Frame&rdquo; or &rdquo;mirror&rdquo; any part of the Service, or use meta tags or code
+                        or other devices
                         containing any reference to us or the Service in order to direct any person to any other
                         websites
                         for any purpose.
@@ -381,7 +385,7 @@ const TermsConditions = () => {
                     Service if you have misused the Service, or violated any of the restrictions above.</p>
                 <p className={privacyDivs.subheading}>13. No Warranties </p>
                 <p className={privacyDivs.paragraphBold}>WE PROVIDE THE SERVICE AND RELATED INFORMATION AND
-                    MATERIALS ON AN "AS IS" BASIS AND WITHOUT ANY
+                    MATERIALS ON AN &rdquo;AS IS&rdquo; BASIS AND WITHOUT ANY
                     WARRANTY OR CONDITION OF ANY KIND, EXPRESS, IMPLIED OR STATUTORY. WE DO NOT GUARANTEE AND DO NOT
                     PROMISE ANY SPECIFIC RESULTS FROM USE OF THE SERVICE. WE, OUR OFFICERS, DIRECTORS, EMPLOYEES AND
                     SUPPLIERS SPECIFICALLY DISCLAIM ANY IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, FITNESS FOR A
@@ -561,7 +565,8 @@ const TermsConditions = () => {
                     information to the user or entity that posted the Content that you are reporting; or in the event
                     that you are the alleged infringer and provide a counter-notice, to the user or entity that filed
                     the original claim. Please also note that you may be liable for damages (including costs and
-                    attorneys' fees) if you knowingly and materially misrepresent that material or an activity that is
+                    attorneys&rdquo; fees) if you knowingly and materially misrepresent that material or an activity
+                    that is
                     infringing your copyright.</p>
                 <p className={privacyDivs.subheading}>23. Other Complaints</p>
                 <p className={privacyDivs.paragraph}>If you reasonably believe that Content made available through the
@@ -580,7 +585,8 @@ const TermsConditions = () => {
                 <p className={privacyDivs.paragraph}>We shall not be liable for any failure to perform our obligations
                     hereunder where such failure
                     results from any cause beyond our reasonable control, including, without limitation, mechanical,
-                    electronic or communications failure or degradation (including "line-noise" interference). </p>
+                    electronic or communications failure or degradation
+                    (including &rdquo;line-noise&rdquo; interference). </p>
                 <p className={privacyDivs.subheading}>27. Severability</p>
                 <p className={privacyDivs.paragraph}>If any provision of these Terms of Use is found to be unenforceable
                     or invalid, that provision shall

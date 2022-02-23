@@ -7,8 +7,8 @@ type EndOfFeedProps = {
 }
 
 const EndOfFeedMessage: FC<EndOfFeedProps> = ({
-    topMessage,
-    bottomMessage,
+    topMessage = "You've read it all...",
+    bottomMessage='Now share your wisdom!',
 }) => {
     return (
         <div className={endOfFeedMessageClass.outerDiv}>
@@ -20,11 +20,6 @@ const EndOfFeedMessage: FC<EndOfFeedProps> = ({
             )}
         </div>
     )
-}
-
-EndOfFeedMessage.defaultProps = {
-    topMessage: "You've read it all...",
-    bottomMessage: 'Now share your wisdom!',
 }
 
 export default EndOfFeedMessage

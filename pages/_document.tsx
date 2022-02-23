@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from "next/document"
+import Document, {DocumentContext, DocumentInitialProps, Head, Html, Main, NextScript} from "next/document"
 
 
 class MyDocument extends Document {
@@ -12,7 +12,9 @@ class MyDocument extends Document {
 
         return (
             <Html lang="en">
-                <Head/>
+                <Head>
+                    <title>Oogway | Social - Wisdom of the crowd</title>
+                </Head>
                 <body className="bg-neutral-25 dark:bg-neutralDark-600">
                     <Main />
                     <NextScript />

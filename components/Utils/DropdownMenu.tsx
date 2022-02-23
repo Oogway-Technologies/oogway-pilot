@@ -1,15 +1,15 @@
 import {Popover, Transition} from '@headlessui/react';
-import React, {Fragment} from 'react';
+import React, {FC, Fragment, useState} from 'react';
 import {usePopper} from 'react-popper'
 
 type DropdownMenuProps = {
     menuButtonClass: string,
     menuItemsClass: string,
-    menuButton: any,
-    menuItems: Array<T>
+    menuButton: JSX.Element,
+    menuItems: JSX.Element[]
 };
 
-const DropdownMenu: React.FC<DropdownMenuProps> = (
+const DropdownMenu: FC<DropdownMenuProps> = (
     {
         menuButtonClass,
         menuItemsClass,
@@ -17,8 +17,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = (
         menuItems
     }
 ) => {
-    const [referenceElement, setReferenceElement] = React.useState(null);
-    const [popperElement, setPopperElement] = React.useState(null);
+    const [referenceElement, setReferenceElement] = useState(null);
+    const [popperElement, setPopperElement] = useState(null);
     const {styles, attributes} = usePopper(referenceElement, popperElement);
 
     // Update popper location
@@ -30,7 +30,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = (
 
     return (
         <Popover as="div">
-            <Popover.Button className={menuButtonClass} ref={setReferenceElement}>
+            <Popover.Button className={menuButtonClass} ref={setReferenceElement as unknown as string}>
                 {menuButton}
             </Popover.Button>
             <Transition
@@ -45,7 +45,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = (
                 <Popover.Panel
                     as="ul"
                     className={menuItemsClass}
-                    ref={setPopperElement}
+                    ref={setPopperElement as unknown as string}
                     style={styles.popper}
                     {...attributes.popper}
                 >
