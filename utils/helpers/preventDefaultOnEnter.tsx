@@ -1,5 +1,5 @@
 // Prevents default on form inputs when user presses enter
-const preventDefaultOnEnter = (e) => {
+const preventDefaultOnEnter = (e: any) => {
     if (e.key === 'Enter') {
         e.preventDefault()
     }

@@ -1,4 +1,4 @@
-import { replyClass } from '../../../styles/feed'
+import {replyClass} from '../../../styles/feed'
 import ReplyHeader from './ReplyHeader'
 import ReplyEngagementBar from './ReplyEngagementBar'
 import firebase from 'firebase/compat/app'
@@ -12,17 +12,17 @@ type ReplyProps = {
 }
 
 const Reply: React.FC<ReplyProps> = ({
-    replyOwner,
-    postId,
-    commentId,
-    replyId,
-    reply,
-}) => {
+                                         replyOwner,
+                                         postId,
+                                         commentId,
+                                         replyId,
+                                         reply,
+                                     }) => {
     return (
         <div className={replyClass.outerDiv}>
             {/* Header */}
             <ReplyHeader
-                postId={postId}
+                postId={postId as string}
                 commentId={commentId}
                 replyId={replyId}
                 authorUid={replyOwner}
@@ -32,7 +32,7 @@ const Reply: React.FC<ReplyProps> = ({
             />
 
             <div className={replyClass.innerDiv}>
-                <div className={replyClass.dividerLeft} />
+                <div className={replyClass.dividerLeft}/>
                 <div className={replyClass.dividerRight}>
                     {/* Body */}
                     <div className={replyClass.body}>

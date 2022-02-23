@@ -34,7 +34,8 @@ const PrivacyPolicy = () => {
                     accept those changes, whether you have read them or not.</p>
                 <p className={privacyDivs.paragraph}>Please note that this Privacy Policy is a legally binding agreement
                     made between you ("you," "your," or
-                    "yourself") and Oogway Technologies Corp. ("Provider&rdquo; "we," "us" or "our"). This Privacy
+                    "yourself") and Oogway Technologies Corp.
+                    ("Provider&rdquo; &rdquo;we,&rdquo; &rdquo;us&rdquo; or &rdquo;our&rdquo;). This Privacy
                     Policy is
                     governed by, and part of, the Terms of Use.</p>
             </div>
@@ -44,7 +45,8 @@ const PrivacyPolicy = () => {
                 <p className={privacyDivs.subheading}>1.&nbsp;&nbsp;&nbsp; Your Information</p>
                 <p className={privacyDivs.paragraph}>In order to operate the Service, and to provide you with
                     information
-                    about products or services that may be of interest to you, we may collect (a) "personal information"
+                    about products or services that may be of interest to you, we may collect (a) &rdquo;personal
+                    information&rdquo;
                     (i.e. information that could be used to contact you directly, such as your name, such as your full
                     name,
                     email address, date of birth, gender, personal preferences, social media profile links (if any) and
@@ -54,7 +56,8 @@ const PrivacyPolicy = () => {
                     a particular set of data was collected, and how the data is formatted; and (d) log file information
                     (i.e. information which is automatically reported by your browser each time you make a request to
                     visit
-                    a web page such as your web request, Internet Protocol ("IP") address, browser type, referring /
+                    a web page such as your web request, Internet Protocol (&rdquo;IP&rdquo;) address, browser type,
+                    referring /
                     exit
                     pages and URLs, number of clicks and how you interact with links on the Service, pages viewed, and
                     other
