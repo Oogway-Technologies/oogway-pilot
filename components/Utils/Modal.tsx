@@ -1,13 +1,16 @@
 import {Dialog, Transition} from '@headlessui/react';
 import React, {Fragment, ReactNode} from 'react';
+// @ts-ignore
+import {UilTimes} from '@iconscout/react-unicons'
 
 type ModalProps = {
     children: ReactNode,
     show: boolean,
-    onClose: ((value: boolean) => void)
+    onClose: ((value?: boolean) => void)
+    closeIcon?: boolean
 };
 
-const Modal: React.FC<ModalProps> = ({children: content, show, onClose}) => {
+const Modal: React.FC<ModalProps> = ({children: content, show, onClose, closeIcon = false}) => {
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog
@@ -46,6 +49,7 @@ const Modal: React.FC<ModalProps> = ({children: content, show, onClose}) => {
                     >
                         <div className="justify-center items-center max-w-6xl p-6 my-8 overflow-hidden text-left
                         transition-all transform bg-white dark:bg-neutralDark-500 shadow-xl rounded-2xl">
+                            {closeIcon && <UilTimes className={'ml-auto cursor-pointer'} onClick={() => onClose()}/>}
                             {content}
                         </div>
                     </Transition.Child>

@@ -20,7 +20,7 @@ export const AreTermsAccepted = (props: AreTermsAcceptedProps): { children: JSX.
 
     return (
         termAndConditions ? <>{children}</> :
-            <div className={className + 'm-0 p-0 cursor-pointer'} onClick={(e) => {
+            <div className={className + 'm-0 p-0 cursor-pointer'} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                 e.preventDefault();
                 e.stopPropagation();
                 setTermsModal(!termsModal)

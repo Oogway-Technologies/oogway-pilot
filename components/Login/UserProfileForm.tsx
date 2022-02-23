@@ -1,17 +1,12 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import React, { FC, useRef, useState } from 'react'
-import { db, storage } from '../../firebase'
-import {
-    loginButtons,
-    loginDivs,
-    loginImages,
-    loginInputs,
-} from '../../styles/login'
+import {useRouter} from 'next/router'
+import React, {FC, useRef, useState} from 'react'
+import {db, storage} from '../../firebase'
+import {loginButtons, loginDivs, loginImages, loginInputs,} from '../../styles/login'
 import Button from '../Utils/Button'
-import { Avatar, useMediaQuery } from '@mui/material'
+import {Avatar, useMediaQuery} from '@mui/material'
 //@ts-ignore
-import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
+import {UilImagePlus, UilTrashAlt} from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 // Firebase
@@ -31,7 +26,7 @@ type UserProfileFormProps = {
     closeModal: () => void
 }
 
-const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
+const UserProfileForm: FC<UserProfileFormProps> = ({closeModal}) => {
     // Get current user profile
     const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
@@ -200,7 +195,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
         } else {
             size = 150
         }
-        return { width: size, height: size }
+        return {width: size, height: size}
     }
 
     return (
@@ -232,7 +227,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
                             className={loginButtons.uploadImage}
                             onClick={() => profilePicRef?.current?.click()}
                         >
-                            <UilImagePlus />
+                            <UilImagePlus/>
                             <span>Upload Image</span>
                             <input
                                 ref={profilePicRef}
@@ -255,7 +250,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
                             disabled={!imageToUpload}
                             onClick={handleRemoveImage}
                         >
-                            <UilTrashAlt />
+                            <UilTrashAlt/>
                             <span>Remove Image</span>
                         </button>
                     </div>
@@ -417,11 +412,13 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
                 children={<TermsConditions/>}
                 show={termsPopUp}
                 onClose={() => setTermsPopUp(false)}
+                closeIcon={true}
             />
             <Modal
                 children={<PrivacyPolicy/>}
                 show={privacyPolicyPopUp}
                 onClose={() => setPrivacyPolicyPopUp(false)}
+                closeIcon={true}
             />
         </div>
     )
