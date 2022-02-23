@@ -1,6 +1,7 @@
 import React from 'react'
 import { commentEngagementBarClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
+// @ts-ignore
 import { UilCornerUpLeftAlt, UilThumbsUp } from '@iconscout/react-unicons'
 import { EngagementItems } from '../../../utils/types/global'
 import { addLike } from '../../../lib/getLikesHelper'

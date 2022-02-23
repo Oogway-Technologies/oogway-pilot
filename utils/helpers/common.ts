@@ -42,8 +42,9 @@ export const parseYoutubeVideoId = (videoUrl: string | undefined) => {
     const YOUTUBE_URL_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-z0-9_-]{11})/gi
 
     const validVideoUrl = (videoUrl)?.match(YOUTUBE_URL_REGEX);
-
     if (!validVideoUrl) return null;
 
-    return validVideoUrl[0].match(/[a-zA-z0-9-]+$/)[0];
+    const matches = validVideoUrl[0].match(/[a-zA-z0-9-]+$/)
+    if (!matches) return null
+    return matches[0];
 }

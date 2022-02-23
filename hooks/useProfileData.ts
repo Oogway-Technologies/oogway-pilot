@@ -1,10 +1,11 @@
 import {useEffect, useState} from 'react'
 import {streamProfileData} from '../lib/profileHelper'
+import { FirebaseProfile } from '../utils/types/firebase'
 
 
-export const useProfileData = (id: string | undefined) => {
+export const useProfileData = (id: string) => {
     // Track profile data
-    const [profileData, setProfileData] = useState({})
+    const [profileData, setProfileData] = useState<FirebaseProfile>()
 
     // Use useEffect to start streaming profile data
     // on component mound and store it in state.
@@ -25,7 +26,6 @@ export const useProfileData = (id: string | undefined) => {
             }
         )
         return () => {
-            setProfileData({})
             unsubscribe()
         }
 

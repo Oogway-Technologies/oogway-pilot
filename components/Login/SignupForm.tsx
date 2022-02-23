@@ -3,6 +3,7 @@ import {
     UilExclamationTriangle,
     UilEye,
     UilEyeSlash,
+    //@ts-ignore
 } from '@iconscout/react-unicons'
 
 import { FC, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
@@ -203,7 +204,6 @@ const SignUpForm: FC<SignUpFormProps> = ({
                         message={errors.email.message}
                         ms={warningTime}
                         style={loginInputs.formAlert}
-                        error="email"
                     />
                 )}
             </div>
@@ -242,7 +242,6 @@ const SignUpForm: FC<SignUpFormProps> = ({
                         message={errors.password.message}
                         ms={warningTime}
                         style={loginInputs.formAlert}
-                        error="password"
                     />
                 )}
             </div>
@@ -281,7 +280,6 @@ const SignUpForm: FC<SignUpFormProps> = ({
                             message={errors.passwordRep.message}
                             ms={warningTime}
                             style={loginInputs.formAlert}
-                            error="passwordRep"
                         />
                     )}
                 {/* Warning message on password repeat */}
@@ -290,7 +288,6 @@ const SignUpForm: FC<SignUpFormProps> = ({
                         message={errors.match.message}
                         ms={warningTime}
                         style={loginInputs.formAlert}
-                        error="match"
                     />
                 )}
             </div>

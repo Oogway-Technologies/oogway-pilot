@@ -1,82 +1,104 @@
-import React, {useEffect, useRef, useState} from 'react'
-import {useForm} from 'react-hook-form'
+import React, {
+    ChangeEvent,
+    MouseEvent,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
+import { useForm } from 'react-hook-form'
 
 // Database
-import {db, storage} from '../../../firebase'
+import { db, storage } from '../../../firebase'
 import firebase from 'firebase/compat/app'
-import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
-import {getDownloadURL, ref, uploadString} from '@firebase/storage'
-import {getUserDoc} from '../../../lib/userHelper'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+} from 'firebase/firestore'
+import { getDownloadURL, ref, uploadString } from '@firebase/storage'
+import { getUserDoc } from '../../../lib/userHelper'
 
 // JSX and Styles
-import {commentFormClass} from '../../../styles/feed'
+import { commentFormClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
 
 // Form
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 // @ts-ignore
-import {UilCommentPlus, UilImagePlus, UilTimesCircle,} from '@iconscout/react-unicons'
+import {
+    UilCommentPlus,
+    UilImagePlus,
+    UilTimesCircle,
+    //@ts-ignore
+} from '@iconscout/react-unicons'
 
 // Recoil states
-import {userProfileState} from '../../../atoms/user'
-import {useRecoilValue} from 'recoil'
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import {checkFileSize} from "../../../utils/helpers/common";
-import {warningTime} from "../../../utils/constants/global";
+import { checkFileSize } from '../../../utils/helpers/common'
+import { warningTime } from '../../../utils/constants/global'
+import { commentsMap, FirebaseComment } from '../../../utils/types/firebase'
+import { HTMLInputEvent } from '../../../utils/types/global'
+import { tabPanelUnstyledClasses } from '@mui/base'
 
 type NewCommentFormProps = {
-    closeModal: React.MouseEventHandler<HTMLButtonElement>
+    closeModal: () => void
     isMobile: boolean
     placeholder: string
 }
 
 const NewCommentForm: React.FC<NewCommentFormProps> = ({
-                                                           closeModal,
-                                                           isMobile,
-                                                           placeholder,
-                                                       }) => {
+    closeModal,
+    isMobile,
+    placeholder,
+}) => {
     const userProfile = useRecoilValue(userProfileState)
     const router = useRouter()
 
     // The image to post and to display as preview
-    const [imageToPost, setImageToPost] = useState<string | ArrayBuffer | null | undefined>(null)
-    const [targetEvent, setTargetEvent] = useState(null) // This is a trick I need to use to reset the state and allow the user
-    // to load the same image twice
+    const [imageToPost, setImageToPost] = useState<
+        string | ArrayBuffer | null | undefined
+    >(null)
+    const [targetEvent, setTargetEvent] =
+        useState<ChangeEvent<HTMLInputElement>>() // Trick used to reset the state and allow the user to load the same image twice
     const filePickerRef = useRef<HTMLInputElement>(null) // Get a reference for the input image
-    const inputRef = useRef(null) // Get a reference to the input text
+    const inputRef = useRef<HTMLTextAreaElement>(null) // Get a reference to the input text
 
     // Track upload
     const [loading, setLoading] = useState(false)
 
-    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false);
-
+    const [isImageSizeLarge, setIsImageSizeLarge] = useState(false)
 
     // Form management
     const {
         register,
         unregister,
         setError,
-        formState: {errors},
+        formState: { errors },
     } = useForm()
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('comment', {required: true})
+        register('comment', { required: true })
         // clean up on unmount
         return () => unregister('comment')
     }, [unregister])
 
-    const addComment = async (e) => {
+    const addComment = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
         // Return asap if no input
         if (inputRef && !inputRef?.current?.value) {
             setError(
                 'comment',
-                {type: 'required', message: 'A comment is required.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'A comment is required.' },
+                { shouldFocus: true }
             )
             return false // Whether to addComment or not
         }
@@ -93,11 +115,11 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             {
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             },
-            {merge: true}
+            { merge: true }
         )
 
         // Now add a new comment for this post
-        let commentData = {
+        let commentData: FirebaseComment = {
             timestamp: serverTimestamp(),
             message: inputRef?.current?.value,
             author: userProfile.username,
@@ -115,6 +137,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             const imageRef = ref(storage, `comments/${docRef.id}/image`)
 
             // Upload the image
+            // @ts-ignore
             await uploadString(imageRef, imageToPost, 'data_url').then(
                 async () => {
                     // Get the downloaded URL for the image
@@ -124,10 +147,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                     await updateDoc(
                         doc(
                             db,
-                            'posts',
-                            router.query.id,
-                            'comments',
-                            docRef.id
+                            `posts/${router.query.id}/comments/${docRef.id}`
                         ),
                         {
                             postImage: downloadURL,
@@ -152,12 +172,14 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                     // a sub-collection under individual posts, we must use a map to
                     // store comments where the key is the comment id and the value
                     // it points to is the parent post id it resides under.
+                    const commentId = docRef.id!
                     if ('comments' in tmp) {
-                        tmp.comments[docRef.id] = router.query.id
+                        tmp.comments[commentId] = router.query.id
                     } else {
                         // Add a new entry
-                        let newComments = {}
-                        newComments[docRef.id] = router.query.id
+                        let newComments: commentsMap = {}
+                        // @ts-ignore
+                        newComments[commentId] = router.query.id
                         tmp['comments'] = newComments
                     }
                     await updateDoc(doc?.ref, tmp)
@@ -176,12 +198,17 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         return true // Return true on a successful submission
     }
 
-    const addImageToPost = (e) => {
+    const addImageToPost = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const reader = new FileReader()
-        if (e.target.files[0]) {
-            // Read the file
-            reader.readAsDataURL(e.target.files[0])
+        const { target } = e
+        if (!target) {
+            return
+        }
+        // Extract file if it exists and read it
+        const file = (target?.files && target?.files[0]) ?? null
+        if (file) {
+            reader.readAsDataURL(file)
         }
 
         // Reader is async, so use onload to attach a function
@@ -196,7 +223,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         }
     }
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         // Store the event to reset its state later
         // and allow the user to load the same image twice
@@ -209,11 +236,11 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         }
     }
 
-    const addAndClose = async (e) => {
+    const addAndClose = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         const success = addComment(e)
         if (await success) {
-            closeModal(e)
+            closeModal()
         }
     }
 
@@ -234,9 +261,12 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                                 className={commentFormClass.growingTextArea}
                                 placeholder={placeholder}
                                 rows={1}
-                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                                    e.target.style.height = '0px';
-                                    e.target.style.height = e.target.scrollHeight + 'px'
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLTextAreaElement>
+                                ) => {
+                                    e.target.style.height = '0px'
+                                    e.target.style.height =
+                                        e.target.scrollHeight + 'px'
                                 }}
                             />
                         )}
@@ -247,7 +277,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                             onClick={() => filePickerRef?.current?.click()}
                             className={commentFormClass.imageButton}
                         >
-                            <UilImagePlus/>
+                            <UilImagePlus />
                             <input
                                 ref={filePickerRef}
                                 onChange={handleImageUpload}
@@ -262,7 +292,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus/>}
+                        icon={<UilCommentPlus />}
                         type="submit"
                         onClick={addComment}
                         addStyle={commentFormClass.submitButton}
@@ -285,7 +315,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                         onClick={() => filePickerRef?.current?.click()}
                         className={commentFormClass.imageButton}
                     >
-                        <UilImagePlus/>
+                        <UilImagePlus />
                         <input
                             ref={filePickerRef}
                             onChange={handleImageUpload}
@@ -298,7 +328,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus/>}
+                        icon={<UilCommentPlus />}
                         type="submit"
                         onClick={addAndClose}
                         addStyle={commentFormClass.submitButton}

@@ -15,6 +15,10 @@ import { collection, orderBy, query } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '../../../firebase'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
+import {
+    commmentConverter,
+    FirebaseComment,
+} from '../../../utils/types/firebase'
 
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
@@ -29,10 +33,13 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
     const router = useRouter()
     const [commentsSnapshot] = useCollection(
         query(
-            collection(db, `posts/${router.query.id}/comments`),
+            collection(db, `posts/${router.query.id}/comments`).withConverter(
+                commmentConverter
+            ),
             orderBy('timestamp', 'asc')
         )
     )
+    // @ts-ignore
     const [numComments] = usePostNumberComments(router.query.id)
 
     // Track mobile state
@@ -53,29 +60,35 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
         // if so show the comments.
         // If not, show the props comments
         if (commentsSnapshot) {
-            return commentsSnapshot?.docs.map((comment) => (
-                <Comment
-                    key={comment.id}
-                    commentOwner={comment.data().authorUid}
-                    postId={router.query.id}
-                    commentId={comment.id}
-                    comment={{
-                        ...comment.data(),
-                        timestamp: comment.data().timestamp?.toDate().getTime(),
-                    }}
-                />
-            ))
+            return commentsSnapshot?.docs.map((comment) => {
+                return (
+                    <Comment
+                        key={comment.id}
+                        commentOwner={comment.data().authorUid}
+                        // @ts-ignore
+                        postId={router.query.id}
+                        commentId={comment.id}
+                        comment={{
+                            ...comment.data(),
+                            timestamp: comment.data().timestamp,
+                        }}
+                    />
+                )
+            })
         } else {
             // Visualize the server-side rendered comments
-            return JSON.parse(comments).map((comment) => (
-                <Comment
-                    key={comment.id}
-                    commentOwner={comment.authorUid}
-                    postId={router.query.id}
-                    commentId={comment.id}
-                    comment={comment}
-                />
-            ))
+            return JSON.parse(comments.toString()).map(
+                (comment: FirebaseComment) => (
+                    <Comment
+                        key={comment.id}
+                        commentOwner={comment.authorUid}
+                        // @ts-ignore
+                        postId={router.query.id}
+                        commentId={comment.id!}
+                        comment={comment}
+                    />
+                )
+            )
         }
     }
 
@@ -86,7 +99,9 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                     onClick={needsHook}
                     className={commentsApiClass.avatar}
                     src={
-                        userProfile?.profilePic ? userProfile.profilePic : null
+                        userProfile?.profilePic
+                            ? userProfile.profilePic
+                            : undefined
                     }
                 />
                 {isMobile ? (

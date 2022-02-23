@@ -1,4 +1,5 @@
 import { MouseEventHandler, FC } from 'react'
+//@ts-ignore
 import { UilSetting } from '@iconscout/react-unicons'
 import Link from 'next/link'
 import { settingsButtonClass } from '../../styles/header'

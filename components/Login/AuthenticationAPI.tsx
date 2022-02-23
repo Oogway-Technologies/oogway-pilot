@@ -49,6 +49,7 @@ const AuthenticationAPI: FC<AuthenticationAPIProps> = ({ closeModal }) => {
         // case 'profile':
         //     return <UserProfileForm closeModal={closeModal} />
         default:
+            return null
         // do nothing
     }
 }
