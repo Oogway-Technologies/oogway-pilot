@@ -15,6 +15,7 @@ import {userProfileState} from '../../../atoms/user'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import {getUserDoc} from '../../../lib/userHelper'
 import {FirebaseReply, repliesMap} from '../../../utils/types/firebase'
+import {warningTime} from "../../../utils/constants/global";
 
 type NewReplyFormProps = {
     commentId: string
@@ -24,11 +25,11 @@ type NewReplyFormProps = {
 }
 
 const NewReplyForm: React.FC<NewReplyFormProps> = ({
-    commentId,
-    closeModal,
-    isMobile,
-    placeholder,
-}) => {
+                                                       commentId,
+                                                       closeModal,
+                                                       isMobile,
+                                                       placeholder,
+                                                   }) => {
     const userProfile = useRecoilValue(userProfileState)
     const router = useRouter()
 
@@ -43,12 +44,12 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         register,
         unregister,
         setError,
-        formState: { errors },
+        formState: {errors},
     } = useForm()
-    const warningTime = 3000 // set warning to flash for 3 sec
+
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('reply', { required: true })
+        register('reply', {required: true})
         // clean up on unmount
         return () => unregister('reply')
     }, [unregister])
@@ -60,8 +61,8 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         if (inputRef && !inputRef?.current?.value) {
             setError(
                 'reply',
-                { type: 'required', message: 'A reply is required.' },
-                { shouldFocus: true }
+                {type: 'required', message: 'A reply is required.'},
+                {shouldFocus: true}
             )
             return false
         }
@@ -78,7 +79,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             {
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             },
-            { merge: true }
+            {merge: true}
         )
 
         // Now add a new reply for this post
@@ -109,7 +110,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     // a sub-collection under comments, we must use a map to
                     // store comments where the key is the comment id and the value
                     // it points to is the parent post id it resides under.
-                    const { id: postId } = router.query
+                    const {id: postId} = router.query
                     if ('replies' in tmp) {
                         tmp.replies[doc.id] = {
                             comment: commentId,
@@ -169,6 +170,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                                 ref={inputRef}
                                 className={replyFormClass.replyTextArea}
                                 placeholder={placeholder}
+                                maxLength={40000}
                             />
                         ) : (
                             <textarea
@@ -176,6 +178,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                                 className={replyFormClass.growingTextArea}
                                 placeholder={placeholder}
                                 rows={1}
+                                maxLength={40000}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLTextAreaElement>
                                 ) => {
@@ -191,7 +194,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus />}
+                        icon={<UilCommentPlus/>}
                         type="submit"
                         onClick={addReply}
                         addStyle={replyFormClass.submitButton}
@@ -217,7 +220,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus />}
+                        icon={<UilCommentPlus/>}
                         type="submit"
                         onClick={addAndClose}
                         addStyle={replyFormClass.submitButton}
