@@ -237,24 +237,27 @@ const PostVotingMechanism = ({
                                     : '')
                             }
                         >
-                            <button
-                                className={
-                                    postCardClass.voteButton +
-                                    (!user && ' cursor-default') +
-                                    (userVoteChoice === idx
-                                        ? ' text-primary dark:text-primaryDark'
-                                        : ' text-neutral-700 dark:text-neutralDark-150')
-                                }
-                                onClick={() => {
-                                    voteOnImage(idx)
-                                }}
-                            >
-                                {idx == 0 ? voteButtonLeft : voteButtonRight}
-                            </button>
-                            <p className={postCardClass.voteCounter}>
-                                {votesList[idx]}{' '}
-                                {votesList[idx] == 1 ? 'vote' : 'votes'}
-                            </p>
+                            {user && (
+                                <>
+                                    <button className={
+                                        postCardClass.voteButton +
+                                        (!user && ' cursor-default') +
+                                        (userVoteChoice === idx
+                                            ? ' text-primary dark:text-primaryDark'
+                                            : ' text-neutral-700 dark:text-neutralDark-150')
+                                        }
+                                        onClick={() => {
+                                        voteOnImage(idx)
+                                        }}
+                                    >
+                                        {idx == 0 ? voteButtonLeft : voteButtonRight}
+                                    </button>
+                                    <p className={postCardClass.voteCounter}>
+                                        {votesList[idx]}{' '}
+                                        {votesList[idx] == 1 ? 'vote' : 'votes'}
+                                    </p>
+                                </>
+                            )}
                         </div>
                     </div>
                 )
