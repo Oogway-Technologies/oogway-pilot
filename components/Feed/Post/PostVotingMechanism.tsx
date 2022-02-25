@@ -229,6 +229,7 @@ const PostVotingMechanism = ({
                                 </div>
                             )
                         )}
+                        {user && (
                         <div
                             className={
                                 postCardClass.voteButtonContainer +
@@ -237,28 +238,25 @@ const PostVotingMechanism = ({
                                     : '')
                             }
                         >
-                            {user && (
-                                <>
-                                    <button className={
-                                        postCardClass.voteButton +
-                                        (!user && ' cursor-default') +
-                                        (userVoteChoice === idx
-                                            ? ' text-primary dark:text-primaryDark'
-                                            : ' text-neutral-700 dark:text-neutralDark-150')
-                                        }
-                                        onClick={() => {
-                                        voteOnImage(idx)
-                                        }}
-                                    >
-                                        {idx == 0 ? voteButtonLeft : voteButtonRight}
-                                    </button>
-                                    <p className={postCardClass.voteCounter}>
-                                        {votesList[idx]}{' '}
-                                        {votesList[idx] == 1 ? 'vote' : 'votes'}
-                                    </p>
-                                </>
-                            )}
+                            <button className={
+                                postCardClass.voteButton +
+                                (!user && ' cursor-default') +
+                                (userVoteChoice === idx
+                                    ? ' text-primary dark:text-primaryDark'
+                                    : ' text-neutral-700 dark:text-neutralDark-150')
+                                }
+                                onClick={() => {
+                                voteOnImage(idx)
+                                }}
+                            >
+                                {idx == 0 ? voteButtonLeft : voteButtonRight}
+                            </button>
+                            <p className={postCardClass.voteCounter}>
+                                {votesList[idx]}{' '}
+                                {votesList[idx] == 1 ? 'vote' : 'votes'}
+                            </p>
                         </div>
+                        )}
                     </div>
                 )
             })}
