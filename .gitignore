@@ -44,3 +44,6 @@ yarn.lock
 
 # Firebase functions
 firebase-key.json
+
+# Lint
+.eslintrc.json

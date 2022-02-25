@@ -229,6 +229,7 @@ const PostVotingMechanism = ({
                                 </div>
                             )
                         )}
+                        {user && (
                         <div
                             className={
                                 postCardClass.voteButtonContainer +
@@ -237,16 +238,15 @@ const PostVotingMechanism = ({
                                     : '')
                             }
                         >
-                            <button
-                                className={
-                                    postCardClass.voteButton +
-                                    (!user && ' cursor-default') +
-                                    (userVoteChoice === idx
-                                        ? ' text-primary dark:text-primaryDark'
-                                        : ' text-neutral-700 dark:text-neutralDark-150')
+                            <button className={
+                                postCardClass.voteButton +
+                                (!user && ' cursor-default') +
+                                (userVoteChoice === idx
+                                    ? ' text-primary dark:text-primaryDark'
+                                    : ' text-neutral-700 dark:text-neutralDark-150')
                                 }
                                 onClick={() => {
-                                    voteOnImage(idx)
+                                voteOnImage(idx)
                                 }}
                             >
                                 {idx == 0 ? voteButtonLeft : voteButtonRight}
@@ -256,6 +256,7 @@ const PostVotingMechanism = ({
                                 {votesList[idx] == 1 ? 'vote' : 'votes'}
                             </p>
                         </div>
+                        )}
                     </div>
                 )
             })}
