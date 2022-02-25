@@ -25,10 +25,16 @@ import FlashErrorMessage from '../Utils/FlashErrorMessage'
 import { warningTime } from '../../utils/constants/global'
 
 type UserProfileFormProps = {
+    headerText: string
+    cancelButtonText: string
     closeModal: () => void
 }
 
-const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
+const UserProfileForm: FC<UserProfileFormProps> = ({
+    closeModal,
+    headerText = 'Edit Profile',
+    cancelButtonText = 'Cancel',
+}) => {
     // Get current user profile
     const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
@@ -39,7 +45,6 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
     const [last, setLast] = useState(userProfile.lastName || '')
     const [location, setLocation] = useState(userProfile.location || '')
     const [bio, setBio] = useState(userProfile.bio || '')
-    const [profilePic] = useState(userProfile.profilePic || '')
 
     // Picture state
     const profilePicRef = useRef<HTMLInputElement>(null)
@@ -69,7 +74,6 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
             bio: bio,
             location: location,
             resetProfile: false,
-            profilePic: profilePic,
             dm: dm,
         }
         // Update recoil state
@@ -103,6 +107,12 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
                         name: name.trim(),
                         username: username,
                         photoUrl: downloadURL,
+                    })
+
+                    // Update atom
+                    setUserProfile({
+                        ...userProfile,
+                        profilePic: downloadURL,
                     })
                 }
             )
@@ -209,7 +219,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
 
             <div className={loginDivs.signIn}>
                 {/* Header */}
-                <div className={loginDivs.modalHeader}>Setup Profile</div>
+                <div className={loginDivs.modalHeader}>{headerText}</div>
                 <div>Complete your profile below.</div>
 
                 {/* Upload Image */}
@@ -380,7 +390,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ closeModal }) => {
                 <Button
                     onClick={cancelAndContinue}
                     addStyle={loginButtons.cancelButtonStyle}
-                    text="Skip"
+                    text={cancelButtonText}
                     keepText={true}
                     forceNoText={false}
                     icon={null}
