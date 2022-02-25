@@ -15,7 +15,7 @@ import {userProfileState} from '../../../atoms/user'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import {getUserDoc} from '../../../lib/userHelper'
 import {FirebaseReply, repliesMap} from '../../../utils/types/firebase'
-import {warningTime} from "../../../utils/constants/global";
+import {longLimit, warningTime} from "../../../utils/constants/global";
 
 type NewReplyFormProps = {
     commentId: string
@@ -170,7 +170,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                                 ref={inputRef}
                                 className={replyFormClass.replyTextArea}
                                 placeholder={placeholder}
-                                maxLength={40000}
+                                maxLength={longLimit}
                             />
                         ) : (
                             <textarea
@@ -178,7 +178,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                                 className={replyFormClass.growingTextArea}
                                 placeholder={placeholder}
                                 rows={1}
-                                maxLength={40000}
+                                maxLength={longLimit}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLTextAreaElement>
                                 ) => {

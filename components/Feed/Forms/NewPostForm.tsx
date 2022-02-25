@@ -54,7 +54,7 @@ import {
     isValidURL,
 } from '../../../utils/helpers/common'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { warningTime } from '../../../utils/constants/global'
+import {longLimit, shortLimit, warningTime} from '../../../utils/constants/global'
 import { MediaObject } from '../../../utils/types/global'
 
 type NewPostProps = {
@@ -605,7 +605,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         aria-invalid={errors.question ? 'true' : 'false'}
                         ref={inputRef}
                         placeholder={questPlaceholder}
-                        maxLength={300}
+                        maxLength={shortLimit}
                         onKeyPress={preventDefaultOnEnter}
                         onChange={(e) => {
                             const isURL = isValidURL(e.target.value)
@@ -631,7 +631,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         ref={descriptionRef}
                         placeholder={descPlaceholder}
                         className={postFormClass.formDescriptionInput}
-                        maxLength={40000}
+                        maxLength={longLimit}
                     />
                 </div>
             </form>
@@ -745,7 +745,7 @@ const NewPostForm: FC<NewPostProps> = ({
                                                 )
                                             }}
                                             value={textToCompareLeft}
-                                            maxLength={300}
+                                            maxLength={shortLimit}
                                         />
                                     </div>
 
@@ -827,7 +827,7 @@ const NewPostForm: FC<NewPostProps> = ({
                                                 )
                                             }}
                                             value={textToCompareRight}
-                                            maxLength={300}
+                                            maxLength={shortLimit}
                                         />
                                     </div>
 
