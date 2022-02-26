@@ -9,7 +9,7 @@ const firebase_tools = require('firebase-tools')
 
 const client = jwks({
     rateLimit: true,
-    jwksUri: 'https://dev-4b2tjbbr.us.auth0.com/.well-known/jwks.json',
+    jwksUri: 'https://oogway-pilot.us.auth0.com/.well-known/jwks.json',
 })
 
 const getKey = (header, callback) => {
@@ -20,8 +20,8 @@ const getKey = (header, callback) => {
 }
 
 const options = {
-    audience: 'ouEYU4SVxoa8JFrTwQ84VV90YnKlfdqc',
-    issuer: 'https://dev-4b2tjbbr.us.auth0.com/',
+    audience: 'vmTXnQbeSY6JNdetz0F4DQrtvxl4QoRs',
+    issuer: 'https://oogway-pilot.us.auth0.com/',
     algorithms: ['RS256'],
 }
 
