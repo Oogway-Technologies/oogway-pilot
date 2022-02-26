@@ -100,38 +100,6 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             ),
             replyData
         )
-        // Store the reference to this reply in the map of repliess
-        // create by the current user.
-        // const userDoc = getUserDoc(userProfile.uid)
-        // await userDoc
-        //     .then(async (doc) => {
-        //         if (doc?.exists()) {
-        //             let tmp = doc.data()
-
-        //             // Since replies don't exist as their own colletion but rather as
-        //             // a sub-collection under comments, we must use a map to
-        //             // store comments where the key is the comment id and the value
-        //             // it points to is the parent post id it resides under.
-        //             if ('replies' in tmp) {
-        //                 tmp.replies[doc.id] = {
-        //                     comment: commentId,
-        //                     post: router.query.id,
-        //                 }
-        //             } else {
-        //                 // Add a new entry
-        //                 let newReplies = {}
-        //                 newReplies[doc.id] = {
-        //                     comment: commentId,
-        //                     post: router.query.id,
-        //                 }
-        //                 tmp['replies'] = newReplies
-        //             }
-        //             await updateDoc(doc?.ref, tmp)
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.log(err)
-        //     })
 
         // Clear the input
         setLoading(false)
