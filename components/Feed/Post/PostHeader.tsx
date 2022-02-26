@@ -6,8 +6,8 @@ import Timestamp from '../../Utils/Timestamp'
 import {useProfileData} from '../../../hooks/useProfileData'
 import {deleteMedia} from '../../../lib/storageHelper'
 import {useRouter} from 'next/router'
-import {getFunctions, httpsCallable} from 'firebase/functions'
-import {query, getDocs, collection, where, deleteDoc, doc, updateDoc, FieldValue} from 'firebase/firestore'
+import {query, getDocs, collection, where, deleteDoc, doc, FieldValue} from 'firebase/firestore'
+import { db } from '../../../firebase'
 
 type PostHeaderProps = {
     id: string
