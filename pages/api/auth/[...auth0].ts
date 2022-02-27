@@ -5,9 +5,14 @@ import {NextApiRequest, NextApiResponse} from "next";
 import { UserProfile } from '@auth0/nextjs-auth0/src/frontend/use-user';
 
 const setFirebaseCustomToken = async (token: string) => {
-    // Fetchm the Firebase custom token from the Auth0 user
+    // Fetch the Firebase custom token from the Auth0 user
+    let firebaseFcnURL = 'https://us-central1-oogway-pilot.cloudfunctions.net/getFirebaseToken';
+    if (process.env.NODE_ENV === 'development') {
+        // For dev mode, replace the URL of the function with the dev function URL
+        firebaseFcnURL = 'https://us-central1-oogway-pilot.cloudfunctions.net/getDevFirebaseToken';
+    }
     const response = await fetch(
-        'https://us-central1-oogway-pilot.cloudfunctions.net/getFirebaseToken',
+        firebaseFcnURL,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
