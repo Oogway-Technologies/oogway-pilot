@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import Reply from './Reply'
 import { repliesApiClass } from '../../../styles/feed'
 import { collection, where, orderBy, query } from 'firebase/firestore'
-import { replyConverter } from '../../../utils/types/firebase'
 
 type RepliesAPIProps = {
     commentId: string

@@ -5,8 +5,7 @@ import {postCardClass, replyHeaderClass} from '../../../styles/feed'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 import {db} from '../../../firebase'
 import {Avatar} from '@mui/material'
-import {deleteDoc, doc, updateDoc} from 'firebase/firestore'
-import {getUserDoc} from '../../../lib/userHelper'
+import {deleteDoc, doc} from 'firebase/firestore'
 import {useProfileData} from '../../../hooks/useProfileData'
 
 type ReplyHeaderProps = {

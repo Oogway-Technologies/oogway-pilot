@@ -5,14 +5,8 @@ import {postCardClass} from '../../../styles/feed'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 import {db} from '../../../firebase'
 import {Avatar} from '@mui/material'
-// @ts-ignore
-import {UilCornerUpLeftAlt} from '@iconscout/react-unicons'
-
 import { useProfileData } from '../../../hooks/useProfileData'
-import { collection, where, query, deleteDoc, doc, getDocs, updateDoc, FieldValue} from 'firebase/firestore'
-import { getUserDoc } from '../../../lib/userHelper'
-import { getComment } from '../../../lib/commentsHelper'
-import { getRepliesCollection } from '../../../lib/repliesHelper'
+import { collection, where, query, deleteDoc, doc, getDocs, FieldValue} from 'firebase/firestore'
 import { deleteMedia } from '../../../lib/storageHelper'
 
 type CommentHeaderProps = {

@@ -8,13 +8,12 @@ import firebase from 'firebase/compat/app'
 import {replyFormClass} from '../../../styles/feed'
 import Button from '../../Utils/Button'
 import needsHook from '../../../hooks/needsHook'
-import {addDoc, collection, doc, serverTimestamp, setDoc, updateDoc,} from 'firebase/firestore'
+import {addDoc, collection, doc, serverTimestamp, setDoc,} from 'firebase/firestore'
 import {Avatar} from '@mui/material'
 import {useRecoilValue} from 'recoil'
 import {userProfileState} from '../../../atoms/user'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import {getUserDoc} from '../../../lib/userHelper'
-import {FirebaseReply, repliesMap} from '../../../utils/types/firebase'
+import {FirebaseReply} from '../../../utils/types/firebase'
 import {warningTime} from "../../../utils/constants/global";
 
 type NewReplyFormProps = {
