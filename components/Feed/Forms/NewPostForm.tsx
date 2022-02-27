@@ -198,7 +198,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const validateForm = () => {
         // If the input is empty, return asap
         let questionProvided = true
-        if (inputRef && !inputRef?.current?.value) {
+        if (inputRef && !inputRef?.current?.value.trim()) {
             setError(
                 'question',
                 { type: 'required', message: 'A question is required.' },
@@ -544,6 +544,7 @@ const NewPostForm: FC<NewPostProps> = ({
         // Validate form
         const isValid = validateForm()
 
+        if(isValid){
         if (isComparePost()) {
             const leftUrl = isValidURL(textToCompareLeft || '')
             if (leftUrl && leftUrl.length > 1 && !imageToCompareLeft) {
@@ -567,12 +568,9 @@ const NewPostForm: FC<NewPostProps> = ({
         } else {
             setPreviewImage(' ')
         }
-
-        if (isValid) {
             // Close
             closeModal()
-
-            // Trigger a post refetch with a timeout to give the database
+            // Trigger a post re-fetch with a timeout to give the database
             // time to register the new post
             setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
         }
