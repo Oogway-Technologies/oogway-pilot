@@ -62,7 +62,7 @@ export const postCardClass = {
     bodyQuestion:
         'font-bold mb-[8px] text-md text-neutral-800 dark:text-neutralDark-50',
     bodyDescription:
-        'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line',
+        'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line break-words',
     // Media
     voteDiv: 'flex px-md space-x-lg ml-xl',
     voteContainer: 'flex flex-col w-full items-center space-y-md',

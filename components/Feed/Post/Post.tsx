@@ -132,7 +132,9 @@ const PostCard: React.FC<PostProps> = ({
                             </Link>
                         )}
                     >
-                        {description}
+                        <Typography className={postCardClass.bodyDescription}>
+                            {description}
+                        </Typography>
                     </Linkify>
                 ) : (
                     <Typography className={postCardClass.bodyDescription}>
