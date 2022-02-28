@@ -25,7 +25,7 @@ import {useRecoilValue} from 'recoil'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import {checkFileSize} from '../../../utils/helpers/common'
-import {warningTime} from '../../../utils/constants/global'
+import {longLimit, warningTime} from '../../../utils/constants/global'
 import {commentsMap, FirebaseComment} from '../../../utils/types/firebase'
 
 type NewCommentFormProps = {
@@ -230,7 +230,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                                 ref={inputRef}
                                 className={commentFormClass.commentTextArea}
                                 placeholder={placeholder}
-                                maxLength={40000}
+                                maxLength={longLimit}
                             />
                         ) : (
                             <textarea
@@ -238,7 +238,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                                 className={commentFormClass.growingTextArea}
                                 placeholder={placeholder}
                                 rows={1}
-                                maxLength={40000}
+                                maxLength={longLimit}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLTextAreaElement>
                                 ) => {
