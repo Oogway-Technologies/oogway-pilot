@@ -36,7 +36,7 @@ export default function Home() {
 
             {/* Modal for user profile */}
             <Modal
-                children={<UserProfileForm closeModal={closeModal} />}
+                children={<UserProfileForm closeModal={closeModal} headerText="Setup Profile" cancelButtonText="skip"/>}
                 show={show}
                 onClose={closeModal}
             />
