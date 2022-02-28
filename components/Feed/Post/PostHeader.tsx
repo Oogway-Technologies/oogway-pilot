@@ -101,6 +101,7 @@ const PostHeader: FC<PostHeaderProps> = ({
                         authorProfile?.username ? authorProfile?.username : name
                     }
                     deletePost={deletePost}
+                    postType='Post'
                 />
             </div>
         </div>
