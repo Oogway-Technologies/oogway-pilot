@@ -29,12 +29,14 @@ type PostOptionsDropdownProps = {
     authorUid: string // Post author id
     deletePost: () => Promise<string> // Handler function to delete post
     authorName: string // Post author name
+    postType: 'Post' | 'Comment' | 'Reply' // Whether post, comment, or reply
 }
 
 const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     authorUid,
     deletePost,
     authorName,
+    postType
 }) => {
     const userProfile = useRecoilValue(userProfileState) // Get user profile
     const currentUserDoc = getUserDoc(userProfile?.uid) // Get user document data
@@ -157,7 +159,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
                     as="div"
                     className={postOptionsDropdownClass.modalTitle}
                 >
-                    Are you sure you want to delete your post? It will be gone
+                    Are you sure you want to delete your {postType.toLowerCase()}? It will be gone
                     forever.
                 </Dialog.Title>
 
@@ -188,7 +190,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     const menuButton = <UilEllipsisH />
     const ownPostMenuItems = [
         <Button
-            text="Delete Post"
+            text={`Delete ${postType}`}
             keepText={true}
             icon={<UilTrashAlt />}
             type="button"

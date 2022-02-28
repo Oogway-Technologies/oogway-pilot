@@ -85,6 +85,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                         authorProfile?.username ? authorProfile?.username : name
                     }
                     deletePost={deleteReplyEntry}
+                    postType='Reply'
                 />
             </div>
         </div>

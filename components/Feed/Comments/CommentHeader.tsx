@@ -101,6 +101,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                         authorProfile?.username ? authorProfile.username : name
                     }
                     deletePost={deleteComment}
+                    postType='Comment'
                 />
             </div>
         </div>

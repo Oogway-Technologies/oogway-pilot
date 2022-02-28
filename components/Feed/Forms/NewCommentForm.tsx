@@ -25,7 +25,7 @@ import {useRecoilValue} from 'recoil'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import {checkFileSize} from '../../../utils/helpers/common'
-import {warningTime} from '../../../utils/constants/global'
+import {longLimit, warningTime} from '../../../utils/constants/global'
 import {commentsMap, FirebaseComment} from '../../../utils/types/firebase'
 
 type NewCommentFormProps = {
@@ -137,34 +137,6 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                 }
             )
         }
-        // TO BE CHANGED
-        // Store the reference to this comment in the map of comments
-        // create by the current user.
-        const userDoc = getUserDoc(userProfile.uid)
-        await userDoc
-            .then(async (doc) => {
-                if (doc?.exists()) {
-                    let tmp = doc.data()
-
-                    // Since comments don't exist as their own colletion but rather as
-                    // a sub-collection under individual posts, we must use a map to
-                    // store comments where the key is the comment id and the value
-                    // it points to is the parent post id it resides under.
-                    const commentId = docRef.id
-                    if ('comments' in tmp) {
-                        tmp.comments[commentId] = router.query.id
-                    } else {
-                        // Add a new entry
-                        let newComments: commentsMap = {}
-                        newComments[commentId] = router.query.id as string
-                        tmp['comments'] = newComments
-                    }
-                    await updateDoc(doc?.ref, tmp)
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-            })
 
         // Everything is done
         setLoading(false)
@@ -231,7 +203,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                                 ref={inputRef}
                                 className={commentFormClass.commentTextArea}
                                 placeholder={placeholder}
-                                maxLength={40000}
+                                maxLength={longLimit}
                             />
                         ) : (
                             <textarea
@@ -239,7 +211,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                                 className={commentFormClass.growingTextArea}
                                 placeholder={placeholder}
                                 rows={1}
-                                maxLength={40000}
+                                maxLength={longLimit}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLTextAreaElement>
                                 ) => {
