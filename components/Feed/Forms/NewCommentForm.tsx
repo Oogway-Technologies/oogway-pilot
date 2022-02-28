@@ -26,7 +26,7 @@ import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import {checkFileSize} from '../../../utils/helpers/common'
 import {longLimit, warningTime} from '../../../utils/constants/global'
-import {commentsMap, FirebaseComment} from '../../../utils/types/firebase'
+import {FirebaseComment} from '../../../utils/types/firebase'
 
 type NewCommentFormProps = {
     closeModal: () => void

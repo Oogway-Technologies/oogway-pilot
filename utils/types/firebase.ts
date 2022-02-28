@@ -9,8 +9,6 @@ export type blockedUsersMap = { [id: string]: boolean }
 
 export type postsMap = { [id: string]: boolean }
 
-export type commentsMap = { [id: string]: string }
-
 export type userMap = { [uid: string]: boolean }
 
 export type compare = {
@@ -68,7 +66,6 @@ export interface FirebaseUser {
     provider: string;
     blockedUsers: blockedUsersMap;
     posts: postsMap;
-    comments?: commentsMap
     auth0: string;
 }
 
