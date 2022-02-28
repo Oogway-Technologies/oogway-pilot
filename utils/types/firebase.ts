@@ -11,12 +11,6 @@ export type postsMap = { [id: string]: boolean }
 
 export type commentsMap = { [id: string]: string }
 
-export type repliesMap = { [replyId: string] : {
-        comment: string
-        post: string
-    }
-}
-
 export type userMap = { [uid: string]: boolean }
 
 export type compare = {
@@ -30,6 +24,9 @@ export type compare = {
  */
 export interface FirebaseReply {
     id?: string
+    postId?: string
+    parentId?: string | null
+    isComment: boolean
     message: string
     author: string
     authorUid: string
@@ -39,6 +36,9 @@ export interface FirebaseReply {
 
 export interface FirebaseComment {
     id?: string
+    postId?: string
+    parentId?: string | null
+    isComment: boolean
     message: string | undefined
     author: string
     authorUid: string
@@ -69,7 +69,6 @@ export interface FirebaseUser {
     blockedUsers: blockedUsersMap;
     posts: postsMap;
     comments?: commentsMap
-    replies?: repliesMap
     auth0: string;
 }
 
@@ -94,6 +93,9 @@ export const commmentConverter = {
     toFirestore(comment: FirebaseComment) : DocumentData {
         return { 
             id: comment.id,
+            postId: comment.postId,
+            parentId: comment.parentId,
+            isComment: comment.isComment,
             message: comment.message,
             author: comment.author,
             authorUid: comment.authorUid,
@@ -109,6 +111,9 @@ export const commmentConverter = {
         const data = snapshot.data(options)
         return {
             id: data.id,
+            postId : data.postId,
+            parentId: data.parentId,
+            isComment: data.isComment,
             message: data.message,
             author: data.author,
             authorUid: data.authorUid,
@@ -123,6 +128,9 @@ export const replyConverter = {
     toFirestore(reply: FirebaseReply) : DocumentData {
         return {
             id: reply.id,
+            postId: reply.postId,
+            parentId: reply.parentId,
+            isComment: reply.isComment,
             message: reply.message,
             author: reply.author,
             authorUid: reply.authorUid,
@@ -137,6 +145,9 @@ export const replyConverter = {
         const data = snapshot.data(options)
         return {
             id: data.id,
+            postId: data.postId,
+            parentId: data.parentId,
+            isComment: data.isComment,
             message: data.message,
             author: data.author,
             authorUid: data.authorUid,

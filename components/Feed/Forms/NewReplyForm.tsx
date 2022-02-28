@@ -83,7 +83,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
 
         // Now add a new reply for this post
         let replyData: FirebaseReply = {
-            postId : router.query.id,
+            postId : router.query.id as string,
             parentId: commentId,
             isComment: false,
             timestamp: serverTimestamp(),

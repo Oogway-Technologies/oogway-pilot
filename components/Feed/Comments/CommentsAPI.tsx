@@ -35,7 +35,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
             where("postId", '==', router.query.id),  
             where('isComment', '==', true),
             orderBy('timestamp', 'asc')
-        )
+        ).withConverter(commmentConverter)
     )
     const [numComments] = usePostNumberComments(router.query.id as string)
 

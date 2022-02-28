@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Reply from './Reply'
 import { repliesApiClass } from '../../../styles/feed'
 import { collection, where, orderBy, query } from 'firebase/firestore'
+import { replyConverter } from '../../../utils/types/firebase'
 
 type RepliesAPIProps = {
     commentId: string
@@ -14,13 +15,12 @@ const RepliesAPI: React.FC<RepliesAPIProps> = ({ commentId }) => {
     const router = useRouter()
 
     // Get a snapshot of the replies from the DB
-    // const [repliesSnapshot] = useReplies(router.query.id, commentId)
     const [repliesSnapshot] = useCollection(
         query(collection(db, "post-activity"), 
         where("parentId", '==', commentId),  
         where('isComment', '==', false),
         orderBy('timestamp', 'asc')
-        )
+        ).withConverter(replyConverter)
         
     )
     const showReplies = () => {

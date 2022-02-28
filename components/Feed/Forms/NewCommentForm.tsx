@@ -96,7 +96,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             {merge: true}
         )
         let commentData: FirebaseComment = {
-            postId : router.query.id,
+            postId : router.query.id as string,
             parentId: null,
             isComment: true,
             timestamp: serverTimestamp(),
@@ -137,7 +137,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                 }
             )
         }
-
+        // TO BE CHANGED
         // Store the reference to this comment in the map of comments
         // create by the current user.
         const userDoc = getUserDoc(userProfile.uid)
