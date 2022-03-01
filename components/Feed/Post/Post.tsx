@@ -145,7 +145,7 @@ const PostCard: React.FC<PostProps> = ({
 
             {/* Media */}
             {postImage ? (
-                <div className="flex ml-xl p-md">
+                <div className="flex mx-xl p-md">
                     <CardMedia component="img" src={postImage} />
                 </div>
             ) : YouTubeURLID && YouTubeURLID.length > 0 ? (
@@ -163,7 +163,7 @@ const PostCard: React.FC<PostProps> = ({
             ) : (
                 previewImage &&
                 previewImage.length > 2 && (
-                    <div className="flex ml-xl p-md">
+                    <div className="flex mx-xl p-md">
                         <CardMedia
                             component="img"
                             src={previewImage}
