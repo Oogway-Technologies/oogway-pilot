@@ -64,14 +64,13 @@ export const postCardClass = {
     bodyDescription:
         'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line break-words',
     // Media
-    voteDiv: 'flex px-md space-x-lg ml-xl',
-    voteContainer: 'flex flex-col w-full items-center space-y-md',
+    voteDiv: 'flex px-md space-x-lg mx-xl',
+    voteContainer: 'flex flex-col w-full items-center space-y-md truncate',
     imageVote: 'flex rounded-[8px] object-contain cursor-pointer m-auto',
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
     textVote:
-        'inline-flex w-full justify-center p-sm \
-    bg-neutral-50 dark:bg-neutralDark-400 \
+        'bg-neutral-50 dark:bg-neutralDark-400 \
     shadow-sm shadow-black/30  dark:shadow-black/50',
     voteButton:
         'p-sm justify-center \
