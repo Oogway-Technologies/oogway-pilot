@@ -233,7 +233,7 @@ const PostVotingMechanism = ({
                         <div
                             className={
                                 postCardClass.voteButtonContainer +
-                                (winningChoice === idx
+                                ( (winningChoice === idx  && userVoteChoice != -1)
                                     ? ' shadow-lg shadow-black/10 dark:shadow-neutralDark-150/20'
                                     : '')
                             }
@@ -251,10 +251,12 @@ const PostVotingMechanism = ({
                             >
                                 {idx == 0 ? voteButtonLeft : voteButtonRight}
                             </button>
-                            <p className={postCardClass.voteCounter}>
+                            { userVoteChoice != -1 && (
+                                <p className={postCardClass.voteCounter}>
                                 {votesList[idx]}{' '}
                                 {votesList[idx] == 1 ? 'vote' : 'votes'}
-                            </p>
+                                </p>
+                            )}
                         </div>
                         )}
                     </div>
