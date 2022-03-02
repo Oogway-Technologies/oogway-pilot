@@ -135,6 +135,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         // Clear the input
         setLoading(false)
         if (inputRef.current) {
+            inputRef.current.style.height = '20px';
             inputRef.current.value = ''
         }
 
@@ -164,7 +165,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     />
                 )}
                 <div className={replyFormClass.replyBar}>
-                    <form>
+                    <form className={'flex items-center'}>
                         {isMobile ? (
                             <textarea
                                 ref={inputRef}

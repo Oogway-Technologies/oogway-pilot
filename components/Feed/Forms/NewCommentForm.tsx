@@ -168,6 +168,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         // Everything is done
         setLoading(false)
         if (inputRef.current) {
+            inputRef.current.style.height = '24px';
             inputRef.current.value = ''
         }
 
@@ -224,7 +225,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         <div className={commentFormClass.form}>
             <div className={commentFormClass.body}>
                 <div className={commentFormClass.commentBar}>
-                    <form className={'w-full'}>
+                    <form className={'flex items-center w-full'}>
                         {isMobile ? (
                             <textarea
                                 ref={inputRef}
