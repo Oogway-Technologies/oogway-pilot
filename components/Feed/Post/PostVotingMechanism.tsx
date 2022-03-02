@@ -193,8 +193,13 @@ const PostVotingMechanism = ({
                                                 : ' cursor-default') +
                                             (userVoteChoice === idx
                                                 ? ' text-primary dark:text-primaryDark font-bold'
-                                                : ' text-neutral-700 dark:text-neutralDark-150')
+                                                : ' text-neutral-700 dark:text-neutralDark-150') +
+                                            (obj.text.split('').length > 20 &&
+                                            isValidURL(obj.text)
+                                                ? ' text-start truncate w-full p-sm'
+                                                : ' text-center inline-flex w-full justify-center p-sm')
                                         }
+                                        style={{ overflow: 'clip' }}
                                         target="blank"
                                         href={decoratedHref}
                                         key={key}
@@ -219,7 +224,10 @@ const PostVotingMechanism = ({
                                             : ' cursor-default') +
                                         (userVoteChoice === idx
                                             ? ' text-primary dark:text-primaryDark font-bold'
-                                            : ' text-neutral-700 dark:text-neutralDark-150')
+                                            : ' text-neutral-700 dark:text-neutralDark-150') +
+                                        (obj.text.split('').length > 20
+                                            ? ' text-start truncate w-full p-sm'
+                                            : ' inline-flex w-full justify-center p-sm')
                                     }
                                     onClick={() => {
                                         voteOnImage(idx)
@@ -238,26 +246,29 @@ const PostVotingMechanism = ({
                                     : '')
                             }
                         >
-                            <button className={
-                                postCardClass.voteButton +
-                                (!user && ' cursor-default') +
-                                (userVoteChoice === idx
-                                    ? ' text-primary dark:text-primaryDark'
-                                    : ' text-neutral-700 dark:text-neutralDark-150')
+                            <button
+                                className={
+                                    postCardClass.voteButton +
+                                    (!user && ' cursor-default') +
+                                    (userVoteChoice === idx
+                                        ? ' text-primary dark:text-primaryDark'
+                                        : ' text-neutral-700 dark:text-neutralDark-150')
                                 }
                                 onClick={() => {
-                                voteOnImage(idx)
+                                    voteOnImage(idx)
                                 }}
                             >
-                                {idx == 0 ? voteButtonLeft : voteButtonRight}
+                                {idx == 0
+                                    ? voteButtonLeft
+                                    : voteButtonRight}
                             </button>
                             { userVoteChoice != -1 && (
                                 <p className={postCardClass.voteCounter}>
-                                {votesList[idx]}{' '}
-                                {votesList[idx] == 1 ? 'vote' : 'votes'}
+                                    {votesList[idx]}{' '}
+                                    {votesList[idx] == 1 ? 'vote' : 'votes'}
                                 </p>
                             )}
-                        </div>
+                            </div>
                         )}
                     </div>
                 )
