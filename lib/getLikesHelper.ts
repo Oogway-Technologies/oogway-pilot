@@ -1,6 +1,5 @@
 import { UserProfile } from "@auth0/nextjs-auth0/src/frontend/use-user";
 import { DocumentData, DocumentSnapshot, updateDoc } from "firebase/firestore";
-import {db} from "../firebase";
 import {findLikes} from "../utils/helpers/common";
 import { FirebaseProfile } from "../utils/types/firebase";
 import { streamPostData } from "./postsHelper";
@@ -30,7 +29,6 @@ export const getLikesForCommentEngagementBar = (
     setNumLikes: (n: number) => void
 ): void => {
     streamCommentData(
-        postId,
         commentId,
         (snapshot) => {findLikes(snapshot, setNumLikes)},
         (err) => console.log(err)

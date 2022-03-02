@@ -87,11 +87,12 @@ export async function getServerSideProps(context: { query: { id: string | undefi
     }
 
     // Prepare the comments
-    const commentsRef = await ref
-        .collection('comments')
+    const commentsRef = await db.collection('post-activity')
+        .where('postId', '==', post.id)
+        .where('isComment', '==', true)
         .orderBy('timestamp', 'asc')
         .get()
-
+        
     // Need to parse each comment and convert the timestamp
     // to a string due to server-side rendering
     const comments = commentsRef.docs
@@ -104,7 +105,6 @@ export async function getServerSideProps(context: { query: { id: string | undefi
             // @ts-ignore
             timestamp: comments.timestamp.toDate().getTime(),
         }))
-
     return {
         props: {
             post: post, // pass the post back as a doc

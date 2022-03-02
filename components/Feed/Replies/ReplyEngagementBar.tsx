@@ -31,7 +31,7 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
 
     // Track likes
     const [userHasLiked] = useUserHasLiked(
-        `posts/${postId}/comments/${commentId}/replies/${replyId}`,
+        `post-activity/${replyId}`,
         userProfile.uid
     )
     const [numLikes] = useReplyNumberLikes(postId, commentId, replyId)

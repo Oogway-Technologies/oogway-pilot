@@ -11,7 +11,7 @@ import Modal from '../../Utils/Modal'
 import { userProfileState } from '../../../atoms/user'
 import { useRecoilValue } from 'recoil'
 import { useUser } from '@auth0/nextjs-auth0'
-import { collection, orderBy, query } from 'firebase/firestore'
+import { collection, where, orderBy, query } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '../../../firebase'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
@@ -23,7 +23,6 @@ import {
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
 }
-
 const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
     // Retrieve user profile
     const userProfile = useRecoilValue(userProfileState)
@@ -32,12 +31,11 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
     // Get a snapshot of the comments from the DB
     const router = useRouter()
     const [commentsSnapshot] = useCollection(
-        query(
-            collection(db, `posts/${router.query.id}/comments`).withConverter(
-                commmentConverter
-            ),
+        query(collection(db, "post-activity"), 
+            where("postId", '==', router.query.id),  
+            where('isComment', '==', true),
             orderBy('timestamp', 'asc')
-        )
+        ).withConverter(commmentConverter)
     )
     const [numComments] = usePostNumberComments(router.query.id as string)
 
@@ -139,7 +137,6 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                         </div>
                     )}
                 </div>
-
                 {/* Comment counter */}
                 <p className={commentsApiClass.counter}>
                     {numComments === 0

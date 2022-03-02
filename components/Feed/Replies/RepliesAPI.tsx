@@ -4,7 +4,7 @@ import { db } from '../../../firebase'
 import { useRouter } from 'next/router'
 import Reply from './Reply'
 import { repliesApiClass } from '../../../styles/feed'
-import { collection, orderBy, query } from 'firebase/firestore'
+import { collection, where, orderBy, query } from 'firebase/firestore'
 import { replyConverter } from '../../../utils/types/firebase'
 
 type RepliesAPIProps = {
@@ -16,15 +16,13 @@ const RepliesAPI: React.FC<RepliesAPIProps> = ({ commentId }) => {
 
     // Get a snapshot of the replies from the DB
     const [repliesSnapshot] = useCollection(
-        query(
-            collection(
-                db,
-                `posts/${router.query.id}/comments/${commentId}/replies`
-            ).withConverter(replyConverter),
-            orderBy('timestamp', 'asc')
-        )
+        query(collection(db, "post-activity"), 
+        where("parentId", '==', commentId),  
+        where('isComment', '==', false),
+        orderBy('timestamp', 'asc')
+        ).withConverter(replyConverter)
+        
     )
-
     const showReplies = () => {
         if (repliesSnapshot) {
             return repliesSnapshot?.docs.map((reply) => (

@@ -3,11 +3,11 @@ import PostOptionsDropdown from './PostOptionsDropdown'
 import {Avatar} from '@mui/material'
 import {postCardClass} from '../../../styles/feed'
 import Timestamp from '../../Utils/Timestamp'
-import {FieldValue} from 'firebase/firestore'
 import {useProfileData} from '../../../hooks/useProfileData'
 import {deleteMedia} from '../../../lib/storageHelper'
 import {useRouter} from 'next/router'
-import {getFunctions, httpsCallable} from 'firebase/functions'
+import {query, getDocs, collection, where, deleteDoc, doc, FieldValue} from 'firebase/firestore'
+import { db } from '../../../firebase'
 
 type PostHeaderProps = {
     id: string
@@ -27,21 +27,37 @@ const PostHeader: FC<PostHeaderProps> = ({
     // router from next.js to use location functions.
     const router = useRouter()
 
-    // Deletes a post
-    const deletePost = async () => {
-        // Get the path to the post to delete
-        const path = `posts/${id}`
-
-        // Get the delete function and call it on the path
-        const functions = getFunctions()
-        const deleteFn = httpsCallable(functions, 'recursiveDelete')
-        deleteFn({ path: path }).catch(function (err) {
-            console.log('Delete failed, see console,')
-            console.warn(err)
+    // Delete the post entry from the DB.
+    // Note: this post should NOT have any comments
+    const deletePostEntry = async () => {
+        const postDocRef = doc(db, 'posts', id)
+        await deleteDoc(postDocRef).catch((err) => {
+            console.log('Cannot delete post: ', err)
         })
 
         // Delete the post's media, if any
         deleteMedia(`posts/${id}`)
+    }
+
+    // Deletes a post
+    const deletePost = async () => {
+
+        let activitiesQuery = query( 
+            collection(db, "post-activity"), 
+            where("postId", '==', id)
+        )
+
+        getDocs(activitiesQuery).then(async (sub) => {
+            sub.forEach((activity) => {
+                deleteDoc(activity?.ref).catch((err) => {
+                    console.log('Cannot delete activity: ', err)
+                })
+            })
+            deletePostEntry()
+        })
+        .catch((err) => {
+        console.log('Cannot delete activities: ', err)
+        })
 
         // Return where the user should be routed
         // If the user deletes the parent post from

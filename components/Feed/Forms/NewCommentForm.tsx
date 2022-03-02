@@ -26,7 +26,7 @@ import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import {checkFileSize} from '../../../utils/helpers/common'
 import {longLimit, warningTime} from '../../../utils/constants/global'
-import {commentsMap, FirebaseComment} from '../../../utils/types/firebase'
+import {FirebaseComment} from '../../../utils/types/firebase'
 
 type NewCommentFormProps = {
     closeModal: () => void
@@ -95,9 +95,10 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             },
             {merge: true}
         )
-
-        // Now add a new comment for this post
         let commentData: FirebaseComment = {
+            postId : router.query.id as string,
+            parentId: null,
+            isComment: true,
             timestamp: serverTimestamp(),
             message: inputRef?.current?.value,
             author: userProfile.username,
@@ -105,7 +106,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
         }
         const docRef = await addDoc(
-            collection(db, `posts/${router.query.id}/comments`),
+            collection(db, `post-activity`),
             commentData
         )
 
@@ -136,34 +137,6 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                 }
             )
         }
-
-        // Store the reference to this comment in the map of comments
-        // create by the current user.
-        const userDoc = getUserDoc(userProfile.uid)
-        await userDoc
-            .then(async (doc) => {
-                if (doc?.exists()) {
-                    let tmp = doc.data()
-
-                    // Since comments don't exist as their own colletion but rather as
-                    // a sub-collection under individual posts, we must use a map to
-                    // store comments where the key is the comment id and the value
-                    // it points to is the parent post id it resides under.
-                    const commentId = docRef.id
-                    if ('comments' in tmp) {
-                        tmp.comments[commentId] = router.query.id
-                    } else {
-                        // Add a new entry
-                        let newComments: commentsMap = {}
-                        newComments[commentId] = router.query.id as string
-                        tmp['comments'] = newComments
-                    }
-                    await updateDoc(doc?.ref, tmp)
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-            })
 
         // Everything is done
         setLoading(false)

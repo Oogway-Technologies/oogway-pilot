@@ -5,8 +5,7 @@ import {postCardClass, replyHeaderClass} from '../../../styles/feed'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 import {db} from '../../../firebase'
 import {Avatar} from '@mui/material'
-import {deleteDoc, doc, updateDoc} from 'firebase/firestore'
-import {getUserDoc} from '../../../lib/userHelper'
+import {deleteDoc, doc} from 'firebase/firestore'
 import {useProfileData} from '../../../hooks/useProfileData'
 
 type ReplyHeaderProps = {
@@ -35,20 +34,10 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
     const deleteReplyEntry = async () => {
         const replyDocRef = doc(
             db,
-            `posts/${postId}/comments/${commentId}/replies/${replyId}`
+            `post-activity/${replyId}`
         )
         await deleteDoc(replyDocRef).catch((err) => {
             console.log('Cannot delete reply: ', err)
-        })
-
-        // Update the user's reply map
-        const authorUserDoc = getUserDoc(authorUid)
-        await authorUserDoc.then(async (doc) => {
-            if (doc?.exists()) {
-                let tmp = doc.data()
-                delete tmp.replies[replyId]
-                await updateDoc(doc?.ref, tmp)
-            }
         })
 
         // Return where the user should be routed
