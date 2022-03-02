@@ -34,7 +34,7 @@ export const getCommentsCollection = async (id: string) => {
  */
 export const streamCommentsCollection = (
         id: string, 
-        snapshot: (snap: firebase.firestore.snapshot) => void, 
+        snapshot: (snap: any) => void, 
         error: (err: any) => void
     ) => {
 
@@ -57,7 +57,7 @@ export const streamCommentsCollection = (
 
  export const streamCommentData = (
     commentId: string, 
-    snapshot: (snap: firebase.firestore.snapshot) => void, 
+    snapshot: (snap: any) => void, 
     error: (err: any) => void
 ) => {
     
