@@ -372,7 +372,8 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                         placeholder="About me..."
                     />
                 </div>
-
+                {/* TODO: Implement DM system */}
+                {/*
                 <div className={loginDivs.checkbox}>
                     <input
                         type="checkbox"
@@ -383,6 +384,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                     />
                     <div>Allow other users to send me a Direct Message</div>
                 </div>
+                */}
             </form>
 
             {/* Form buttons */}
