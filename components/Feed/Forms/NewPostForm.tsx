@@ -23,7 +23,6 @@ import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 // JSX components
 import Button from '../../Utils/Button'
 import { Dialog } from '@headlessui/react'
-// @ts-ignore
 import {
     UilBalanceScale,
     UilImagePlus,
