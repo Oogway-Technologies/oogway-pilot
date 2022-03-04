@@ -49,7 +49,7 @@ function PostsAPI() {
                     {data?.pages.map((page) => (
                         <React.Fragment key={page?.lastTimestamp?.seconds}>
                             {/* If posts collection exists */}
-                            {page.posts ? (
+                            {page.posts && (
                                 page.posts.map((post: FirebasePost) => (
                                     <PostCard
                                         key={post.id}
@@ -66,8 +66,6 @@ function PostsAPI() {
                                         previewImage={post?.previewImage || ''}
                                     />
                                 ))
-                            ) : (
-                                <div>No posts. Be the first!</div>
                             )}
                         </React.Fragment>
                     ))}
@@ -76,7 +74,10 @@ function PostsAPI() {
                     {isFetchingNextPage || hasNextPage ? (
                         <PostCardLoader ref={loadMoreRef} />
                     ) : (
-                        <EndOfFeedMessage />
+                        <EndOfFeedMessage 
+                            topMessage={data?.pages[0].posts ? "You've read it all..." : "No Posts..."}
+                            bottomMessage={data?.pages[0].posts ? "Now share your wisdom!" : "Be the first!"}
+                        />
                     )}
                 </>
             )}
