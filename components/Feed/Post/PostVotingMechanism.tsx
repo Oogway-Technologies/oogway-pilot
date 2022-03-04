@@ -8,7 +8,11 @@ import { useRecoilValue } from 'recoil'
 import { streamPostData } from '../../../lib/postsHelper'
 import { useUser } from '@auth0/nextjs-auth0'
 import Linkify from 'react-linkify'
-import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
+import {
+    isValidURL,
+    parseYoutubeVideoId,
+    winnerCall,
+} from '../../../utils/helpers/common'
 import { MediaObject } from '../../../utils/types/global'
 
 type PostVotingMechanismProps = {
@@ -130,7 +134,7 @@ const PostVotingMechanism = ({
 
     return (
         <div className={postCardClass.voteDiv}>
-            {compareData.map((obj, idx) => {
+            {compareData.map((obj: MediaObject, idx: number) => {
                 return (
                     <div key={idx} className={postCardClass.voteContainer}>
                         {obj.image && obj.image.length > 1 ? (
@@ -138,7 +142,11 @@ const PostVotingMechanism = ({
                                 <img
                                     className={
                                         postCardClass.imageVote +
-                                        (!user ? ' cursor-default' : '')
+                                        (!user ? ' cursor-default' : '') +
+                                        (winnerCall(votesList) === idx &&
+                                        userVoteChoice != -1
+                                            ? ' border-4 border-primary'
+                                            : '')
                                     }
                                     src={obj.image}
                                     onClick={() => {
@@ -148,7 +156,15 @@ const PostVotingMechanism = ({
                                 />
                             </div>
                         ) : parseYoutubeVideoId(obj.text) ? (
-                            <div className={'m-2'}>
+                            <div
+                                className={
+                                    'm-2' +
+                                    (winnerCall(votesList) === idx &&
+                                    userVoteChoice != -1
+                                        ? ' border-4 border-primary'
+                                        : '')
+                                }
+                            >
                                 <iframe
                                     src={`https://www.youtube.com/embed/${parseYoutubeVideoId(
                                         obj.text
@@ -167,7 +183,11 @@ const PostVotingMechanism = ({
                                     <img
                                         className={
                                             postCardClass.imageVote +
-                                            (!user ? ' cursor-default' : '')
+                                            (!user ? ' cursor-default' : '') +
+                                            (winnerCall(votesList) === idx &&
+                                            userVoteChoice != -1
+                                                ? ' border-4 border-primary'
+                                                : '')
                                         }
                                         src={obj.previewImage}
                                         onClick={() => {
@@ -197,7 +217,11 @@ const PostVotingMechanism = ({
                                             (obj.text.split('').length > 20 &&
                                             isValidURL(obj.text)
                                                 ? ' text-start truncate w-full p-sm'
-                                                : ' text-center inline-flex w-full justify-center p-sm')
+                                                : ' text-center inline-flex w-full justify-center p-sm') +
+                                            (winnerCall(votesList) === idx &&
+                                            userVoteChoice != -1
+                                                ? ' border-4 border-primary'
+                                                : '')
                                         }
                                         style={{ overflow: 'clip' }}
                                         target="blank"
@@ -227,7 +251,11 @@ const PostVotingMechanism = ({
                                             : ' text-neutral-700 dark:text-neutralDark-150') +
                                         (obj.text.split('').length > 20
                                             ? ' text-start truncate w-full p-sm'
-                                            : ' inline-flex w-full justify-center p-sm')
+                                            : ' inline-flex w-full justify-center p-sm') +
+                                        (winnerCall(votesList) === idx &&
+                                        userVoteChoice != -1
+                                            ? ' border-4 border-primary'
+                                            : '')
                                     }
                                     onClick={() => {
                                         voteOnImage(idx)
@@ -238,36 +266,29 @@ const PostVotingMechanism = ({
                             )
                         )}
                         {user && (
-                        <div
-                            className={
-                                postCardClass.voteButtonContainer +
-                                ( (winningChoice === idx  && userVoteChoice != -1)
-                                    ? ' shadow-lg shadow-black/10 dark:shadow-neutralDark-150/20'
-                                    : '')
-                            }
-                        >
-                            <button
-                                className={
-                                    postCardClass.voteButton +
-                                    (!user && ' cursor-default') +
-                                    (userVoteChoice === idx
-                                        ? ' text-primary dark:text-primaryDark'
-                                        : ' text-neutral-700 dark:text-neutralDark-150')
-                                }
-                                onClick={() => {
-                                    voteOnImage(idx)
-                                }}
-                            >
-                                {idx == 0
-                                    ? voteButtonLeft
-                                    : voteButtonRight}
-                            </button>
-                            { userVoteChoice != -1 && (
-                                <p className={postCardClass.voteCounter}>
-                                    {votesList[idx]}{' '}
-                                    {votesList[idx] == 1 ? 'vote' : 'votes'}
-                                </p>
-                            )}
+                            <div className={postCardClass.voteButtonContainer}>
+                                <button
+                                    className={
+                                        postCardClass.voteButton +
+                                        (!user && ' cursor-default') +
+                                        (userVoteChoice === idx
+                                            ? ' text-primary dark:text-primaryDark'
+                                            : ' text-neutral-700 dark:text-neutralDark-150')
+                                    }
+                                    onClick={() => {
+                                        voteOnImage(idx)
+                                    }}
+                                >
+                                    {idx == 0
+                                        ? voteButtonLeft
+                                        : voteButtonRight}
+                                </button>
+                                {userVoteChoice != -1 && (
+                                    <p className={postCardClass.voteCounter}>
+                                        {votesList[idx]}{' '}
+                                        {votesList[idx] == 1 ? 'vote' : 'votes'}
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>
