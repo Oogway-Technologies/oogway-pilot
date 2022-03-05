@@ -112,7 +112,7 @@ export const postOptionsDropdownClass = {
 export const postFormClass = {
     modalDiv: 'flex-col bg-white dark:bg-neutralDark-500',
     dialogTitle:
-        'flex px-2 py-md text-lg font-bold  text-neutral-800 dark:text-neutralDark-50',
+        'inline-flex w-full justify-between px-2 py-md text-lg font-bold  text-neutral-800 dark:text-neutralDark-50',
     // Form
     form: 'flex flex-col p-sm space-y-3 lg:w-136',
     formQuestion:
@@ -163,6 +163,15 @@ export const postFormClass = {
         'flex my-md cursor-pointer text-neutral-700 hover:text-error',
     compareUpload:
         'inline-block items-center text-primary dark:text-primaryDark text-sm disabled:text-neutral-700',
+}
+
+export const toggleIncognitoClass = {
+    switchSlide:
+        'relative inline-flex items-center h-7 rounded-full w-12 px-0.5 \
+        transition-colors ease-in-out duration-300',
+    switchButton:
+        'rounded-full inline-block w-6 h-6 transform bg-white \
+        transition ease-in-out duration-300',
 }
 
 // Comments

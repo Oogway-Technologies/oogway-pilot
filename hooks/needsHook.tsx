@@ -1,6 +1,5 @@
 // Placeholder for hooks until they are added
-const needsHook = (e: any) => {
-    e.preventDefault()
+const needsHook = () => {
     alert('This button needs a hook!')
 }
 

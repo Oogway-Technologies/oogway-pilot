@@ -31,6 +31,7 @@ import {
     // @ts-ignore
 } from '@iconscout/react-unicons'
 import { Collapse } from '@mui/material'
+import { Icon } from '@iconify/react'
 
 // Form management
 import { useForm } from 'react-hook-form'
@@ -59,6 +60,9 @@ import {
     warningTime,
 } from '../../../utils/constants/global'
 import { MediaObject } from '../../../utils/types/global'
+import Slider from '../../Utils/Slider'
+import needsHook from '../../../hooks/needsHook'
+import ToggleIncognito from '../Post/ToggleIncognito'
 
 type NewPostProps = {
     closeModal: () => void
@@ -597,9 +601,10 @@ const NewPostForm: FC<NewPostProps> = ({
     return (
         <div className={postFormClass.modalDiv}>
             <Dialog.Title as="div" className={postFormClass.dialogTitle}>
-                What&rsquo;s your question?
-            </Dialog.Title>
+                <div>What's your question?</div>
 
+                <ToggleIncognito onChange={needsHook} />
+            </Dialog.Title>
             {/* Question form */}
             <form className={postFormClass.form}>
                 {/* Question: required */}
