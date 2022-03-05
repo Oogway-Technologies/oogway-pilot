@@ -32,6 +32,7 @@ import {
     //@ts-ignore
 } from '@iconscout/react-unicons'
 import { Collapse } from '@mui/material'
+import { Icon } from '@iconify/react'
 
 // Form management
 import { useForm } from 'react-hook-form'
@@ -54,8 +55,15 @@ import {
     isValidURL,
 } from '../../../utils/helpers/common'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import {longLimit, shortLimit, warningTime} from '../../../utils/constants/global'
+import {
+    longLimit,
+    shortLimit,
+    warningTime,
+} from '../../../utils/constants/global'
 import { MediaObject } from '../../../utils/types/global'
+import Slider from '../../Utils/Slider'
+import needsHook from '../../../hooks/needsHook'
+import ToggleIncognito from '../Post/ToggleIncognito'
 
 type NewPostProps = {
     closeModal: () => void
@@ -544,30 +552,30 @@ const NewPostForm: FC<NewPostProps> = ({
         // Validate form
         const isValid = validateForm()
 
-        if(isValid){
-        if (isComparePost()) {
-            const leftUrl = isValidURL(textToCompareLeft || '')
-            if (leftUrl && leftUrl.length > 1 && !imageToCompareLeft) {
-                await checkPreviewImage(leftUrl).then(async (res) => {
-                    await leftComparePreviewImagecallBack(res)
-                })
-            }
+        if (isValid) {
+            if (isComparePost()) {
+                const leftUrl = isValidURL(textToCompareLeft || '')
+                if (leftUrl && leftUrl.length > 1 && !imageToCompareLeft) {
+                    await checkPreviewImage(leftUrl).then(async (res) => {
+                        await leftComparePreviewImagecallBack(res)
+                    })
+                }
 
-            const rightUrl = isValidURL(textToCompareRight || '')
-            if (rightUrl && rightUrl.length > 1 && !imageToCompareRight) {
-                await checkPreviewImage(rightUrl).then(async (res) => {
-                    await rightComparePreviewImagecallBack(res)
-                })
+                const rightUrl = isValidURL(textToCompareRight || '')
+                if (rightUrl && rightUrl.length > 1 && !imageToCompareRight) {
+                    await checkPreviewImage(rightUrl).then(async (res) => {
+                        await rightComparePreviewImagecallBack(res)
+                    })
+                }
             }
-        }
-        const url = isValidURL(descriptionRef?.current?.value || '')
-        if (url && url.length > 1 && !imageToPost) {
-            await checkPreviewImage(url).then(async (res) => {
-                await previewImagecallBack(res)
-            })
-        } else {
-            setPreviewImage(' ')
-        }
+            const url = isValidURL(descriptionRef?.current?.value || '')
+            if (url && url.length > 1 && !imageToPost) {
+                await checkPreviewImage(url).then(async (res) => {
+                    await previewImagecallBack(res)
+                })
+            } else {
+                setPreviewImage(' ')
+            }
             // Close
             closeModal()
             // Trigger a post re-fetch with a timeout to give the database
@@ -590,9 +598,10 @@ const NewPostForm: FC<NewPostProps> = ({
     return (
         <div className={postFormClass.modalDiv}>
             <Dialog.Title as="div" className={postFormClass.dialogTitle}>
-                What&rsquo;s your question?
-            </Dialog.Title>
+                <div>What's your question?</div>
 
+                <ToggleIncognito onChange={needsHook} />
+            </Dialog.Title>
             {/* Question form */}
             <form className={postFormClass.form}>
                 {/* Question: required */}
@@ -608,7 +617,10 @@ const NewPostForm: FC<NewPostProps> = ({
                         onChange={(e) => {
                             const isURL = isValidURL(e.target.value)
                             if (isURL) {
-                                e.target.value = e.target.value.replace(isURL, '')
+                                e.target.value = e.target.value.replace(
+                                    isURL,
+                                    ''
+                                )
                             }
                         }}
                     />
