@@ -10,6 +10,7 @@ import { useUser } from '@auth0/nextjs-auth0'
 import Linkify from 'react-linkify'
 import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
 import { MediaObject } from '../../../utils/types/global'
+import YoutubeEmbed from '../../Utils/YoutubeEmbed'
 
 type PostVotingMechanismProps = {
     id: string
@@ -42,7 +43,7 @@ const PostVotingMechanism = ({
     useEffect(() => {
         const unsubscribe = streamPostData(
             id,
-            (snapshot) => {
+            snapshot => {
                 const postData = snapshot.data()
                 // prevent error on compare post deletion
                 if (postData) {
@@ -77,9 +78,9 @@ const PostVotingMechanism = ({
                     }
                 }
             },
-            (error) => {
+            error => {
                 console.log(error)
-            }
+            },
         )
 
         // Stop listening
@@ -94,7 +95,7 @@ const PostVotingMechanism = ({
         // Add a vote, for this user, to one of the images
         let docRef = db.collection('posts').doc(id)
 
-        return db.runTransaction(async (transaction) => {
+        return db.runTransaction(async transaction => {
             const doc = await transaction.get(docRef)
             const postData = doc.data()
             if (postData) {
@@ -148,18 +149,7 @@ const PostVotingMechanism = ({
                                 />
                             </div>
                         ) : parseYoutubeVideoId(obj.text) ? (
-                            <div className={'m-2'}>
-                                <iframe
-                                    src={`https://www.youtube.com/embed/${parseYoutubeVideoId(
-                                        obj.text
-                                    )}`}
-                                    frameBorder="0"
-                                    allow="autoplay; encrypted-media"
-                                    allowFullScreen
-                                    title="video"
-                                    className={'w-full h-full'}
-                                />
-                            </div>
+                            <YoutubeEmbed text={obj.text} />
                         ) : (
                             obj.previewImage &&
                             obj.previewImage.length > 1 && (
@@ -183,7 +173,7 @@ const PostVotingMechanism = ({
                                 componentDecorator={(
                                     decoratedHref,
                                     decoratedText,
-                                    key
+                                    key,
                                 ) => (
                                     <a
                                         className={
@@ -238,36 +228,37 @@ const PostVotingMechanism = ({
                             )
                         )}
                         {user && (
-                        <div
-                            className={
-                                postCardClass.voteButtonContainer +
-                                ( (winningChoice === idx  && userVoteChoice != -1)
-                                    ? ' shadow-lg shadow-black/10 dark:shadow-neutralDark-150/20'
-                                    : '')
-                            }
-                        >
-                            <button
+                            <div
                                 className={
-                                    postCardClass.voteButton +
-                                    (!user && ' cursor-default') +
-                                    (userVoteChoice === idx
-                                        ? ' text-primary dark:text-primaryDark'
-                                        : ' text-neutral-700 dark:text-neutralDark-150')
+                                    postCardClass.voteButtonContainer +
+                                    (winningChoice === idx &&
+                                    userVoteChoice != -1
+                                        ? ' shadow-lg shadow-black/10 dark:shadow-neutralDark-150/20'
+                                        : '')
                                 }
-                                onClick={() => {
-                                    voteOnImage(idx)
-                                }}
                             >
-                                {idx == 0
-                                    ? voteButtonLeft
-                                    : voteButtonRight}
-                            </button>
-                            { userVoteChoice != -1 && (
-                                <p className={postCardClass.voteCounter}>
-                                    {votesList[idx]}{' '}
-                                    {votesList[idx] == 1 ? 'vote' : 'votes'}
-                                </p>
-                            )}
+                                <button
+                                    className={
+                                        postCardClass.voteButton +
+                                        (!user && ' cursor-default') +
+                                        (userVoteChoice === idx
+                                            ? ' text-primary dark:text-primaryDark'
+                                            : ' text-neutral-700 dark:text-neutralDark-150')
+                                    }
+                                    onClick={() => {
+                                        voteOnImage(idx)
+                                    }}
+                                >
+                                    {idx == 0
+                                        ? voteButtonLeft
+                                        : voteButtonRight}
+                                </button>
+                                {userVoteChoice != -1 && (
+                                    <p className={postCardClass.voteCounter}>
+                                        {votesList[idx]}{' '}
+                                        {votesList[idx] == 1 ? 'vote' : 'votes'}
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>

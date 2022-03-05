@@ -1,0 +1,28 @@
+import React, { FC } from 'react'
+import { parseYoutubeVideoId } from '../../utils/helpers/common'
+
+interface YoutubeEmbedProps {
+    text: string
+}
+
+const YoutubeEmbed: FC<YoutubeEmbedProps> = ({ text }) => {
+    const Embed = () => (
+        <div className={'m-2'}>
+            <iframe
+                src={`https://www.youtube.com/embed/${parseYoutubeVideoId(
+                    text,
+                )}`}
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                title="video"
+                className={'w-full h-full'}
+            />
+        </div>
+    )
+
+    if (parseYoutubeVideoId(text)) return <Embed />
+    else return <></>
+}
+
+export default YoutubeEmbed
