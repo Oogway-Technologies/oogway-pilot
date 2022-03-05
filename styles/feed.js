@@ -165,6 +165,7 @@ export const postFormClass = {
         'inline-block items-center text-primary dark:text-primaryDark text-sm disabled:text-neutral-700',
 }
 
+<<<<<<< HEAD
 export const toggleIncognitoClass = {
     switchSlide:
         'relative inline-flex items-center h-7 rounded-full w-12 px-0.5 \
@@ -174,6 +175,8 @@ export const toggleIncognitoClass = {
         transition ease-in-out duration-300',
 }
 
+=======
+>>>>>>> Form front-end finished; need verification/preview
 export const compareFormClass = {
     header: 'inline-flex font-bold items-center',
     goBackButton:

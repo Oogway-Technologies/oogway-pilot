@@ -3,11 +3,12 @@ import { parseYoutubeVideoId } from '../../utils/helpers/common'
 
 interface YoutubeEmbedProps {
     text: string
+    addStyle?: string
 }
 
-const YoutubeEmbed: FC<YoutubeEmbedProps> = ({ text }) => {
+const YoutubeEmbed: FC<YoutubeEmbedProps> = ({ text, addStyle }) => {
     const Embed = () => (
-        <div className={'m-2'}>
+        <div className={'m-2' + addStyle}>
             <iframe
                 src={`https://www.youtube.com/embed/${parseYoutubeVideoId(
                     text,

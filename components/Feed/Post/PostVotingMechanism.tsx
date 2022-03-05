@@ -159,7 +159,15 @@ const PostVotingMechanism = ({
                                 />
                             </div>
                         ) : parseYoutubeVideoId(obj.text) ? (
-                            <YoutubeEmbed text={obj.text} />
+                            <YoutubeEmbed
+                                text={obj.text}
+                                addStyle={
+                                    winnerCall(votesList) === idx &&
+                                    userVoteChoice != -1
+                                        ? ' border-4 border-primary'
+                                        : ''
+                                }
+                            />
                         ) : (
                             obj.previewImage &&
                             obj.previewImage.length > 1 && (
@@ -276,7 +284,8 @@ const PostVotingMechanism = ({
                                         ? voteButtonLeft
                                         : voteButtonRight}
                                 </button>
-                                {userVoteChoice != -1 && (
+                                {(userVoteChoice != -1 ||
+                                    authorUid == userProfile.uid) && (
                                     <p className={postCardClass.voteCounter}>
                                         {votesList[idx]}{' '}
                                         {votesList[idx] == 1 ? 'vote' : 'votes'}

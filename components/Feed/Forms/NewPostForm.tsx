@@ -45,12 +45,11 @@ import {
     shortLimit,
     warningTime,
 } from '../../../utils/constants/global'
-import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
 import ToggleIncognito from '../Post/ToggleIncognito'
 
 // Recoil states
 import { userProfileState } from '../../../atoms/user'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
@@ -61,6 +60,7 @@ import {
     fetcher,
     isValidURL,
 } from '../../../utils/helpers/common'
+import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
 
 // Queries
 import { useQueryClient } from 'react-query'
@@ -111,6 +111,14 @@ const NewPostForm: FC<NewPostProps> = ({
 
     const [loading, setLoading] = useState(false)
 
+    // Get a reference to the input text
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    // Get a reference to the description text
+    const descriptionRef = useRef<HTMLTextAreaElement>(null)
+
+    // Get a reference for the input image
+    const filePickerRef = useRef<HTMLInputElement>(null)
     // The image to post and to display as preview
     const [imageToPost, setImageToPost] = useState<
         string | ArrayBuffer | null | undefined
@@ -123,15 +131,6 @@ const NewPostForm: FC<NewPostProps> = ({
 
     // Refs and state for Compare post
     const [expanded, setExpanded] = useState<boolean>(false)
-
-    // Get a reference to the input text
-    const inputRef = useRef<HTMLInputElement>(null)
-
-    // Get a reference to the description text
-    const descriptionRef = useRef<HTMLTextAreaElement>(null)
-
-    // Get a reference for the input image
-    const filePickerRef = useRef<HTMLInputElement>(null)
 
     // Track whether user has opted to post anonymously
     const [isIncognito, setIsIncognito] = useState<boolean>(false)
@@ -159,7 +158,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const [leftComparePreviewImage, setLeftComparePreviewImage] =
         useRecoilState(leftPreviewImage)
     const [rightComparePreviewImage, setRightComparePreviewImage] =
-        useState<string>('')
+        useRecoilState(rightPreviewImage)
     const [isTitleURL, setIsTitleURL] = useState<boolean>(false)
     useRecoilState(rightPreviewImage)
 
@@ -668,7 +667,9 @@ const NewPostForm: FC<NewPostProps> = ({
                         maxLength={shortLimit}
                         onKeyPress={preventDefaultOnEnter}
                         onChange={e => {
-                            handleInputChange(e)
+                            if (errors?.question?.type) {
+                                clearErrors()
+                            }
                             const isURL = isValidURL(e.target.value)
                             if (isURL) {
                                 e.target.value = e.target.value.replace(
