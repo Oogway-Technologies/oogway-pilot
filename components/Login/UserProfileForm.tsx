@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { FC, useRef, useState, MouseEvent, ChangeEvent } from 'react'
+import React, { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 import { db, storage } from '../../firebase'
 import {
     loginButtons,
@@ -91,32 +91,33 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         // Note: path to image is profiles/<profile_id>/image
         if (imageToUpload) {
             const imageRef = ref(storage, `profiles/${userProfile.uid}/image`)
-            //@ts-ignore
-            await uploadString(imageRef, imageToUpload, 'data_url').then(
-                async () => {
-                    // Get the download URL for the image
-                    const downloadURL = await getDownloadURL(imageRef)
+            try {
+                await uploadString(
+                    imageRef,
+                    imageToUpload as string,
+                    'data_url'
+                )
 
-                    // Update the original profile with the image url
-                    await updateDoc(doc(db, 'profiles', userProfile.uid), {
-                        profilePic: downloadURL,
-                    })
-
-                    // Update the user's data as well
-                    await updateDoc(doc(db, 'users', userProfile.uid), {
-                        name: name.trim(),
-                        username: username,
-                        photoUrl: downloadURL,
-                    })
-
-                    // Update atom
-                    setUserProfile({
-                        ...userProfile,
-                        profilePic: downloadURL,
-                    })
-                }
-            )
-
+                // Get the download URL for the image
+                const downloadURL = await getDownloadURL(imageRef)
+                // Update the original profile with the image url
+                await updateDoc(doc(db, 'profiles', userProfile.uid), {
+                    profilePic: downloadURL,
+                })
+                // Update the user's data as well
+                await updateDoc(doc(db, 'users', userProfile.uid), {
+                    name: name.trim(),
+                    username: username,
+                    photoUrl: downloadURL,
+                })
+                // Update atom
+                setUserProfile({
+                    ...userProfile,
+                    profilePic: downloadURL,
+                })
+            } catch (e) {
+                console.log(e)
+            }
             handleRemoveImage()
         }
 
