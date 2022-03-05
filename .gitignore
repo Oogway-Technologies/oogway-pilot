@@ -47,3 +47,6 @@ firebase-key.json
 
 # Lint
 .eslintrc.json
+
+# VS code settings
+.vscode/
