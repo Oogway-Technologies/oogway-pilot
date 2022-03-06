@@ -1,36 +1,37 @@
-import {Popover, Transition} from '@headlessui/react';
-import React, {FC, Fragment, useState} from 'react';
-import {usePopper} from 'react-popper'
+import { Popover, Transition } from '@headlessui/react'
+import React, { FC, Fragment, useState } from 'react'
+import { usePopper } from 'react-popper'
 
 type DropdownMenuProps = {
-    menuButtonClass: string,
-    menuItemsClass: string,
-    menuButton: JSX.Element,
+    menuButtonClass: string
+    menuItemsClass: string
+    menuButton: JSX.Element
     menuItems: JSX.Element[]
-};
+}
 
-const DropdownMenu: FC<DropdownMenuProps> = (
-    {
-        menuButtonClass,
-        menuItemsClass,
-        menuButton,
-        menuItems
-    }
-) => {
-    const [referenceElement, setReferenceElement] = useState(null);
-    const [popperElement, setPopperElement] = useState(null);
-    const {styles, attributes} = usePopper(referenceElement, popperElement);
+const DropdownMenu: FC<DropdownMenuProps> = ({
+    menuButtonClass,
+    menuItemsClass,
+    menuButton,
+    menuItems,
+}) => {
+    const [referenceElement, setReferenceElement] = useState(null)
+    const [popperElement, setPopperElement] = useState(null)
+    const { styles, attributes } = usePopper(referenceElement, popperElement)
 
     // Update popper location
     styles.popper = {
-        position: "absolute",
-        right: "0",
-        top: "1"
+        position: 'absolute',
+        right: '0',
+        top: '1',
     }
 
     return (
         <Popover as="div">
-            <Popover.Button className={menuButtonClass} ref={setReferenceElement as unknown as string}>
+            <Popover.Button
+                className={menuButtonClass}
+                ref={setReferenceElement as unknown as string}
+            >
                 {menuButton}
             </Popover.Button>
             <Transition
@@ -49,19 +50,23 @@ const DropdownMenu: FC<DropdownMenuProps> = (
                     style={styles.popper}
                     {...attributes.popper}
                 >
-                    {menuItems.map(
-                        (item, idx) => {
+                    {({ close }) =>
+                        menuItems.map((item, idx) => {
                             return (
-                                <li key={idx} className="pt-1 group">
+                                <li
+                                    key={idx}
+                                    className="pt-1 group"
+                                    onClick={() => close()}
+                                >
                                     {item}
                                 </li>
                             )
-                        }
-                    )}
+                        })
+                    }
                 </Popover.Panel>
             </Transition>
         </Popover>
-    );
-};
+    )
+}
 
-export default DropdownMenu;
+export default DropdownMenu
