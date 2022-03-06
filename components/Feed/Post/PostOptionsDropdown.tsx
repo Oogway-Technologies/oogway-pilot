@@ -24,26 +24,28 @@ import {useQueryClient} from 'react-query'
 
 // Utils
 import needsHook from '../../../hooks/needsHook'
+import { FirebaseProfile } from '../../../utils/types/firebase'
 
 type PostOptionsDropdownProps = {
-    authorUid: string // Post author id
+    authorUid: string
     deletePost: () => Promise<string> // Handler function to delete post
-    authorName: string // Post author name
     postType: 'Post' | 'Comment' | 'Reply' // Whether post, comment, or reply
+    authorProfile: FirebaseProfile | undefined
 }
 
 const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     authorUid,
+    authorProfile,
     deletePost,
-    authorName,
-    postType
+    postType,
 }) => {
     const userProfile = useRecoilValue(userProfileState) // Get user profile
     const currentUserDoc = getUserDoc(userProfile?.uid) // Get user document data
 
     // For triggering posts refetch on form submission
     const queryClient = useQueryClient()
-
+    
+    const authorName = authorProfile?.username ? authorProfile?.username : authorProfile?.name
     // Track author blocked state
     // TODO: refactor to custom hook
     const [authorIsBlocked, setAuthorIsBlocked] = useState(false)

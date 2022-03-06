@@ -1,6 +1,8 @@
 import {doc, getDoc, onSnapshot} from "firebase/firestore"
 import {db} from "../firebase"
-
+import { FirebaseProfile } from "../utils/types/firebase"
+import { staticPostData } from "../utils/types/params"  
+import { anonymousUserName } from "../utils/constants/global"
 /**
  *
  * @param id profile id
@@ -36,4 +38,26 @@ export const streamProfileData = (
 ) => {
     const profileRef = doc(db, "profiles", id)
     return onSnapshot(profileRef, snapshot, error)
+}
+
+export const getAuthorName = ( 
+    authorProfile : FirebaseProfile | undefined,
+    parentPost : staticPostData,
+) => {
+    
+    if( parentPost.authorUid == authorProfile?.uid && parentPost.isAnonymous) {
+        return anonymousUserName
+    }
+    return authorProfile?.username ? authorProfile?.username : authorProfile?.name
+}
+
+export const getProfilePic = (
+    authorProfile : FirebaseProfile | undefined,
+    parentPost : staticPostData,
+) => {
+    
+    if( parentPost.authorUid == authorProfile?.uid && parentPost.isAnonymous) {
+        return anonymousUserName
+    }
+    return authorProfile?.profilePic || undefined
 }

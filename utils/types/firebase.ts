@@ -57,6 +57,7 @@ export interface FirebasePost {
     postImage?: string | null
     previewImage?: string
     uid: string
+    isAnonymous: boolean
 }
 
 export interface FirebaseUser {
@@ -80,7 +81,6 @@ export interface FirebaseProfile {
     username: string;
     uid: string;
 }
-
 
 /**
  * Type converters for Firebase Snapshots

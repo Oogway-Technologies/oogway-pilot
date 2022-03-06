@@ -10,7 +10,7 @@ import Linkify from 'react-linkify'
 import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
 import { FirebasePost } from '../../../utils/types/firebase'
 import { FieldValue } from 'firebase/firestore'
-
+import { staticPostData } from '../../../utils/types/params'
 interface PostProps {
     authorUid: string
     id: string
@@ -23,6 +23,7 @@ interface PostProps {
     isCommentThread: boolean
     comments: null | any // Should be json object
     previewImage: string | null
+    isAnonymous: boolean
 }
 
 const PostCard: React.FC<PostProps> = ({
@@ -37,13 +38,20 @@ const PostCard: React.FC<PostProps> = ({
     isCommentThread,
     comments,
     previewImage,
+    isAnonymous,
 }) => {
     // Track state for voting mechanism
     const [votesList, setVotesList] = useState(Array<number>())
     const [compareData, setCompareData] = useState(Array())
     const [URL, setURL] = useState<string>('')
     const [YouTubeURLID, setYouTubeURLID] = useState<string>('')
-
+    
+    // Set params for child components
+    let staticPostData : staticPostData = {
+        authorUid: authorUid,
+        id: id,
+        isAnonymous: isAnonymous,
+    }
     // Use useEffect to bind on document loading the
     // function that will listen for DB updates to the
     // setters of number of votes for a comparison
@@ -105,6 +113,7 @@ const PostCard: React.FC<PostProps> = ({
                 authorUid={authorUid}
                 name={name}
                 timestamp={timestamp}
+                isAnonymous={isAnonymous}
             />
 
             {/* Body */}
@@ -188,7 +197,9 @@ const PostCard: React.FC<PostProps> = ({
 
             {/* Comments */}
             {/* Note: pass the server-rendered comments to the panel */}
-            {isCommentThread && <CommentsAPI comments={comments} />}
+            {isCommentThread && <CommentsAPI comments={comments} 
+                                             parentPostData={staticPostData}
+                                />}
         </Card>
     )
 }

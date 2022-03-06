@@ -12,6 +12,9 @@ import {collection, doc, getDoc, orderBy, query, where} from 'firebase/firestore
 import {db} from '../../firebase'
 import {useCollection} from 'react-firebase-hooks/firestore'
 import PostCard from '../../components/Feed/Post/Post'
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../atoms/user'
+
 import DocumentData = firebase.firestore.DocumentData;
 
 interface ProfileProps {
@@ -29,7 +32,8 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
         lastName,
         location,
     } = userProfile
-
+    
+    const authUserProfile = useRecoilValue(userProfileState)
     // Get real-time connection with DB
     const [realtimePosts] = useCollection(
         query(
@@ -37,8 +41,7 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
             where('uid', '==', uid),
             orderBy('timestamp', 'desc')
         )
-    )
-
+    ) 
     return (
         <div className={profilePage.innerDiv}>
             <div className={profilePage.contentDiv}>
@@ -46,7 +49,7 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                 <ProfileCard
                     bio={bio}
                     location={location}
-                    name={name}
+                    // name={name}
                     lastName={lastName}
                     profilePic={profilePic}
                     username={username}
@@ -59,7 +62,10 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                 */}
                 <>
                     {realtimePosts
-                        ? realtimePosts?.docs.map((post) => (
+                        ? realtimePosts?.docs.filter( (post) => {
+                            return (post.data().isAnonymous != true) 
+                                || ( post.data().uid == authUserProfile.uid);
+                        }).map((post) => (
                               <PostCard
                                   key={post.id}
                                   id={post.id}
@@ -73,10 +79,13 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                                   comments={null}
                                   isCommentThread={false}
                                   previewImage={null}
+                                  isAnonymous={post.data().isAnonymous}
                               />
                           ))
                         : // Render out the server-side rendered posts
-                          posts.map((post) => (
+                          posts.filter(function(post) {
+                            return (post.isAnonymous != true) || ( post.uid == authUserProfile.uid);
+                             }).map((post) => (
                               <PostCard
                                   key={post.id}
                                   id={post.id || ''}
@@ -90,6 +99,7 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                                   comments={null}
                                   isCommentThread={false}
                                   previewImage={null}
+                                  isAnonymous={post.isAnonymous}
                               />
                           ))}
                 </>

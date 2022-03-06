@@ -2,6 +2,7 @@ import {replyClass} from '../../../styles/feed'
 import ReplyHeader from './ReplyHeader'
 import ReplyEngagementBar from './ReplyEngagementBar'
 import firebase from 'firebase/compat/app'
+import { staticPostData } from '../../../utils/types/params'
 
 type ReplyProps = {
     replyOwner: string
@@ -9,6 +10,7 @@ type ReplyProps = {
     commentId: string
     replyId: string
     reply: firebase.firestore.DocumentData
+    parentPostData: staticPostData
 }
 
 const Reply: React.FC<ReplyProps> = ({
@@ -17,6 +19,7 @@ const Reply: React.FC<ReplyProps> = ({
                                          commentId,
                                          replyId,
                                          reply,
+                                         parentPostData,
                                      }) => {
     return (
         <div className={replyClass.outerDiv}>
@@ -29,6 +32,7 @@ const Reply: React.FC<ReplyProps> = ({
                 name={reply.author}
                 email={reply.email}
                 timestamp={reply.timestamp}
+                parentPostData={parentPostData}
             />
 
             <div className={replyClass.innerDiv}>

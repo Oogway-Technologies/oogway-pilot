@@ -6,12 +6,15 @@ import Reply from './Reply'
 import { repliesApiClass } from '../../../styles/feed'
 import { collection, where, orderBy, query } from 'firebase/firestore'
 import { replyConverter } from '../../../utils/types/firebase'
+import { staticPostData } from '../../../utils/types/params'
 
 type RepliesAPIProps = {
     commentId: string
+    parentPostData: staticPostData
 }
 
-const RepliesAPI: React.FC<RepliesAPIProps> = ({ commentId }) => {
+const RepliesAPI: React.FC<RepliesAPIProps> = (
+    { commentId, parentPostData, }) => {
     const router = useRouter()
 
     // Get a snapshot of the replies from the DB
@@ -36,6 +39,7 @@ const RepliesAPI: React.FC<RepliesAPIProps> = ({ commentId }) => {
                         ...reply.data(),
                         timestamp: reply.data().timestamp,
                     }}
+                    parentPostData={parentPostData}
                 />
             ))
         }

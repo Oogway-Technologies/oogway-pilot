@@ -270,6 +270,7 @@ const NewPostForm: FC<NewPostProps> = ({
             isCompare: false, // Explicitly flag whether is compare type
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
             timestamp: serverTimestamp(),
+            isAnonymous: isIncognito,
         }
 
         if (isComparePost()) {

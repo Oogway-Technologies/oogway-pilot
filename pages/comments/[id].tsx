@@ -59,6 +59,7 @@ const CommentPage:FC<CommentPageProps> = ({ post, comments }:CommentPageProps)=>
                         comments={comments}
                         isCommentThread={true}
                         previewImage={null}
+                        isAnonymous={post.isAnonymous}
                     />
                 </div>
             </div>

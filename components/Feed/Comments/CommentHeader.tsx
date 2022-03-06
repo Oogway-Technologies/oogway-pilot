@@ -8,6 +8,10 @@ import {Avatar} from '@mui/material'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { collection, where, query, deleteDoc, doc, getDocs, FieldValue} from 'firebase/firestore'
 import { deleteMedia } from '../../../lib/storageHelper'
+import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
+import { staticPostData } from '../../../utils/types/params'
+import { authorLabel } from '../../../utils/constants/global'
+
 
 type CommentHeaderProps = {
     postId: string
@@ -15,6 +19,7 @@ type CommentHeaderProps = {
     authorUid: string
     name: string
     timestamp: FieldValue
+    parentPostData: staticPostData
 }
 
 const CommentHeader: FC<CommentHeaderProps> = ({
@@ -23,6 +28,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
     name,
     authorUid,
     timestamp,
+    parentPostData,
 }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
@@ -68,9 +74,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                     onClick={needsHook}
                     className={postCardClass.avatar}
                     src={
-                        authorProfile?.profilePic
-                            ? authorProfile.profilePic
-                            : undefined
+                        getProfilePic(authorProfile, parentPostData)
                     }
                 />
 
@@ -79,10 +83,13 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            {authorProfile?.username
-                                ? authorProfile.username
-                                : name}
+                            { getAuthorName(authorProfile, parentPostData) }
                         </span>
+                        {(parentPostData.authorUid == authorUid) &&
+                        (<span className="pl-sm font-bold">
+                            {authorLabel}
+                        </span>
+                        )}
                     </div>
 
                     <div className={postCardClass.leftMobileRowTwo}>
@@ -95,11 +102,10 @@ const CommentHeader: FC<CommentHeaderProps> = ({
 
             {/* Right: More Button */}
             <div className={postCardClass.headerRight}>
+                {/* TODO: Refactor params, pass the whole authorProfile ? */}
                 <PostOptionsDropdown
                     authorUid={authorUid}
-                    authorName={
-                        authorProfile?.username ? authorProfile.username : name
-                    }
+                    authorProfile={authorProfile}
                     deletePost={deleteComment}
                     postType='Comment'
                 />
