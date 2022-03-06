@@ -221,16 +221,9 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
     }
 
     const handleRemoveImage = () => {
-        setImageToUpload(null)
-
-        if (targetEvent) {
-            // Reset the event state so the user can reload
-            // the same image twice
-            targetEvent.target.value = ''
-        }
-
-        // Delete user image
-        if (userProfile.profilePic.length > 0) {
+        // Delete user image if there is not a staged image for uploaad
+        // and proofile pic exists
+        if (imageToUpload && userProfile.profilePic.length > 0) {
             // Update user profile atom
             setUserProfile({
                 ...userProfile,
@@ -246,6 +239,15 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
 
             // Delete from back-end
             deleteProfilePic()
+        }
+
+        // Otherwise just remove staged image
+        setImageToUpload(null)
+
+        if (targetEvent) {
+            // Reset the event state so the user can reload
+            // the same image twice
+            targetEvent.target.value = ''
         }
     }
 
