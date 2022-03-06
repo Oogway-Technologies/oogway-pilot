@@ -3,7 +3,7 @@ export const headerClass = {
     div: 'shadow-sm shadow-black/10 dark:shadow-white/20',
     toolbar:
         'grid grid-cols-2 md:grid-cols-3 gap-y-2 grid-flow-row-dense w-full \
-          py-5 px-3 justify-items-stretch items-center bg-white \
+          pt-5 px-3 justify-items-stretch items-center bg-white \
           dark:bg-neutralDark-500',
     logo: 'flex items-center justify-self-start cursor-pointer md:mr-auto \
           text-black dark:text-neutralDark-50',
