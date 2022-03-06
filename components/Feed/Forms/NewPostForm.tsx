@@ -120,6 +120,9 @@ const NewPostForm: FC<NewPostProps> = ({
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
 
+    // Track whether user has opted to post anonymously
+    const [isIncognito, setIsIncognito] = useState<boolean>(false)
+
     // Ref and data for left and right images
     const [imageToCompareLeft, setImageToCompareLeft] = useState<
         string | ArrayBuffer | null | undefined
@@ -599,8 +602,9 @@ const NewPostForm: FC<NewPostProps> = ({
         <div className={postFormClass.modalDiv}>
             <Dialog.Title as="div" className={postFormClass.dialogTitle}>
                 <div>What's your question?</div>
-
-                <ToggleIncognito onChange={needsHook} />
+                <ToggleIncognito
+                    onChange={() => setIsIncognito(!isIncognito)}
+                />
             </Dialog.Title>
             {/* Question form */}
             <form className={postFormClass.form}>
