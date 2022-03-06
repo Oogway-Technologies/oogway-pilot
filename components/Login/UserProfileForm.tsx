@@ -15,7 +15,7 @@ import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 // Firebase
-import { doc, updateDoc } from 'firebase/firestore'
+import { deleteField, doc, updateDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 import { userProfileState } from '../../atoms/user'
 import { useRecoilState } from 'recoil'
@@ -23,6 +23,9 @@ import { getProfileDoc } from '../../lib/profileHelper'
 import { checkFileSize } from '../../utils/helpers/common'
 import FlashErrorMessage from '../Utils/FlashErrorMessage'
 import { warningTime } from '../../utils/constants/global'
+import { deleteMedia } from '../../lib/storageHelper'
+import { useUser } from '@auth0/nextjs-auth0'
+import API from '../../axios'
 
 type UserProfileFormProps = {
     headerText: string
@@ -36,6 +39,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
     cancelButtonText = 'Cancel',
 }) => {
     // Get current user profile
+    const { user, isLoading } = useUser()
     const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
     // Form state
@@ -118,7 +122,13 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             } catch (e) {
                 console.log(e)
             }
-            handleRemoveImage()
+            setImageToUpload(null)
+
+            if (targetEvent) {
+                // Reset the event state so the user can reload
+                // the same image twice
+                targetEvent.target.value = ''
+            }
         }
 
         // Close Modal
@@ -191,6 +201,25 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         }
     }
 
+    const deleteProfilePic = async () => {
+        try {
+            // Remove from storage
+            deleteMedia(`profiles/${userProfile.uid}/image`)
+
+            // Remove from user doc
+            await updateDoc(doc(db, 'users', userProfile.uid), {
+                photoUrl: deleteField(),
+            })
+
+            // Remove from profile doc
+            await updateDoc(doc(db, 'profiles', userProfile.uid), {
+                profilePic: '',
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     const handleRemoveImage = () => {
         setImageToUpload(null)
 
@@ -198,6 +227,25 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             // Reset the event state so the user can reload
             // the same image twice
             targetEvent.target.value = ''
+        }
+
+        // Delete user image
+        if (userProfile.profilePic.length > 0) {
+            // Update user profile atom
+            setUserProfile({
+                ...userProfile,
+                profilePic: '',
+            })
+
+            // Update auth0 user object
+            // TODO: this does not work
+            if (!isLoading && user) {
+                const userMetadata = { picture: null }
+                API.patch('auth/updateUser', userMetadata)
+            }
+
+            // Delete from back-end
+            deleteProfilePic()
         }
     }
 
@@ -256,12 +304,18 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                             className={
                                 loginButtons.removeImage +
                                 `${
-                                    imageToUpload
+                                    imageToUpload ||
+                                    userProfile.profilePic.length > 0
                                         ? ' text-black dark:text-white'
                                         : ' text-neutral-100 dark:text-neutralDark-300'
                                 }`
                             }
-                            disabled={!imageToUpload}
+                            disabled={
+                                !(
+                                    imageToUpload ||
+                                    userProfile.profilePic.length > 0
+                                )
+                            }
                             onClick={handleRemoveImage}
                         >
                             <UilTrashAlt />

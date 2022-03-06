@@ -1,29 +1,27 @@
-import {handleAuth, handleCallback} from '@auth0/nextjs-auth0'
-import {getAuth, signInWithCustomToken} from 'firebase/auth'
-import {getOrCreateUserFromFirebase} from '../../../lib/userHelper'
-import {NextApiRequest, NextApiResponse} from "next";
-import { UserProfile } from '@auth0/nextjs-auth0/src/frontend/use-user';
+import { handleAuth, handleCallback } from '@auth0/nextjs-auth0'
+import { getAuth, signInWithCustomToken } from 'firebase/auth'
+import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 const setFirebaseCustomToken = async (token: string) => {
     // Fetch the Firebase custom token from the Auth0 user
-    let firebaseFcnURL = 'https://us-central1-oogway-pilot.cloudfunctions.net/getFirebaseToken';
+    let firebaseFcnURL =
+        'https://us-central1-oogway-pilot.cloudfunctions.net/getFirebaseToken'
     if (process.env.NODE_ENV === 'development') {
         // For dev mode, replace the URL of the function with the dev function URL
-        firebaseFcnURL = 'https://us-central1-oogway-pilot.cloudfunctions.net/getDevFirebaseToken';
+        firebaseFcnURL =
+            'https://us-central1-oogway-pilot.cloudfunctions.net/getDevFirebaseToken'
     }
-    const response = await fetch(
-        firebaseFcnURL,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    )
+    const response = await fetch(firebaseFcnURL, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
     return response.json()
 }
 
 // TODO: check these parameters and create types for them to remove any.
-const afterCallback = async (req: any, res: any, session:any, state:any) => {
+const afterCallback = async (req: any, res: any, session: any, state: any) => {
     // Retrieve the Firebase custom token from the Auth0 user
     const firebaseResponse = await setFirebaseCustomToken(session.idToken)
 
@@ -63,6 +61,9 @@ const afterCallback = async (req: any, res: any, session:any, state:any) => {
     // Append firebase uid to auth0 UserProfile
     session.user.uid = userProfile?.uid
 
+    // Update auth0 UserProfile image
+    session.user.picture = userProfile?.profilePic
+
     // Note: session.user already contains the Auth0 user
     // as Session.user.sub. This should be the same as
     // the userCredentials returned by Firebase, i.e.,
@@ -79,13 +80,13 @@ export default handleAuth({
     // Use this function for validating additional claims on the user's ID Token or adding removing items
     // from the session after login.
     // For more information, see https://auth0.github.io/nextjs-auth0/modules/handlers_callback.html#handlecallback
-    async callback(req: NextApiRequest, res:NextApiResponse) {
+    async callback(req: NextApiRequest, res: NextApiResponse) {
         try {
             await handleCallback(req, res, {
                 afterCallback,
             })
         } catch (err) {
-            const error= err as {status:number,message:string}
+            const error = err as { status: number; message: string }
             res.status(error.status || 500).end(error.message)
         }
     },
