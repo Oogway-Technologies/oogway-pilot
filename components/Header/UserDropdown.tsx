@@ -1,13 +1,15 @@
 import React from 'react'
+
+// JSX and styling
 import {Avatar} from '@mui/material'
+import Button from '../Utils/Button'
+import ProfileButton from './ProfileButton'
+import {loginButtons} from '../../styles/login'
+import {userDropdownClass} from '../../styles/header'
 import ToggleTheme from './ToggleTheme'
 import LogoutButton from './LogoutButton'
 import DropdownMenu from '../Utils/DropdownMenu'
-import {userDropdownClass} from '../../styles/header'
 
-// JSX and styling
-import Button from '../Utils/Button'
-import {loginButtons} from '../../styles/login'
 
 // Auth0
 import {useUser} from '@auth0/nextjs-auth0'
@@ -16,7 +18,6 @@ import {useRouter} from 'next/router'
 // Recoil state
 import {userProfileState} from '../../atoms/user'
 import {useRecoilValue} from 'recoil'
-import ProfileButton from './ProfileButton'
 
 // User profile
 
