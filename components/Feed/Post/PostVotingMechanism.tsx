@@ -16,19 +16,21 @@ import {
 import { MediaObject } from '../../../utils/types/global'
 
 type PostVotingMechanismProps = {
+    authorUid : string
     id: string
     compareData: Array<MediaObject>
     votesList: number[]
 }
 
 const PostVotingMechanism = ({
+    authorUid,
     id,
     compareData,
     votesList,
 }: PostVotingMechanismProps) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
-
+    
     // Track voting button state
     const [winningChoice, setWinningChoice] = useState(-1) // Instantiate to value that's not possible
     const [userVoteChoice, setUserVoteChoice] = useState(-1) // Instantiate to value that's never in index
@@ -253,7 +255,7 @@ const PostVotingMechanism = ({
                                             ? ' text-start truncate w-full p-sm'
                                             : ' inline-flex w-full justify-center p-sm') +
                                         (winnerCall(votesList) === idx &&
-                                        userVoteChoice != -1
+                                        (userVoteChoice != -1 || authorUid == userProfile.uid)
                                             ? ' border-4 border-primary'
                                             : '')
                                     }
@@ -283,7 +285,7 @@ const PostVotingMechanism = ({
                                         ? voteButtonLeft
                                         : voteButtonRight}
                                 </button>
-                                {userVoteChoice != -1 && (
+                                {(userVoteChoice != -1 || authorUid == userProfile.uid) && (
                                     <p className={postCardClass.voteCounter}>
                                         {votesList[idx]}{' '}
                                         {votesList[idx] == 1 ? 'vote' : 'votes'}

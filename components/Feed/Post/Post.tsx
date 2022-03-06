@@ -176,6 +176,7 @@ const PostCard: React.FC<PostProps> = ({
             {/* Voting for compare posts */}
             {isCompare && (
                 <PostVotingMechanism
+                    authorUid={authorUid}
                     id={id}
                     compareData={compareData}
                     votesList={votesList}
