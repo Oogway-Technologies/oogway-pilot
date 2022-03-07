@@ -220,10 +220,10 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         }
     }
 
-    const handleRemoveImage = () => {
-        // Delete user image if there is not a staged image for uploaad
-        // and proofile pic exists
-        if (imageToUpload && userProfile.profilePic.length > 0) {
+    const handleRemoveImage = async () => {
+        // Delete user image if there is not a staged image for upload
+        // and profile pic exists
+        if (userProfile.profilePic) {
             // Update user profile atom
             setUserProfile({
                 ...userProfile,
@@ -233,16 +233,15 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             // Update auth0 user object
             // TODO: this does not work
             if (!isLoading && user) {
-                const userMetadata = { picture: null }
-                API.patch('auth/updateUser', userMetadata)
+                const userMetadata = { picture: '' }
+                await API.patch('auth/updateUser', userMetadata)
             }
-
             // Delete from back-end
-            deleteProfilePic()
+            await deleteProfilePic()
         }
 
         // Otherwise just remove staged image
-        setImageToUpload(null)
+        imageToUpload && setImageToUpload(null)
 
         if (targetEvent) {
             // Reset the event state so the user can reload
