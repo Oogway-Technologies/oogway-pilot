@@ -28,7 +28,6 @@ import {
     UilImagePlus,
     UilNavigator,
     UilTimesCircle,
-    // @ts-ignore
 } from '@iconscout/react-unicons'
 import { Collapse } from '@mui/material'
 import { Icon } from '@iconify/react'
@@ -206,6 +205,9 @@ const NewPostForm: FC<NewPostProps> = ({
     }
 
     const validateForm = () => {
+        // remove URL warning
+        setIsTitleURL(false)
+
         // If the input is empty, return asap
         let questionProvided = true
         if (inputRef && !inputRef?.current?.value.trim()) {
@@ -601,6 +603,22 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // clear errors if there are any. so they can reappear.
+        if (errors?.question?.type) {
+            clearErrors()
+        }
+
+        //check if input is URL, if it is a url remove it and show warning.
+        const isURL = isValidURL(e.target.value)
+        if (Boolean(isURL)) {
+            setIsTitleURL(true)
+            e.target.value = e.target.value.replace(isURL, '')
+        } else {
+            isTitleURL && setIsTitleURL(false)
+        }
+    }
+
     return (
         <div className={postFormClass.modalDiv}>
             <Dialog.Title as="div" className={postFormClass.dialogTitle}>
@@ -621,21 +639,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         placeholder={questPlaceholder}
                         maxLength={shortLimit}
                         onKeyPress={preventDefaultOnEnter}
-                        onChange={(e) => {
-                            if (errors?.question?.type) {
-                                clearErrors()
-                            }
-                            const isURL = isValidURL(e.target.value)
-                            if (Boolean(isURL)) {
-                                setIsTitleURL(true)
-                                e.target.value = e.target.value.replace(
-                                    isURL,
-                                    ''
-                                )
-                            } else {
-                                isTitleURL && setIsTitleURL(false)
-                            }
-                        }}
+                        onChange={handleInputChange}
                     />
                 </div>
                 {/* Warning message on Title */}
