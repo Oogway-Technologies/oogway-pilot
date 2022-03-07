@@ -138,6 +138,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const [rightComparePreviewImage, setRightComparePreviewImage] =
         useState<string>('')
     const [isImageSizeLarge, setIsImageSizeLarge] = useState<boolean>(false)
+    const [isTitleURL, setIsTitleURL] = useState<boolean>(false)
 
     //Processing the images received from backend for description field
     const previewImagecallBack = async (res: string[]) => {
@@ -625,15 +626,26 @@ const NewPostForm: FC<NewPostProps> = ({
                                 clearErrors()
                             }
                             const isURL = isValidURL(e.target.value)
-                            if (isURL) {
+                            if (Boolean(isURL)) {
+                                setIsTitleURL(true)
                                 e.target.value = e.target.value.replace(
                                     isURL,
                                     ''
                                 )
+                            } else {
+                                isTitleURL && setIsTitleURL(false)
                             }
                         }}
                     />
                 </div>
+                {/* Warning message on Title */}
+                {isTitleURL && (
+                    <FlashErrorMessage
+                        message={'Title should not be a URL'}
+                        ms={100000}
+                        style={postFormClass.formAlert}
+                    />
+                )}
 
                 {/* Warning message on missing question */}
                 {errors.question && errors.question.type === 'required' && (
