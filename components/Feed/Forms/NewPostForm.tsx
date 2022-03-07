@@ -166,10 +166,6 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }, [previewImage])
 
-    useEffect(() => {
-        console.log(hasPreviewed)
-    }, [hasPreviewed])
-
     // Reset form global state on umount
     useEffect(() => {
         return () => {
