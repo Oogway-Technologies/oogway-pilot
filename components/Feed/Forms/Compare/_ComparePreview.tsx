@@ -1,13 +1,11 @@
 import React, { FC, useEffect, useState } from 'react'
 import { compareFormClass, postCardClass } from '../../../../styles/feed'
-import {
-    fetcher,
-    isValidURL,
-    parseYoutubeVideoId,
-} from '../../../../utils/helpers/common'
+import { parseYoutubeVideoId } from '../../../../utils/helpers/common'
 import YoutubeEmbed from '../../../Utils/YoutubeEmbed'
 // @ts-ignore
 import { UilTimesCircle } from '@iconscout/react-unicons'
+import { useMediaQuery } from '@mui/material'
+import { useFetchUrlPreview } from '../../../../hooks/useFetchUrlPreview'
 
 interface ComparePreviewProps {
     text: string
@@ -15,44 +13,70 @@ interface ComparePreviewProps {
 }
 
 const _ComparePreview: FC<ComparePreviewProps> = ({ text, onClick }) => {
-    const [previewImage, setPreviewImage] = useState('')
-    useEffect(() => {
-        if (isValidURL(text) && !parseYoutubeVideoId(text)) {
-            ;(async () => {
-                const res = await fetcher(
-                    `/api/fetchPreviewData?urlToHit=${text}`,
-                )
-                setPreviewImage(res[0])
-            })()
-        }
-    }, [text])
+    // Parse text and fetch preview
+    const [previewImage] = useFetchUrlPreview(text)
+
+    // Calculate truncation
+    const isMobile = useMediaQuery('(max-width: 500px)')
+    const calcTruncate = () => {
+        return isMobile ? 15 : 20
+    }
+
     return (
         <>
-            <div className={compareFormClass.previewText}>
-                {parseYoutubeVideoId(text) ? (
+            {parseYoutubeVideoId(text) ? (
+                // If Youtube link, parse and truncate label
+                <div className="w-full">
                     <YoutubeEmbed text={text} />
-                ) : (
-                    previewImage && (
-                        <img
-                            src={previewImage}
-                            alt={''}
+                    <div className={postCardClass.textVote + ' mt-sm'}>
+                        <div
                             className={
-                                'flex rounded-[8px] object-contain cursor-pointer mb-3'
+                                // compareFormClass.previewText +
+                                text.split('').length > calcTruncate()
+                                    ? ' text-center truncate p-sm'
+                                    : ' inline-flex w-full justify-center p-sm'
                             }
-                        />
-                    )
-                )}
+                        >
+                            {text}
+                        </div>
+                    </div>
+                </div>
+            ) : previewImage ? (
+                // If just image, display fetched image and truncate url
+                <>
+                    <img
+                        src={previewImage}
+                        alt={''}
+                        className={
+                            compareFormClass.image + ' cursor-pointer mb-3'
+                        }
+                    />
+                    <div className={postCardClass.textVote + ' mt-sm'}>
+                        <div
+                            className={
+                                compareFormClass.previewText +
+                                (text.split('').length > 20
+                                    ? ' break-words text-center truncate p-sm'
+                                    : ' inline-flex w-full justify-center p-sm')
+                            }
+                        >
+                            {text}
+                        </div>
+                    </div>
+                </>
+            ) : (
                 <div
                     className={
                         postCardClass.textVote +
+                        compareFormClass.previewText +
                         (text.split('').length > 20
-                            ? ' text-start truncate w-full p-sm'
+                            ? ' break-words text-center p-sm'
                             : ' inline-flex w-full justify-center p-sm')
                     }
                 >
                     {text}
                 </div>
-            </div>
+            )}
             <UilTimesCircle
                 className={compareFormClass.undoChoice}
                 onClick={onClick}

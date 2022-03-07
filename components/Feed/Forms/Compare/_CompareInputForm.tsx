@@ -8,7 +8,7 @@ interface _CompareInputFormProps {
 
 const _CompareInputForm: FC<_CompareInputFormProps> = ({ children, title }) => {
     return (
-        <div className={compareFormClass.tab + ' flex flex-col p-md'}>
+        <div className={compareFormClass.tab + ' p-md'}>
             {title && (
                 <div className={compareFormClass.smallGreyText + ' font-bold'}>
                     {title}

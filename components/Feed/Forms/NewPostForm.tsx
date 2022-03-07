@@ -49,7 +49,7 @@ import ToggleIncognito from '../Post/ToggleIncognito'
 
 // Recoil states
 import { userProfileState } from '../../../atoms/user'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
@@ -71,6 +71,8 @@ import {
     hasPreviewedCompare,
     imageCompareLeft,
     imageCompareRight,
+    labelCompareLeft,
+    labelCompareRight,
     leftPreviewImage,
     rightPreviewImage,
     textCompareLeft,
@@ -104,10 +106,10 @@ const NewPostForm: FC<NewPostProps> = ({
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
         register('question', { required: true })
-    }, [])
+    }, [register])
     useEffect(() => {
         register('compare', { required: true })
-    }, [])
+    }, [register])
 
     const [loading, setLoading] = useState(false)
 
@@ -146,6 +148,10 @@ const NewPostForm: FC<NewPostProps> = ({
         useRecoilState(imageCompareLeft)
     const [imageToCompareRight, setImageToCompareRight] =
         useRecoilState(imageCompareRight)
+    const [labelToCompareLeft, setLabelToCompareLeft] =
+        useRecoilState(labelCompareLeft)
+    const [labelToCompareRight, setLabelToCompareRight] =
+        useRecoilState(labelCompareRight)
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
     const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
     const compareFilePickers = useRef<compareFilePickerRefs>({
@@ -386,6 +392,11 @@ const NewPostForm: FC<NewPostProps> = ({
                     leftMediaObject.image = downloadURL
                     votesObjMapList.push({})
                 })
+
+                // Optionally, append label
+                if (labelToCompareLeft) {
+                    leftMediaObject.label = labelToCompareLeft
+                }
             } else {
                 leftMediaObject.previewImage = leftComparePreviewImage
             }
@@ -403,6 +414,11 @@ const NewPostForm: FC<NewPostProps> = ({
                     rightMediaObject.image = downloadURL
                     votesObjMapList.push({})
                 })
+
+                // Optionally, append label
+                if (labelToCompareRight) {
+                    rightMediaObject.label = labelToCompareRight
+                }
             } else {
                 rightMediaObject.previewImage = rightComparePreviewImage
             }

@@ -8,6 +8,7 @@ export interface EngagementItems {
 export interface MediaObject {
     text: string
     image: string
+    label?: string
     previewImage: string
 }
 

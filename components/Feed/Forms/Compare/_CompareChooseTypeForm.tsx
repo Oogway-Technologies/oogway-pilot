@@ -6,6 +6,7 @@ import { compareFormClass } from '../../../../styles/feed'
 import { UilTextFields, UilImageUpload } from '@iconscout/react-unicons'
 import { useSetRecoilState } from 'recoil'
 import { comparePostType } from '../../../../atoms/compareForm'
+import { useMediaQuery } from '@mui/material'
 
 const _CompareChooseTypeForm = () => {
     // Update step
@@ -17,6 +18,9 @@ const _CompareChooseTypeForm = () => {
         setCompareType('imageOnly')
     }
 
+    // Track mobile state
+    const isMobile = useMediaQuery('(max-width: 500px)')
+
     return (
         <div className="flex flex-col">
             <div className={compareFormClass.header}>Select Compare Type</div>
@@ -25,7 +29,7 @@ const _CompareChooseTypeForm = () => {
                     <div className={compareFormClass.chooseTypeLabel}>
                         <UilTextFields
                             className={compareFormClass.chooseTypeChild}
-                            size="60"
+                            size={isMobile ? '30' : '60'}
                         />
                         <div className={compareFormClass.chooseTypeChild}>
                             Text Only
@@ -39,7 +43,7 @@ const _CompareChooseTypeForm = () => {
                     <div className={compareFormClass.chooseTypeLabel}>
                         <UilImageUpload
                             className={compareFormClass.chooseTypeChild}
-                            size="60"
+                            size={isMobile ? '30' : '60'}
                         />
                         <div className={compareFormClass.chooseTypeChild}>
                             Image Only

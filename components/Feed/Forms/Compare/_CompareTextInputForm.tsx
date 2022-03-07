@@ -28,13 +28,14 @@ const _CompareTextInputForm = () => {
     const [hasPreviewed, setHasPreviewed] = useRecoilState(hasPreviewedCompare)
 
     return (
-        <div className="flex flex-col">
+        <div className={compareFormClass.container}>
             <div className={compareFormClass.header}>
                 <Tooltip toolTipText={'Go Back'}>
                     <button
                         className={compareFormClass.goBackButton}
                         onClick={() => {
                             goToChooseType()
+                            setHasPreviewed(false)
                             setTextToCompareLeft('')
                             setTextToCompareRight('')
                         }}
@@ -44,11 +45,7 @@ const _CompareTextInputForm = () => {
                 </Tooltip>
                 Text Only
             </div>
-            {/* <div className={compareFormClass.smallGreyText + ' ml-xl'}>
-                Text Only
-            </div> */}
             <div className={compareFormClass.optionsSideBySide}>
-                {/* Left Tab */}
                 {hasPreviewed ? (
                     <>
                         <_CompareInputForm>
@@ -78,7 +75,6 @@ const _CompareTextInputForm = () => {
                                 <textarea
                                     className={compareFormClass.textInput}
                                     placeholder="Label your first option"
-                                    onKeyPress={preventDefaultOnEnter}
                                     onChange={e => {
                                         setTextToCompareLeft(e.target.value)
                                     }}
@@ -93,7 +89,6 @@ const _CompareTextInputForm = () => {
                                 <textarea
                                     className={compareFormClass.textInput}
                                     placeholder="Label your second option"
-                                    onKeyPress={preventDefaultOnEnter}
                                     onChange={e => {
                                         setTextToCompareRight(e.target.value)
                                     }}
