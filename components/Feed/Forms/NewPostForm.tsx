@@ -166,6 +166,10 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }, [previewImage])
 
+    useEffect(() => {
+        console.log(hasPreviewed)
+    }, [hasPreviewed])
+
     // Reset form global state on umount
     useEffect(() => {
         return () => {
@@ -175,6 +179,8 @@ const NewPostForm: FC<NewPostProps> = ({
             setImageToCompareRight(null)
             setTextToCompareLeft('')
             setTextToCompareRight('')
+            setLabelToCompareLeft('')
+            setLabelToCompareRight('')
             setHasPreviewed(false)
         }
     }, [
@@ -182,6 +188,8 @@ const NewPostForm: FC<NewPostProps> = ({
         setIsImageSizeLarge,
         setImageToCompareLeft,
         setImageToCompareRight,
+        setLabelToCompareLeft,
+        setLabelToCompareRight,
         setTextToCompareLeft,
         setTextToCompareRight,
         setHasPreviewed,
