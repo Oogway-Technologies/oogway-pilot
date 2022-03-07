@@ -11,7 +11,6 @@ import {
 } from '../../../../atoms/compareForm'
 import { Tooltip } from '../../../Utils/Tooltip'
 import _CompareInputForm from './_CompareInputForm'
-import preventDefaultOnEnter from '../../../../utils/helpers/preventDefaultOnEnter'
 import { shortLimit } from '../../../../utils/constants/global'
 import _ComparePreview from './_ComparePreview'
 
