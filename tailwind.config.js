@@ -1,3 +1,5 @@
+const fractionWidths = require('tailwindcss-fraction-widths')
+
 module.exports = {
     content: [
         './pages/**/*.{js,ts,jsx,tsx}',

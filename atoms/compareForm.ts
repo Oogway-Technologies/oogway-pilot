@@ -16,6 +16,16 @@ export const textCompareRight = atom<string>({
     default: '',
 })
 
+export const labelCompareLeft = atom<string>({
+    key: 'labelToCompareLeftState',
+    default: '',
+})
+
+export const labelCompareRight = atom<string>({
+    key: 'labelToCompareRightState',
+    default: '',
+})
+
 export const imageCompareLeft = atom<string | ArrayBuffer | null | undefined>({
     key: 'imageToCompareLeftState',
     default: null,

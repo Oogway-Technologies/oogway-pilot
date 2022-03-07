@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../../../firebase'
-import { postCardClass } from '../../../styles/feed'
+import { compareFormClass, postCardClass } from '../../../styles/feed'
 // @ts-ignore
 import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import { userProfileState } from '../../../atoms/user'
@@ -141,7 +141,7 @@ const PostVotingMechanism = ({
                 return (
                     <div key={idx} className={postCardClass.voteContainer}>
                         {obj.image && obj.image.length > 1 ? (
-                            <div className="flex h-full">
+                            <div className="w-full h-fit">
                                 <img
                                     className={
                                         postCardClass.imageVote +
@@ -157,6 +157,24 @@ const PostVotingMechanism = ({
                                     }}
                                     alt=""
                                 />
+                                {obj.label && (
+                                    <div
+                                        className={
+                                            postCardClass.textVote + ' mt-sm'
+                                        }
+                                    >
+                                        <div
+                                            className={
+                                                'm-auto' +
+                                                (obj.label.split('').length > 20
+                                                    ? ' break-words text-center truncate p-sm'
+                                                    : ' inline-flex w-full justify-center p-sm')
+                                            }
+                                        >
+                                            {obj.label}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ) : parseYoutubeVideoId(obj.text) ? (
                             <YoutubeEmbed
@@ -208,7 +226,7 @@ const PostVotingMechanism = ({
                                                 : ' text-neutral-700 dark:text-neutralDark-150') +
                                             (obj.text.split('').length > 20 &&
                                             isValidURL(obj.text)
-                                                ? ' text-start truncate w-full p-sm'
+                                                ? ' text-center truncate p-sm'
                                                 : ' text-center inline-flex w-full justify-center p-sm') +
                                             (winnerCall(votesList) === idx &&
                                             userVoteChoice != -1
