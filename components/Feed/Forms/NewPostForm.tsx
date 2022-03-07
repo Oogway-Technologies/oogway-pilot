@@ -172,8 +172,8 @@ const NewPostForm: FC<NewPostProps> = ({
     // useEffect cannot unclude async logic
     useEffect(() => {
         if (previewImage) {
-            ;(() => {
-                sendPost()
+            ;(async () => {
+                await sendPost()
             })()
         }
     }, [previewImage])
