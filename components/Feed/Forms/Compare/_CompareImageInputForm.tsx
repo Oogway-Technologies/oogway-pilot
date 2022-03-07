@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC } from 'react'
+import React, { ChangeEvent, FC, MutableRefObject } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
     UilAngleLeft,
@@ -51,7 +51,8 @@ const _CompareImageInputForm = React.forwardRef<
     const [hasPreviewed, setHasPreviewed] = useRecoilState(hasPreviewedCompare)
 
     // Extract file picker refs
-    const { left, right } = ref.current
+    const { left, right } = (ref as MutableRefObject<compareFilePickerRefs>)
+        .current
 
     return (
         <div className={compareFormClass.container}>
@@ -121,7 +122,7 @@ const _CompareImageInputForm = React.forwardRef<
                                     </div>
                                 ) : (
                                     <button
-                                        onClick={() => left?.current.click()}
+                                        onClick={() => left?.current!.click()}
                                     >
                                         <div
                                             className={
@@ -187,7 +188,7 @@ const _CompareImageInputForm = React.forwardRef<
                                     </div>
                                 ) : (
                                     <button
-                                        onClick={() => right?.current.click()}
+                                        onClick={() => right?.current!.click()}
                                     >
                                         <div
                                             className={

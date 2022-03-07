@@ -106,10 +106,10 @@ const NewPostForm: FC<NewPostProps> = ({
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
         register('question', { required: true })
-    }, [register])
+    }, [])
     useEffect(() => {
         register('compare', { required: true })
-    }, [register])
+    }, [])
 
     const [loading, setLoading] = useState(false)
 
@@ -168,10 +168,12 @@ const NewPostForm: FC<NewPostProps> = ({
     const [isTitleURL, setIsTitleURL] = useState<boolean>(false)
     useRecoilState(rightPreviewImage)
 
+    // I'm pretty sure this is introducing a memory leak
+    // useEffect cannot unclude async logic
     useEffect(() => {
         if (previewImage) {
-            ;(async () => {
-                await sendPost()
+            ;(() => {
+                sendPost()
             })()
         }
     }, [previewImage])
