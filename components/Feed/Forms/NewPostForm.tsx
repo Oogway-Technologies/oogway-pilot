@@ -28,7 +28,6 @@ import {
     UilImagePlus,
     UilNavigator,
     UilTimesCircle,
-    // @ts-ignore
 } from '@iconscout/react-unicons'
 
 import { Collapse } from '@mui/material'
@@ -49,6 +48,7 @@ import { FirebasePost } from '../../../utils/types/firebase'
 import { useQueryClient } from 'react-query'
 import { Tooltip } from '../../Utils/Tooltip'
 import {
+    amazonURLAppendQueryString,
     checkFileSize,
     fetcher,
     isValidURL,
@@ -253,7 +253,9 @@ const NewPostForm: FC<NewPostProps> = ({
         // Prepare the data to add as a post
         let postData: FirebasePost = {
             message: inputRef?.current?.value || '', // Leaving field name as message even though UI refers to it as a question
-            description: descriptionRef?.current?.value || '', // Optional description
+            description: amazonURLAppendQueryString(
+                descriptionRef?.current?.value || ''
+            ), // Optional description
             previewImage: previewImage, // Saves preview Image from Link
             name: userProfile.username, // Change this with username or incognito
             uid: userProfile.uid, // uid of the user that created this post
@@ -353,12 +355,14 @@ const NewPostForm: FC<NewPostProps> = ({
             }
 
             if (textToCompareLeft) {
-                leftMediaObject.text = textToCompareLeft
+                leftMediaObject.text =
+                    amazonURLAppendQueryString(textToCompareLeft)
                 votesObjMapList.push({})
             }
 
             if (textToCompareRight) {
-                rightMediaObject.text = textToCompareRight
+                rightMediaObject.text =
+                    amazonURLAppendQueryString(textToCompareRight)
                 votesObjMapList.push({})
             }
 
