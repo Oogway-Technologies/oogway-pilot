@@ -26,10 +26,6 @@ const ToggleTheme: FC<ToggleThemeProps> = ({ hasText }) => {
     // Set specs
     const enabledColor = 'bg-primary'
     const disabledColor = 'bg-secondary/30'
-    const height = 24
-    const width = 36
-    const diameter = height - 3
-    const transDist = (width - height) / 4
 
     return (
         <a className={toggleThemeClass.a} onClick={handleChangeTheme}>
@@ -43,7 +39,6 @@ const ToggleTheme: FC<ToggleThemeProps> = ({ hasText }) => {
                 onChange={handleChangeTheme}
                 className={
                     toggleThemeClass.switchSlide +
-                    ` h-[${height}px] w-[${width}px]` +
                     (enabled ? ` ${enabledColor}` : ` ${disabledColor}`)
                 }
             >
@@ -52,10 +47,7 @@ const ToggleTheme: FC<ToggleThemeProps> = ({ hasText }) => {
                     aria-hidden="true"
                     className={
                         toggleThemeClass.switchButton +
-                        ` h-[${diameter}px] w-[${diameter}px]` +
-                        (enabled
-                            ? ` translate-x-${transDist}`
-                            : ' translate-x-0')
+                        (enabled ? ' translate-x-3' : ' translate-x-0')
                     }
                 ></span>
             </Switch>
