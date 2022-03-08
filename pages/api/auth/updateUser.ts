@@ -18,14 +18,14 @@ export default withApiAuthRequired(async function updateUser(
         const session = getSession(req, res)
         const {
             accessToken,
-            user: { uid },
-        } = session ? session : { accessToken: '', user: { uid: '' } }
+            user: { sub },
+        } = session ? session : { accessToken: '', user: { sub: '' } }
         // Call management API
         const baseURL =
             process.env.AUTH0_ISSUER_BASE_URL?.indexOf('http') === 0
-                ? process.env.AUTH0_ISSUER_BASE_URL
-                : `https://${process.env.AUTH0_ISSUER_BASE_URL}`
-        const reqURL = baseURL + `api/v2/users/${uid}`
+                ? process.env.AUTH0_ISSUER_BASE_URL.replace('https', 'http')
+                : process.env.AUTH0_ISSUER_BASE_URL
+        const reqURL = baseURL + `api/v2/users/${sub.replace('auth0|', '')}`
         const options = {
             headers: {
                 authorization: `Bearer ${accessToken}`,
