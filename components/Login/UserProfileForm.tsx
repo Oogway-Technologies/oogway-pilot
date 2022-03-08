@@ -215,6 +215,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             await updateDoc(doc(db, 'profiles', userProfile.uid), {
                 profilePic: '',
             })
+            setUserProfile({ ...userProfile, profilePic: '' })
         } catch (e) {
             console.log(e)
         }
@@ -231,15 +232,18 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             })
 
             // Update auth0 user object
-            // TODO: this does not work
             if (!isLoading && user) {
-                const userMetadata = { picture: '' }
+                // We cannot use empty value in the picture, so we have to set a default image when we want to delete the image.
+                const userMetadata = {
+                    // TODO: Change image link to our own personal drive link from where the image can never be removed.
+                    picture:
+                        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+                }
                 await API.patch('auth/updateUser', userMetadata)
+                // Delete from back-end
+                await deleteProfilePic()
             }
-            // Delete from back-end
-            await deleteProfilePic()
         }
-
         // Otherwise just remove staged image
         imageToUpload && setImageToUpload(null)
 
