@@ -14,8 +14,6 @@ const ToggleIncognito: FC<ToggleIncognitoProps> = ({ onChange }) => {
     // Set specs
     const enabledColor = 'bg-primary dark:bg-primaryDark'
     const disabledColor = 'bg-neutral-150 dark:bg-neutralDark-150'
-    const height = 7
-    const width = 10
 
     return (
         <Switch
@@ -33,7 +31,7 @@ const ToggleIncognito: FC<ToggleIncognitoProps> = ({ onChange }) => {
                 aria-hidden="true"
                 className={
                     toggleIncognitoClass.switchButton +
-                    (enabled ? ` translate-x-5` : ' translate-x-0')
+                    (enabled ? ' translate-x-5' : ' translate-x-0')
                 }
             >
                 <Icon
