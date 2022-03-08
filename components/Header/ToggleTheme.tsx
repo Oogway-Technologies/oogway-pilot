@@ -3,7 +3,6 @@ import { Switch } from '@headlessui/react'
 import { Moon } from 'react-feather'
 import { useTheme } from 'next-themes'
 import { toggleThemeClass } from '../../styles/header'
-import Slider from '../Utils/Slider'
 
 interface ToggleThemeProps {
     hasText: boolean
