@@ -61,7 +61,6 @@ import {
     warningTime,
 } from '../../../utils/constants/global'
 import { MediaObject } from '../../../utils/types/global'
-import Slider from '../../Utils/Slider'
 import needsHook from '../../../hooks/needsHook'
 import ToggleIncognito from '../Post/ToggleIncognito'
 
