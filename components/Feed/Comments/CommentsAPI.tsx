@@ -19,11 +19,15 @@ import {
     commmentConverter,
     FirebaseComment,
 } from '../../../utils/types/firebase'
+import { staticPostData } from '../../../utils/types/params'
 
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
+    parentPostData: staticPostData
 }
-const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
+
+const CommentsAPI: React.FC<CommentsAPIProps> = (
+    { comments, parentPostData, }) => {
     // Retrieve user profile
     const userProfile = useRecoilValue(userProfileState)
     const { user } = useUser()
@@ -37,6 +41,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
             orderBy('timestamp', 'asc')
         ).withConverter(commmentConverter)
     )
+
     const [numComments] = usePostNumberComments(router.query.id as string)
 
     // Track mobile state
@@ -68,6 +73,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                             ...comment.data(),
                             timestamp: comment.data().timestamp,
                         }}
+                        parentPostData = {parentPostData}
                     />
                 )
             })
@@ -81,6 +87,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({ comments }) => {
                         postId={router.query.id as string}
                         commentId={comment.id!}
                         comment={comment}
+                        parentPostData = {parentPostData}
                     />
                 )
             )

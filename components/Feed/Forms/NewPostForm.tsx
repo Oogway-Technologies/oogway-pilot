@@ -31,6 +31,7 @@ import {
     // @ts-ignore
 } from '@iconscout/react-unicons'
 import { Collapse } from '@mui/material'
+import { Icon } from '@iconify/react'
 
 // Form management
 import { useForm } from 'react-hook-form'
@@ -59,6 +60,7 @@ import {
     warningTime,
 } from '../../../utils/constants/global'
 import { MediaObject } from '../../../utils/types/global'
+import ToggleIncognito from '../Post/ToggleIncognito'
 
 type NewPostProps = {
     closeModal: () => void
@@ -115,6 +117,9 @@ const NewPostForm: FC<NewPostProps> = ({
 
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
+
+    // Track whether user has opted to post anonymously
+    const [isIncognito, setIsIncognito] = useState<boolean>(false)
 
     // Ref and data for left and right images
     const [imageToCompareLeft, setImageToCompareLeft] = useState<
@@ -265,6 +270,7 @@ const NewPostForm: FC<NewPostProps> = ({
             isCompare: false, // Explicitly flag whether is compare type
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
             timestamp: serverTimestamp(),
+            isAnonymous: isIncognito,
         }
 
         if (isComparePost()) {
@@ -597,9 +603,11 @@ const NewPostForm: FC<NewPostProps> = ({
     return (
         <div className={postFormClass.modalDiv}>
             <Dialog.Title as="div" className={postFormClass.dialogTitle}>
-                What&rsquo;s your question?
+                <div>What's your question?</div>
+                <ToggleIncognito
+                    onChange={() => setIsIncognito(!isIncognito)}
+                />
             </Dialog.Title>
-
             {/* Question form */}
             <form className={postFormClass.form}>
                 {/* Question: required */}

@@ -51,6 +51,17 @@ export const toggleThemeClass = {
     a: 'inline-flex group-hover:text-black active:text-black \
           dark:group-hover:text-neutralDark-50 dark:active:text-neutralDark-50 \
           cursor-pointer',
+    switchSlide:
+        'ml-4 items-center inline-flex border-2 \
+        border-transparent rounded-full cursor-pointer transition-colors \
+        ease-in-out duration-200 focus:outline-none focus-visible:ring-2  \
+        focus-visible:ring-white focus-visible:ring-opacity-75 \
+        hover:shadow-md hover:shadow-secondary/20 dark:hover:shadow-primary/30 \
+        h-[24px] w-[36px]',
+    switchButton:
+        'pointer-events-none inline-block align-text-middle \
+        rounded-full bg-white shadow-lg transform ring-0 \
+        transition ease-in-out duration-200 h-[21px] w-[21px]',
 }
 
 export const settingsButtonClass = {

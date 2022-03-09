@@ -64,6 +64,7 @@ function PostsAPI() {
                                         comments={null}
                                         isCommentThread={false}
                                         previewImage={post?.previewImage || ''}
+                                        isAnonymous={post?.isAnonymous || false}
                                     />
                                 ))
                             ) : (

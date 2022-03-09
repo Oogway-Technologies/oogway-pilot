@@ -9,19 +9,23 @@ interface ToggleThemeProps {
 }
 
 const ToggleTheme: FC<ToggleThemeProps> = ({ hasText }) => {
-    const [enabled, setEnabled] = useState(false)
     const { theme, setTheme } = useTheme()
+    const [enabled, setEnabled] = useState(false)
 
     // Maintain state on (re)mount
     useEffect(() => {
         theme === 'light' ? setEnabled(false) : setEnabled(true)
-    }, [])
+    }, [theme])
 
     // Helper function to update theme and switch state
     const handleChangeTheme = () => {
         setTheme(theme === 'light' ? 'dark' : 'light')
         setEnabled(!enabled)
     }
+
+    // Set specs
+    const enabledColor = 'bg-primary'
+    const disabledColor = 'bg-secondary/30'
 
     return (
         <a className={toggleThemeClass.a} onClick={handleChangeTheme}>
@@ -33,20 +37,18 @@ const ToggleTheme: FC<ToggleThemeProps> = ({ hasText }) => {
             <Switch
                 checked={enabled}
                 onChange={handleChangeTheme}
-                className={`${enabled ? 'bg-primary' : 'bg-secondary/30'}
-            ml-4 items-center inline-flex h-[24px] w-[36px] border-2 
-            border-transparent rounded-full cursor-pointer transition-colors 
-            ease-in-out duration-200 focus:outline-none focus-visible:ring-2  
-            focus-visible:ring-white focus-visible:ring-opacity-75
-            hover:shadow-md hover:shadow-secondary/20 dark:hover:shadow-primary/30`}
+                className={
+                    toggleThemeClass.switchSlide +
+                    (enabled ? ` ${enabledColor}` : ` ${disabledColor}`)
+                }
             >
                 <span className="sr-only">Use setting</span>
                 <span
                     aria-hidden="true"
-                    className={`${enabled ? 'translate-x-3' : 'translate-x-0'}
-                    pointer-events-none inline-block align-text-middle h-[21px] w-[21px] 
-                    rounded-full bg-white shadow-lg transform ring-0
-                    transition ease-in-out duration-200`}
+                    className={
+                        toggleThemeClass.switchButton +
+                        (enabled ? ' translate-x-3' : ' translate-x-0')
+                    }
                 ></span>
             </Switch>
         </a>

@@ -7,7 +7,9 @@ import {db} from '../../../firebase'
 import {Avatar} from '@mui/material'
 import {deleteDoc, doc} from 'firebase/firestore'
 import {useProfileData} from '../../../hooks/useProfileData'
-
+import {getAuthorName, getProfilePic} from '../../../lib/profileHelper'
+import { staticPostData } from '../../../utils/types/params'
+import { authorLabel } from '../../../utils/constants/global'
 type ReplyHeaderProps = {
     postId: string
     commentId: string
@@ -16,6 +18,7 @@ type ReplyHeaderProps = {
     name: string
     email: string
     timestamp: Date | null
+    parentPostData: staticPostData
 }
 
 const ReplyHeader: React.FC<ReplyHeaderProps> = ({
@@ -26,6 +29,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
     authorUid,
     email,
     timestamp,
+    parentPostData,
 }) => {
     // Get author profile
     const [authorProfile] = useProfileData(authorUid)
@@ -53,9 +57,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                     onClick={needsHook}
                     className={replyHeaderClass.avatar}
                     src={
-                        authorProfile?.profilePic
-                            ? authorProfile.profilePic
-                            : undefined
+                        getProfilePic(authorProfile, parentPostData)
                     }
                 />
 
@@ -64,9 +66,10 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            {authorProfile?.username
-                                ? authorProfile?.username
-                                : name}
+                            { getAuthorName(authorProfile, parentPostData) }
+                        </span>
+                        <span className="pl-sm font-bold">
+                            {authorLabel}
                         </span>
                     </div>
 
@@ -81,9 +84,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
             <div className={postCardClass.headerRight}>
                 <PostOptionsDropdown
                     authorUid={authorUid}
-                    authorName={
-                        authorProfile?.username ? authorProfile?.username : name
-                    }
+                    authorProfile={authorProfile}
                     deletePost={deleteReplyEntry}
                     postType='Reply'
                 />

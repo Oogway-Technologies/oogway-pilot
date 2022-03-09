@@ -8,12 +8,14 @@ import RepliesAPI from '../Replies/RepliesAPI'
 import Modal from '../../Utils/Modal'
 import { useUser } from '@auth0/nextjs-auth0'
 import { FirebaseComment } from '../../../utils/types/firebase'
+import { staticPostData } from '../../../utils/types/params'
 
 interface CommentProps {
     commentOwner: string
     postId: string
     commentId: string
     comment: FirebaseComment
+    parentPostData: staticPostData
 }
 
 const Comment: FC<CommentProps> = ({
@@ -21,6 +23,7 @@ const Comment: FC<CommentProps> = ({
     postId,
     commentId,
     comment,
+    parentPostData,
 }) => {
     // Retrieve auth state
     const { user } = useUser()
@@ -63,6 +66,7 @@ const Comment: FC<CommentProps> = ({
                     authorUid={commentOwner}
                     name={comment.author}
                     timestamp={comment.timestamp}
+                    parentPostData={parentPostData}
                 />
 
                 {/* Body */}
@@ -100,7 +104,8 @@ const Comment: FC<CommentProps> = ({
                 </Collapse>
 
                 {/* Replies API */}
-                <RepliesAPI commentId={commentId} />
+                <RepliesAPI commentId={commentId}
+                            parentPostData={parentPostData} />
             </div>
 
             <Modal
