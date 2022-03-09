@@ -28,6 +28,7 @@ import {
     UilImagePlus,
     UilNavigator,
     UilTimesCircle,
+    // @ts-ignore
 } from '@iconscout/react-unicons'
 
 import { Collapse } from '@mui/material'
