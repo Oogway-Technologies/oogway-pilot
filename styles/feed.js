@@ -153,7 +153,7 @@ export const postFormClass = {
     PostButton:
         'rounded-[20px] p-sm w-full space-x-2 justify-center bg-primary dark:bg-primaryDark\
             hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive \
-            dark:active:bg-primaryActive text-white font-bold',
+            dark:active:bg-primaryActive text-white font-bold disabled-style',
     imageButton:
         'inline-flex p-sm rounded-[20px] text-neutral-700 dark:text-neutralDark-150 \
             hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \

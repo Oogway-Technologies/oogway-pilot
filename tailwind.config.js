@@ -69,6 +69,10 @@ module.exports = {
             },
         },
     },
+    variants: {
+        backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+        textColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+    },
     plugins: [
         require('tailwindcss-font-inter'),
         require('tailwindcss-aria-attributes'),

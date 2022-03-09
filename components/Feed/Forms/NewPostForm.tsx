@@ -28,7 +28,9 @@ import {
     UilImagePlus,
     UilNavigator,
     UilTimesCircle,
+    // @ts-ignore
 } from '@iconscout/react-unicons'
+
 import { Collapse } from '@mui/material'
 
 // Form management
@@ -923,6 +925,7 @@ const NewPostForm: FC<NewPostProps> = ({
                     addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}
                     onKeyPress={handleKeyPress}
+                    disabled={isTitleURL}
                 />
             </div>
         </div>
