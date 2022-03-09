@@ -63,7 +63,6 @@ import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
 
 // Queries
 import { useQueryClient } from 'react-query'
-import _CompareStepSwitch from './Compare/_CompareFormSwitch'
 import { fileSizeTooLarge } from '../../../atoms/forms'
 import {
     compareFormExpanded,
@@ -106,10 +105,10 @@ const NewPostForm: FC<NewPostProps> = ({
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
         register('question', { required: true })
-    }, [])
+    }, [register])
     useEffect(() => {
         register('compare', { required: true })
-    }, [])
+    }, [register])
 
     const [loading, setLoading] = useState(false)
 
@@ -180,8 +179,9 @@ const NewPostForm: FC<NewPostProps> = ({
     // Reset form global state on umount
     useEffect(() => {
         return () => {
+            setExpanded(false)
             setIsImageSizeLarge(false)
-            setCompareType('chooseType')
+            setCompareType('textOnly')
             setImageToCompareLeft(null)
             setImageToCompareRight(null)
             setTextToCompareLeft('')
@@ -191,6 +191,7 @@ const NewPostForm: FC<NewPostProps> = ({
             setHasPreviewed(false)
         }
     }, [
+        setExpanded,
         setCompareType,
         setIsImageSizeLarge,
         setImageToCompareLeft,
@@ -795,7 +796,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 timeout="auto"
                 unmountOnExit
             >
-                <_CompareStepSwitch
+                <_CompareChooseTypeForm
                     handleLeftUpload={handleCompareLeftUpload}
                     handleRightUpload={handleCompareRightUpload}
                     ref={compareFilePickers}

@@ -3,7 +3,7 @@ import { compareFormOptions } from '../utils/types/global'
 
 export const comparePostType = atom<compareFormOptions>({
     key: 'comparePostTypeState',
-    default: 'chooseType',
+    default: 'textOnly',
 })
 
 export const compareFormExpanded = atom<boolean>({

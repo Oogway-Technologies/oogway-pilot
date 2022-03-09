@@ -23,10 +23,10 @@ const _ComparePreview: FC<ComparePreviewProps> = ({ text, onClick }) => {
     }
 
     return (
-        <>
+        <div className="flex-col">
             {parseYoutubeVideoId(text) ? (
                 // If Youtube link, parse and truncate label
-                <div className="w-full">
+                <div>
                     <YoutubeEmbed text={text} />
                     <div className={postCardClass.textVote + ' mt-sm'}>
                         <div
@@ -71,7 +71,7 @@ const _ComparePreview: FC<ComparePreviewProps> = ({ text, onClick }) => {
                         compareFormClass.previewText +
                         (text.split('').length > 20
                             ? ' break-words text-center p-sm'
-                            : ' inline-flex w-full justify-center p-sm')
+                            : ' inline-flex justify-center p-sm')
                     }
                 >
                     {text}
@@ -81,7 +81,7 @@ const _ComparePreview: FC<ComparePreviewProps> = ({ text, onClick }) => {
                 className={compareFormClass.undoChoice}
                 onClick={onClick}
             />
-        </>
+        </div>
     )
 }
 

@@ -19,7 +19,7 @@ const _CompareImagePreview: FC<CompareImagePreviewProps> = ({
     onClick,
 }) => {
     return (
-        <>
+        <div className="flex-col">
             <img
                 className={compareFormClass.image}
                 src={image as string} // Pass image to src
@@ -30,9 +30,10 @@ const _CompareImagePreview: FC<CompareImagePreviewProps> = ({
                     <div
                         className={
                             compareFormClass.previewText +
+                            ' w-48' +
                             (label.split('').length > 20
-                                ? ' break-words text-center truncate p-sm'
-                                : ' inline-flex w-full justify-center p-sm')
+                                ? ' break-words text-center p-sm'
+                                : ' inline-flex justify-center p-sm')
                         }
                     >
                         {label}
@@ -43,7 +44,7 @@ const _CompareImagePreview: FC<CompareImagePreviewProps> = ({
                 className={compareFormClass.undoChoice}
                 onClick={onClick}
             />
-        </>
+        </div>
     )
 }
 

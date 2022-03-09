@@ -1,4 +1,4 @@
-import Reactvh from 'react'
+import React, { ChangeEvent } from 'react'
 
 // Styles and JSX
 import { compareFormClass } from '../../../../styles/feed'
@@ -9,7 +9,7 @@ import {
     UilCancel,
     // @ts-ignore
 } from '@iconscout/react-unicons'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import {
     compareFormExpanded,
     comparePostType,
@@ -22,15 +22,49 @@ import {
     textCompareRight,
 } from '../../../../atoms/compareForm'
 import { useMediaQuery } from '@mui/material'
+import _CompareInputForm from './_CompareInputForm'
+import { compareFilePickerRefs } from '../../../../utils/types/global'
+import _CompareTextInputForm from './_CompareTextInputForm'
+import _CompareImageInputForm from './_CompareImageInputForm'
 
-const _CompareChooseTypeForm = () => {
+interface _CompareChooseTypeFormProps {
+    handleLeftUpload: (e: ChangeEvent<HTMLInputElement>) => void
+    handleRightUpload: (e: ChangeEvent<HTMLInputElement>) => void
+}
+
+const _CompareChooseTypeForm = React.forwardRef<
+    compareFilePickerRefs,
+    _CompareChooseTypeFormProps
+>(({ handleLeftUpload, handleRightUpload }, ref) => {
     // Update step
-    const setCompareType = useSetRecoilState(comparePostType)
+    const [compareType, setCompareType] = useRecoilState(comparePostType)
     const goToTextForm = () => {
-        setCompareType('textOnly')
+        if (compareType !== 'textOnly') {
+            setCompareType('textOnly')
+            setHasPreviewed(false)
+            setImageToCompareLeft('')
+            setImageToCompareRight('')
+            setLabelToCompareLeft('')
+            setLabelToCompareRight('')
+        }
     }
     const goToImageForm = () => {
-        setCompareType('imageOnly')
+        if (compareType !== 'imageOnly') {
+            setCompareType('imageOnly')
+            setHasPreviewed(false)
+            setTextToCompareLeft('')
+            setTextToCompareRight('')
+        }
+    }
+    const cancelCompare = () => {
+        setHasPreviewed(false)
+        setExpanded(false)
+        setTextToCompareLeft('')
+        setTextToCompareRight('')
+        setImageToCompareLeft('')
+        setImageToCompareRight('')
+        setLabelToCompareLeft('')
+        setLabelToCompareRight('')
     }
 
     // Compare form state
@@ -53,50 +87,50 @@ const _CompareChooseTypeForm = () => {
                 <div>
                     <button
                         className={compareFormClass.cancelButton}
-                        onClick={() => {
-                            setHasPreviewed(false)
-                            setExpanded(false)
-                            setTextToCompareLeft('')
-                            setTextToCompareRight('')
-                            setImageToCompareLeft('')
-                            setImageToCompareRight('')
-                            setLabelToCompareLeft('')
-                            setLabelToCompareRight('')
-                        }}
+                        onClick={cancelCompare}
                     >
                         <UilCancel size="30" />
                     </button>
                 </div>
             </div>
-            <div className={compareFormClass.optionsSideBySide}>
-                <button className={compareFormClass.tab} onClick={goToTextForm}>
-                    <div className={compareFormClass.chooseTypeLabel}>
-                        <UilTextFields
+            <_CompareInputForm>
+                <>
+                    {/* Toolbar */}
+                    <div className={compareFormClass.chooseTypeToolbar}>
+                        <div
                             className={compareFormClass.chooseTypeChild}
-                            size={isMobile ? '30' : '60'}
-                        />
-                        <div className={compareFormClass.chooseTypeChild}>
-                            Text
+                            onClick={goToTextForm}
+                        >
+                            <UilTextFields size={isMobile ? '15' : '20'} />
+                            <div className="text-xs ml-sm">Text</div>
                         </div>
-                    </div>
-                </button>
-                <button
-                    className={compareFormClass.tab}
-                    onClick={goToImageForm}
-                >
-                    <div className={compareFormClass.chooseTypeLabel}>
-                        <UilImageUpload
-                            className={compareFormClass.chooseTypeChild}
-                            size={isMobile ? '30' : '60'}
-                        />
-                        <div className={compareFormClass.chooseTypeChild}>
-                            Image
+                        <div
+                            className={
+                                compareFormClass.chooseTypeChild + ' pl-sm'
+                            }
+                            onClick={goToImageForm}
+                        >
+                            <UilImageUpload size={isMobile ? '15' : '20'} />
+                            <div className="text-xs ml-sm">Image</div>
                         </div>
+                        <div></div>
                     </div>
-                </button>
-            </div>
+                    {/* Forms */}
+                    <div className={compareFormClass.container}>
+                        {compareType === 'textOnly' ? (
+                            <_CompareTextInputForm />
+                        ) : (
+                            <_CompareImageInputForm
+                                ref={ref}
+                                handleLeftUpload={handleLeftUpload}
+                                handleRightUpload={handleRightUpload}
+                            />
+                        )}
+                    </div>
+                </>
+            </_CompareInputForm>
         </div>
     )
-}
+})
 
 export default _CompareChooseTypeForm
