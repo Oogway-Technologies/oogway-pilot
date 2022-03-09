@@ -26,8 +26,10 @@ type CommentsAPIProps = {
     parentPostData: staticPostData
 }
 
-const CommentsAPI: React.FC<CommentsAPIProps> = (
-    { comments, parentPostData, }) => {
+const CommentsAPI: React.FC<CommentsAPIProps> = ({
+    comments,
+    parentPostData,
+}) => {
     // Retrieve user profile
     const userProfile = useRecoilValue(userProfileState)
     const { user } = useUser()
@@ -35,8 +37,9 @@ const CommentsAPI: React.FC<CommentsAPIProps> = (
     // Get a snapshot of the comments from the DB
     const router = useRouter()
     const [commentsSnapshot] = useCollection(
-        query(collection(db, "post-activity"), 
-            where("postId", '==', router.query.id),  
+        query(
+            collection(db, 'post-activity'),
+            where('postId', '==', router.query.id),
             where('isComment', '==', true),
             orderBy('timestamp', 'asc')
         ).withConverter(commmentConverter)
@@ -73,7 +76,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = (
                             ...comment.data(),
                             timestamp: comment.data().timestamp,
                         }}
-                        parentPostData = {parentPostData}
+                        parentPostData={parentPostData}
                     />
                 )
             })
@@ -87,7 +90,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = (
                         postId={router.query.id as string}
                         commentId={comment.id!}
                         comment={comment}
-                        parentPostData = {parentPostData}
+                        parentPostData={parentPostData}
                     />
                 )
             )
@@ -171,6 +174,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = (
                 }
                 show={isOpen}
                 onClose={closeModal}
+                className={'w-full'}
             />
         </>
     )

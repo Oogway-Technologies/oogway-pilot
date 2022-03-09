@@ -243,7 +243,7 @@ export const commentFormClass = {
         focus-within:border-primary focus-visible:border-primary \
         dark:focus-within:border-primary dark:focus-visible:border-primary \
         active:border-neutral-300 dark:active:border-neutralDark-50 \
-        hover:border-neutral-150 dark:hover:border-neutralDark-50',
+        hover:border-neutral-150 dark:hover:border-neutralDark-50 w-full',
     commentInput:
         'md:w-52 lg:w-80 justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white \
         text-sm lg:text-base',

@@ -1,17 +1,25 @@
-import {Dialog, Transition} from '@headlessui/react';
-import React, {Fragment, ReactNode} from 'react';
+import { Dialog, Transition } from '@headlessui/react'
+import React, { Fragment, ReactNode } from 'react'
 
 type ModalProps = {
-    children: ReactNode,
-    show: boolean,
-    onClose: ((value: boolean) => void)
-};
+    children: ReactNode
+    show: boolean
+    onClose: (value: boolean) => void
+    className?: string
+}
 
-const Modal: React.FC<ModalProps> = ({children: content, show, onClose}) => {
+const Modal: React.FC<ModalProps> = ({
+    children: content,
+    show,
+    onClose,
+    className,
+}) => {
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog
-                className="fixed inset-0 z-10 overflow-y-auto flex justify-center items-center"
+                className={
+                    'fixed inset-0 z-10 overflow-y-auto flex justify-center items-center'
+                }
                 as="div"
                 onClose={onClose}
             >
@@ -25,7 +33,7 @@ const Modal: React.FC<ModalProps> = ({children: content, show, onClose}) => {
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <Dialog.Overlay className="fixed inset-0 bg-neutralDark-300/75"/>
+                        <Dialog.Overlay className="fixed inset-0 bg-neutralDark-300/75" />
                     </Transition.Child>
 
                     {/* This element is to trick the browser into centering the modal contents. */}
@@ -44,15 +52,19 @@ const Modal: React.FC<ModalProps> = ({children: content, show, onClose}) => {
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <div className="justify-center items-center max-w-6xl p-6 my-8 overflow-hidden text-left
-                        transition-all transform bg-white dark:bg-neutralDark-500 shadow-xl rounded-2xl">
+                        <div
+                            className={`justify-center items-center max-w-6xl p-6 my-8 overflow-hidden text-left
+                        transition-all transform bg-white dark:bg-neutralDark-500 shadow-xl rounded-2xl ${
+                            className ? className : ''
+                        }`}
+                        >
                             {content}
                         </div>
                     </Transition.Child>
                 </div>
             </Dialog>
         </Transition>
-    );
-};
+    )
+}
 
-export default Modal;
+export default Modal
