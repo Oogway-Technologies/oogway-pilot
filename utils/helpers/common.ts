@@ -60,10 +60,24 @@ export const winnerCall = (optionsArray: number[]) => {
         ? 1
         : -1
 }
-
-export const truncate = (str: string, num: number): string => {
-    if (str.length <= num) {
-        return str;
+export const amazonURLAppendQueryString = (url: string) => {
+    if (url && url.length > 0) {
+        const urlArray = url.split(' ')
+        urlArray.map((item, index) => {
+            const res = item.match(
+                /https?:\/\/(?=(?:....)?amazon|smile)(www|smile)\S+com(((?:\/(?:dp|gp)\/([A-Z0-9]+))?\S*[?&]?(?:tag=))?\S*?)(?:#)?(\w*?-\w{2})?(\S*)(#?\S*)+/g
+            )
+            if (res && res.length > 0) {
+                if (!item.includes('tag=oogwayai0c-20')) {
+                    if (!item.includes('?')) {
+                        urlArray[index] = item + '?tag=oogwayai0c-20'
+                    } else {
+                        urlArray[index] = item + '&tag=oogwayai0c-20'
+                    }
+                }
+            }
+        })
+        url = urlArray.join(' ')
     }
-    return str.slice(0, num).concat('...');
-};
+    return url
+}
