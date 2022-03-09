@@ -1,8 +1,7 @@
 import React from 'react'
 import { compareFormClass } from '../../../../styles/feed'
-import { useSetRecoilState, useRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import {
-    comparePostType,
     hasPreviewedCompare,
     textCompareLeft,
     textCompareRight,

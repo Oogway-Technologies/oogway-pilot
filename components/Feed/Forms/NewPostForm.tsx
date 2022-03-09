@@ -164,7 +164,6 @@ const NewPostForm: FC<NewPostProps> = ({
     const [rightComparePreviewImage, setRightComparePreviewImage] =
         useRecoilState(rightPreviewImage)
     const [isTitleURL, setIsTitleURL] = useState<boolean>(false)
-    useRecoilState(rightPreviewImage)
 
     // I'm pretty sure this is introducing a memory leak
     // useEffect cannot unclude async logic
