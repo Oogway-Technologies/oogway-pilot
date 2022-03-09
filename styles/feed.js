@@ -40,7 +40,7 @@ export const feedToolbarClass = {
 
 // PostCard
 export const postCardClass = {
-    card: 'flex flex-col px-md pt-md pb-sm rounded-md shadow-sm shadow-black/20 dark:shadow-black/60 \
+    card: 'flex flex-col mx-3 px-md pt-md pb-sm rounded-md shadow-sm shadow-black/20 dark:shadow-black/60 \
         dark:bg-neutralDark-500',
     // Header
     header: 'overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 \
@@ -82,7 +82,7 @@ export const postCardClass = {
     engagementButton:
         'items-center space-x-2  \
             hover:text-neutral-800 dark:hover:text-neutralDark-50  \
-            active:text-primary',
+            active:text-primary whitespace-nowrap',
 }
 
 export const postOptionsDropdownClass = {
