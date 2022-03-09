@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { FC, useRef, useState, MouseEvent, ChangeEvent } from 'react'
+import React, { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 import { db, storage } from '../../firebase'
 import {
     loginButtons,
@@ -15,7 +15,7 @@ import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 // Firebase
-import { doc, updateDoc } from 'firebase/firestore'
+import { deleteField, doc, updateDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 import { userProfileState } from '../../atoms/user'
 import { useRecoilState } from 'recoil'
@@ -23,6 +23,9 @@ import { getProfileDoc } from '../../lib/profileHelper'
 import { checkFileSize } from '../../utils/helpers/common'
 import FlashErrorMessage from '../Utils/FlashErrorMessage'
 import { warningTime } from '../../utils/constants/global'
+import { deleteMedia } from '../../lib/storageHelper'
+import { useUser } from '@auth0/nextjs-auth0'
+import API from '../../axios'
 
 type UserProfileFormProps = {
     headerText: string
@@ -36,6 +39,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
     cancelButtonText = 'Cancel',
 }) => {
     // Get current user profile
+    const { user, isLoading } = useUser()
     const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
     // Form state
@@ -91,33 +95,40 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         // Note: path to image is profiles/<profile_id>/image
         if (imageToUpload) {
             const imageRef = ref(storage, `profiles/${userProfile.uid}/image`)
-            //@ts-ignore
-            await uploadString(imageRef, imageToUpload, 'data_url').then(
-                async () => {
-                    // Get the download URL for the image
-                    const downloadURL = await getDownloadURL(imageRef)
+            try {
+                await uploadString(
+                    imageRef,
+                    imageToUpload as string,
+                    'data_url'
+                )
 
-                    // Update the original profile with the image url
-                    await updateDoc(doc(db, 'profiles', userProfile.uid), {
-                        profilePic: downloadURL,
-                    })
+                // Get the download URL for the image
+                const downloadURL = await getDownloadURL(imageRef)
+                // Update the original profile with the image url
+                await updateDoc(doc(db, 'profiles', userProfile.uid), {
+                    profilePic: downloadURL,
+                })
+                // Update the user's data as well
+                await updateDoc(doc(db, 'users', userProfile.uid), {
+                    name: name.trim(),
+                    username: username,
+                    photoUrl: downloadURL,
+                })
+                // Update atom
+                setUserProfile({
+                    ...userProfile,
+                    profilePic: downloadURL,
+                })
+            } catch (e) {
+                console.log(e)
+            }
+            setImageToUpload(null)
 
-                    // Update the user's data as well
-                    await updateDoc(doc(db, 'users', userProfile.uid), {
-                        name: name.trim(),
-                        username: username,
-                        photoUrl: downloadURL,
-                    })
-
-                    // Update atom
-                    setUserProfile({
-                        ...userProfile,
-                        profilePic: downloadURL,
-                    })
-                }
-            )
-
-            handleRemoveImage()
+            if (targetEvent) {
+                // Reset the event state so the user can reload
+                // the same image twice
+                targetEvent.target.value = ''
+            }
         }
 
         // Close Modal
@@ -190,8 +201,51 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         }
     }
 
-    const handleRemoveImage = () => {
-        setImageToUpload(null)
+    const deleteProfilePic = async () => {
+        try {
+            // Remove from storage
+            deleteMedia(`profiles/${userProfile.uid}/image`)
+
+            // Remove from user doc
+            await updateDoc(doc(db, 'users', userProfile.uid), {
+                photoUrl: deleteField(),
+            })
+
+            // Remove from profile doc
+            await updateDoc(doc(db, 'profiles', userProfile.uid), {
+                profilePic: '',
+            })
+            setUserProfile({ ...userProfile, profilePic: '' })
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const handleRemoveImage = async () => {
+        // Delete user image if there is not a staged image for upload
+        // and profile pic exists
+        if (userProfile.profilePic) {
+            // Update user profile atom
+            setUserProfile({
+                ...userProfile,
+                profilePic: '',
+            })
+
+            // Update auth0 user object
+            if (!isLoading && user) {
+                // We cannot use empty value in the picture, so we have to set a default image when we want to delete the image.
+                const userMetadata = {
+                    // TODO: Change image link to our own personal drive link from where the image can never be removed.
+                    picture:
+                        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+                }
+                await API.patch('auth/updateUser', userMetadata)
+                // Delete from back-end
+                await deleteProfilePic()
+            }
+        }
+        // Otherwise just remove staged image
+        imageToUpload && setImageToUpload(null)
 
         if (targetEvent) {
             // Reset the event state so the user can reload
@@ -255,12 +309,18 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                             className={
                                 loginButtons.removeImage +
                                 `${
-                                    imageToUpload
+                                    imageToUpload ||
+                                    userProfile.profilePic.length > 0
                                         ? ' text-black dark:text-white'
                                         : ' text-neutral-100 dark:text-neutralDark-300'
                                 }`
                             }
-                            disabled={!imageToUpload}
+                            disabled={
+                                !(
+                                    imageToUpload ||
+                                    userProfile.profilePic.length > 0
+                                )
+                            }
                             onClick={handleRemoveImage}
                         >
                             <UilTrashAlt />
