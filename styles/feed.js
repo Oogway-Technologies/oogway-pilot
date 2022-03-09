@@ -179,12 +179,14 @@ export const toggleIncognitoClass = {
 >>>>>>> Form front-end finished; need verification/preview
 export const compareFormClass = {
     container: 'flex flex-col lg:max-w-136',
-    header: 'inline-flex font-bold items-center',
+    header: 'inline-flex font-bold items-center justify-between',
     goBackButton:
-        'p-0.5 mr-1 rounded-[20px] \
-        hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
+        'p-1 rounded-[20px] inline-flex font-bold items-center \
         hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
         hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
+    cancelButton:
+        'p-1 text-error rounded-full inline-flex font-bold items-center \
+        hover:scale-110 dark:hover:scale-110',
     optionsSideBySide:
         'flex flex-wrap lg:max-w-136 justify-between gap-y-xl mt-md mb-xxl',
     tab: 'w-full lg:w-64 h-fit rounded-md border border-1 border-neutralDark-150',
@@ -197,6 +199,9 @@ export const compareFormClass = {
     textInputDiv: 'rounded-[8px] bg-primary/25 dark:bg-primaryDark/25  mt-md',
     textInput:
         'resize-none w-full h-xxl bg-transparent flex-grow py-2 px-5 \
+        focus:outline-none text-sm max-h-[100px] scrollbar-hide',
+    caption:
+        'resize-none w-full h-xl bg-transparent flex-grow py-2 px-5 \
         focus:outline-none text-sm max-h-[100px] scrollbar-hide',
     previewText: 'm-auto',
     // Image only subform

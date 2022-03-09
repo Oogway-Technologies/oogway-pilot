@@ -29,20 +29,17 @@ const _CompareTextInputForm = () => {
     return (
         <div className={compareFormClass.container}>
             <div className={compareFormClass.header}>
-                <Tooltip toolTipText={'Go Back'}>
-                    <button
-                        className={compareFormClass.goBackButton}
-                        onClick={() => {
-                            goToChooseType()
-                            setHasPreviewed(false)
-                            setTextToCompareLeft('')
-                            setTextToCompareRight('')
-                        }}
-                    >
-                        <UilAngleLeft />
-                    </button>
-                </Tooltip>
-                Text Only
+                <button
+                    className={compareFormClass.goBackButton}
+                    onClick={() => {
+                        goToChooseType()
+                        setHasPreviewed(false)
+                        setTextToCompareLeft('')
+                        setTextToCompareRight('')
+                    }}
+                >
+                    <UilAngleLeft /> <span className="mr-2">Go Back</span>
+                </button>
             </div>
             <div className={compareFormClass.optionsSideBySide}>
                 {hasPreviewed ? (
@@ -69,11 +66,11 @@ const _CompareTextInputForm = () => {
                     </>
                 ) : (
                     <>
-                        <_CompareInputForm title="First Option">
+                        <_CompareInputForm>
                             <div className={compareFormClass.textInputDiv}>
                                 <textarea
                                     className={compareFormClass.textInput}
-                                    placeholder="Label your first option"
+                                    placeholder="First option ..."
                                     onChange={e => {
                                         setTextToCompareLeft(e.target.value)
                                     }}
@@ -83,11 +80,11 @@ const _CompareTextInputForm = () => {
                             </div>
                         </_CompareInputForm>
                         {/* Right tab */}
-                        <_CompareInputForm title="Second Option">
+                        <_CompareInputForm>
                             <div className={compareFormClass.textInputDiv}>
                                 <textarea
                                     className={compareFormClass.textInput}
-                                    placeholder="Label your second option"
+                                    placeholder="Second option ..."
                                     onChange={e => {
                                         setTextToCompareRight(e.target.value)
                                     }}

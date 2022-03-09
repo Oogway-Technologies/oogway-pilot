@@ -6,6 +6,11 @@ export const comparePostType = atom<compareFormOptions>({
     default: 'chooseType',
 })
 
+export const compareFormExpanded = atom<boolean>({
+    key: 'compareFormExpanded',
+    default: false,
+})
+
 export const textCompareLeft = atom<string>({
     key: 'textToCompareLeftState',
     default: '',

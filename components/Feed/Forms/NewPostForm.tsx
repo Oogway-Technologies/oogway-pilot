@@ -3,7 +3,6 @@ import React, {
     FC,
     KeyboardEvent,
     MouseEvent,
-    ReactText,
     useEffect,
     useRef,
     useState,
@@ -67,6 +66,7 @@ import { useQueryClient } from 'react-query'
 import _CompareStepSwitch from './Compare/_CompareFormSwitch'
 import { fileSizeTooLarge } from '../../../atoms/forms'
 import {
+    compareFormExpanded,
     comparePostType,
     hasPreviewedCompare,
     imageCompareLeft,
@@ -126,24 +126,23 @@ const NewPostForm: FC<NewPostProps> = ({
         string | ArrayBuffer | null | undefined
     >(null)
 
+    // Track whether user has opted to post anonymously
+    const [isIncognito, setIsIncognito] = useState<boolean>(false)
+
     // This is a trick I need to use to reset the state and allow the user
     // to load the same image twice
     const [targetEvent, setTargetEvent] =
         useState<ChangeEvent<HTMLInputElement>>()
 
     // Refs and state for Compare post
-    const [expanded, setExpanded] = useState<boolean>(false)
-
-    // Track whether user has opted to post anonymously
-    const [isIncognito, setIsIncognito] = useState<boolean>(false)
-
-    // Ref and data for left and right images
-    const [hasPreviewed, setHasPreviewed] = useRecoilState(hasPreviewedCompare)
+    const [expanded, setExpanded] = useRecoilState(compareFormExpanded)
     const [compareType, setCompareType] = useRecoilState(comparePostType)
-    const [textToCompareLeft, setTextToCompareLeft] =
-        useRecoilState(textCompareLeft)
+    useRecoilState(textCompareLeft)
+    const [hasPreviewed, setHasPreviewed] = useRecoilState(hasPreviewedCompare)
     const [textToCompareRight, setTextToCompareRight] =
         useRecoilState(textCompareRight)
+    const [textToCompareLeft, setTextToCompareLeft] =
+        useRecoilState(textCompareLeft)
     const [imageToCompareLeft, setImageToCompareLeft] =
         useRecoilState(imageCompareLeft)
     const [imageToCompareRight, setImageToCompareRight] =
@@ -752,12 +751,12 @@ const NewPostForm: FC<NewPostProps> = ({
                         </button>
                     </Tooltip>
                     {/* Trigger compare */}
-                    <Tooltip toolTipText={'Compare'}>
+                    <Tooltip toolTipText={'Add Poll'}>
                         <button
                             onClick={handleCompareClick}
                             className={postFormClass.imageButton}
                             aria-expanded={expanded}
-                            aria-label="compare"
+                            aria-label="poll"
                         >
                             <UilBalanceScale />
                         </button>
@@ -790,7 +789,12 @@ const NewPostForm: FC<NewPostProps> = ({
                 </div>
             )}
 
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <Collapse
+                className="px-2"
+                in={expanded}
+                timeout="auto"
+                unmountOnExit
+            >
                 <_CompareStepSwitch
                     handleLeftUpload={handleCompareLeftUpload}
                     handleRightUpload={handleCompareRightUpload}
