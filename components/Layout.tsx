@@ -1,19 +1,20 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
+import Head from 'next/head'
 import Header from './Header/Header'
-import {useUser} from '@auth0/nextjs-auth0'
-import {userProfileState} from '../atoms/user'
-import {useSetRecoilState} from 'recoil'
-import {getOrCreateUserFromFirebase} from '../lib/userHelper'
-import {FirebaseProfile} from "../utils/types/firebase";
-import firebase from "firebase/compat";
-import DocumentData = firebase.firestore.DocumentData;
+import { useUser } from '@auth0/nextjs-auth0'
+import { userProfileState } from '../atoms/user'
+import { useSetRecoilState } from 'recoil'
+import { getOrCreateUserFromFirebase } from '../lib/userHelper'
+import { FirebaseProfile } from '../utils/types/firebase'
+import firebase from 'firebase/compat'
+import DocumentData = firebase.firestore.DocumentData
 
 interface LayoutProps {
     children: React.ReactNode
 }
 
-const Layout = ({children}: LayoutProps) => {
-    const {user, isLoading} = useUser()
+const Layout = ({ children }: LayoutProps) => {
+    const { user, isLoading } = useUser()
 
     // Get userProfileState state from recoil.
     const setUserProfileState = useSetRecoilState(userProfileState)
@@ -27,21 +28,28 @@ const Layout = ({children}: LayoutProps) => {
         // getUserFromFirebase will get the returned user from the backend
         // and set it to recoil state by setUserProfileState
         if (!isLoading && user) {
-            getOrCreateUserFromFirebase(user).then((data: FirebaseProfile | DocumentData | undefined) => {
-                setUserProfileState(data as FirebaseProfile)
-            })
+            getOrCreateUserFromFirebase(user).then(
+                (data: FirebaseProfile | DocumentData | undefined) => {
+                    setUserProfileState(data as FirebaseProfile)
+                }
+            )
         }
     }, [isLoading, user])
 
     return (
-        <div className="flex flex-col min-h-screen max-h-screen overflow-y-hidden">
-            <div className="sticky">
-                <Header/>
+        <>
+            <Head>
+                <title>Oogway | Social - Wisdom of the crowd</title>
+            </Head>
+            <div className="flex flex-col min-h-screen max-h-screen overflow-y-hidden">
+                <div className="sticky">
+                    <Header />
+                </div>
+                <div className="">
+                    <main>{children}</main>
+                </div>
             </div>
-            <div className="">
-                <main>{children}</main>
-            </div>
-        </div>
+        </>
     )
 }
 
