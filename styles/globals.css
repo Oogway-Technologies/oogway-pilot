@@ -22,4 +22,7 @@
     height: 15px;
     cursor: pointer;
   }
+  .disabled-style:disabled{
+    opacity: 0.50;
+  }
 }

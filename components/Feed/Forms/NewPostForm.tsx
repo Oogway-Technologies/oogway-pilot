@@ -30,8 +30,8 @@ import {
     UilTimesCircle,
     // @ts-ignore
 } from '@iconscout/react-unicons'
+
 import { Collapse } from '@mui/material'
-import { Icon } from '@iconify/react'
 
 // Form management
 import { useForm } from 'react-hook-form'
@@ -138,6 +138,7 @@ const NewPostForm: FC<NewPostProps> = ({
     const [rightComparePreviewImage, setRightComparePreviewImage] =
         useState<string>('')
     const [isImageSizeLarge, setIsImageSizeLarge] = useState<boolean>(false)
+    const [isTitleURL, setIsTitleURL] = useState<boolean>(false)
 
     //Processing the images received from backend for description field
     const previewImagecallBack = async (res: string[]) => {
@@ -216,17 +217,6 @@ const NewPostForm: FC<NewPostProps> = ({
             questionProvided = false
         }
 
-        // If the input is link, return asap
-        let questionNoLink = true
-        if (isValidURL(inputRef?.current?.value)) {
-            setError(
-                'question',
-                { type: 'required', message: 'Question can not have link.' },
-                { shouldFocus: true }
-            )
-            questionNoLink = false
-        }
-
         // If the post is a compare post and not all media is specified, return asap
         let questionHasMedia = true
         if (isMissingDataForComparePost() && !isComparePost()) {
@@ -241,12 +231,12 @@ const NewPostForm: FC<NewPostProps> = ({
             )
             questionHasMedia = false
         }
-        if (!questionProvided || !questionNoLink || !questionHasMedia) {
+        if (!questionProvided || !questionHasMedia) {
             setTimeout(() => clearErrors(), 3000)
         }
 
         // Whether to sendPost or not
-        return questionProvided && questionNoLink && questionHasMedia
+        return questionProvided && questionHasMedia && !isTitleURL
     }
 
     const sendPost = async () => {
@@ -600,6 +590,21 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // clear errors if there are any. so they can reappear.
+        if (errors?.question?.type) {
+            clearErrors()
+        }
+
+        //check if input is URL, if it is a url remove it and show warning.
+        const isURL = isValidURL(e.target.value)
+        if (Boolean(isURL)) {
+            setIsTitleURL(true)
+        } else {
+            isTitleURL && setIsTitleURL(false)
+        }
+    }
+
     return (
         <div className={postFormClass.modalDiv}>
             <Dialog.Title as="div" className={postFormClass.dialogTitle}>
@@ -620,20 +625,17 @@ const NewPostForm: FC<NewPostProps> = ({
                         placeholder={questPlaceholder}
                         maxLength={shortLimit}
                         onKeyPress={preventDefaultOnEnter}
-                        onChange={(e) => {
-                            if (errors?.question?.type) {
-                                clearErrors()
-                            }
-                            const isURL = isValidURL(e.target.value)
-                            if (isURL) {
-                                e.target.value = e.target.value.replace(
-                                    isURL,
-                                    ''
-                                )
-                            }
-                        }}
+                        onChange={handleInputChange}
                     />
                 </div>
+                {/* Warning message on Title */}
+                {isTitleURL && (
+                    <FlashErrorMessage
+                        message={'Question should not be a URL'}
+                        ms={100000}
+                        style={postFormClass.formAlert}
+                    />
+                )}
 
                 {/* Warning message on missing question */}
                 {errors.question && errors.question.type === 'required' && (
@@ -923,6 +925,7 @@ const NewPostForm: FC<NewPostProps> = ({
                     addStyle={postFormClass.PostButton}
                     onClick={sendAndClose}
                     onKeyPress={handleKeyPress}
+                    disabled={isTitleURL}
                 />
             </div>
         </div>
