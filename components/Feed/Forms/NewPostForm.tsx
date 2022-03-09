@@ -30,7 +30,6 @@ import {
     UilTimesCircle,
 } from '@iconscout/react-unicons'
 import { Collapse } from '@mui/material'
-import { Icon } from '@iconify/react'
 
 // Form management
 import { useForm } from 'react-hook-form'
@@ -205,9 +204,6 @@ const NewPostForm: FC<NewPostProps> = ({
     }
 
     const validateForm = () => {
-        // remove URL warning
-        setIsTitleURL(false)
-
         // If the input is empty, return asap
         let questionProvided = true
         if (inputRef && !inputRef?.current?.value.trim()) {
@@ -217,17 +213,6 @@ const NewPostForm: FC<NewPostProps> = ({
                 { shouldFocus: true }
             )
             questionProvided = false
-        }
-
-        // If the input is link, return asap
-        let questionNoLink = true
-        if (isValidURL(inputRef?.current?.value)) {
-            setError(
-                'question',
-                { type: 'required', message: 'Question can not have link.' },
-                { shouldFocus: true }
-            )
-            questionNoLink = false
         }
 
         // If the post is a compare post and not all media is specified, return asap
@@ -244,12 +229,12 @@ const NewPostForm: FC<NewPostProps> = ({
             )
             questionHasMedia = false
         }
-        if (!questionProvided || !questionNoLink || !questionHasMedia) {
+        if (!questionProvided || !questionHasMedia) {
             setTimeout(() => clearErrors(), 3000)
         }
 
         // Whether to sendPost or not
-        return questionProvided && questionNoLink && questionHasMedia
+        return questionProvided && questionHasMedia && !isTitleURL
     }
 
     const sendPost = async () => {
@@ -613,7 +598,6 @@ const NewPostForm: FC<NewPostProps> = ({
         const isURL = isValidURL(e.target.value)
         if (Boolean(isURL)) {
             setIsTitleURL(true)
-            e.target.value = e.target.value.replace(isURL, '')
         } else {
             isTitleURL && setIsTitleURL(false)
         }
@@ -645,7 +629,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 {/* Warning message on Title */}
                 {isTitleURL && (
                     <FlashErrorMessage
-                        message={'Title should not be a URL'}
+                        message={'Question should not be a URL'}
                         ms={100000}
                         style={postFormClass.formAlert}
                     />
