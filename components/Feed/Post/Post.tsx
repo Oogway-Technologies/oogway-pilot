@@ -45,9 +45,9 @@ const PostCard: React.FC<PostProps> = ({
     const [compareData, setCompareData] = useState(Array())
     const [URL, setURL] = useState<string>('')
     const [YouTubeURLID, setYouTubeURLID] = useState<string>('')
-    
+
     // Set params for child components
-    let staticPostData : staticPostData = {
+    let staticPostData: staticPostData = {
         authorUid: authorUid,
         id: id,
         isAnonymous: isAnonymous,
@@ -60,7 +60,7 @@ const PostCard: React.FC<PostProps> = ({
         // Store reference to snapshot
         const unsubscribe = streamPostData(
             id,
-            (snapshot) => {
+            snapshot => {
                 const postData = snapshot.data()
                 if (postData) {
                     // prevent error on compare post deletion
@@ -70,18 +70,18 @@ const PostCard: React.FC<PostProps> = ({
 
                     setURL(isValidURL(postData?.description))
                     setYouTubeURLID(
-                        parseYoutubeVideoId(postData?.description) || ''
+                        parseYoutubeVideoId(postData?.description) || '',
                     )
 
                     if (isComparePost(postData)) {
                         // Add a counter of votes for each object to compare.
                         // Note: this should generally be an array of 2 objects
                         let votesCounter = new Array(
-                            postData.compare.votesObjMapList.length
+                            postData.compare.votesObjMapList.length,
                         ).fill(0)
                         for (var i = 0; i < votesCounter.length; i++) {
                             votesCounter[i] = Object.keys(
-                                postData.compare.votesObjMapList[i]
+                                postData.compare.votesObjMapList[i],
                             ).length
                         }
 
@@ -93,9 +93,9 @@ const PostCard: React.FC<PostProps> = ({
                     }
                 }
             },
-            (err) => {
+            err => {
                 console.log(err)
-            }
+            },
         )
 
         return () => unsubscribe()
@@ -129,7 +129,7 @@ const PostCard: React.FC<PostProps> = ({
                         componentDecorator={(
                             decoratedHref,
                             decoratedText,
-                            key
+                            key,
                         ) => (
                             <Link
                                 className={postCardClass.bodyDescription}
@@ -197,9 +197,12 @@ const PostCard: React.FC<PostProps> = ({
 
             {/* Comments */}
             {/* Note: pass the server-rendered comments to the panel */}
-            {isCommentThread && <CommentsAPI comments={comments} 
-                                             parentPostData={staticPostData}
-                                />}
+            {isCommentThread && (
+                <CommentsAPI
+                    comments={comments}
+                    parentPostData={staticPostData}
+                />
+            )}
         </Card>
     )
 }

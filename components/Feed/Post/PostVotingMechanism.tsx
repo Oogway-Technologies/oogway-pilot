@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../../../firebase'
-import { compareFormClass, postCardClass } from '../../../styles/feed'
+import { postCardClass } from '../../../styles/feed'
 // @ts-ignore
 import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import { userProfileState } from '../../../atoms/user'

@@ -1,6 +1,12 @@
-import { FC, useState } from 'react'
-import { commentClass } from '../../../styles/feed'
-import { CardMedia, Collapse, useMediaQuery } from '@mui/material'
+import React, { FC, useState } from 'react'
+import { commentClass, postCardClass } from '../../../styles/feed'
+import {
+    CardMedia,
+    Collapse,
+    Link,
+    Typography,
+    useMediaQuery,
+} from '@mui/material'
 import CommentHeader from './CommentHeader'
 import CommentEngagementBar from './CommentEngagementBar'
 import NewReplyForm from '../Forms/NewReplyForm'
@@ -9,6 +15,9 @@ import Modal from '../../Utils/Modal'
 import { useUser } from '@auth0/nextjs-auth0'
 import { FirebaseComment } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
+import { PreviewDecider } from '../../Utils/PreviewDecider'
+import { isValidURL } from '../../../utils/helpers/common'
+import Linkify from 'react-linkify'
 
 interface CommentProps {
     commentOwner: string
@@ -71,9 +80,34 @@ const Comment: FC<CommentProps> = ({
 
                 {/* Body */}
                 <div className={commentClass.body}>
-                    <p className={commentClass.bodyDescription}>
-                        {comment.message}
-                    </p>
+                    {isValidURL(comment.message) ? (
+                        <Linkify
+                            componentDecorator={(
+                                decoratedHref,
+                                decoratedText,
+                                key,
+                            ) => (
+                                <Link
+                                    className={
+                                        commentClass.bodyDescription + ' ml-0'
+                                    }
+                                    target="blank"
+                                    href={decoratedHref}
+                                    key={key}
+                                >
+                                    {decoratedText}
+                                </Link>
+                            )}
+                        >
+                            <p className={commentClass.bodyDescription}>
+                                {comment.message}
+                            </p>
+                        </Linkify>
+                    ) : (
+                        <p className={commentClass.bodyDescription}>
+                            {comment.message}
+                        </p>
+                    )}
                 </div>
 
                 {/* Media */}
@@ -81,6 +115,10 @@ const Comment: FC<CommentProps> = ({
                     <div className={commentClass.media}>
                         <CardMedia component="img" src={comment.postImage} />
                     </div>
+                )}
+
+                {isValidURL(comment.message) && (
+                    <PreviewDecider textToDetect={comment.message || ''} />
                 )}
 
                 {/* Engagement */}
@@ -104,8 +142,10 @@ const Comment: FC<CommentProps> = ({
                 </Collapse>
 
                 {/* Replies API */}
-                <RepliesAPI commentId={commentId}
-                            parentPostData={parentPostData} />
+                <RepliesAPI
+                    commentId={commentId}
+                    parentPostData={parentPostData}
+                />
             </div>
 
             <Modal

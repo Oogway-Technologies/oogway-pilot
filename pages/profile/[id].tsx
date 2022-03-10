@@ -1,21 +1,28 @@
-import React, {FC} from 'react'
-import {ParsedUrlQuery} from 'querystring'
-import {FirebasePost, FirebaseProfile} from '../../utils/types/firebase'
-import {profilePage} from '../../styles/profile'
-import {GetServerSideProps, GetServerSidePropsContext} from 'next'
+import React, { FC } from 'react'
+import { ParsedUrlQuery } from 'querystring'
+import { FirebasePost, FirebaseProfile } from '../../utils/types/firebase'
+import { profilePage } from '../../styles/profile'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 
-import {ProfileCard} from '../../components/Profile/ProfileCard'
+import { ProfileCard } from '../../components/Profile/ProfileCard'
 
 // Firebase imports
 import firebase from 'firebase/compat'
-import {collection, doc, getDoc, orderBy, query, where} from 'firebase/firestore'
-import {db} from '../../firebase'
-import {useCollection} from 'react-firebase-hooks/firestore'
+import {
+    collection,
+    doc,
+    getDoc,
+    orderBy,
+    query,
+    where,
+} from 'firebase/firestore'
+import { db } from '../../firebase'
+import { useCollection } from 'react-firebase-hooks/firestore'
 import PostCard from '../../components/Feed/Post/Post'
 import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../atoms/user'
 
-import DocumentData = firebase.firestore.DocumentData;
+import DocumentData = firebase.firestore.DocumentData
 
 interface ProfileProps {
     userProfile: FirebaseProfile
@@ -23,25 +30,18 @@ interface ProfileProps {
 }
 
 const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
-    const {
-        bio,
-        profilePic,
-        uid,
-        username,
-        name,
-        lastName,
-        location,
-    } = userProfile
-    
+    const { bio, profilePic, uid, username, name, lastName, location } =
+        userProfile
+
     const authUserProfile = useRecoilValue(userProfileState)
     // Get real-time connection with DB
     const [realtimePosts] = useCollection(
         query(
             collection(db, 'posts'),
             where('uid', '==', uid),
-            orderBy('timestamp', 'desc')
-        )
-    ) 
+            orderBy('timestamp', 'desc'),
+        ),
+    )
     return (
         <div className={profilePage.innerDiv}>
             <div className={profilePage.contentDiv}>
@@ -62,46 +62,57 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                 */}
                 <>
                     {realtimePosts
-                        ? realtimePosts?.docs.filter( (post) => {
-                            return (post.data().isAnonymous != true) 
-                                || ( post.data().uid == authUserProfile.uid);
-                        }).map((post) => (
-                              <PostCard
-                                  key={post.id}
-                                  id={post.id}
-                                  authorUid={post.data().uid}
-                                  name={post.data().name}
-                                  message={post.data().message}
-                                  description={post.data().description}
-                                  isCompare={post.data().isCompare}
-                                  timestamp={post.data().timestamp}
-                                  postImage={post.data().postImage}
-                                  comments={null}
-                                  isCommentThread={false}
-                                  previewImage={null}
-                                  isAnonymous={post.data().isAnonymous}
-                              />
-                          ))
+                        ? realtimePosts?.docs
+                              .filter(post => {
+                                  return (
+                                      post.data().isAnonymous != true ||
+                                      post.data().uid == authUserProfile.uid
+                                  )
+                              })
+                              .map(post => (
+                                  <PostCard
+                                      key={post.id}
+                                      id={post.id}
+                                      authorUid={post.data().uid}
+                                      name={post.data().name}
+                                      message={post.data().message}
+                                      description={post.data().description}
+                                      isCompare={post.data().isCompare}
+                                      timestamp={post.data().timestamp}
+                                      postImage={post.data().postImage}
+                                      comments={null}
+                                      isCommentThread={false}
+                                      previewImage={
+                                          post.data().previewImage || ''
+                                      }
+                                      isAnonymous={post.data().isAnonymous}
+                                  />
+                              ))
                         : // Render out the server-side rendered posts
-                          posts.filter(function(post) {
-                            return (post.isAnonymous != true) || ( post.uid == authUserProfile.uid);
-                             }).map((post) => (
-                              <PostCard
-                                  key={post.id}
-                                  id={post.id || ''}
-                                  authorUid={post.uid}
-                                  name={post.name}
-                                  message={post.message}
-                                  description={post.description}
-                                  isCompare={post.isCompare}
-                                  timestamp={post.timestamp}
-                                  postImage={post.postImage}
-                                  comments={null}
-                                  isCommentThread={false}
-                                  previewImage={null}
-                                  isAnonymous={post.isAnonymous}
-                              />
-                          ))}
+                          posts
+                              .filter(function (post: FirebasePost) {
+                                  return (
+                                      post.isAnonymous != true ||
+                                      post.uid == authUserProfile.uid
+                                  )
+                              })
+                              .map(post => (
+                                  <PostCard
+                                      key={post.id}
+                                      id={post.id || ''}
+                                      authorUid={post.uid}
+                                      name={post.name}
+                                      message={post.message}
+                                      description={post.description}
+                                      isCompare={post.isCompare}
+                                      timestamp={post.timestamp}
+                                      postImage={post.postImage}
+                                      comments={null}
+                                      isCommentThread={false}
+                                      previewImage={post.previewImage || ''}
+                                      isAnonymous={post.isAnonymous}
+                                  />
+                              ))}
                 </>
             </div>
         </div>
@@ -115,7 +126,7 @@ export const getServerSideProps: GetServerSideProps = async (
     context: GetServerSidePropsContext<
         ParsedUrlQuery,
         string | false | object | undefined
-    >
+    >,
 ) => {
     //Get userProfile of selected user from database.
     const userProfile: DocumentData | undefined = (
@@ -129,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async (
         .orderBy('timestamp', 'desc')
         .get()
 
-    const posts = postsRef.docs.map((post) => ({
+    const posts = postsRef.docs.map(post => ({
         id: post.id,
         ...post.data(),
         timestamp: null, // DO NOT prefetch timestamp
