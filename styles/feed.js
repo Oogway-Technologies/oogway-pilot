@@ -289,7 +289,7 @@ export const commentEngagementBarClass = {
     engagementButton:
         'inline-flex items-center space-x-2 \
             hover:text-neutral-800 dark:hover:text-neutralDark-50 \
-            active:text-primary',
+            active:text-primary whitespace-nowrap',
 }
 
 // Replies
@@ -322,7 +322,7 @@ export const replyFormClass = {
           focus-within:border-primary focus-visible:border-primary \
           dark:focus-within:border-primary dark:focus-visible:border-primary \
           active:border-neutral-300 dark:active:border-neutralDark-50 \
-          hover:border-neutral-150 dark:hover:border-neutralDark-50',
+          hover:border-neutral-150 dark:hover:border-neutralDark-50 w-full',
     replyInput:
         'w-full focus:outline-none border-none bg-transparent text-black dark:text-white \
           text-sm',
@@ -336,7 +336,7 @@ export const replyFormClass = {
         'rounded-[20px] p-sm md:px-md md:space-x-2 \
             bg-primary dark:bg-primaryDark hover:bg-primaryActive \
             active:bg-primaryActive dark:hover:bg-primaryActive \
-            dark:active:bg-primaryActive text-white font-bold',
+            dark:active:bg-primaryActive text-white font-bold justify-self-end',
     formAlert:
         'inline-flex pt-sm ml-xxl items-center text-sm text-alert dark:text-alert',
     formAlertMobile:

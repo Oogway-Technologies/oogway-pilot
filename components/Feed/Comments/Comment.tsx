@@ -104,8 +104,10 @@ const Comment: FC<CommentProps> = ({
                 </Collapse>
 
                 {/* Replies API */}
-                <RepliesAPI commentId={commentId}
-                            parentPostData={parentPostData} />
+                <RepliesAPI
+                    commentId={commentId}
+                    parentPostData={parentPostData}
+                />
             </div>
 
             <Modal
@@ -119,6 +121,7 @@ const Comment: FC<CommentProps> = ({
                 }
                 show={isOpen}
                 onClose={closeModal}
+                className={'w-full'}
             />
         </>
     )
