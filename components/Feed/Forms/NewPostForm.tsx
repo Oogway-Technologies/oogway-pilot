@@ -32,51 +32,36 @@ import {
 } from '@iconscout/react-unicons'
 
 import { Collapse } from '@mui/material'
-import _CompareChooseTypeForm from './Compare/_CompareChooseTypeForm'
-import { Tooltip } from '../../Utils/Tooltip'
 
 // Form management
 import { useForm } from 'react-hook-form'
 import { postFormClass } from '../../../styles/feed'
-import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import {
-    longLimit,
-    shortLimit,
-    warningTime,
-} from '../../../utils/constants/global'
-import ToggleIncognito from '../Post/ToggleIncognito'
 
 // Recoil states
 import { userProfileState } from '../../../atoms/user'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilValue } from 'recoil'
 
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import { FirebasePost } from '../../../utils/types/firebase'
+
+// Queries
+import { useQueryClient } from 'react-query'
+import { Tooltip } from '../../Utils/Tooltip'
 import {
     amazonURLAppendQueryString,
     checkFileSize,
     fetcher,
     isValidURL,
 } from '../../../utils/helpers/common'
-import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
-
-// Queries
-import { useQueryClient } from 'react-query'
-import { fileSizeTooLarge } from '../../../atoms/forms'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import {
-    compareFormExpanded,
-    comparePostType,
-    hasPreviewedCompare,
-    imageCompareLeft,
-    imageCompareRight,
-    labelCompareLeft,
-    labelCompareRight,
-    leftPreviewImage,
-    rightPreviewImage,
-    textCompareLeft,
-    textCompareRight,
-} from '../../../atoms/compareForm'
+    longLimit,
+    shortLimit,
+    warningTime,
+} from '../../../utils/constants/global'
+import { MediaObject } from '../../../utils/types/global'
+import ToggleIncognito from '../Post/ToggleIncognito'
 
 type NewPostProps = {
     closeModal: () => void
@@ -105,12 +90,25 @@ const NewPostForm: FC<NewPostProps> = ({
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
         register('question', { required: true })
-    }, [register])
+    }, [])
     useEffect(() => {
         register('compare', { required: true })
-    }, [register])
+    }, [])
 
     const [loading, setLoading] = useState(false)
+
+    // The image to post and to display as preview
+    const [imageToPost, setImageToPost] = useState<
+        string | ArrayBuffer | null | undefined
+    >(null)
+
+    // This is a trick I need to use to reset the state and allow the user
+    // to load the same image twice
+    const [targetEvent, setTargetEvent] =
+        useState<ChangeEvent<HTMLInputElement>>()
+
+    // Track whether comparison form or not
+    const [expanded, setExpanded] = useState<boolean>(false)
 
     // Get a reference to the input text
     const inputRef = useRef<HTMLInputElement>(null)
@@ -120,89 +118,30 @@ const NewPostForm: FC<NewPostProps> = ({
 
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
-    // The image to post and to display as preview
-    const [imageToPost, setImageToPost] = useState<
-        string | ArrayBuffer | null | undefined
-    >(null)
 
     // Track whether user has opted to post anonymously
     const [isIncognito, setIsIncognito] = useState<boolean>(false)
 
-    // This is a trick I need to use to reset the state and allow the user
-    // to load the same image twice
-    const [targetEvent, setTargetEvent] =
-        useState<ChangeEvent<HTMLInputElement>>()
-
-    // Refs and state for Compare post
-    const [expanded, setExpanded] = useRecoilState(compareFormExpanded)
-    const [compareType, setCompareType] = useRecoilState(comparePostType)
-    useRecoilState(textCompareLeft)
-    const [hasPreviewed, setHasPreviewed] = useRecoilState(hasPreviewedCompare)
-    const [textToCompareRight, setTextToCompareRight] =
-        useRecoilState(textCompareRight)
-    const [textToCompareLeft, setTextToCompareLeft] =
-        useRecoilState(textCompareLeft)
-    const [imageToCompareLeft, setImageToCompareLeft] =
-        useRecoilState(imageCompareLeft)
-    const [imageToCompareRight, setImageToCompareRight] =
-        useRecoilState(imageCompareRight)
-    const [labelToCompareLeft, setLabelToCompareLeft] =
-        useRecoilState(labelCompareLeft)
-    const [labelToCompareRight, setLabelToCompareRight] =
-        useRecoilState(labelCompareRight)
+    // Ref and data for left and right images
+    const [imageToCompareLeft, setImageToCompareLeft] = useState<
+        string | ArrayBuffer | null | undefined
+    >(null)
+    const [imageToCompareRight, setImageToCompareRight] = useState<
+        string | ArrayBuffer | null | undefined
+    >(null)
+    const [textToCompareLeft, setTextToCompareLeft] = useState<string>('')
+    const [textToCompareRight, setTextToCompareRight] = useState<string>('')
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
     const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
-    const compareFilePickers = useRef<compareFilePickerRefs>({
-        left: filePickerCompareLeftRef,
-        right: filePickerCompareRightRef,
-    })
-    const [isImageSizeLarge, setIsImageSizeLarge] =
-        useRecoilState(fileSizeTooLarge)
     const [previewImage, setPreviewImage] = useState<string>('')
     const [leftComparePreviewImage, setLeftComparePreviewImage] =
-        useRecoilState(leftPreviewImage)
+        useState<string>('')
     const [rightComparePreviewImage, setRightComparePreviewImage] =
-        useRecoilState(rightPreviewImage)
+        useState<string>('')
+    const [isImageSizeLarge, setIsImageSizeLarge] = useState<boolean>(false)
     const [isTitleURL, setIsTitleURL] = useState<boolean>(false)
 
-    // I'm pretty sure this is introducing a memory leak
-    // useEffect cannot unclude async logic
-    useEffect(() => {
-        if (previewImage) {
-            ;(async () => {
-                await sendPost()
-            })()
-        }
-    }, [previewImage])
-
-    // Reset form global state on umount
-    useEffect(() => {
-        return () => {
-            setExpanded(false)
-            setIsImageSizeLarge(false)
-            setCompareType('textOnly')
-            setImageToCompareLeft(null)
-            setImageToCompareRight(null)
-            setTextToCompareLeft('')
-            setTextToCompareRight('')
-            setLabelToCompareLeft('')
-            setLabelToCompareRight('')
-            setHasPreviewed(false)
-        }
-    }, [
-        setExpanded,
-        setCompareType,
-        setIsImageSizeLarge,
-        setImageToCompareLeft,
-        setImageToCompareRight,
-        setLabelToCompareLeft,
-        setLabelToCompareRight,
-        setTextToCompareLeft,
-        setTextToCompareRight,
-        setHasPreviewed,
-    ])
-
-    // Processing the images received from backend for description field
+    //Processing the images received from backend for description field
     const previewImagecallBack = async (res: string[]) => {
         if (res.length > 0) {
             setPreviewImage(res[0])
@@ -211,7 +150,7 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }
 
-    // Processing the images received from backend for left compare Link field
+    //Processing the images received from backend for left compare Link field
     const leftComparePreviewImagecallBack = async (res: string[]) => {
         if (res.length > 0) {
             setLeftComparePreviewImage(res[0])
@@ -220,7 +159,7 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }
 
-    // Processing the images received from backend for right compare Link field
+    //Processing the images received from backend for right compare Link field
     const rightComparePreviewImagecallBack = async (res: string[]) => {
         if (res.length > 0) {
             setRightComparePreviewImage(res[0])
@@ -228,6 +167,14 @@ const NewPostForm: FC<NewPostProps> = ({
             setRightComparePreviewImage(' ')
         }
     }
+
+    useEffect(() => {
+        if (previewImage) {
+            ;(async () => {
+                await sendPost()
+            })()
+        }
+    }, [previewImage])
 
     const checkPreviewImage = (url: string) => {
         return fetcher(`/api/fetchPreviewData?urlToHit=${url}`)
@@ -243,15 +190,10 @@ const NewPostForm: FC<NewPostProps> = ({
         // return false otherwise
         return (
             (imageToCompareLeft && imageToCompareRight) ||
-            (textToCompareLeft && textToCompareRight)
-            // ||
-            // (imageToCompareLeft && textToCompareRight) ||
-            // (textToCompareLeft && imageToCompareRight)
+            (textToCompareLeft && textToCompareRight) ||
+            (imageToCompareLeft && textToCompareRight) ||
+            (textToCompareLeft && imageToCompareRight)
         )
-    }
-
-    const isMissingDataForPreview = () => {
-        return !isComparePost() && compareType != 'chooseType'
     }
 
     const isMissingDataForComparePost = () => {
@@ -271,7 +213,7 @@ const NewPostForm: FC<NewPostProps> = ({
             setError(
                 'question',
                 { type: 'required', message: 'A question is required.' },
-                { shouldFocus: true },
+                { shouldFocus: true }
             )
             questionProvided = false
         }
@@ -286,7 +228,7 @@ const NewPostForm: FC<NewPostProps> = ({
                     message:
                         'You are missing required information to create a compare post.',
                 },
-                { shouldFocus: true },
+                { shouldFocus: true }
             )
             questionHasMedia = false
         }
@@ -313,7 +255,7 @@ const NewPostForm: FC<NewPostProps> = ({
         let postData: FirebasePost = {
             message: inputRef?.current?.value || '', // Leaving field name as message even though UI refers to it as a question
             description: amazonURLAppendQueryString(
-                descriptionRef?.current?.value || '',
+                descriptionRef?.current?.value || ''
             ), // Optional description
             previewImage: previewImage, // Saves preview Image from Link
             name: userProfile.username, // Change this with username or incognito
@@ -347,7 +289,7 @@ const NewPostForm: FC<NewPostProps> = ({
             await uploadString(
                 imageRef,
                 imageToPost as string,
-                'data_url',
+                'data_url'
             ).then(async () => {
                 // Get the download URL for the image
                 const downloadURL = await getDownloadURL(imageRef)
@@ -358,12 +300,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 })
 
                 // Remove image preview
-                setImageToPost(null)
-                if (targetEvent) {
-                    // Reset the event state so the user can reload
-                    // the same image twice
-                    targetEvent.target.value = ''
-                }
+                removeImage(0)
             })
         }
 
@@ -390,18 +327,13 @@ const NewPostForm: FC<NewPostProps> = ({
                 await uploadString(
                     imageRef,
                     imageToCompareLeft as string,
-                    'data_url',
+                    'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
                     leftMediaObject.image = downloadURL
                     votesObjMapList.push({})
                 })
-
-                // Optionally, append label
-                if (labelToCompareLeft) {
-                    leftMediaObject.label = labelToCompareLeft
-                }
             } else {
                 leftMediaObject.previewImage = leftComparePreviewImage
             }
@@ -412,18 +344,13 @@ const NewPostForm: FC<NewPostProps> = ({
                 await uploadString(
                     imageRef,
                     imageToCompareRight as string,
-                    'data_url',
+                    'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
                     rightMediaObject.image = downloadURL
                     votesObjMapList.push({})
                 })
-
-                // Optionally, append label
-                if (labelToCompareRight) {
-                    rightMediaObject.label = labelToCompareRight
-                }
             } else {
                 rightMediaObject.previewImage = rightComparePreviewImage
             }
@@ -467,7 +394,7 @@ const NewPostForm: FC<NewPostProps> = ({
             {
                 posts: { id: docRef.id },
             },
-            { merge: true },
+            { merge: true }
         )
 
         // Everything is done
@@ -494,7 +421,7 @@ const NewPostForm: FC<NewPostProps> = ({
 
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
-        reader.onload = readerEvent => {
+        reader.onload = (readerEvent) => {
             setImageToCompareLeft(readerEvent?.target?.result)
             setTextToCompareLeft('')
             if (targetEvent) {
@@ -520,7 +447,7 @@ const NewPostForm: FC<NewPostProps> = ({
 
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
-        reader.onload = readerEvent => {
+        reader.onload = (readerEvent) => {
             setImageToCompareRight(readerEvent?.target?.result)
             setTextToCompareRight('')
             if (targetEvent) {
@@ -545,7 +472,7 @@ const NewPostForm: FC<NewPostProps> = ({
         }
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
-        reader.onload = readerEvent => {
+        reader.onload = (readerEvent) => {
             setImageToPost(readerEvent?.target?.result)
             if (targetEvent) {
                 // Reset the event state so the user can reload
@@ -601,8 +528,24 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }
 
+    const removeImage = (idx: number) => {
+        // Easiest way to generalize image removal during when
+        // mapping over array, but doesn't scale well to more than
+        // three images
+        if (idx === 0) setImageToPost(null)
+        else if (idx === 1) setImageToCompareLeft(null)
+        else if (idx === 2) setImageToCompareRight(null)
+        else return
+
+        if (targetEvent) {
+            // Reset the event state so the user can reload
+            // the same image twice
+            targetEvent.target.value = ''
+        }
+    }
+
     const sendAndClose = async (
-        e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>,
+        e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => {
         e.preventDefault()
 
@@ -613,21 +556,21 @@ const NewPostForm: FC<NewPostProps> = ({
             if (isComparePost()) {
                 const leftUrl = isValidURL(textToCompareLeft || '')
                 if (leftUrl && leftUrl.length > 1 && !imageToCompareLeft) {
-                    await checkPreviewImage(leftUrl).then(async res => {
+                    await checkPreviewImage(leftUrl).then(async (res) => {
                         await leftComparePreviewImagecallBack(res)
                     })
                 }
 
                 const rightUrl = isValidURL(textToCompareRight || '')
                 if (rightUrl && rightUrl.length > 1 && !imageToCompareRight) {
-                    await checkPreviewImage(rightUrl).then(async res => {
+                    await checkPreviewImage(rightUrl).then(async (res) => {
                         await rightComparePreviewImagecallBack(res)
                     })
                 }
             }
             const url = isValidURL(descriptionRef?.current?.value || '')
             if (url && url.length > 1 && !imageToPost) {
-                await checkPreviewImage(url).then(async res => {
+                await checkPreviewImage(url).then(async (res) => {
                     await previewImagecallBack(res)
                 })
             } else {
@@ -687,18 +630,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         placeholder={questPlaceholder}
                         maxLength={shortLimit}
                         onKeyPress={preventDefaultOnEnter}
-                        onChange={e => {
-                            if (errors?.question?.type) {
-                                clearErrors()
-                            }
-                            const isURL = isValidURL(e.target.value)
-                            if (isURL) {
-                                e.target.value = e.target.value.replace(
-                                    isURL,
-                                    '',
-                                )
-                            }
-                        }}
+                        onChange={handleInputChange}
                     />
                 </div>
                 {/* Warning message on Title */}
@@ -751,12 +683,12 @@ const NewPostForm: FC<NewPostProps> = ({
                         </button>
                     </Tooltip>
                     {/* Trigger compare */}
-                    <Tooltip toolTipText={'Add Poll'}>
+                    <Tooltip toolTipText={'Compare'}>
                         <button
                             onClick={handleCompareClick}
                             className={postFormClass.imageButton}
                             aria-expanded={expanded}
-                            aria-label="poll"
+                            aria-label="compare"
                         >
                             <UilBalanceScale />
                         </button>
@@ -773,33 +705,211 @@ const NewPostForm: FC<NewPostProps> = ({
             </div>
 
             {/* Show preview of the image and click it to remove the image from the post */}
-            {imageToPost && (
+            {(imageToPost || imageToCompareLeft || imageToCompareRight) && (
                 <div className={postFormClass.previewDiv}>
-                    <div className={postFormClass.imagePreview}>
-                        <img
-                            className={postFormClass.image}
-                            src={imageToPost as string} // Pass image to src
-                            alt=""
-                        />
-                        <UilTimesCircle
-                            className={postFormClass.removeImageButton}
-                            onClick={() => setImageToPost(null)}
-                        />
-                    </div>
+                    {[imageToPost, imageToCompareLeft, imageToCompareRight].map(
+                        (img, idx) => {
+                            if (img) {
+                                return (
+                                    <div
+                                        key={idx}
+                                        className={postFormClass.imagePreview}
+                                    >
+                                        <img
+                                            className={postFormClass.image}
+                                            src={img as string} // Pass image to src
+                                            alt=""
+                                        />
+                                        <UilTimesCircle
+                                            className={
+                                                postFormClass.removeImageButton
+                                            }
+                                            onClick={() => removeImage(idx)}
+                                        />
+                                    </div>
+                                )
+                            }
+                        }
+                    )}
                 </div>
             )}
 
-            <Collapse
-                className="px-2"
-                in={expanded}
-                timeout="auto"
-                unmountOnExit
-            >
-                <_CompareChooseTypeForm
-                    handleLeftUpload={handleCompareLeftUpload}
-                    handleRightUpload={handleCompareRightUpload}
-                    ref={compareFilePickers}
-                />
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <div className={postFormClass.imageComparisonDiv}>
+                    <div className={postFormClass.form}>
+                        {/* Option A */}
+                        <div className="inline-flex">
+                            {imageToCompareLeft ? (
+                                <p className={postFormClass.imageSelectedText}>
+                                    Option 1:{' '}
+                                    <span
+                                        className={
+                                            postFormClass.imageSelectedSpan
+                                        }
+                                    >
+                                        image selected
+                                    </span>
+                                </p>
+                            ) : (
+                                <>
+                                    {/* Text input A */}
+                                    <div
+                                        className={
+                                            postFormClass.formCompareText
+                                        }
+                                    >
+                                        <input
+                                            className={
+                                                postFormClass.formQuestionInput
+                                            }
+                                            type="text"
+                                            placeholder="Option 1"
+                                            onKeyPress={preventDefaultOnEnter}
+                                            onChange={(e) => {
+                                                setTextToCompareLeft(
+                                                    e.target.value
+                                                )
+                                            }}
+                                            value={textToCompareLeft}
+                                            maxLength={shortLimit}
+                                        />
+                                    </div>
+
+                                    {/* Image input A */}
+                                    {!textToCompareLeft && (
+                                        <>
+                                            <p className={postFormClass.orText}>
+                                                or
+                                            </p>
+                                            <button
+                                                className={
+                                                    postFormClass.compareUpload
+                                                }
+                                                onClick={() =>
+                                                    filePickerCompareLeftRef?.current?.click()
+                                                }
+                                            >
+                                                Upload Image
+                                                <input
+                                                    ref={
+                                                        filePickerCompareLeftRef
+                                                    }
+                                                    onChange={
+                                                        handleCompareLeftUpload
+                                                    }
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onKeyPress={
+                                                        preventDefaultOnEnter
+                                                    }
+                                                    hidden
+                                                />
+                                            </button>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                        {isImageSizeLarge && (
+                            <FlashErrorMessage
+                                message={`Image should be less then 10 MB`}
+                                ms={warningTime}
+                                style={postFormClass.imageSizeAlert}
+                                onClose={() => setIsImageSizeLarge(false)}
+                            />
+                        )}
+                        {/* Option B */}
+                        <div className="inline-flex">
+                            {imageToCompareRight ? (
+                                <p className={postFormClass.imageSelectedText}>
+                                    Option 2:{' '}
+                                    <span
+                                        className={
+                                            postFormClass.imageSelectedSpan
+                                        }
+                                    >
+                                        image selected
+                                    </span>
+                                </p>
+                            ) : (
+                                <>
+                                    <div
+                                        className={
+                                            postFormClass.formCompareText
+                                        }
+                                    >
+                                        {/* Text input B */}
+                                        <input
+                                            className={
+                                                postFormClass.formQuestionInput
+                                            }
+                                            // ref={textCompareRightRef}
+                                            type="text"
+                                            placeholder="Option 2"
+                                            onKeyPress={preventDefaultOnEnter}
+                                            onChange={(e) => {
+                                                setTextToCompareRight(
+                                                    e.target.value
+                                                )
+                                            }}
+                                            value={textToCompareRight}
+                                            maxLength={shortLimit}
+                                        />
+                                    </div>
+
+                                    {/* Image input B */}
+                                    {!textToCompareRight && (
+                                        <>
+                                            <p className={postFormClass.orText}>
+                                                or
+                                            </p>
+                                            <button
+                                                className={
+                                                    postFormClass.compareUpload
+                                                }
+                                                onClick={() =>
+                                                    filePickerCompareRightRef?.current?.click()
+                                                }
+                                            >
+                                                Upload Image
+                                                <input
+                                                    ref={
+                                                        filePickerCompareRightRef
+                                                    }
+                                                    onChange={
+                                                        handleCompareRightUpload
+                                                    }
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onKeyPress={
+                                                        preventDefaultOnEnter
+                                                    }
+                                                    hidden
+                                                />
+                                            </button>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                        {isImageSizeLarge && (
+                            <FlashErrorMessage
+                                message={`Image should be less then 10 MB`}
+                                ms={warningTime}
+                                style={postFormClass.imageSizeAlert}
+                                onClose={() => setIsImageSizeLarge(false)}
+                            />
+                        )}
+                        {errors.compare &&
+                            errors.compare.type === 'required' && (
+                                <FlashErrorMessage
+                                    message={errors.compare.message}
+                                    ms={warningTime}
+                                    style={postFormClass.formAlert}
+                                />
+                            )}
+                    </div>
+                </div>
             </Collapse>
 
             {/* Cancel / Submit buttons */}
@@ -812,32 +922,16 @@ const NewPostForm: FC<NewPostProps> = ({
                     addStyle={postFormClass.cancelButton}
                     onClick={closeModal}
                 />
-                {expanded && !hasPreviewed && compareType != 'chooseType' ? (
-                    <Button
-                        text="Preview"
-                        keepText={true}
-                        icon={<UilNavigator />}
-                        type="button"
-                        disabled={isMissingDataForPreview() ? true : false}
-                        addStyle={
-                            postFormClass.PostButton +
-                            (isMissingDataForPreview()
-                                ? ' cursor-not-allowed opacity-50'
-                                : '')
-                        }
-                        onClick={() => setHasPreviewed(true)}
-                    />
-                ) : (
-                    <Button
-                        text="Post"
-                        keepText={true}
-                        icon={<UilNavigator />}
-                        type="submit"
-                        addStyle={postFormClass.PostButton}
-                        onClick={sendAndClose}
-                        onKeyPress={handleKeyPress}
-                    />
-                )}
+                <Button
+                    text="Post"
+                    keepText={true}
+                    icon={<UilNavigator />}
+                    type="submit"
+                    addStyle={postFormClass.PostButton}
+                    onClick={sendAndClose}
+                    onKeyPress={handleKeyPress}
+                    disabled={isTitleURL}
+                />
             </div>
         </div>
     )

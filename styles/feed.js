@@ -65,13 +65,13 @@ export const postCardClass = {
         'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line break-words',
     // Media
     voteDiv: 'flex px-md space-x-lg mx-xl',
-    voteContainer: 'flex flex-col w-full items-center space-y-sm',
+    voteContainer: 'flex flex-col w-full items-center space-y-md truncate',
     imageVote: 'flex rounded-[8px] object-contain cursor-pointer m-auto',
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
     textVote:
-        'bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 \
-        rounded-sm shadow-sm shadow-black/30  dark:shadow-black/50 whitespace-pre-wrap',
+        'bg-neutral-50 dark:bg-neutralDark-400 \
+    shadow-sm shadow-black/30  dark:shadow-black/50',
     voteButton:
         'p-sm justify-center \
             hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary \
@@ -110,11 +110,11 @@ export const postOptionsDropdownClass = {
 }
 
 export const postFormClass = {
-    modalDiv: 'flex-col bg-white dark:bg-neutralDark-500 md:w-136',
+    modalDiv: 'flex-col bg-white dark:bg-neutralDark-500',
     dialogTitle:
         'inline-flex w-full justify-between px-2 py-md text-lg font-bold  text-neutral-800 dark:text-neutralDark-50',
     // Form
-    form: 'flex flex-col p-sm space-y-3',
+    form: 'flex flex-col p-sm space-y-3 lg:w-136',
     formQuestion:
         'border-solid border-[1px] border-neutral-300 \
             focus-within:border-primary focus-visible:border-primary active:border-neutral-300\
@@ -128,7 +128,7 @@ export const postFormClass = {
     formDescriptionInput:
         'resize-none w-full h-28 bg-transparent flex-grow py-2 px-5\
             focus:outline-none text-sm',
-    uploadBar: 'inline-flex flex-col w-full space-y-3 px-2 py-md',
+    uploadBar: 'inline-flex flex-col w-full space-y-3 px-2 pt-md pb-xl',
     imageSizeAlert:
         'inline-flex items-center m-0 text-sm text-alert dark:text-alert',
     formCompareText:
@@ -141,7 +141,7 @@ export const postFormClass = {
         'inline-flex items-center px-md text-neutral-700 dark:text-neutralDark-150',
     orText: 'inline-flex items-center px-md',
     imageSelectedSpan: 'italic ml-2',
-    cancelSubmitDiv: 'inline-flex w-full space-x-3 px-2 pt-md',
+    cancelSubmitDiv: 'inline-flex w-full space-x-3 px-2',
     // Media
     previewDiv: 'inline-flex px-2 space-x-md',
     imagePreview: 'flex flex-col items-center',
@@ -172,41 +172,6 @@ export const toggleIncognitoClass = {
     switchButton:
         'rounded-full inline-block w-6 h-6 transform bg-white \
         transition ease-in-out duration-300',
-}
-
-export const compareFormClass = {
-    container: 'flex flex-col',
-    header: 'inline-flex font-bold items-center justify-between pb-md',
-    cancelButton:
-        'p-1 text-error rounded-full inline-flex font-bold items-center \
-        hover:scale-110 dark:hover:scale-110',
-    tab: 'flex flex-col w-full h-fit rounded-md border border-1 border-neutralDark-150 divide-y divide-neutralDark-150',
-    formContainer:
-        'grid grid-cols-1 md:grid-cols-2 grid-rows-auto gap-x-sm gap-y-sm p-sm',
-    // choose Type subform
-    chooseTypeToolbar:
-        'inline-flex p-sm space-x-sm divide-x divide-neutralDark-150',
-    chooseTypeChild:
-        'inline-flex items-center cursor-pointer text-xs sm:text-sm md:text-base',
-    // Text only subform
-    smallGreyText: 'text-sm text-neutral-700 dark:text-neutralDark-50',
-    textInputDiv: 'rounded-[8px] bg-primary/25 dark:bg-primaryDark/25',
-    textInput:
-        'resize-none w-full h-xxl bg-transparent flex-grow py-2 px-5 \
-        focus:outline-none text-sm max-h-[100px] scrollbar-hide',
-    caption:
-        'resize-none w-full h-xl bg-transparent flex-grow py-2 px-5 \
-        focus:outline-none text-sm max-h-[100px] scrollbar-hide',
-    previewText: 'm-auto w-full flex-grow',
-    // Image only subform
-    uploadButton:
-        'inline-flex space-x-sm items-center text-neutral-700 dark:text-neutralDark-150 \
-        hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
-        hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary \
-        dark:active:text-primaryDark',
-    undoChoice:
-        'flex mt-md mx-auto cursor-pointer text-neutral-700 hover:text-error',
-    image: 'flex rounded-[8px] w-48 object-contain',
 }
 
 // Comments

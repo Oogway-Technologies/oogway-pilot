@@ -12,25 +12,25 @@ interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: FC<ToolbarButtonProps> = (
-    props: ToolbarButtonProps & { children?: ReactNode | undefined },
+    props: ToolbarButtonProps & { children?: ReactNode | undefined }
 ) => {
     const {
         icon,
-        disabled,
         keepText = false,
         forceNoText,
         text = '',
         addStyle = '',
         onClick,
         type = 'button',
+        disabled,
     } = props
     const isMobile = useMediaQuery('(max-width: 965px)')
     return (
         <button
             type={type}
-            disabled={disabled}
             onClick={onClick}
             className={'inline-flex ' + addStyle}
+            disabled={disabled}
         >
             {icon}{' '}
             {!forceNoText && (
