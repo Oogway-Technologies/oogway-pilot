@@ -678,7 +678,13 @@ const NewPostForm: FC<NewPostProps> = ({
             {/* Question form */}
             <form className={postFormClass.form}>
                 {/* Question: required */}
-                <div className={postFormClass.formQuestion}>
+                <div
+                    className={`${postFormClass.formQuestion} ${
+                        isTitleURL
+                            ? ' border-error focus-within:border-error focus-visible:border-error active:border-error'
+                            : ''
+                    }`}
+                >
                     <input
                         className={postFormClass.formQuestionInput}
                         type="text"
@@ -687,24 +693,13 @@ const NewPostForm: FC<NewPostProps> = ({
                         placeholder={questPlaceholder}
                         maxLength={shortLimit}
                         onKeyPress={preventDefaultOnEnter}
-                        onChange={e => {
-                            if (errors?.question?.type) {
-                                clearErrors()
-                            }
-                            const isURL = isValidURL(e.target.value)
-                            if (isURL) {
-                                e.target.value = e.target.value.replace(
-                                    isURL,
-                                    '',
-                                )
-                            }
-                        }}
+                        onChange={handleInputChange}
                     />
                 </div>
                 {/* Warning message on Title */}
                 {isTitleURL && (
                     <FlashErrorMessage
-                        message={'Question should not be a URL'}
+                        message={'URLs are not allowed in question'}
                         ms={100000}
                         style={postFormClass.formAlert}
                     />
