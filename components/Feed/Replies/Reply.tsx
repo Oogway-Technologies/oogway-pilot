@@ -1,10 +1,13 @@
-import { replyClass } from '../../../styles/feed'
+import { commentClass, replyClass } from '../../../styles/feed'
 import ReplyHeader from './ReplyHeader'
 import ReplyEngagementBar from './ReplyEngagementBar'
 import firebase from 'firebase/compat/app'
 import { staticPostData } from '../../../utils/types/params'
 import { PreviewDecider } from '../../Utils/PreviewDecider'
 import { isValidURL } from '../../../utils/helpers/common'
+import Linkify from 'react-linkify'
+import { Link } from '@mui/material'
+import React from 'react'
 
 type ReplyProps = {
     replyOwner: string
@@ -42,9 +45,35 @@ const Reply: React.FC<ReplyProps> = ({
                 <div className={replyClass.dividerRight}>
                     {/* Body */}
                     <div className={replyClass.body}>
-                        <p className={replyClass.bodyDescription}>
-                            {reply.message}
-                        </p>
+                        {isValidURL(reply.message) ? (
+                            <Linkify
+                                componentDecorator={(
+                                    decoratedHref,
+                                    decoratedText,
+                                    key,
+                                ) => (
+                                    <Link
+                                        className={
+                                            replyClass.bodyDescription + ' ml-0'
+                                        }
+                                        target="blank"
+                                        href={decoratedHref}
+                                        key={key}
+                                    >
+                                        {decoratedText}
+                                    </Link>
+                                )}
+                            >
+                                <p className={replyClass.bodyDescription}>
+                                    {reply.message}
+                                </p>
+                            </Linkify>
+                        ) : (
+                            <p className={replyClass.bodyDescription}>
+                                {reply.message}
+                            </p>
+                        )}
+
                         {isValidURL(reply.message || '') && (
                             <PreviewDecider
                                 textToDetect={reply.message || ''}
