@@ -102,7 +102,16 @@ const _CompareChooseTypeForm = React.forwardRef<
                             onClick={goToTextForm}
                         >
                             <UilTextFields size={isMobile ? '15' : '20'} />
-                            <div className="text-xs ml-sm">Text</div>
+                            <div
+                                className={
+                                    'text-xs ml-sm' +
+                                    (compareType === 'textOnly'
+                                        ? ' font-bold'
+                                        : '')
+                                }
+                            >
+                                Text
+                            </div>
                         </div>
                         <div
                             className={
@@ -111,7 +120,16 @@ const _CompareChooseTypeForm = React.forwardRef<
                             onClick={goToImageForm}
                         >
                             <UilImageUpload size={isMobile ? '15' : '20'} />
-                            <div className="text-xs ml-sm">Image</div>
+                            <div
+                                className={
+                                    'text-xs ml-sm' +
+                                    (compareType === 'imageOnly'
+                                        ? ' font-bold'
+                                        : '')
+                                }
+                            >
+                                Image
+                            </div>
                         </div>
                         <div></div>
                     </div>
