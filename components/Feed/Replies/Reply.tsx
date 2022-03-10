@@ -1,8 +1,10 @@
-import {replyClass} from '../../../styles/feed'
+import { replyClass } from '../../../styles/feed'
 import ReplyHeader from './ReplyHeader'
 import ReplyEngagementBar from './ReplyEngagementBar'
 import firebase from 'firebase/compat/app'
 import { staticPostData } from '../../../utils/types/params'
+import { PreviewDecider } from '../../Utils/PreviewDecider'
+import { isValidURL } from '../../../utils/helpers/common'
 
 type ReplyProps = {
     replyOwner: string
@@ -14,13 +16,13 @@ type ReplyProps = {
 }
 
 const Reply: React.FC<ReplyProps> = ({
-                                         replyOwner,
-                                         postId,
-                                         commentId,
-                                         replyId,
-                                         reply,
-                                         parentPostData,
-                                     }) => {
+    replyOwner,
+    postId,
+    commentId,
+    replyId,
+    reply,
+    parentPostData,
+}) => {
     return (
         <div className={replyClass.outerDiv}>
             {/* Header */}
@@ -36,13 +38,18 @@ const Reply: React.FC<ReplyProps> = ({
             />
 
             <div className={replyClass.innerDiv}>
-                <div className={replyClass.dividerLeft}/>
+                <div className={replyClass.dividerLeft} />
                 <div className={replyClass.dividerRight}>
                     {/* Body */}
                     <div className={replyClass.body}>
                         <p className={replyClass.bodyDescription}>
                             {reply.message}
                         </p>
+                        {isValidURL(reply.message || '') && (
+                            <PreviewDecider
+                                textToDetect={reply.message || ''}
+                            />
+                        )}
                     </div>
 
                     {/* Engagement */}
