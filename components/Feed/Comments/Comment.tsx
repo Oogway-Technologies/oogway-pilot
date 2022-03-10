@@ -83,7 +83,7 @@ const Comment: FC<CommentProps> = ({
                     </div>
                 )}
 
-                {/* Engagement */}
+                {/* Engagement Form */}
                 <CommentEngagementBar
                     postId={postId}
                     commentId={commentId}
