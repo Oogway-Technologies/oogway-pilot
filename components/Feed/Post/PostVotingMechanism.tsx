@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../../../firebase'
-import { postCardClass } from '../../../styles/feed'
+import { compareFormClass, postCardClass } from '../../../styles/feed'
 // @ts-ignore
 import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import { userProfileState } from '../../../atoms/user'
@@ -14,9 +14,10 @@ import {
     winnerCall,
 } from '../../../utils/helpers/common'
 import { MediaObject } from '../../../utils/types/global'
+import YoutubeEmbed from '../../Utils/YoutubeEmbed'
 
 type PostVotingMechanismProps = {
-    authorUid : string
+    authorUid: string
     id: string
     compareData: Array<MediaObject>
     votesList: number[]
@@ -30,7 +31,7 @@ const PostVotingMechanism = ({
 }: PostVotingMechanismProps) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
-    
+
     // Track voting button state
     const [winningChoice, setWinningChoice] = useState(-1) // Instantiate to value that's not possible
     const [userVoteChoice, setUserVoteChoice] = useState(-1) // Instantiate to value that's never in index
@@ -48,7 +49,7 @@ const PostVotingMechanism = ({
     useEffect(() => {
         const unsubscribe = streamPostData(
             id,
-            (snapshot) => {
+            snapshot => {
                 const postData = snapshot.data()
                 // prevent error on compare post deletion
                 if (postData) {
@@ -83,9 +84,9 @@ const PostVotingMechanism = ({
                     }
                 }
             },
-            (error) => {
+            error => {
                 console.log(error)
-            }
+            },
         )
 
         // Stop listening
@@ -100,7 +101,7 @@ const PostVotingMechanism = ({
         // Add a vote, for this user, to one of the images
         let docRef = db.collection('posts').doc(id)
 
-        return db.runTransaction(async (transaction) => {
+        return db.runTransaction(async transaction => {
             const doc = await transaction.get(docRef)
             const postData = doc.data()
             if (postData) {
@@ -140,7 +141,7 @@ const PostVotingMechanism = ({
                 return (
                     <div key={idx} className={postCardClass.voteContainer}>
                         {obj.image && obj.image.length > 1 ? (
-                            <div className="flex h-full">
+                            <div className="w-full h-fit">
                                 <img
                                     className={
                                         postCardClass.imageVote +
@@ -156,28 +157,35 @@ const PostVotingMechanism = ({
                                     }}
                                     alt=""
                                 />
+                                {obj.label && (
+                                    <div
+                                        className={
+                                            postCardClass.textVote + ' mt-sm'
+                                        }
+                                    >
+                                        <div
+                                            className={
+                                                'm-auto' +
+                                                (obj.label.split('').length > 20
+                                                    ? ' break-words text-center truncate p-sm'
+                                                    : ' inline-flex w-full justify-center p-sm')
+                                            }
+                                        >
+                                            {obj.label}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ) : parseYoutubeVideoId(obj.text) ? (
-                            <div
-                                className={
-                                    'm-2' +
-                                    (winnerCall(votesList) === idx &&
+                            <YoutubeEmbed
+                                text={obj.text}
+                                addStyle={
+                                    winnerCall(votesList) === idx &&
                                     userVoteChoice != -1
                                         ? ' border-4 border-primary'
-                                        : '')
+                                        : ''
                                 }
-                            >
-                                <iframe
-                                    src={`https://www.youtube.com/embed/${parseYoutubeVideoId(
-                                        obj.text
-                                    )}`}
-                                    frameBorder="0"
-                                    allow="autoplay; encrypted-media"
-                                    allowFullScreen
-                                    title="video"
-                                    className={'w-full h-full'}
-                                />
-                            </div>
+                            />
                         ) : (
                             obj.previewImage &&
                             obj.previewImage.length > 1 && (
@@ -205,7 +213,7 @@ const PostVotingMechanism = ({
                                 componentDecorator={(
                                     decoratedHref,
                                     decoratedText,
-                                    key
+                                    key,
                                 ) => (
                                     <a
                                         className={
@@ -218,7 +226,7 @@ const PostVotingMechanism = ({
                                                 : ' text-neutral-700 dark:text-neutralDark-150') +
                                             (obj.text.split('').length > 20 &&
                                             isValidURL(obj.text)
-                                                ? ' text-start truncate w-full p-sm'
+                                                ? ' text-center truncate p-sm'
                                                 : ' text-center inline-flex w-full justify-center p-sm') +
                                             (winnerCall(votesList) === idx &&
                                             userVoteChoice != -1
@@ -255,7 +263,8 @@ const PostVotingMechanism = ({
                                             ? ' text-start truncate w-full p-sm'
                                             : ' inline-flex w-full justify-center p-sm') +
                                         (winnerCall(votesList) === idx &&
-                                        (userVoteChoice != -1 || authorUid == userProfile.uid)
+                                        (userVoteChoice != -1 ||
+                                            authorUid == userProfile.uid)
                                             ? ' border-4 border-primary'
                                             : '')
                                     }
@@ -268,7 +277,15 @@ const PostVotingMechanism = ({
                             )
                         )}
                         {user && (
-                            <div className={postCardClass.voteButtonContainer}>
+                            <div
+                                className={
+                                    postCardClass.voteButtonContainer +
+                                    (winningChoice === idx &&
+                                    userVoteChoice != -1
+                                        ? ' shadow-lg shadow-black/10 dark:shadow-neutralDark-150/20'
+                                        : '')
+                                }
+                            >
                                 <button
                                     className={
                                         postCardClass.voteButton +
@@ -285,7 +302,8 @@ const PostVotingMechanism = ({
                                         ? voteButtonLeft
                                         : voteButtonRight}
                                 </button>
-                                {(userVoteChoice != -1 || authorUid == userProfile.uid) && (
+                                {(userVoteChoice != -1 ||
+                                    authorUid == userProfile.uid) && (
                                     <p className={postCardClass.voteCounter}>
                                         {votesList[idx]}{' '}
                                         {votesList[idx] == 1 ? 'vote' : 'votes'}
