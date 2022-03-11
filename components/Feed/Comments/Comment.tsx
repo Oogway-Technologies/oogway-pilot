@@ -159,6 +159,7 @@ const Comment: FC<CommentProps> = ({
                 }
                 show={isOpen}
                 onClose={closeModal}
+                className={'w-full'}
             />
         </>
     )

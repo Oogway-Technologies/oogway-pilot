@@ -90,7 +90,7 @@ export const profileButtonClass = {
 }
 
 export const navLinksClass = {
-    li: 'flex text-xs pt-2 pb-[6px] md:text-base hover:font-bold',
+    li: 'flex pt-2 pb-[6px] text-base hover:font-bold mx-3',
 }
 
 export const userDropdownClass = {
