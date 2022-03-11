@@ -1,20 +1,26 @@
-import React, {MouseEvent, useEffect, useRef, useState} from 'react'
-import {useForm} from 'react-hook-form'
-import {db} from '../../../firebase'
+import React, { MouseEvent, useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { db } from '../../../firebase'
 // @ts-ignore
-import {UilCommentPlus} from '@iconscout/react-unicons'
-import {useRouter} from 'next/router'
+import { UilCommentPlus } from '@iconscout/react-unicons'
+import { useRouter } from 'next/router'
 import firebase from 'firebase/compat/app'
-import {replyFormClass} from '../../../styles/feed'
+import { replyFormClass } from '../../../styles/feed'
 import Button from '../../Utils/Button'
 import needsHook from '../../../hooks/needsHook'
-import {addDoc, collection, doc, serverTimestamp, setDoc,} from 'firebase/firestore'
-import {Avatar} from '@mui/material'
-import {useRecoilValue} from 'recoil'
-import {userProfileState} from '../../../atoms/user'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+} from 'firebase/firestore'
+import { Avatar } from '@mui/material'
+import { useRecoilValue } from 'recoil'
+import { userProfileState } from '../../../atoms/user'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import {FirebaseReply} from '../../../utils/types/firebase'
-import {longLimit, warningTime} from "../../../utils/constants/global";
+import { FirebaseReply } from '../../../utils/types/firebase'
+import { longLimit, warningTime } from '../../../utils/constants/global'
 
 type NewReplyFormProps = {
     commentId: string
@@ -24,11 +30,11 @@ type NewReplyFormProps = {
 }
 
 const NewReplyForm: React.FC<NewReplyFormProps> = ({
-                                                       commentId,
-                                                       closeModal,
-                                                       isMobile,
-                                                       placeholder,
-                                                   }) => {
+    commentId,
+    closeModal,
+    isMobile,
+    placeholder,
+}) => {
     const userProfile = useRecoilValue(userProfileState)
     const router = useRouter()
 
@@ -43,12 +49,12 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         register,
         unregister,
         setError,
-        formState: {errors},
+        formState: { errors },
     } = useForm()
 
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
-        register('reply', {required: true})
+        register('reply', { required: true })
         // clean up on unmount
         return () => unregister('reply')
     }, [unregister])
@@ -60,8 +66,8 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
         if (inputRef && !inputRef?.current?.value) {
             setError(
                 'reply',
-                {type: 'required', message: 'A reply is required.'},
-                {shouldFocus: true}
+                { type: 'required', message: 'A reply is required.' },
+                { shouldFocus: true }
             )
             return false
         }
@@ -78,12 +84,12 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             {
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             },
-            {merge: true}
+            { merge: true }
         )
 
         // Now add a new reply for this post
         let replyData: FirebaseReply = {
-            postId : router.query.id as string,
+            postId: router.query.id as string,
             parentId: commentId,
             isComment: false,
             timestamp: serverTimestamp(),
@@ -92,18 +98,12 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             authorUid: userProfile.uid,
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
         }
-        const docRef = await addDoc(
-            collection(
-                db,
-                `post-activity`
-            ),
-            replyData
-        )
+        const docRef = await addDoc(collection(db, `post-activity`), replyData)
 
         // Clear the input
         setLoading(false)
         if (inputRef.current) {
-            inputRef.current.style.height = '20px';
+            inputRef.current.style.height = '20px'
             inputRef.current.value = ''
         }
 
@@ -163,7 +163,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus/>}
+                        icon={<UilCommentPlus />}
                         type="submit"
                         onClick={addReply}
                         addStyle={replyFormClass.submitButton}
@@ -189,7 +189,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus/>}
+                        icon={<UilCommentPlus />}
                         type="submit"
                         onClick={addAndClose}
                         addStyle={replyFormClass.submitButton}

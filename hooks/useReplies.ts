@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { streamRepliesCollection } from '../lib/repliesHelper'
 
-
-export const useReplies = (postId: string , commentId: string) => {
+export const useReplies = (postId: string, commentId: string) => {
     // track replies
     const [repliesSnapshot, setRepliesSnapshot] = useState()
 
@@ -11,15 +10,17 @@ export const useReplies = (postId: string , commentId: string) => {
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
         const unsubscribe = streamRepliesCollection(
-            postId, 
+            postId,
             commentId,
-            (querySnapshot) => {
+            querySnapshot => {
                 // Fetch comments
                 setRepliesSnapshot(querySnapshot.docs)
             },
-            (error) => {console.log(error)}
+            error => {
+                console.log(error)
+            }
         )
-        return unsubscribe;
+        return unsubscribe
     }, [postId, commentId, setRepliesSnapshot])
 
     return [repliesSnapshot, setRepliesSnapshot] as const

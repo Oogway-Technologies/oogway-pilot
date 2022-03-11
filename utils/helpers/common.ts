@@ -6,7 +6,7 @@ export const findLikes = (snapshot: any, setNumLikes: (n: number) => void) => {
         // Count the entries that are True
         let ctr = 0
         // Count the entries that are True
-        Object.values(likesMap).forEach((item) => {
+        Object.values(likesMap).forEach(item => {
             if (item) {
                 ctr += 1
             }
@@ -29,7 +29,7 @@ export const checkFileSize = (files: FileList | null) => {
 
 //To connect frontend with backend
 export const fetcher = (url: string) =>
-    fetch(url).then((res) => {
+    fetch(url).then(res => {
         return res.json()
     })
 

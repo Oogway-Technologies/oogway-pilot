@@ -1,26 +1,32 @@
 // React
-import React, {MouseEvent, useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
+import React, { MouseEvent, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
 // Styles and Coomponents
 import Button from '../../Utils/Button'
 import DropdownMenu from '../../Utils/DropdownMenu'
 // @ts-ignore
-import {UilBan, UilEllipsisH, UilExclamationCircle, UilQuestionCircle, UilTrashAlt,} from '@iconscout/react-unicons'
+import {
+    UilBan,
+    UilEllipsisH,
+    UilExclamationCircle,
+    UilQuestionCircle,
+    UilTrashAlt,
+} from '@iconscout/react-unicons'
 import Modal from '../../Utils/Modal'
-import {Dialog} from '@headlessui/react'
-import {postOptionsDropdownClass} from '../../../styles/feed'
+import { Dialog } from '@headlessui/react'
+import { postOptionsDropdownClass } from '../../../styles/feed'
 
 // Recoil
-import {userProfileState} from '../../../atoms/user'
-import {useRecoilValue} from 'recoil'
+import { userProfileState } from '../../../atoms/user'
+import { useRecoilValue } from 'recoil'
 
 // Database
-import {getUserDoc} from '../../../lib/userHelper'
-import {updateDoc} from 'firebase/firestore'
+import { getUserDoc } from '../../../lib/userHelper'
+import { updateDoc } from 'firebase/firestore'
 
 // Queries
-import {useQueryClient} from 'react-query'
+import { useQueryClient } from 'react-query'
 
 // Utils
 import needsHook from '../../../hooks/needsHook'
@@ -44,13 +50,15 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
 
     // For triggering posts refetch on form submission
     const queryClient = useQueryClient()
-    
-    const authorName = authorProfile?.username ? authorProfile?.username : authorProfile?.name
+
+    const authorName = authorProfile?.username
+        ? authorProfile?.username
+        : authorProfile?.name
     // Track author blocked state
     // TODO: refactor to custom hook
     const [authorIsBlocked, setAuthorIsBlocked] = useState(false)
     useEffect(() => {
-        isUserBlocked(authorUid).then((result) => {
+        isUserBlocked(authorUid).then(result => {
             setAuthorIsBlocked(result)
         })
     }, [authorUid])
@@ -71,7 +79,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     }
 
     const isUserBlocked = async (authorUid: string) => {
-        const isBlocked = await currentUserDoc.then(async (doc) => {
+        const isBlocked = await currentUserDoc.then(async doc => {
             if (doc?.exists()) {
                 return authorUid in doc.data().blockedUsers
             } else {
@@ -93,7 +101,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         // Otherwise add blocked user uid to current user's
         // blockedUsers map
         await currentUserDoc
-            .then(async (doc) => {
+            .then(async doc => {
                 if (doc?.exists()) {
                     let tmp = doc.data()
                     tmp.blockedUsers[authorUid] = true
@@ -102,7 +110,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
                     console.log('User doc not retrieved')
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err)
             })
 
@@ -121,7 +129,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
         // Remove blocked user uid from current user's
         // blockedUser list
         await currentUserDoc
-            .then(async (doc) => {
+            .then(async doc => {
                 if (doc?.exists()) {
                     let tmp = doc.data()
                     delete tmp.blockedUsers[authorUid]
@@ -130,7 +138,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
                     console.log('User doc not retrieved')
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err)
             })
 
@@ -161,8 +169,8 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
                     as="div"
                     className={postOptionsDropdownClass.modalTitle}
                 >
-                    Are you sure you want to delete your {postType.toLowerCase()}? It will be gone
-                    forever.
+                    Are you sure you want to delete your{' '}
+                    {postType.toLowerCase()}? It will be gone forever.
                 </Dialog.Title>
 
                 {/* Cancel / Submit buttons */}

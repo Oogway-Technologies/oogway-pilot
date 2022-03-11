@@ -1,5 +1,5 @@
-import {doc, getDoc, onSnapshot} from "firebase/firestore";
-import {db} from "../firebase";
+import { doc, getDoc, onSnapshot } from 'firebase/firestore'
+import { db } from '../firebase'
 
 /**
  *
@@ -8,8 +8,8 @@ import {db} from "../firebase";
  */
 export const getPost = async (id: string) => {
     // Retrieve reference to parent post
-    const postRef = doc(db, "posts", id)
-    return await getDoc(postRef);
+    const postRef = doc(db, 'posts', id)
+    return await getDoc(postRef)
 }
 
 /**
@@ -24,6 +24,6 @@ export const streamPostData = (
     snapshot: (snap: any) => void,
     error: (err: any) => void
 ) => {
-    const postRef = doc(db, "posts", id)
+    const postRef = doc(db, 'posts', id)
     return onSnapshot(postRef, snapshot, error)
 }

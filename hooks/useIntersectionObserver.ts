@@ -10,14 +10,13 @@ interface useInstersectionObserverProps {
 }
 
 const useIntersectionObserver = ({
-  root,
-  target,
-  onIntersect,
-  threshold = 1.0,
-  rootMargin = '0px',
-  enabled = true,
+    root,
+    target,
+    onIntersect,
+    threshold = 1.0,
+    rootMargin = '0px',
+    enabled = true,
 }: useInstersectionObserverProps): void => {
-  
     useEffect(() => {
         if (!enabled) {
             return
@@ -47,4 +46,4 @@ const useIntersectionObserver = ({
     }, [target.current, enabled])
 }
 
-export default useIntersectionObserver;
+export default useIntersectionObserver

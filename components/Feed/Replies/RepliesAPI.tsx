@@ -13,22 +13,24 @@ type RepliesAPIProps = {
     parentPostData: staticPostData
 }
 
-const RepliesAPI: React.FC<RepliesAPIProps> = (
-    { commentId, parentPostData, }) => {
+const RepliesAPI: React.FC<RepliesAPIProps> = ({
+    commentId,
+    parentPostData,
+}) => {
     const router = useRouter()
 
     // Get a snapshot of the replies from the DB
     const [repliesSnapshot] = useCollection(
-        query(collection(db, "post-activity"), 
-        where("parentId", '==', commentId),  
-        where('isComment', '==', false),
-        orderBy('timestamp', 'asc')
+        query(
+            collection(db, 'post-activity'),
+            where('parentId', '==', commentId),
+            where('isComment', '==', false),
+            orderBy('timestamp', 'asc')
         ).withConverter(replyConverter)
-        
     )
     const showReplies = () => {
         if (repliesSnapshot) {
-            return repliesSnapshot?.docs.map((reply) => (
+            return repliesSnapshot?.docs.map(reply => (
                 <Reply
                     key={reply.id}
                     replyOwner={reply.data().authorUid}

@@ -4,7 +4,7 @@ import React, { FC, forwardRef } from 'react'
 import ContentLoader from 'react-content-loader'
 import { postCardClass } from '../../styles/feed'
 
-export const PostContent: FC = (props) => (
+export const PostContent: FC = props => (
     <ContentLoader
         speed={2}
         width={650}
@@ -43,7 +43,7 @@ export const GeneratePostCardLoaders: FC<GeneratePostCardLoaderProps> = ({
 
     return (
         <>
-            {nPosts.map((i) => {
+            {nPosts.map(i => {
                 ;<PostCardLoader key={i} />
             })}
         </>

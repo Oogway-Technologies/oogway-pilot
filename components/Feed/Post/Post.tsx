@@ -70,18 +70,18 @@ const PostCard: React.FC<PostProps> = ({
 
                     setURL(isValidURL(postData?.description))
                     setYouTubeURLID(
-                        parseYoutubeVideoId(postData?.description) || '',
+                        parseYoutubeVideoId(postData?.description) || ''
                     )
 
                     if (isComparePost(postData)) {
                         // Add a counter of votes for each object to compare.
                         // Note: this should generally be an array of 2 objects
                         let votesCounter = new Array(
-                            postData.compare.votesObjMapList.length,
+                            postData.compare.votesObjMapList.length
                         ).fill(0)
                         for (var i = 0; i < votesCounter.length; i++) {
                             votesCounter[i] = Object.keys(
-                                postData.compare.votesObjMapList[i],
+                                postData.compare.votesObjMapList[i]
                             ).length
                         }
 
@@ -95,7 +95,7 @@ const PostCard: React.FC<PostProps> = ({
             },
             err => {
                 console.log(err)
-            },
+            }
         )
 
         return () => unsubscribe()
@@ -129,7 +129,7 @@ const PostCard: React.FC<PostProps> = ({
                         componentDecorator={(
                             decoratedHref,
                             decoratedText,
-                            key,
+                            key
                         ) => (
                             <Link
                                 className={postCardClass.bodyDescription}

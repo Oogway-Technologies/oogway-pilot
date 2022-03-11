@@ -1,13 +1,13 @@
 import Timestamp from '../../Utils/Timestamp'
 import React from 'react'
 import needsHook from '../../../hooks/needsHook'
-import {postCardClass, replyHeaderClass} from '../../../styles/feed'
+import { postCardClass, replyHeaderClass } from '../../../styles/feed'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
-import {db} from '../../../firebase'
-import {Avatar} from '@mui/material'
-import {deleteDoc, doc} from 'firebase/firestore'
-import {useProfileData} from '../../../hooks/useProfileData'
-import {getAuthorName, getProfilePic} from '../../../lib/profileHelper'
+import { db } from '../../../firebase'
+import { Avatar } from '@mui/material'
+import { deleteDoc, doc } from 'firebase/firestore'
+import { useProfileData } from '../../../hooks/useProfileData'
+import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
 import { staticPostData } from '../../../utils/types/params'
 import { authorLabel } from '../../../utils/constants/global'
 type ReplyHeaderProps = {
@@ -36,11 +36,8 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
 
     // Deletes a reply
     const deleteReplyEntry = async () => {
-        const replyDocRef = doc(
-            db,
-            `post-activity/${replyId}`
-        )
-        await deleteDoc(replyDocRef).catch((err) => {
+        const replyDocRef = doc(db, `post-activity/${replyId}`)
+        await deleteDoc(replyDocRef).catch(err => {
             console.log('Cannot delete reply: ', err)
         })
 
@@ -56,9 +53,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                 <Avatar
                     onClick={needsHook}
                     className={replyHeaderClass.avatar}
-                    src={
-                        getProfilePic(authorProfile, parentPostData)
-                    }
+                    src={getProfilePic(authorProfile, parentPostData)}
                 />
 
                 {/* Split into two rows on mobile */}
@@ -66,11 +61,9 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            { getAuthorName(authorProfile, parentPostData) }
+                            {getAuthorName(authorProfile, parentPostData)}
                         </span>
-                        <span className="pl-sm font-bold">
-                            {authorLabel}
-                        </span>
+                        <span className="pl-sm font-bold">{authorLabel}</span>
                     </div>
 
                     <div className={postCardClass.leftMobileRowTwo}>
@@ -86,7 +79,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                     authorUid={authorUid}
                     authorProfile={authorProfile}
                     deletePost={deleteReplyEntry}
-                    postType='Reply'
+                    postType="Reply"
                 />
             </div>
         </div>

@@ -39,8 +39,8 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
         query(
             collection(db, 'posts'),
             where('uid', '==', uid),
-            orderBy('timestamp', 'desc'),
-        ),
+            orderBy('timestamp', 'desc')
+        )
     )
     return (
         <div className={profilePage.innerDiv}>
@@ -126,7 +126,7 @@ export const getServerSideProps: GetServerSideProps = async (
     context: GetServerSidePropsContext<
         ParsedUrlQuery,
         string | false | object | undefined
-    >,
+    >
 ) => {
     //Get userProfile of selected user from database.
     const userProfile: DocumentData | undefined = (

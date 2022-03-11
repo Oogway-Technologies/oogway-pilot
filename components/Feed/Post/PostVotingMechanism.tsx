@@ -86,7 +86,7 @@ const PostVotingMechanism = ({
             },
             error => {
                 console.log(error)
-            },
+            }
         )
 
         // Stop listening
@@ -213,7 +213,7 @@ const PostVotingMechanism = ({
                                 componentDecorator={(
                                     decoratedHref,
                                     decoratedText,
-                                    key,
+                                    key
                                 ) => (
                                     <a
                                         className={

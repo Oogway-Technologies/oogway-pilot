@@ -12,7 +12,7 @@ interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: FC<ToolbarButtonProps> = (
-    props: ToolbarButtonProps & { children?: ReactNode | undefined },
+    props: ToolbarButtonProps & { children?: ReactNode | undefined }
 ) => {
     const {
         icon,

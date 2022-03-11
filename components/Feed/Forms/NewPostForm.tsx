@@ -271,7 +271,7 @@ const NewPostForm: FC<NewPostProps> = ({
             setError(
                 'question',
                 { type: 'required', message: 'A question is required.' },
-                { shouldFocus: true },
+                { shouldFocus: true }
             )
             questionProvided = false
         }
@@ -286,7 +286,7 @@ const NewPostForm: FC<NewPostProps> = ({
                     message:
                         'You are missing required information to create a compare post.',
                 },
-                { shouldFocus: true },
+                { shouldFocus: true }
             )
             questionHasMedia = false
         }
@@ -313,7 +313,7 @@ const NewPostForm: FC<NewPostProps> = ({
         let postData: FirebasePost = {
             message: inputRef?.current?.value || '', // Leaving field name as message even though UI refers to it as a question
             description: amazonURLAppendQueryString(
-                descriptionRef?.current?.value || '',
+                descriptionRef?.current?.value || ''
             ), // Optional description
             previewImage: previewImage, // Saves preview Image from Link
             name: userProfile.username, // Change this with username or incognito
@@ -347,7 +347,7 @@ const NewPostForm: FC<NewPostProps> = ({
             await uploadString(
                 imageRef,
                 imageToPost as string,
-                'data_url',
+                'data_url'
             ).then(async () => {
                 // Get the download URL for the image
                 const downloadURL = await getDownloadURL(imageRef)
@@ -390,7 +390,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 await uploadString(
                     imageRef,
                     imageToCompareLeft as string,
-                    'data_url',
+                    'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
@@ -412,7 +412,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 await uploadString(
                     imageRef,
                     imageToCompareRight as string,
-                    'data_url',
+                    'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
                     const downloadURL = await getDownloadURL(imageRef)
@@ -467,7 +467,7 @@ const NewPostForm: FC<NewPostProps> = ({
             {
                 posts: { id: docRef.id },
             },
-            { merge: true },
+            { merge: true }
         )
 
         // Everything is done
@@ -602,7 +602,7 @@ const NewPostForm: FC<NewPostProps> = ({
     }
 
     const sendAndClose = async (
-        e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>,
+        e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => {
         e.preventDefault()
 

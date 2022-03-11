@@ -17,7 +17,7 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
     useEffect(() => {
         if (isValidURL(textToDetect)) {
             fetcher(
-                `/api/fetchPreviewData?urlToHit=${isValidURL(textToDetect)}`,
+                `/api/fetchPreviewData?urlToHit=${isValidURL(textToDetect)}`
             ).then(imageUrl => {
                 setIsUrlPreviewImage(imageUrl)
             })

@@ -81,7 +81,7 @@ const LoginForm: FC<LoginFormProps> = ({
                 inputEmailRef.current.value,
                 inputPasswordRef.current.value
             )
-            .then((userCredential) => {
+            .then(userCredential => {
                 // Signed in: not much to do here
                 // redirection happend on shate change from the _app
                 const user = userCredential.user

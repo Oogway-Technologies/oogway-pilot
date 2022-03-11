@@ -141,7 +141,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         // Set the profile so that it doesn't need reset
         const profileDoc = getProfileDoc(userProfile.uid)
         await profileDoc
-            .then(async (doc) => {
+            .then(async doc => {
                 if (doc?.exists()) {
                     // If profile needs reseting mark as reset
                     // i.e. upon registration
@@ -156,7 +156,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                     console.log('Error: userProfile.resetProfile not updated')
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err)
             })
 
@@ -178,7 +178,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         }
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
-        reader.onload = (readEvent) => {
+        reader.onload = readEvent => {
             setImageToUpload(readEvent?.target?.result)
             if (targetEvent) {
                 // Reset the event state so the user can reload
@@ -345,7 +345,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                     <div className="flex-col">
                         <div className={loginInputs.inputBorder}>
                             <input
-                                onChange={(e) => {
+                                onChange={e => {
                                     setName(e.target.value)
                                 }}
                                 onKeyPress={preventDefaultOnEnter}
@@ -368,7 +368,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                     <div className="flex-col">
                         <div className={loginInputs.inputBorder}>
                             <input
-                                onChange={(e) => {
+                                onChange={e => {
                                     setLast(e.target.value)
                                 }}
                                 onKeyPress={preventDefaultOnEnter}
@@ -393,7 +393,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                 <div className={loginInputs.inputHeader}>Username</div>
                 <div className={loginInputs.inputBorder}>
                     <input
-                        onChange={(e) => {
+                        onChange={e => {
                             setUsername(e.target.value)
                         }}
                         onKeyPress={preventDefaultOnEnter}
@@ -407,7 +407,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                 <div className={loginInputs.inputHeader}>Location</div>
                 <div className={loginInputs.inputBorder}>
                     <input
-                        onChange={(e) => {
+                        onChange={e => {
                             setLocation(e.target.value)
                         }}
                         onKeyPress={preventDefaultOnEnter}
@@ -421,7 +421,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                 <div className={loginInputs.inputHeader}>Bio</div>
                 <div className={loginInputs.inputBorder}>
                     <textarea
-                        onChange={(e) => {
+                        onChange={e => {
                             e.target.style.height = '0px'
                             e.target.style.height = e.target.scrollHeight + 'px'
                             setBio(e.target.value)

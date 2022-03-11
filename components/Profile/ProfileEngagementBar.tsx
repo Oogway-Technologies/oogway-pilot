@@ -1,45 +1,43 @@
-import React, {FC} from 'react'
+import React, { FC } from 'react'
 
-import {EngagementItems} from "../../utils/types/global";
-import Button from "../Utils/Button";
-import {profileEngagementBarClass} from "../../styles/profile";
+import { EngagementItems } from '../../utils/types/global'
+import Button from '../Utils/Button'
+import { profileEngagementBarClass } from '../../styles/profile'
 
 // @ts-ignore
-import {UilComment, UilEstate, UilThumbsUp, UilUsersAlt} from '@iconscout/react-unicons'
+import {
+    UilComment,
+    UilEstate,
+    UilThumbsUp,
+    UilUsersAlt,
+} from '@iconscout/react-unicons'
 
 interface ProfileEngagementBarProps {
-
     expanded: boolean
 }
 
 const ProfileEngagementBar: FC<ProfileEngagementBarProps> = ({}) => {
-
-
     // Items
     const engagementItems: EngagementItems[] = [
         {
-            icon: <UilEstate/>,
+            icon: <UilEstate />,
             text: 'Posts',
-            onClick: () => {
-            },
+            onClick: () => {},
         },
         {
-            icon: <UilComment/>,
+            icon: <UilComment />,
             text: 'Comments',
-            onClick: () => {
-            },
+            onClick: () => {},
         },
         {
-            icon: <UilThumbsUp/>,
+            icon: <UilThumbsUp />,
             text: 'Likes',
-            onClick: () => {
-            },
+            onClick: () => {},
         },
         {
-            icon: <UilUsersAlt/>,
+            icon: <UilUsersAlt />,
             text: '123 Following',
-            onClick: () => {
-            },
+            onClick: () => {},
         },
     ]
 

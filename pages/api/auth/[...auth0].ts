@@ -30,7 +30,7 @@ const afterCallback = async (req: any, res: any, session: any, state: any) => {
     const userCredential = await signInWithCustomToken(
         auth,
         firebaseResponse.firebaseToken
-    ).catch((error) => {
+    ).catch(error => {
         // Something went wrong trying to authenticate with Firebase
         const errorMessage = error.message
         console.log('error:', errorMessage)

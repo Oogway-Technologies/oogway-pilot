@@ -23,7 +23,7 @@ interface ProfileCardProps {
     joinedAt?: string
 }
 
-export const ProfileCard: FC<ProfileCardProps> = (props) => {
+export const ProfileCard: FC<ProfileCardProps> = props => {
     const {
         bio,
         location,
