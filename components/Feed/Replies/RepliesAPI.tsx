@@ -25,8 +25,8 @@ const RepliesAPI: React.FC<RepliesAPIProps> = ({
             collection(db, 'post-activity'),
             where('parentId', '==', commentId),
             where('isComment', '==', false),
-            orderBy('timestamp', 'asc'),
-        ).withConverter(replyConverter),
+            orderBy('timestamp', 'asc')
+        ).withConverter(replyConverter)
     )
 
     return (

@@ -67,7 +67,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             setError(
                 'reply',
                 { type: 'required', message: 'A reply is required.' },
-                { shouldFocus: true },
+                { shouldFocus: true }
             )
             return false
         }
@@ -84,11 +84,11 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             {
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             },
-            { merge: true },
+            { merge: true }
         )
 
         // Now add a new reply for this post
-        let replyData: FirebaseReply = {
+        const replyData: FirebaseReply = {
             postId: router.query.id as string,
             parentId: commentId,
             isComment: false,
@@ -98,7 +98,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             authorUid: userProfile.uid,
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
         }
-        const docRef = await addDoc(collection(db, `post-activity`), replyData)
+        await addDoc(collection(db, `post-activity`), replyData)
 
         // Clear the input
         setLoading(false)
@@ -149,7 +149,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                                 rows={1}
                                 maxLength={longLimit}
                                 onChange={(
-                                    e: React.ChangeEvent<HTMLTextAreaElement>,
+                                    e: React.ChangeEvent<HTMLTextAreaElement>
                                 ) => {
                                     e.target.style.height = '0px'
                                     e.target.style.height =

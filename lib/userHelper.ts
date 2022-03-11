@@ -1,5 +1,5 @@
-import {UserProfile} from "@auth0/nextjs-auth0/src/frontend/use-user";
-import {db} from "../firebase";
+import { UserProfile } from '@auth0/nextjs-auth0/src/frontend/use-user'
+import { db } from '../firebase'
 import {
     addDoc,
     collection,
@@ -10,16 +10,17 @@ import {
     query,
     serverTimestamp,
     setDoc,
-    where
-} from "firebase/firestore";
-import {FirebaseProfile, FirebaseUser} from "../utils/types/firebase";
-
+    where,
+} from 'firebase/firestore'
+import { FirebaseProfile, FirebaseUser } from '../utils/types/firebase'
 
 export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
     try {
         // Check if the Auth0-Firebase mapping is available
         // TODO: Check if the user is in the database and/or is defined
-        const checkIfUserExists = await getDocs(query(collection(db, "users"), where("auth0", "==", user.sub)));
+        const checkIfUserExists = await getDocs(
+            query(collection(db, 'users'), where('auth0', '==', user.sub))
+        )
 
         // Create user if it doesn't already exist
         if (!checkIfUserExists.docs.length) {
@@ -35,7 +36,10 @@ export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
                 blockedUsers: {}, // List of people blocked by the user
                 posts: {}, // List of posts the user has made,
             }
-            const newlyAddedUserRef = await addDoc(collection(db, "users"), newUser);
+            const newlyAddedUserRef = await addDoc(
+                collection(db, 'users'),
+                newUser
+            )
 
             // Create a new user profile using the same id as the
             // newly created user entry
@@ -48,21 +52,21 @@ export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
                 name: '',
                 profilePic: user.picture || '',
                 username: user.nickname || '',
-                uid: newlyAddedUserRef.id // store the user's id in profile so accessible in global state
+                uid: newlyAddedUserRef.id, // store the user's id in profile so accessible in global state
             }
-            await setDoc(doc(db, "profiles", newlyAddedUserRef.id), newProfile);
+            await setDoc(doc(db, 'profiles', newlyAddedUserRef.id), newProfile)
 
             // Create a new authenticated user in Firebase
 
             // Return the new profile
-            return newProfile;
+            return newProfile
         }
 
         // User already exists, fetch profile and return it
-        const profileId = checkIfUserExists.docs[0].id;
-        const userProfileDocRef = doc(db, "profiles", profileId);
-        const profileDocSnap = await getDoc(userProfileDocRef);
-        return profileDocSnap.data();
+        const profileId = checkIfUserExists.docs[0].id
+        const userProfileDocRef = doc(db, 'profiles', profileId)
+        const profileDocSnap = await getDoc(userProfileDocRef)
+        return profileDocSnap.data()
     } catch (e) {
         console.log(e)
     }
@@ -70,12 +74,12 @@ export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
 
 export const getUserDoc = async (id: string) => {
     if (!id) {
-        return null;
+        return null
     }
 
     try {
-        const userDocRef = doc(db, "users", id);
-        return await getDoc(userDocRef);
+        const userDocRef = doc(db, 'users', id)
+        return await getDoc(userDocRef)
     } catch (e) {
         console.log(e)
     }
@@ -87,7 +91,7 @@ export const getUserDocData = async (id: string) => {
             if (doc) {
                 return doc.data()
             } else {
-                return null;
+                return null
             }
         })
     } catch (e) {
@@ -95,10 +99,11 @@ export const getUserDocData = async (id: string) => {
     }
 }
 
-export const streamUserData = (id: string,
-                               snapshot: (snap: any) => void,
-                               error: (err: any) => void
+export const streamUserData = (
+    id: string,
+    snapshot: (snap: any) => void,
+    error: (err: any) => void
 ) => {
-    const userDocRef = doc(db, "users", id);
+    const userDocRef = doc(db, 'users', id)
     return onSnapshot(userDocRef, snapshot, error)
 }

@@ -67,7 +67,7 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
                 .then(() => {
                     setShowEmailSent(true)
                 })
-                .catch((e) => {
+                .catch(e => {
                     const errorCode = e.code
                     const errorMessage = e.message
                 })
@@ -156,7 +156,7 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
                         type="button"
                     />
                     <Button
-                        onClick={(e) => sendAndClose(e)}
+                        onClick={e => sendAndClose(e)}
                         addStyle={loginButtons.loginButtonStyle}
                         text="Send Link"
                         keepText={true}

@@ -50,7 +50,7 @@ const Reply: React.FC<ReplyProps> = ({
                                 componentDecorator={(
                                     decoratedHref,
                                     decoratedText,
-                                    key,
+                                    key
                                 ) => (
                                     <Link
                                         className={

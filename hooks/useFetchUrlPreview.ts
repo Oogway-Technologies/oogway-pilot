@@ -15,7 +15,7 @@ export const useFetchUrlPreview = (text: string) => {
         if (isValidURL(text) && !parseYoutubeVideoId(text)) {
             ;(async () => {
                 const res = await fetcher(
-                    `/api/fetchPreviewData?urlToHit=${text}`,
+                    `/api/fetchPreviewData?urlToHit=${text}`
                 )
                 setPreviewImage(res[0])
             })()

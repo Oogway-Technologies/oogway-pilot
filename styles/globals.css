@@ -3,26 +3,26 @@
 @tailwind utilities;
 
 @layer components {
-  .buttonText::after {
-    display: block;
-    content: attr(data-text);
-    content: attr(data-text) / "";
-    height: 0;
-    visibility: hidden;
-    font-weight: bold;
-  }
+    .buttonText::after {
+        display: block;
+        content: attr(data-text);
+        content: attr(data-text) / '';
+        height: 0;
+        visibility: hidden;
+        font-weight: bold;
+    }
 
-  .showPW {
-    content: "";
-    position: absolute;
-    left: 93%;
-    top: 12%;
-    bottom: 0;
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
-  }
-  .disabled-style:disabled{
-    opacity: 0.50;
-  }
+    .showPW {
+        content: '';
+        position: absolute;
+        left: 93%;
+        top: 12%;
+        bottom: 0;
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+    }
+    .disabled-style:disabled {
+        opacity: 0.5;
+    }
 }

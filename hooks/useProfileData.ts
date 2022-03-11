@@ -1,7 +1,6 @@
-import {useEffect, useState} from 'react'
-import {streamProfileData} from '../lib/profileHelper'
+import { useEffect, useState } from 'react'
+import { streamProfileData } from '../lib/profileHelper'
 import { FirebaseProfile } from '../utils/types/firebase'
-
 
 export const useProfileData = (id: string) => {
     // Track profile data
@@ -14,21 +13,20 @@ export const useProfileData = (id: string) => {
     useEffect(() => {
         const unsubscribe = streamProfileData(
             id,
-            (snapshot) => {
+            snapshot => {
                 if (snapshot.exists()) {
                     setProfileData({
-                        ...snapshot.data()
+                        ...snapshot.data(),
                     })
                 }
             },
-            (error) => {
+            error => {
                 console.log(error)
             }
         )
         return () => {
             unsubscribe()
         }
-
     }, [id])
 
     return [profileData, setProfileData] as const

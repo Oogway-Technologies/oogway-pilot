@@ -128,7 +128,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
                             inputEmailRef.current.value,
                             inputPasswordRef.current.value
                         )
-                        .then((userCredential) => {
+                        .then(userCredential => {
                             // Signed in: not much to do here,
                             // redirection happend on state change from the _app
                             const user = userCredential.user
@@ -145,7 +145,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
                                 resetProfile: true,
                             })
                         })
-                        .catch((error) => {
+                        .catch(error => {
                             console.log(error)
                         })
                 }

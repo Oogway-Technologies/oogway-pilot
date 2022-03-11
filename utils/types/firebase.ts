@@ -1,6 +1,10 @@
-import {DocumentData, FieldValue, QueryDocumentSnapshot, SnapshotOptions} from "firebase/firestore";
-import {MediaObject} from "./global";
-
+import {
+    DocumentData,
+    FieldValue,
+    QueryDocumentSnapshot,
+    SnapshotOptions,
+} from 'firebase/firestore'
+import { MediaObject } from './global'
 
 /**
  * Firebase collection field types
@@ -15,7 +19,6 @@ export type compare = {
     objList: Array<MediaObject>
     votesObjMapList: Array<userMap>
 }
-
 
 /**
  * Fire base collection interfaces
@@ -61,25 +64,25 @@ export interface FirebasePost {
 }
 
 export interface FirebaseUser {
-    email: string;
-    lastSeen: FieldValue;
-    name: string;
-    provider: string;
-    blockedUsers: blockedUsersMap;
-    posts: postsMap;
-    auth0: string;
+    email: string
+    lastSeen: FieldValue
+    name: string
+    provider: string
+    blockedUsers: blockedUsersMap
+    posts: postsMap
+    auth0: string
 }
 
 export interface FirebaseProfile {
-    bio: string;
-    dm: boolean;
-    lastName: string;
-    location: string;
-    name: string;
-    profilePic: string;
-    resetProfile: boolean;
-    username: string;
-    uid: string;
+    bio: string
+    dm: boolean
+    lastName: string
+    location: string
+    name: string
+    profilePic: string
+    resetProfile: boolean
+    username: string
+    uid: string
 }
 
 /**
@@ -87,8 +90,8 @@ export interface FirebaseProfile {
  * See: https://firebase.google.com/docs/reference/js/v8/firebase.firestore.FirestoreDataConverter
  */
 export const commmentConverter = {
-    toFirestore(comment: FirebaseComment) : DocumentData {
-        return { 
+    toFirestore(comment: FirebaseComment): DocumentData {
+        return {
             id: comment.id,
             postId: comment.postId,
             parentId: comment.parentId,
@@ -98,7 +101,7 @@ export const commmentConverter = {
             authorUid: comment.authorUid,
             likes: comment.likes,
             postImage: comment.postImage,
-            timestamp: comment.timestamp
+            timestamp: comment.timestamp,
         }
     },
     fromFirestore(
@@ -108,7 +111,7 @@ export const commmentConverter = {
         const data = snapshot.data(options)
         return {
             id: data.id,
-            postId : data.postId,
+            postId: data.postId,
             parentId: data.parentId,
             isComment: data.isComment,
             message: data.message,
@@ -116,13 +119,13 @@ export const commmentConverter = {
             authorUid: data.authorUid,
             likes: data.likes,
             postImage: data.postImage ? data.postImage : null,
-            timestamp: data.timestamp
+            timestamp: data.timestamp,
         }
-    }
+    },
 }
 
 export const replyConverter = {
-    toFirestore(reply: FirebaseReply) : DocumentData {
+    toFirestore(reply: FirebaseReply): DocumentData {
         return {
             id: reply.id,
             postId: reply.postId,
@@ -132,7 +135,7 @@ export const replyConverter = {
             author: reply.author,
             authorUid: reply.authorUid,
             likes: reply.likes,
-            timestamp: reply.timestamp
+            timestamp: reply.timestamp,
         }
     },
     fromFirestore(
@@ -149,7 +152,7 @@ export const replyConverter = {
             author: data.author,
             authorUid: data.authorUid,
             likes: data.likes,
-            timestamp: data.timestamp
+            timestamp: data.timestamp,
         }
-    }
+    },
 }

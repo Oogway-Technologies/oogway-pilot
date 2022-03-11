@@ -65,7 +65,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
         // if so show the comments.
         // If not, show the props comments
         if (commentsSnapshot) {
-            return commentsSnapshot?.docs.map((comment) => {
+            return commentsSnapshot?.docs.map(comment => {
                 return (
                     <Comment
                         key={comment.id}

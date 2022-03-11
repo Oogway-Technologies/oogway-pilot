@@ -1,6 +1,14 @@
-import { collection, doc, getDoc, getDocs, onSnapshot, where, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase";
-
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    onSnapshot,
+    where,
+    orderBy,
+    query,
+} from 'firebase/firestore'
+import { db } from '../firebase'
 
 /**
  *
@@ -10,8 +18,8 @@ import { db } from "../firebase";
  */
 export const getComment = async (postId: string, commentId: string) => {
     // Retrieve reference to parent post
-    const postRef = doc(db, "post-activity", commentId)
-    return await getDoc(postRef);
+    const postRef = doc(db, 'post-activity', commentId)
+    return await getDoc(postRef)
 }
 
 /**
@@ -21,8 +29,9 @@ export const getComment = async (postId: string, commentId: string) => {
  */
 export const getCommentsCollection = async (id: string) => {
     // Retrieve reference to parent post
-    return await getDocs(query(collection(db, "post-activity"), where("postId", "==", id)))
-    
+    return await getDocs(
+        query(collection(db, 'post-activity'), where('postId', '==', id))
+    )
 }
 
 /**
@@ -33,16 +42,16 @@ export const getCommentsCollection = async (id: string) => {
  * @description streams the comments collection real time and performs the snapshot function on it.
  */
 export const streamCommentsCollection = (
-        id: string, 
-        snapshot: (snap: any) => void, 
-        error: (err: any) => void
-    ) => {
-
-    const commentsQuery = query(collection(db, "post-activity"), 
-                                where("postId", '==', id),  
-                                where('isComment', '==', true),
-                                orderBy('timestamp', 'asc')
-                                )
+    id: string,
+    snapshot: (snap: any) => void,
+    error: (err: any) => void
+) => {
+    const commentsQuery = query(
+        collection(db, 'post-activity'),
+        where('postId', '==', id),
+        where('isComment', '==', true),
+        orderBy('timestamp', 'asc')
+    )
     return onSnapshot(commentsQuery, snapshot, error)
 }
 
@@ -55,12 +64,11 @@ export const streamCommentsCollection = (
  * @description streams the comment data real time and performs the snapshot function on it.
  */
 
- export const streamCommentData = (
-    commentId: string, 
-    snapshot: (snap: any) => void, 
+export const streamCommentData = (
+    commentId: string,
+    snapshot: (snap: any) => void,
     error: (err: any) => void
 ) => {
-    
     const commentRef = doc(db, `post-activity/${commentId}`)
     return onSnapshot(commentRef, snapshot, error)
 }

@@ -5,15 +5,9 @@ type ModalProps = {
     children: ReactNode
     show: boolean
     onClose: (value: boolean) => void
-    className?: string
 }
 
-const Modal: React.FC<ModalProps> = ({
-    children: content,
-    show,
-    onClose,
-    className,
-}) => {
+const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog
@@ -53,10 +47,8 @@ const Modal: React.FC<ModalProps> = ({
                         leaveTo="opacity-0 scale-95"
                     >
                         <div
-                            className={`justify-center items-center max-w-6xl p-6 my-8 overflow-hidden text-left
-                        transition-all transform bg-white dark:bg-neutralDark-500 shadow-xl rounded-2xl ${
-                            className ? className : ''
-                        }`}
+                            className="justify-center items-center max-w-6xl p-6 my-8 overflow-hidden text-left
+                        transition-all transform bg-white dark:bg-neutralDark-500 shadow-xl rounded-2xl"
                         >
                             {content}
                         </div>

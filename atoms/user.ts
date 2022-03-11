@@ -1,5 +1,5 @@
-import {atom} from "recoil";
-import {FirebaseProfile} from "../utils/types/firebase";
+import { atom } from 'recoil'
+import { FirebaseProfile } from '../utils/types/firebase'
 
 export const defaultProfile = {
     bio: '',
@@ -16,6 +16,6 @@ export const defaultProfile = {
 // userProfileState is an Atom, a global state
 // that can be accessed by any component
 export const userProfileState = atom<FirebaseProfile>({
-    key: "userProfileState", // unique ID of the global state atom
+    key: 'userProfileState', // unique ID of the global state atom
     default: defaultProfile, // default value to avoid warnings?
-});
+})

@@ -85,7 +85,7 @@ const Comment: FC<CommentProps> = ({
                             componentDecorator={(
                                 decoratedHref,
                                 decoratedText,
-                                key,
+                                key
                             ) => (
                                 <Link
                                     className={
