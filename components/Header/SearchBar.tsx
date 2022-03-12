@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
-import SearchBarButton from './SearchBarButton'
+
 import { searchBarClass } from '../../styles/header'
+import SearchBarButton from './SearchBarButton'
 
 interface SearchBarProps {
     placeholder: string

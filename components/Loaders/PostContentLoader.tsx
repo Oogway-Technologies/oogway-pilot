@@ -1,7 +1,8 @@
-import { Card, CardTypeMap } from '@mui/material'
-import { OverridableComponent } from '@mui/material/OverridableComponent'
+/* eslint-disable react/display-name */
+import { Card } from '@mui/material'
 import React, { FC, forwardRef } from 'react'
 import ContentLoader from 'react-content-loader'
+
 import { postCardClass } from '../../styles/feed'
 
 export const PostContent: FC = props => (
@@ -43,9 +44,9 @@ export const GeneratePostCardLoaders: FC<GeneratePostCardLoaderProps> = ({
 
     return (
         <>
-            {nPosts.map(i => {
-                ;<PostCardLoader key={i} />
-            })}
+            {nPosts.map(i => (
+                <PostCardLoader key={i} />
+            ))}
         </>
     )
 }

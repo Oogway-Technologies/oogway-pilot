@@ -1,7 +1,8 @@
-import { useState, useEffect, FC } from 'react'
 import { Switch } from '@headlessui/react'
-import { Moon } from 'react-feather'
 import { useTheme } from 'next-themes'
+import { FC, useEffect, useState } from 'react'
+import { Moon } from 'react-feather'
+
 import { toggleThemeClass } from '../../styles/header'
 
 interface ToggleThemeProps {
@@ -14,7 +15,11 @@ const ToggleTheme: FC<ToggleThemeProps> = ({ hasText }) => {
 
     // Maintain state on (re)mount
     useEffect(() => {
-        theme === 'light' ? setEnabled(false) : setEnabled(true)
+        if (theme === 'light') {
+            setEnabled(false)
+        } else {
+            setEnabled(true)
+        }
     }, [theme])
 
     // Helper function to update theme and switch state

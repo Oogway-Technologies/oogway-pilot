@@ -1,11 +1,7 @@
-import React, { FC } from 'react'
-import {
-    compareFormClass,
-    postCardClass,
-    postFormClass,
-} from '../../../../styles/feed'
-// @ts-ignore
 import { UilTimesCircle } from '@iconscout/react-unicons'
+import React, { FC } from 'react'
+
+import { compareFormClass, postCardClass } from '../../../../styles/feed'
 
 type CompareImagePreviewProps = {
     image: string

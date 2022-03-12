@@ -1,25 +1,26 @@
-import React, { useState } from 'react'
-import { useRouter } from 'next/router'
-import Comment from './Comment'
-import { commentFormClass, commentsApiClass } from '../../../styles/feed'
-import needsHook from '../../../hooks/needsHook'
+import { useUser } from '@auth0/nextjs-auth0'
 import { Avatar, useMediaQuery } from '@mui/material'
 import firebase from 'firebase/compat/app'
-import NewCommentForm from '../Forms/NewCommentForm'
-import Button from '../../Utils/Button'
-import Modal from '../../Utils/Modal'
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
-import { useUser } from '@auth0/nextjs-auth0'
-import { collection, where, orderBy, query } from 'firebase/firestore'
+import { collection, orderBy, query, where } from 'firebase/firestore'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
+import { useRecoilValue } from 'recoil'
+
+import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
+import needsHook from '../../../hooks/needsHook'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
+import { commentFormClass, commentsApiClass } from '../../../styles/feed'
 import {
     commmentConverter,
     FirebaseComment,
 } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
+import Button from '../../Utils/Button'
+import Modal from '../../Utils/Modal'
+import NewCommentForm from '../Forms/NewCommentForm'
+import Comment from './Comment'
 
 type CommentsAPIProps = {
     comments: firebase.firestore.QueryDocumentSnapshot
@@ -88,7 +89,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
                         key={comment.id}
                         commentOwner={comment.authorUid}
                         postId={router.query.id as string}
-                        commentId={comment.id!}
+                        commentId={comment?.id || ''}
                         comment={comment}
                         parentPostData={parentPostData}
                     />
@@ -160,21 +161,17 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
                 {showComments()}
             </div>
 
-            <Modal
-                children={
-                    <NewCommentForm
-                        placeholder={
-                            userProfile?.name
-                                ? `What do you think, ${userProfile.name}?`
-                                : 'What do you think?'
-                        }
-                        closeModal={closeModal}
-                        isMobile={isMobile}
-                    />
-                }
-                show={isOpen}
-                onClose={closeModal}
-            />
+            <Modal show={isOpen} onClose={closeModal}>
+                <NewCommentForm
+                    placeholder={
+                        userProfile?.name
+                            ? `What do you think, ${userProfile.name}?`
+                            : 'What do you think?'
+                    }
+                    closeModal={closeModal}
+                    isMobile={isMobile}
+                />
+            </Modal>
         </>
     )
 }

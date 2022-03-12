@@ -1,24 +1,25 @@
-import Timestamp from '../../Utils/Timestamp'
-import React, { FC } from 'react'
-import needsHook from '../../../hooks/needsHook'
-import { postCardClass } from '../../../styles/feed'
-import PostOptionsDropdown from '../Post/PostOptionsDropdown'
-import { db } from '../../../firebase'
 import { Avatar } from '@mui/material'
-import { useProfileData } from '../../../hooks/useProfileData'
 import {
     collection,
-    where,
-    query,
     deleteDoc,
     doc,
-    getDocs,
     FieldValue,
+    getDocs,
+    query,
+    where,
 } from 'firebase/firestore'
-import { deleteMedia } from '../../../lib/storageHelper'
+import React, { FC } from 'react'
+
+import { db } from '../../../firebase'
+import needsHook from '../../../hooks/needsHook'
+import { useProfileData } from '../../../hooks/useProfileData'
 import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
-import { staticPostData } from '../../../utils/types/params'
+import { deleteMedia } from '../../../lib/storageHelper'
+import { postCardClass } from '../../../styles/feed'
 import { authorLabel } from '../../../utils/constants/global'
+import { staticPostData } from '../../../utils/types/params'
+import Timestamp from '../../Utils/Timestamp'
+import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 
 type CommentHeaderProps = {
     postId: string
@@ -32,7 +33,6 @@ type CommentHeaderProps = {
 const CommentHeader: FC<CommentHeaderProps> = ({
     postId,
     commentId,
-    name,
     authorUid,
     timestamp,
     parentPostData,
@@ -53,7 +53,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
 
     // Deletes a comment
     const deleteComment = async () => {
-        let repliesQuery = query(
+        const repliesQuery = query(
             collection(db, 'post-activity'),
             where('parentId', '==', commentId)
         )

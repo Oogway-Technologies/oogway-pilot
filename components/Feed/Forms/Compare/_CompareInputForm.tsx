@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+
 import { compareFormClass } from '../../../../styles/feed'
 
 interface _CompareInputFormProps {

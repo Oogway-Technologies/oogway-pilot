@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { getLinkPreview } from 'link-preview-js'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 type ResponseURL = {
     url?: string
@@ -29,7 +29,7 @@ export default function handler(
         return res.status(400).json([])
     }
 
-    //GET metadata of link
+    // GET metadata of link
     getLinkPreview(`${urlToHit}`, {
         imagesPropertyType: 'og',
         timeout: 5000,

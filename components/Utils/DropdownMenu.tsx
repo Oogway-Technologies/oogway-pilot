@@ -55,7 +55,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                             return (
                                 <li
                                     key={idx}
-                                    className="pt-1 group"
+                                    className="group pt-1"
                                     onClick={() => close()}
                                 >
                                     {item}

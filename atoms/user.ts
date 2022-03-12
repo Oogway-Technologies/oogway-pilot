@@ -1,4 +1,5 @@
 import { atom } from 'recoil'
+
 import { FirebaseProfile } from '../utils/types/firebase'
 
 export const defaultProfile = {

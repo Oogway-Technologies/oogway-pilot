@@ -1,6 +1,6 @@
 import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { ManagementClient, User } from 'auth0'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default withApiAuthRequired(async function updateUser(
     req: NextApiRequest,

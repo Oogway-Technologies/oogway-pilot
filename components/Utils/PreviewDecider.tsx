@@ -1,5 +1,6 @@
 import { CardMedia } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+
 import {
     fetcher,
     isValidURL,
@@ -25,7 +26,7 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
     }, [textToDetect])
 
     return (
-        <div className={'flex ml-xl p-md'}>
+        <div className={'flex p-md ml-xl'}>
             {isYoutubeLink && isYoutubeLink.length > 0 ? (
                 <iframe
                     width="800"

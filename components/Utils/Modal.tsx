@@ -11,11 +11,11 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog
-                className="fixed inset-0 z-10 overflow-y-auto flex justify-center items-center"
+                className="flex overflow-y-auto fixed inset-0 z-10 justify-center items-center"
                 as="div"
                 onClose={onClose}
             >
-                <div className="flex w-11/12 sm:w-full justify-center px-4 text-center">
+                <div className="flex justify-center px-4 w-11/12 text-center sm:w-full">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -45,8 +45,8 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
                         leaveTo="opacity-0 scale-95"
                     >
                         <div
-                            className="justify-center items-center max-w-6xl p-6 my-8 overflow-hidden text-left
-                        transition-all transform bg-white dark:bg-neutralDark-500 shadow-xl rounded-2xl"
+                            className="overflow-hidden justify-center items-center p-6 my-8 max-w-6xl text-left
+                        bg-white dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all"
                         >
                             {content}
                         </div>

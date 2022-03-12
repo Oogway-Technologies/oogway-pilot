@@ -10,23 +10,23 @@ export const Tooltip: FC<TooltipProps> = ({
     toolTipText,
 }: TooltipProps) => {
     return (
-        <div className={'relative flex flex-col items-center group'}>
+        <div className={'group flex relative flex-col items-center'}>
             {children}
             <div
                 className={
-                    'absolute bottom-0 flex flex-col items-center hidden mb-11 group-hover:flex'
+                    'hidden group-hover:flex absolute bottom-0 flex-col items-center mb-11'
                 }
             >
                 <span
                     className={
-                        'w-max rounded-[8px] relative z-10 p-1 text-xs text-primary bg-white dark:bg-neutralDark-500 shadow-lg border-solid border-[1px] border-neutral-300'
+                        'relative z-10 p-1 w-max text-xs text-primary bg-white dark:bg-neutralDark-500 rounded-[8px] border-[1px] border-neutral-300 border-solid shadow-lg'
                     }
                 >
                     {toolTipText}
                 </span>
                 <div
                     className={
-                        'w-3 h-3 -mt-2 rotate-45 bg-white dark:bg-neutralDark-500 border-solid border-[1px] border-neutral-300'
+                        '-mt-2 w-3 h-3 bg-white dark:bg-neutralDark-500 border-[1px] border-neutral-300 border-solid rotate-45'
                     }
                 />
             </div>

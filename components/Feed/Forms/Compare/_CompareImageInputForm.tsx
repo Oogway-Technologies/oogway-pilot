@@ -1,27 +1,23 @@
-import React, { ChangeEvent, FC, MutableRefObject } from 'react'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+/* eslint-disable react/display-name */
+import { UilTimesCircle, UilUploadAlt } from '@iconscout/react-unicons'
+import React, { ChangeEvent, MutableRefObject } from 'react'
+import { useRecoilState } from 'recoil'
+
 import {
-    UilAngleLeft,
-    UilUploadAlt,
-    UilTimesCircle,
-    // @ts-ignore
-} from '@iconscout/react-unicons'
-import {
-    comparePostType,
     hasPreviewedCompare,
     imageCompareLeft,
     imageCompareRight,
     labelCompareLeft,
     labelCompareRight,
 } from '../../../../atoms/compareForm'
+import { fileSizeTooLarge } from '../../../../atoms/forms'
 import { compareFormClass, postFormClass } from '../../../../styles/feed'
-import _CompareInputForm from './_CompareInputForm'
+import { shortLimit, warningTime } from '../../../../utils/constants/global'
 import preventDefaultOnEnter from '../../../../utils/helpers/preventDefaultOnEnter'
 import { compareFilePickerRefs } from '../../../../utils/types/global'
 import FlashErrorMessage from '../../../Utils/FlashErrorMessage'
-import { shortLimit, warningTime } from '../../../../utils/constants/global'
-import { fileSizeTooLarge } from '../../../../atoms/forms'
 import _CompareImagePreview from './_CompareImagePreview'
+import _CompareInputForm from './_CompareInputForm'
 
 interface _CompareImageInputFormProps {
     handleLeftUpload: (e: ChangeEvent<HTMLInputElement>) => void
@@ -32,10 +28,6 @@ const _CompareImageInputForm = React.forwardRef<
     compareFilePickerRefs,
     _CompareImageInputFormProps
 >(({ handleLeftUpload, handleRightUpload }, ref) => {
-    // Control form flow
-    const setCompareType = useSetRecoilState(comparePostType)
-    const goToChooseType = () => setCompareType('chooseType')
-
     // Image state
     const [isImageSizeLarge, setIsImageSizeLarge] =
         useRecoilState(fileSizeTooLarge)
@@ -92,7 +84,7 @@ const _CompareImageInputForm = React.forwardRef<
                                 />
                             </div>
                         ) : (
-                            <button onClick={() => left?.current!.click()}>
+                            <button onClick={() => left?.current?.click()}>
                                 <div className={compareFormClass.uploadButton}>
                                     <UilUploadAlt />
                                     <span>Upload your image</span>
@@ -141,7 +133,7 @@ const _CompareImageInputForm = React.forwardRef<
                                 />
                             </div>
                         ) : (
-                            <button onClick={() => right?.current!.click()}>
+                            <button onClick={() => right?.current?.click()}>
                                 <div className={compareFormClass.uploadButton}>
                                     <UilUploadAlt />
                                     <span>Upload your image</span>

@@ -1,6 +1,7 @@
+import { useInfiniteQuery, useQuery } from 'react-query'
+
 import API from '../axios'
 import { FirebasePost } from '../utils/types/firebase'
-import { useQuery, useInfiniteQuery } from 'react-query'
 
 type jsonTimeObj = {
     seconds: number

@@ -1,12 +1,13 @@
+import { collection, orderBy, query, where } from 'firebase/firestore'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
+
 import { db } from '../../../firebase'
-import { useRouter } from 'next/router'
-import Reply from './Reply'
 import { repliesApiClass } from '../../../styles/feed'
-import { collection, where, orderBy, query } from 'firebase/firestore'
 import { replyConverter } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
+import Reply from './Reply'
 
 type RepliesAPIProps = {
     commentId: string
@@ -28,26 +29,26 @@ const RepliesAPI: React.FC<RepliesAPIProps> = ({
             orderBy('timestamp', 'asc')
         ).withConverter(replyConverter)
     )
-    const showReplies = () => {
-        if (repliesSnapshot) {
-            return repliesSnapshot?.docs.map(reply => (
-                <Reply
-                    key={reply.id}
-                    replyOwner={reply.data().authorUid}
-                    postId={router.query.id}
-                    commentId={commentId}
-                    replyId={reply.id}
-                    reply={{
-                        ...reply.data(),
-                        timestamp: reply.data().timestamp,
-                    }}
-                    parentPostData={parentPostData}
-                />
-            ))
-        }
-    }
 
-    return <div className={repliesApiClass.outerDiv}>{showReplies()}</div>
+    return (
+        <div className={repliesApiClass.outerDiv}>
+            {repliesSnapshot &&
+                repliesSnapshot?.docs.map(reply => (
+                    <Reply
+                        key={reply.id}
+                        replyOwner={reply.data().authorUid}
+                        postId={router.query.id}
+                        commentId={commentId}
+                        replyId={reply.id}
+                        reply={{
+                            ...reply.data(),
+                            timestamp: reply.data().timestamp,
+                        }}
+                        parentPostData={parentPostData}
+                    />
+                ))}
+        </div>
+    )
 }
 
 export default RepliesAPI

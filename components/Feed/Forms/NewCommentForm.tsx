@@ -1,14 +1,9 @@
-import React, {
-    ChangeEvent,
-    MouseEvent,
-    useEffect,
-    useRef,
-    useState,
-} from 'react'
-import { useForm } from 'react-hook-form'
-
-// Database
-import { db, storage } from '../../../firebase'
+import { getDownloadURL, ref, uploadString } from '@firebase/storage'
+import {
+    UilCommentPlus,
+    UilImagePlus,
+    UilTimesCircle,
+} from '@iconscout/react-unicons'
 import firebase from 'firebase/compat/app'
 import {
     addDoc,
@@ -18,32 +13,31 @@ import {
     setDoc,
     updateDoc,
 } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
-import { getUserDoc } from '../../../lib/userHelper'
-
-// JSX and Styles
-import { commentFormClass } from '../../../styles/feed'
-import Button from '../../Utils/Button'
-
 // Form
 import { useRouter } from 'next/router'
-// @ts-ignore
-import {
-    UilCommentPlus,
-    UilImagePlus,
-    UilTimesCircle,
-} from '@iconscout/react-unicons'
+import React, {
+    ChangeEvent,
+    MouseEvent,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
+import { useForm } from 'react-hook-form'
+import { useRecoilValue } from 'recoil'
 
 // Recoil states
 import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
-
+// Database
+import { db, storage } from '../../../firebase'
+// JSX and Styles
+import { commentFormClass } from '../../../styles/feed'
+import { longLimit, warningTime } from '../../../utils/constants/global'
+import { checkFileSize } from '../../../utils/helpers/common'
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { checkFileSize } from '../../../utils/helpers/common'
-import { longLimit, warningTime } from '../../../utils/constants/global'
 import { FirebaseComment } from '../../../utils/types/firebase'
+import Button from '../../Utils/Button'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 
 type NewCommentFormProps = {
     closeModal: () => void
@@ -114,7 +108,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             },
             { merge: true }
         )
-        let commentData: FirebaseComment = {
+        const commentData: FirebaseComment = {
             postId: router.query.id as string,
             parentId: null,
             isComment: true,

@@ -1,24 +1,25 @@
-import React, { FC } from 'react'
-import PostOptionsDropdown from './PostOptionsDropdown'
 import { Avatar } from '@mui/material'
-import { postCardClass } from '../../../styles/feed'
-import Timestamp from '../../Utils/Timestamp'
-import { useProfileData } from '../../../hooks/useProfileData'
-import { deleteMedia } from '../../../lib/storageHelper'
-import { useRouter } from 'next/router'
 import {
-    query,
-    getDocs,
     collection,
-    where,
     deleteDoc,
     doc,
     FieldValue,
+    getDocs,
+    query,
+    where,
 } from 'firebase/firestore'
+import { useRouter } from 'next/router'
+import React, { FC } from 'react'
+
 import { db } from '../../../firebase'
+import { useProfileData } from '../../../hooks/useProfileData'
 import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
-import { staticPostData } from '../../../utils/types/params'
+import { deleteMedia } from '../../../lib/storageHelper'
+import { postCardClass } from '../../../styles/feed'
 import { FirebaseProfile } from '../../../utils/types/firebase'
+import { staticPostData } from '../../../utils/types/params'
+import Timestamp from '../../Utils/Timestamp'
+import PostOptionsDropdown from './PostOptionsDropdown'
 
 type PostHeaderProps = {
     id: string
@@ -30,7 +31,6 @@ type PostHeaderProps = {
 
 const PostHeader: FC<PostHeaderProps> = ({
     id,
-    name,
     authorUid,
     timestamp,
     isAnonymous,
@@ -61,7 +61,7 @@ const PostHeader: FC<PostHeaderProps> = ({
 
     // Deletes a post
     const deletePost = async () => {
-        let activitiesQuery = query(
+        const activitiesQuery = query(
             collection(db, 'post-activity'),
             where('postId', '==', id)
         )

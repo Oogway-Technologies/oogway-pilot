@@ -1,11 +1,3 @@
-import React, { FC } from 'react'
-import { ParsedUrlQuery } from 'querystring'
-import { FirebasePost, FirebaseProfile } from '../../utils/types/firebase'
-import { profilePage } from '../../styles/profile'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-
-import { ProfileCard } from '../../components/Profile/ProfileCard'
-
 // Firebase imports
 import firebase from 'firebase/compat'
 import {
@@ -16,11 +8,18 @@ import {
     query,
     where,
 } from 'firebase/firestore'
-import { db } from '../../firebase'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import { ParsedUrlQuery } from 'querystring'
+import React, { FC } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import PostCard from '../../components/Feed/Post/Post'
 import { useRecoilValue } from 'recoil'
+
 import { userProfileState } from '../../atoms/user'
+import PostCard from '../../components/Feed/Post/Post'
+import { ProfileCard } from '../../components/Profile/ProfileCard'
+import { db } from '../../firebase'
+import { profilePage } from '../../styles/profile'
+import { FirebasePost, FirebaseProfile } from '../../utils/types/firebase'
 
 import DocumentData = firebase.firestore.DocumentData
 
@@ -30,8 +29,7 @@ interface ProfileProps {
 }
 
 const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
-    const { bio, profilePic, uid, username, name, lastName, location } =
-        userProfile
+    const { bio, profilePic, uid, username, lastName, location } = userProfile
 
     const authUserProfile = useRecoilValue(userProfileState)
     // Get real-time connection with DB
@@ -45,7 +43,7 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
     return (
         <div className={profilePage.innerDiv}>
             <div className={profilePage.contentDiv}>
-                {/*profile card of the user*/}
+                {/* profile card of the user*/}
                 <ProfileCard
                     bio={bio}
                     location={location}
@@ -128,7 +126,7 @@ export const getServerSideProps: GetServerSideProps = async (
         string | false | object | undefined
     >
 ) => {
-    //Get userProfile of selected user from database.
+    // Get userProfile of selected user from database.
     const userProfile: DocumentData | undefined = (
         await getDoc(doc(db, 'profiles', (context?.query?.id as string) || ''))
     ).data()

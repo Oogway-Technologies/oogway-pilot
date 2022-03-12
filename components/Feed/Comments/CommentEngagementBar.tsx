@@ -1,17 +1,17 @@
-import React from 'react'
-import { commentEngagementBarClass } from '../../../styles/feed'
-import Button from '../../Utils/Button'
-// @ts-ignore
-import { UilCornerUpLeftAlt, UilThumbsUp } from '@iconscout/react-unicons'
-import { EngagementItems } from '../../../utils/types/global'
-import { addLike } from '../../../lib/getLikesHelper'
-import { useCommentNumberLikes } from '../../../hooks/useNumberLikes'
-import { useCommentNumberReplies } from '../../../hooks/useNumberComments'
 import { useUser } from '@auth0/nextjs-auth0'
+import { UilCornerUpLeftAlt, UilThumbsUp } from '@iconscout/react-unicons'
+import React from 'react'
 import { useRecoilValue } from 'recoil'
+
 import { userProfileState } from '../../../atoms/user'
-import { getComment } from '../../../lib/commentsHelper'
+import { useCommentNumberReplies } from '../../../hooks/useNumberComments'
+import { useCommentNumberLikes } from '../../../hooks/useNumberLikes'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
+import { getComment } from '../../../lib/commentsHelper'
+import { addLike } from '../../../lib/getLikesHelper'
+import { commentEngagementBarClass } from '../../../styles/feed'
+import { EngagementItems } from '../../../utils/types/global'
+import Button from '../../Utils/Button'
 
 type CommentEngagementBarProps = {
     postId: string
@@ -54,7 +54,7 @@ const CommentEngagementBar = ({
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
             onClick: () => {
-                addLike(user, userProfile, getComment(postId, commentId))
+                addLike(user, userProfile, getComment(commentId))
             },
             expanded: expanded,
         },

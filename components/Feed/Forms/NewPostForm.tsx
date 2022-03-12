@@ -1,3 +1,20 @@
+import { getDownloadURL, ref, uploadString } from '@firebase/storage'
+import { Dialog } from '@headlessui/react'
+import {
+    UilBalanceScale,
+    UilImagePlus,
+    UilNavigator,
+    UilTimesCircle,
+} from '@iconscout/react-unicons'
+import { Collapse } from '@mui/material'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+    updateDoc,
+} from 'firebase/firestore'
 import React, {
     ChangeEvent,
     FC,
@@ -7,63 +24,12 @@ import React, {
     useRef,
     useState,
 } from 'react'
-
-// Database
-import { db, storage } from '../../../firebase'
-import {
-    addDoc,
-    collection,
-    doc,
-    serverTimestamp,
-    setDoc,
-    updateDoc,
-} from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
-
-// JSX components
-import Button from '../../Utils/Button'
-import { Dialog } from '@headlessui/react'
-import {
-    UilBalanceScale,
-    UilImagePlus,
-    UilNavigator,
-    UilTimesCircle,
-    // @ts-ignore
-} from '@iconscout/react-unicons'
-
-import { Collapse } from '@mui/material'
-import _CompareChooseTypeForm from './Compare/_CompareChooseTypeForm'
-import { Tooltip } from '../../Utils/Tooltip'
-
 // Form management
 import { useForm } from 'react-hook-form'
-import { postFormClass } from '../../../styles/feed'
-import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import {
-    longLimit,
-    shortLimit,
-    warningTime,
-} from '../../../utils/constants/global'
-import ToggleIncognito from '../Post/ToggleIncognito'
-
-// Recoil states
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilState, useRecoilValue } from 'recoil'
-
-// Other and utilities
-import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import { FirebasePost } from '../../../utils/types/firebase'
-import {
-    amazonURLAppendQueryString,
-    checkFileSize,
-    fetcher,
-    isValidURL,
-} from '../../../utils/helpers/common'
-import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
-
 // Queries
 import { useQueryClient } from 'react-query'
-import { fileSizeTooLarge } from '../../../atoms/forms'
+import { useRecoilState, useRecoilValue } from 'recoil'
+
 import {
     compareFormExpanded,
     comparePostType,
@@ -77,6 +43,33 @@ import {
     textCompareLeft,
     textCompareRight,
 } from '../../../atoms/compareForm'
+import { fileSizeTooLarge } from '../../../atoms/forms'
+// Recoil states
+import { userProfileState } from '../../../atoms/user'
+// Database
+import { db, storage } from '../../../firebase'
+import { postFormClass } from '../../../styles/feed'
+import {
+    longLimit,
+    shortLimit,
+    warningTime,
+} from '../../../utils/constants/global'
+import {
+    amazonURLAppendQueryString,
+    checkFileSize,
+    fetcher,
+    isValidURL,
+} from '../../../utils/helpers/common'
+// Other and utilities
+import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
+import { FirebasePost } from '../../../utils/types/firebase'
+import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
+// JSX components
+import Button from '../../Utils/Button'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
+import { Tooltip } from '../../Utils/Tooltip'
+import ToggleIncognito from '../Post/ToggleIncognito'
+import _CompareChooseTypeForm from './Compare/_CompareChooseTypeForm'
 
 type NewPostProps = {
     closeModal: () => void
@@ -169,9 +162,7 @@ const NewPostForm: FC<NewPostProps> = ({
     // useEffect cannot unclude async logic
     useEffect(() => {
         if (previewImage) {
-            ;(async () => {
-                await sendPost()
-            })()
+            sendPost().finally()
         }
     }, [previewImage])
 
@@ -310,7 +301,7 @@ const NewPostForm: FC<NewPostProps> = ({
         // 4) get the dowanload URL for the image and update the original post with image url
 
         // Prepare the data to add as a post
-        let postData: FirebasePost = {
+        const postData: FirebasePost = {
             message: inputRef?.current?.value || '', // Leaving field name as message even though UI refers to it as a question
             description: amazonURLAppendQueryString(
                 descriptionRef?.current?.value || ''
@@ -328,7 +319,7 @@ const NewPostForm: FC<NewPostProps> = ({
             // If the current post is a compare post,
             // Turn on isCompare flag and add compare post data structure
             postData.isCompare = true
-            let compareData = {
+            const compareData = {
                 objList: [], // List of objects to compare
                 votesObjMapList: [], // List of maps, one for each image in the list
             }
@@ -370,19 +361,19 @@ const NewPostForm: FC<NewPostProps> = ({
         if (isComparePost()) {
             // This is a compare post and it is slightly more complex than the single image post
             // since now we need to upload two images and/or text to the DB and post
-            //let mediaObjectList: { type: string; value: string }[] = []
-            let leftMediaObject: MediaObject = {
+            // let mediaObjectList: { type: string; value: string }[] = []
+            const leftMediaObject: MediaObject = {
                 text: '',
                 image: '',
                 previewImage: '',
             }
-            let rightMediaObject: MediaObject = {
+            const rightMediaObject: MediaObject = {
                 text: '',
                 image: '',
                 previewImage: '',
             }
-            let mediaObjectList: MediaObject[] = []
-            let votesObjMapList: {}[] = [] // TODO: remove and fix likes
+            const mediaObjectList: MediaObject[] = []
+            const votesObjMapList: object[] = [] // TODO: remove and fix likes
 
             // Upload the left image, if there is one
             if (imageToCompareLeft) {
@@ -658,19 +649,21 @@ const NewPostForm: FC<NewPostProps> = ({
             clearErrors()
         }
 
-        //check if input is URL, if it is a url remove it and show warning.
+        // check if input is URL, if it is a url remove it and show warning.
         const isURL = isValidURL(e.target.value)
-        if (Boolean(isURL)) {
+        if (isURL) {
             setIsTitleURL(true)
         } else {
-            isTitleURL && setIsTitleURL(false)
+            if (isTitleURL) {
+                setIsTitleURL(false)
+            }
         }
     }
 
     return (
         <div className={postFormClass.modalDiv}>
             <Dialog.Title as="div" className={postFormClass.dialogTitle}>
-                <div>What's your question?</div>
+                <div>{`What's your question?`}</div>
                 <ToggleIncognito
                     onChange={() => setIsIncognito(!isIncognito)}
                 />

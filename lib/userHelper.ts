@@ -1,5 +1,4 @@
 import { UserProfile } from '@auth0/nextjs-auth0/src/frontend/use-user'
-import { db } from '../firebase'
 import {
     addDoc,
     collection,
@@ -12,9 +11,13 @@ import {
     setDoc,
     where,
 } from 'firebase/firestore'
+
+import { db } from '../firebase'
 import { FirebaseProfile, FirebaseUser } from '../utils/types/firebase'
 
-export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
+export const getOrCreateUserFromFirebase = async (
+    user: UserProfile
+): Promise<any> => {
     try {
         // Check if the Auth0-Firebase mapping is available
         // TODO: Check if the user is in the database and/or is defined
@@ -72,7 +75,7 @@ export const getOrCreateUserFromFirebase = async (user: UserProfile) => {
     }
 }
 
-export const getUserDoc = async (id: string) => {
+export const getUserDoc = async (id: string): Promise<any> => {
     if (!id) {
         return null
     }

@@ -1,20 +1,18 @@
 // Next and react
-import React, { useState } from 'react'
 import Head from 'next/head'
+import React, { useState } from 'react'
+// Recoil states
+// import {userProfileState} from '../atoms/user'
+// import {useRecoilValue} from 'recoil'
+// Queries
+import { dehydrate, QueryClient } from 'react-query'
 
 // Components and styling
 import FeedAPI from '../components/Feed/FeedAPI'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
-
-// Recoil states
-// import {userProfileState} from '../atoms/user'
-// import {useRecoilValue} from 'recoil'
-
-// Queries
-import { dehydrate, QueryClient } from 'react-query'
-import { queryClientConfig } from '../query'
 import { getPosts } from '../queries/posts'
+import { queryClientConfig } from '../query'
 
 /**
  * Home: The public (or personalized user) feed of the app
@@ -31,7 +29,7 @@ export default function Home() {
 
     return (
         <>
-            <div className="flex flex-col w-full justify-center">
+            <div className="flex flex-col justify-center w-full">
                 <Head>
                     <title>Oogway | Social - Wisdom of the crowd</title>
                 </Head>

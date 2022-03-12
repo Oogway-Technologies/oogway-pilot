@@ -1,15 +1,13 @@
-import React, { ChangeEvent } from 'react'
-
-// Styles and JSX
-import { compareFormClass } from '../../../../styles/feed'
-// @ts-ignore
+/* eslint-disable react/display-name */
 import {
-    UilTextFields,
-    UilImageUpload,
     UilCancel,
-    // @ts-ignore
+    UilImageUpload,
+    UilTextFields,
 } from '@iconscout/react-unicons'
+import { useMediaQuery } from '@mui/material'
+import React, { ChangeEvent } from 'react'
 import { useRecoilState, useSetRecoilState } from 'recoil'
+
 import {
     compareFormExpanded,
     comparePostType,
@@ -21,11 +19,12 @@ import {
     textCompareLeft,
     textCompareRight,
 } from '../../../../atoms/compareForm'
-import { useMediaQuery } from '@mui/material'
-import _CompareInputForm from './_CompareInputForm'
+// Styles and JSX
+import { compareFormClass } from '../../../../styles/feed'
 import { compareFilePickerRefs } from '../../../../utils/types/global'
-import _CompareTextInputForm from './_CompareTextInputForm'
 import _CompareImageInputForm from './_CompareImageInputForm'
+import _CompareInputForm from './_CompareInputForm'
+import _CompareTextInputForm from './_CompareTextInputForm'
 
 interface _CompareChooseTypeFormProps {
     handleLeftUpload: (e: ChangeEvent<HTMLInputElement>) => void

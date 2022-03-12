@@ -7,7 +7,7 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "isolatedModules": true,
-        // "incremental": true,
+        "incremental": true,
         "jsx": "preserve",
         "lib": ["dom", "dom.iterable", "esnext"],
         "module": "esnext",
@@ -22,8 +22,20 @@
         "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,
-        "target": "es2018"
+        "target": "es2018",
+        "allowSyntheticDefaultImports": true
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "include": [
+        "pages",
+        "utils",
+        "styles",
+        "queries",
+        "lib",
+        "hooks",
+        "functions",
+        "components",
+        "atoms",
+        "decs.d.ts"
+    ],
     "exclude": ["node_modules"]
 }

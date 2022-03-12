@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import useTimeout from '../../hooks/useTimeout'
-// @ts-ignore
 import { UilExclamationTriangle } from '@iconscout/react-unicons'
+import React, { useState } from 'react'
+
+import useTimeout from '../../hooks/useTimeout'
 
 export type FlashErrorMessageProps = {
     message: string
@@ -21,7 +21,9 @@ const FlashErrorMessage: React.FC<FlashErrorMessageProps> = ({
 
     useTimeout(() => {
         setWarningHasElapsed(true)
-        onClose && onClose()
+        if (onClose) {
+            onClose()
+        }
     }, ms)
 
     // If show is false the component will return null and stop here
