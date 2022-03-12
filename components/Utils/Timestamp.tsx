@@ -1,6 +1,6 @@
+import { FieldValue } from 'firebase/firestore'
 import moment from 'moment'
 import React from 'react'
-import { FieldValue } from 'firebase/firestore'
 
 interface TimeObject extends FieldValue {
     seconds: number

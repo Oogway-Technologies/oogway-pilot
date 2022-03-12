@@ -1,16 +1,16 @@
-import Button from '../Utils/Button'
-import { profileCard } from '../../styles/profile'
-import bull from '../Utils/Bullet'
-import React, { FC, useState } from 'react'
-// @ts-ignore
 import { UilLocationPoint, UilPen } from '@iconscout/react-unicons'
-import { useRecoilValue } from 'recoil'
-import { userProfileState } from '../../atoms/user'
 import { Avatar, useMediaQuery } from '@mui/material'
-import UserProfileForm from '../Login/UserProfileForm'
-import Modal from '../Utils/Modal'
+import React, { FC, useState } from 'react'
+import { useRecoilValue } from 'recoil'
+
+import { userProfileState } from '../../atoms/user'
 import { useProfileData } from '../../hooks/useProfileData'
+import { profileCard } from '../../styles/profile'
 import NewPostForm from '../Feed/Forms/NewPostForm'
+import UserProfileForm from '../Login/UserProfileForm'
+import bull from '../Utils/Bullet'
+import Button from '../Utils/Button'
+import Modal from '../Utils/Modal'
 
 interface ProfileCardProps {
     bio?: string
@@ -69,15 +69,15 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
         <>
             <div className={'flex flex-col items-center mx-sm sm:mx-0'}>
                 <div className={profileCard.mainDiv}>
-                    {/*profile image*/}
+                    {/* profile image*/}
                     <Avatar
                         sx={sizeAvatar}
                         src={userProfileSnapshot?.profilePic || profilePic}
                         alt={username}
                     />
-                    {/*container for user details*/}
+                    {/* container for user details*/}
                     <div className={profileCard.userDetailsDiv}>
-                        {/*User profile name and buttons list*/}
+                        {/* User profile name and buttons list*/}
                         <div className={'flex items-center mb-1'}>
                             <div className={profileCard.userProfileName}>
                                 {userProfileSnapshot?.name || name}{' '}
@@ -86,20 +86,20 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
 
                             <div
                                 className={
-                                    'flex items-center justify-self-end space-x-2'
+                                    'flex justify-self-end items-center space-x-2'
                                 }
                             >
                                 {uid !== currentUserUid ? (
                                     <>
-                                        {/*TODO: uncomment FOLLOW button when its done. */}
-                                        {/*<Button*/}
+                                        {/* TODO: uncomment FOLLOW button when its done. */}
+                                        {/* <Button*/}
                                         {/*    onClick={() => {*/}
                                         {/*        alert('TODO: Follow')*/}
                                         {/*    }}*/}
                                         {/*    text={'Follow'}*/}
                                         {/*    keepText={true}*/}
                                         {/*    addStyle={profileCard.newPostButton}*/}
-                                        {/*/>*/}
+                                        {/* />*/}
                                     </>
                                 ) : (
                                     <>
@@ -116,7 +116,7 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
                                                 icon={
                                                     <UilPen
                                                         className={
-                                                            'h-5 w-5 mr-1'
+                                                            'mr-1 w-5 h-5'
                                                         }
                                                     />
                                                 }
@@ -130,13 +130,13 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
                                 )}
                             </div>
                         </div>
-                        {/*username*/}
+                        {/* username*/}
                         {username && (
                             <span className={profileCard.usernameText}>
                                 {userProfileSnapshot?.username || username}
                             </span>
                         )}
-                        {/*location and date of joining*/}
+                        {/* location and date of joining*/}
                         {(joinedAt || location) && (
                             <span className={profileCard.joinedAndLocationText}>
                                 {joinedAt && (
@@ -148,7 +148,7 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
                                 {location && (
                                     <>
                                         <UilLocationPoint
-                                            className={'h-6 w-6 mr-2'}
+                                            className={'mr-2 w-6 h-6'}
                                         />{' '}
                                         {userProfileSnapshot?.location ||
                                             location}
@@ -156,7 +156,7 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
                                 )}
                             </span>
                         )}
-                        {/*user bio if not on mobile device*/}
+                        {/* user bio if not on mobile device*/}
                         {bio && !isMobile && (
                             <span className={profileCard.bioText}>
                                 {userProfileSnapshot?.bio || bio}
@@ -164,29 +164,23 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
                         )}
                     </div>
                 </div>
-                {/*user bio if on mobile device.*/}
+                {/* user bio if on mobile device.*/}
                 {bio && isMobile && (
                     <span className={profileCard.bioText}>
                         {userProfileSnapshot?.bio || bio}
                     </span>
                 )}
             </div>
-            <Modal
-                children={
-                    <UserProfileForm
-                        closeModal={closeProfileModal}
-                        cancelButtonText="Cancel"
-                        headerText="Edit Profile"
-                    />
-                }
-                show={showProfileForm}
-                onClose={closeProfileModal}
-            />
-            <Modal
-                children={<NewPostForm closeModal={closePostModal} />}
-                show={showNewPostForm}
-                onClose={closePostModal}
-            />
+            <Modal show={showProfileForm} onClose={closeProfileModal}>
+                <UserProfileForm
+                    closeModal={closeProfileModal}
+                    cancelButtonText="Cancel"
+                    headerText="Edit Profile"
+                />
+            </Modal>
+            <Modal show={showNewPostForm} onClose={closePostModal}>
+                <NewPostForm closeModal={closePostModal} />
+            </Modal>
         </>
     )
 }

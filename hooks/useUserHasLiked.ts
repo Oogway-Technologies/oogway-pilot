@@ -1,5 +1,6 @@
 import { doc, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
+
 import { db } from '../firebase'
 
 /**
@@ -8,6 +9,7 @@ import { db } from '../firebase'
  * @param userId user id
  * @description tracks whether user currently likes the post, commment or reply
  */
+
 export const useUserHasLiked = (docPath: string, userId: string) => {
     // Track number of likes
     const [userHasLiked, setUserHasLiked] = useState(false)
@@ -22,7 +24,7 @@ export const useUserHasLiked = (docPath: string, userId: string) => {
             snapshot => {
                 if (snapshot.exists()) {
                     // get a reference to the doc
-                    let docData = snapshot.data()
+                    const docData = snapshot.data()
 
                     // Update user has liked state
                     if (userId in docData.likes) setUserHasLiked(true)

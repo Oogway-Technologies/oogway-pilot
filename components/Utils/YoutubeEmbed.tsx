@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+
 import { parseYoutubeVideoId } from '../../utils/helpers/common'
 
 interface YoutubeEmbedProps {

@@ -1,19 +1,19 @@
-import React, { FC } from 'react'
-import { postCardClass } from '../../../styles/feed'
-import Button from '../../Utils/Button'
-import { useRouter } from 'next/router'
-// @ts-ignore
-import { UilComment, UilThumbsUp } from '@iconscout/react-unicons'
-import { EngagementItems } from '../../../utils/types/global'
-import { usePostNumberLikes } from '../../../hooks/useNumberLikes'
 import { useUser } from '@auth0/nextjs-auth0'
-import { userProfileState } from '../../../atoms/user'
+import { UilComment, UilThumbsUp } from '@iconscout/react-unicons'
+import { useRouter } from 'next/router'
+import React, { FC } from 'react'
 import { useRecoilValue } from 'recoil'
+
+import { userProfileState } from '../../../atoms/user'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
-import { getPost } from '../../../lib/postsHelper'
-import { addLike } from '../../../lib/getLikesHelper'
-import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
+import { usePostNumberLikes } from '../../../hooks/useNumberLikes'
 import { useOnCommmentsPage } from '../../../hooks/useOnCommentsPage'
+import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
+import { addLike } from '../../../lib/getLikesHelper'
+import { getPost } from '../../../lib/postsHelper'
+import { postCardClass } from '../../../styles/feed'
+import { EngagementItems } from '../../../utils/types/global'
+import Button from '../../Utils/Button'
 
 type PostEngagementBarProps = {
     id: string

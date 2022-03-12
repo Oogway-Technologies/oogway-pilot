@@ -1,9 +1,9 @@
-import React from 'react'
-import { auth } from '../../firebase'
-//@ts-ignore
 import { UilSignOutAlt } from '@iconscout/react-unicons'
-import { logoutButtonClass } from '../../styles/header'
 import { useRouter } from 'next/router'
+import React from 'react'
+
+import { auth } from '../../firebase'
+import { logoutButtonClass } from '../../styles/header'
 
 interface LogoutButtonProps {
     hasText: boolean

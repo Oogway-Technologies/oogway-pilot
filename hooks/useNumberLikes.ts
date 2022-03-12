@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import {
     getLikes,
     getLikesForCommentEngagementBar,
@@ -30,7 +31,7 @@ export const useCommentNumberLikes = (postId: string, commentId: string) => {
     // function that will set the number of likes on
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
-        getLikesForCommentEngagementBar(postId, commentId, setNumLikes)
+        getLikesForCommentEngagementBar(commentId, setNumLikes)
         return () => {
             setNumLikes(0)
         }
@@ -51,7 +52,7 @@ export const useReplyNumberLikes = (
     // function that will set the number of likes on
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
-        getLikesForReplyEngagementBar(postId, commentId, replyId, setNumLikes)
+        getLikesForReplyEngagementBar(replyId, setNumLikes)
         return () => {
             setNumLikes(0)
         }

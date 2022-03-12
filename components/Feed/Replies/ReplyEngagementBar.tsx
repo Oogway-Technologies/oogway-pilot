@@ -1,19 +1,19 @@
+import { useUser } from '@auth0/nextjs-auth0'
+import { UilThumbsUp } from '@iconscout/react-unicons'
 import React from 'react'
+import { useRecoilValue } from 'recoil'
+
+import { userProfileState } from '../../../atoms/user'
+import { useReplyNumberLikes } from '../../../hooks/useNumberLikes'
+import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
+import { addLike } from '../../../lib/getLikesHelper'
+import { getReply } from '../../../lib/repliesHelper'
 import {
     commentEngagementBarClass,
     replyEngagementBarClass,
 } from '../../../styles/feed'
-import Button from '../../Utils/Button'
-// @ts-ignore
-import { UilThumbsUp } from '@iconscout/react-unicons'
 import { EngagementItems } from '../../../utils/types/global'
-import { addLike } from '../../../lib/getLikesHelper'
-import { useUser } from '@auth0/nextjs-auth0'
-import { useRecoilValue } from 'recoil'
-import { userProfileState } from '../../../atoms/user'
-import { useReplyNumberLikes } from '../../../hooks/useNumberLikes'
-import { getReply } from '../../../lib/repliesHelper'
-import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
+import Button from '../../Utils/Button'
 
 type ReplyEngagementBarProps = {
     postId: string
@@ -43,9 +43,9 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
             text: `${
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
-            onClick: () => {
+            onClick: (): null | void => {
                 if (!user) return null // TODO: add popover about logging in
-                addLike(user, userProfile, getReply(postId, commentId, replyId))
+                addLike(user, userProfile, getReply(postId))
             },
         },
         // {

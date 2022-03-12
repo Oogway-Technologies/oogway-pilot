@@ -1,7 +1,7 @@
-import { MouseEventHandler, FC } from 'react'
-//@ts-ignore
 import { UilSetting } from '@iconscout/react-unicons'
 import Link from 'next/link'
+import { FC, MouseEventHandler } from 'react'
+
 import { settingsButtonClass } from '../../styles/header'
 
 interface SettingsButtonProps {

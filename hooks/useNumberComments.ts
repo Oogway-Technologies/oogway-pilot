@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import { streamCommentsCollection } from '../lib/commentsHelper'
 import { streamRepliesCollection } from '../lib/repliesHelper'
 
@@ -21,7 +22,7 @@ export const usePostNumberComments = (id: string) => {
         )
         return () => {
             setNumComments(0)
-            unsubscribe
+            unsubscribe()
         }
     }, [id])
 
@@ -35,9 +36,9 @@ export const useCommentNumberReplies = (postId: string, commentId: string) => {
     // Use useEffect to bind on document loading the
     // function that will set the number of comments on
     // each change of the DB (triggered by onSnapshot)
+
     useEffect(() => {
         const unsubscribe = streamRepliesCollection(
-            postId,
             commentId,
             querySnapshot => {
                 setNumReplies(querySnapshot.docs.length || 0)
@@ -48,7 +49,7 @@ export const useCommentNumberReplies = (postId: string, commentId: string) => {
         )
         return () => {
             setNumReplies(0)
-            unsubscribe
+            unsubscribe()
         }
     }, [postId, commentId])
 

@@ -1,7 +1,8 @@
 import { Switch } from '@headlessui/react'
-import React, { FC, useState } from 'react'
-import { toggleIncognitoClass } from '../../../styles/feed'
 import { Icon } from '@iconify/react'
+import React, { FC, useState } from 'react'
+
+import { toggleIncognitoClass } from '../../../styles/feed'
 
 type ToggleIncognitoProps = {
     onChange: () => void
@@ -14,8 +15,6 @@ const ToggleIncognito: FC<ToggleIncognitoProps> = ({ onChange }) => {
     // Set specs
     const enabledColor = 'bg-primary dark:bg-primaryDark'
     const disabledColor = 'bg-neutral-150 dark:bg-neutralDark-150'
-    const height = 7
-    const width = 10
 
     return (
         <Switch

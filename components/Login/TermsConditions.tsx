@@ -239,7 +239,7 @@ const TermsConditions = () => {
                 <p className={privacyDivs.paragraph}>
                     By submitting Content to us, you represent and warrant that:
                 </p>
-                <ul className={'list-disc ml-4'}>
+                <ul className={'ml-4 list-disc'}>
                     <li>
                         You understand you are participating in a public forum
                         and that your Content will be available to all other
@@ -446,7 +446,7 @@ const TermsConditions = () => {
                     You represent and warrant that you will not use the Service
                     to:
                 </p>
-                <ul className={'list-disc ml-4'}>
+                <ul className={'ml-4 list-disc'}>
                     <li>
                         {' '}
                         Upload, post, email, transmit or otherwise make
@@ -831,7 +831,7 @@ const TermsConditions = () => {
                     In order to notify us of a copyright infringement claim
                     pursuant to the DMCA, you must include:
                 </p>
-                <ul className={'list-disc ml-4'}>
+                <ul className={'ml-4 list-disc'}>
                     <li>
                         {' '}
                         a physical or electronic signature of a person

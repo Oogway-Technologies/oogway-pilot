@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import { streamProfileData } from '../lib/profileHelper'
 import { FirebaseProfile } from '../utils/types/firebase'
 

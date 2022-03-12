@@ -9,7 +9,7 @@ export const useHover = <T>(): [MutableRefObject<T>, boolean] => {
     const handleMouseOut = (): void => setValue(false)
 
     useEffect(
-        () => {
+        (): any => {
             const node: any = ref.current
             if (node) {
                 node.addEventListener('mouseover', handleMouseOver)

@@ -1,11 +1,12 @@
-import Logo from '../Logo'
+import { useUser } from '@auth0/nextjs-auth0'
 import Link from 'next/link'
+import { useRecoilValue } from 'recoil'
+
+import { userProfileState } from '../../atoms/user'
+import { headerClass } from '../../styles/header'
+import Logo from '../Logo'
 import NavLinks from './NavLinks'
 import UserDropdown from './UserDropdown'
-import { headerClass } from '../../styles/header'
-import { useRecoilValue } from 'recoil'
-import { userProfileState } from '../../atoms/user'
-import { useUser } from '@auth0/nextjs-auth0'
 
 const Header = () => {
     // Call UserProfile to pass uid into links
@@ -53,8 +54,8 @@ const Header = () => {
 
                 {/* Center: Search */}
                 <div className={headerClass.search}>
-                    {/*TODO: uncomment search bar when its done. */}
-                    {/*<SearchBar placeholder="What's your question?"/>*/}
+                    {/* TODO: uncomment search bar when its done. */}
+                    {/* <SearchBar placeholder="What's your question?"/>*/}
                 </div>
 
                 {/* Right: User */}

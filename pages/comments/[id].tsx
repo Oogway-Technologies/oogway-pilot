@@ -1,13 +1,13 @@
-import { db } from '../../firebase'
-import { useRouter } from 'next/router'
+import { UilArrowCircleLeft } from '@iconscout/react-unicons'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { FC } from 'react'
+
 import PostCard from '../../components/Feed/Post/Post'
 import Button from '../../components/Utils/Button'
-// @ts-ignore
-import { UilArrowCircleLeft } from '@iconscout/react-unicons'
+import { db } from '../../firebase'
 import { commentsPageClass } from '../../styles/feed'
 import { FirebaseComment, FirebasePost } from '../../utils/types/firebase'
-import { FC } from 'react'
 
 interface CommentPageProps {
     post: FirebasePost
@@ -88,8 +88,7 @@ export async function getServerSideProps(context: {
     const post = {
         id: postRes.id,
         ...postRes.data(),
-        // @ts-ignore
-        timestamp: postRes.data().timestamp.toDate().getTime(),
+        timestamp: postRes?.data()?.timestamp.toDate().getTime() || '',
     }
 
     // Prepare the comments
@@ -105,12 +104,12 @@ export async function getServerSideProps(context: {
     const comments = commentsRef.docs
         .map(doc => ({
             id: doc.id,
+            timestamp: doc?.data().timestamp,
             ...doc.data(),
         }))
         .map(comments => ({
             ...comments,
-            // @ts-ignore
-            timestamp: comments.timestamp.toDate().getTime(),
+            timestamp: comments?.timestamp.toDate()?.getTime() || '',
         }))
     return {
         props: {

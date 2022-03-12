@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+
 import {
     fetcher,
     isValidURL,
@@ -13,12 +14,9 @@ export const useFetchUrlPreview = (text: string) => {
     // Fetch preview
     useEffect(() => {
         if (isValidURL(text) && !parseYoutubeVideoId(text)) {
-            ;(async () => {
-                const res = await fetcher(
-                    `/api/fetchPreviewData?urlToHit=${text}`
-                )
+            fetcher(`/api/fetchPreviewData?urlToHit=${text}`).then(res =>
                 setPreviewImage(res[0])
-            })()
+            )
         }
     }, [text])
 

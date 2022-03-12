@@ -1,23 +1,15 @@
-import { FC, useState, useRef, useEffect, MouseEvent } from 'react'
-
-// JSX and styling
-import Button from '../Utils/Button'
-import Modal from '../Utils/Modal'
-import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
-//@ts-ignore
-import { UilExclamationTriangle } from '@iconscout/react-unicons'
-
 // Form
 import * as EmailValidator from 'email-validator'
-import { useForm } from 'react-hook-form'
-import FlashErrorMessage, {
-    FlashErrorMessageProps,
-} from '../Utils/FlashErrorMessage'
-import useTimeout from '../../hooks/useTimeout'
-
 // db
 import firebase from 'firebase/compat/app'
+import { FC, MouseEvent, useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
+// JSX and styling
+import Button from '../Utils/Button'
+import FlashErrorMessage from '../Utils/FlashErrorMessage'
 
 type PWFormProps = {
     goToLogin: () => void
@@ -67,10 +59,6 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
                 .then(() => {
                     setShowEmailSent(true)
                 })
-                .catch(e => {
-                    const errorCode = e.code
-                    const errorMessage = e.message
-                })
         }
 
         return true
@@ -91,8 +79,8 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
             <div>
                 <div className={loginDivs.modalHeader}>Forgot Password</div>
                 <div>
-                    We've sent an email with instructions on how to reset your
-                    password to your inbox.
+                    {`We've sent an email with instructions on how to reset your
+                    password to your inbox.`}
                 </div>
                 <div className={loginDivs.recoveryNotification}>
                     <div className={loginDivs.recoveryText}>
@@ -122,8 +110,8 @@ const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
             <div>
                 <div className={loginDivs.modalHeader}>Forgot Password</div>
                 <div className={loginDivs.textDisplay}>
-                    We'll send you a link to set a new password. Please enter
-                    the Email you signed up with.
+                    {`We'll send you a link to set a new password. Please enter
+                    the Email you signed up with.`}
                 </div>
                 <div className={loginDivs.signIn}>
                     <div className={loginInputs.inputHeader}>Email</div>

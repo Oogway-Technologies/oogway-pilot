@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+
 import { endOfFeedMessageClass } from '../../styles/feed'
 
 type EndOfFeedProps = {

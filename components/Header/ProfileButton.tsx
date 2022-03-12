@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
-// @ts-ignore
 import { UilUser } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
+import React, { FC } from 'react'
+
 import { profileButtonClass } from '../../styles/header'
 
 interface ProfileButtonProps {
@@ -14,7 +14,9 @@ const ProfileButton: FC<ProfileButtonProps> = ({ hasText, uid }) => {
     const router = useRouter()
 
     const handleOnClick = async () => {
-        uid && router.push(`/profile/${uid}`)
+        if (uid) {
+            router.push(`/profile/${uid}`)
+        }
     }
     return (
         <a className={profileButtonClass.a} onClick={handleOnClick}>

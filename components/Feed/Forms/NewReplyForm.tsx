@@ -1,13 +1,6 @@
-import React, { MouseEvent, useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { db } from '../../../firebase'
-// @ts-ignore
 import { UilCommentPlus } from '@iconscout/react-unicons'
-import { useRouter } from 'next/router'
+import { Avatar } from '@mui/material'
 import firebase from 'firebase/compat/app'
-import { replyFormClass } from '../../../styles/feed'
-import Button from '../../Utils/Button'
-import needsHook from '../../../hooks/needsHook'
 import {
     addDoc,
     collection,
@@ -15,12 +8,19 @@ import {
     serverTimestamp,
     setDoc,
 } from 'firebase/firestore'
-import { Avatar } from '@mui/material'
+import { useRouter } from 'next/router'
+import React, { MouseEvent, useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useRecoilValue } from 'recoil'
+
 import { userProfileState } from '../../../atoms/user'
-import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { FirebaseReply } from '../../../utils/types/firebase'
+import { db } from '../../../firebase'
+import needsHook from '../../../hooks/needsHook'
+import { replyFormClass } from '../../../styles/feed'
 import { longLimit, warningTime } from '../../../utils/constants/global'
+import { FirebaseReply } from '../../../utils/types/firebase'
+import Button from '../../Utils/Button'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 
 type NewReplyFormProps = {
     commentId: string

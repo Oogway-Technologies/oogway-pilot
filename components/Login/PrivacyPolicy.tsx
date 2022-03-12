@@ -41,15 +41,16 @@ const PrivacyPolicy = () => {
                 </p>
                 <p className={privacyDivs.paragraph}>
                     Please note that this Privacy Policy is a legally binding
-                    agreement made between you ("you," "your," or "yourself")
-                    and Oogway Technologies Corp. ("Provider&rdquo;
+                    agreement made between you{' '}
+                    {`("you," "your," or "yourself")`}
+                    and Oogway Technologies Corp. {`("`}Provider&rdquo;
                     &rdquo;we,&rdquo; &rdquo;us&rdquo; or &rdquo;our&rdquo;).
                     This Privacy Policy is governed by, and part of, the Terms
                     of Use.
                 </p>
             </div>
 
-            {/*1. Your Information*/}
+            {/* 1. Your Information*/}
             <div className={privacyDivs.card}>
                 <p className={privacyDivs.subheading}>
                     1.&nbsp;&nbsp;&nbsp; Your Information
@@ -77,7 +78,7 @@ const PrivacyPolicy = () => {
                     called &ldquo;your Information&rdquo;.
                 </p>
                 <div className={privacyDivs.divider} />
-                {/*2. Information Transfer*/}
+                {/* 2. Information Transfer*/}
                 <p className={privacyDivs.subheading}>
                     2.&nbsp;&nbsp;&nbsp; Information Transfer
                 </p>
@@ -139,7 +140,7 @@ const PrivacyPolicy = () => {
                     the use of your personal information by them.
                 </p>
                 <div className={privacyDivs.divider} />
-                {/*3. Material you Choose to Reveal*/}
+                {/* 3. Material you Choose to Reveal*/}
                 <p className={privacyDivs.subheading}>
                     3.&nbsp;&nbsp;&nbsp; Material you Choose to Reveal
                 </p>
@@ -236,7 +237,7 @@ const PrivacyPolicy = () => {
                     PERSONAL INFORMATION.{' '}
                 </p>
                 <div className={privacyDivs.divider} />
-                {/*4. Cookies and Device Identifiers*/}
+                {/* 4. Cookies and Device Identifiers*/}
                 <p className={privacyDivs.subheading}>
                     4.&nbsp;&nbsp;&nbsp; Cookies and Device Identifiers
                 </p>
@@ -431,14 +432,14 @@ const PrivacyPolicy = () => {
                     sites. you are encouraged to review the privacy policies of
                     the different sites you visit.{' '}
                 </p>
-                {/*6. How we use Information*/}
+                {/* 6. How we use Information*/}
                 <p className={privacyDivs.subheading}>
                     6. How we use Information
                 </p>
                 <p className={privacyDivs.paragraph}>
                     We may use Your information:{' '}
                 </p>
-                <ul className={'list-disc ml-4'}>
+                <ul className={'ml-4 list-disc'}>
                     <li> To provide you with our Service.</li>
                     <li>
                         {' '}
@@ -512,7 +513,7 @@ const PrivacyPolicy = () => {
                         your personal information.
                     </li>
                 </ul>
-                {/*7. Information Updates*/}
+                {/* 7. Information Updates*/}
                 <p className={privacyDivs.subheading}>7. Information Updates</p>
                 <p className={privacyDivs.paragraph}>
                     Our databases automatically update any personal information
@@ -522,7 +523,7 @@ const PrivacyPolicy = () => {
                     in mind if you decide to communicate personal information
                     through any of these means.
                 </p>
-                {/*8. Information Retention*/}
+                {/* 8. Information Retention*/}
                 <p className={privacyDivs.subheading}>
                     8. Information Retention
                 </p>
@@ -536,7 +537,7 @@ const PrivacyPolicy = () => {
                     erasing it from our database. We will also respond to
                     written user requests to remove account information.{' '}
                 </p>
-                {/*9. Special Cases in Which we Share Personal Information*/}
+                {/* 9. Special Cases in Which we Share Personal Information*/}
                 <p className={privacyDivs.subheading}>
                     9. Special Cases in Which we Share Personal Information
                 </p>
@@ -555,7 +556,7 @@ const PrivacyPolicy = () => {
                     and be bound by the terms of this Privacy Policy with
                     respect to their use and disclosure of such information.
                 </p>
-                {/*10. Our Security Precautions*/}
+                {/* 10. Our Security Precautions*/}
                 <p className={privacyDivs.subheading}>
                     10. Our Security Precautions
                 </p>
@@ -578,7 +579,7 @@ const PrivacyPolicy = () => {
                     information entered on public terminals from disclosure to
                     third parties.
                 </p>
-                {/*11. Children*/}
+                {/* 11. Children*/}
                 <p className={privacyDivs.subheading}>11. Children</p>
                 <p className={privacyDivs.paragraph}>
                     The Service is intended for general audiences and is not
@@ -591,7 +592,7 @@ const PrivacyPolicy = () => {
                     to remove such information and terminate the child&rsquo;s
                     account
                 </p>
-                {/*12. California Residents: California Privacy Rights*/}
+                {/* 12. California Residents: California Privacy Rights*/}
                 <p className={privacyDivs.subheading}>
                     12. California Residents: California Privacy Rights
                 </p>
@@ -642,7 +643,7 @@ const PrivacyPolicy = () => {
                     questions regarding this policy, or would like to change
                     your preferences, you may contact us at info@oogway.ai.
                 </p>
-                {/*13. European Union users*/}
+                {/* 13. European Union users*/}
                 <p className={privacyDivs.subheading}>
                     13. European Union users{' '}
                 </p>
@@ -654,7 +655,7 @@ const PrivacyPolicy = () => {
                     its storage and use as described in the terms and conditions
                     of this Privacy Policy.{' '}
                 </p>
-                {/*14. Changing our Privacy Policy for Previously Gathered Information*/}
+                {/* 14. Changing our Privacy Policy for Previously Gathered Information*/}
                 <p className={privacyDivs.subheading}>
                     14. Changing our Privacy Policy for Previously Gathered
                     Information
@@ -670,7 +671,7 @@ const PrivacyPolicy = () => {
                     you have read, understand and agree to all terms of this
                     Privacy Policy.{' '}
                 </p>
-                {/*15. Contacting us*/}
+                {/* 15. Contacting us*/}
                 <p className={privacyDivs.subheading}>15. Contacting us</p>
                 <p className={privacyDivs.paragraph}>
                     If you have any questions about this Privacy Policy, our

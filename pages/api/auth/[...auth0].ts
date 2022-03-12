@@ -1,7 +1,8 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
-import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 import { NextApiRequest, NextApiResponse } from 'next'
+
+import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 
 const setFirebaseCustomToken = async (token: string) => {
     // Fetch the Firebase custom token from the Auth0 user
@@ -21,7 +22,7 @@ const setFirebaseCustomToken = async (token: string) => {
 }
 
 // TODO: check these parameters and create types for them to remove any.
-const afterCallback = async (req: any, res: any, session: any, state: any) => {
+const afterCallback = async (session: any, state: any) => {
     // Retrieve the Firebase custom token from the Auth0 user
     const firebaseResponse = await setFirebaseCustomToken(session.idToken)
 

@@ -1,13 +1,14 @@
-import { commentClass, replyClass } from '../../../styles/feed'
-import ReplyHeader from './ReplyHeader'
-import ReplyEngagementBar from './ReplyEngagementBar'
+import { Link } from '@mui/material'
 import firebase from 'firebase/compat/app'
+import React from 'react'
+import Linkify from 'react-linkify'
+
+import { replyClass } from '../../../styles/feed'
+import { isValidURL } from '../../../utils/helpers/common'
 import { staticPostData } from '../../../utils/types/params'
 import { PreviewDecider } from '../../Utils/PreviewDecider'
-import { isValidURL } from '../../../utils/helpers/common'
-import Linkify from 'react-linkify'
-import { Link } from '@mui/material'
-import React from 'react'
+import ReplyEngagementBar from './ReplyEngagementBar'
+import ReplyHeader from './ReplyHeader'
 
 type ReplyProps = {
     replyOwner: string

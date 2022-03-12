@@ -1,31 +1,29 @@
+import { useUser } from '@auth0/nextjs-auth0'
+import { getDownloadURL, ref, uploadString } from '@firebase/storage'
+import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
+import { Avatar, useMediaQuery } from '@mui/material'
+// Firebase
+import { deleteField, doc, updateDoc } from 'firebase/firestore'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import React, { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
+import { useRecoilState } from 'recoil'
+
+import { userProfileState } from '../../atoms/user'
+import API from '../../axios'
 import { db, storage } from '../../firebase'
+import { getProfileDoc } from '../../lib/profileHelper'
+import { deleteMedia } from '../../lib/storageHelper'
 import {
     loginButtons,
     loginDivs,
     loginImages,
     loginInputs,
 } from '../../styles/login'
-import Button from '../Utils/Button'
-import { Avatar, useMediaQuery } from '@mui/material'
-//@ts-ignore
-import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
-import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
-
-// Firebase
-import { deleteField, doc, updateDoc } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
-import { userProfileState } from '../../atoms/user'
-import { useRecoilState } from 'recoil'
-import { getProfileDoc } from '../../lib/profileHelper'
-import { checkFileSize } from '../../utils/helpers/common'
-import FlashErrorMessage from '../Utils/FlashErrorMessage'
 import { warningTime } from '../../utils/constants/global'
-import { deleteMedia } from '../../lib/storageHelper'
-import { useUser } from '@auth0/nextjs-auth0'
-import API from '../../axios'
+import { checkFileSize } from '../../utils/helpers/common'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
+import Button from '../Utils/Button'
+import FlashErrorMessage from '../Utils/FlashErrorMessage'
 
 type UserProfileFormProps = {
     headerText: string
@@ -43,7 +41,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
     const [userProfile, setUserProfile] = useRecoilState(userProfileState)
 
     // Form state
-    const [dm, setDm] = useState(userProfile.dm || false)
+    const [dm] = useState(userProfile.dm || false)
     const [username, setUsername] = useState(userProfile.username || '')
     const [name, setName] = useState(userProfile.name || '')
     const [last, setLast] = useState(userProfile.lastName || '')
@@ -59,13 +57,13 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         useState<ChangeEvent<HTMLInputElement>>()
     const [isImageSizeLarge, setIsImageSizeLarge] = useState<boolean>(false)
 
-    // Router
-    const router = useRouter()
+    // // Router
+    // const router = useRouter()
 
-    // Handler functions
-    const toggleDM = () => {
-        setDm(!dm)
-    }
+    // // Handler functions
+    // const toggleDM = () => {
+    //     setDm(!dm)
+    // }
 
     // Database Hook functions
     const uploadProfileAndContinue = async () => {
@@ -146,7 +144,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                     // If profile needs reseting mark as reset
                     // i.e. upon registration
                     if (doc.data().resetProfile) {
-                        let tmp = doc.data()
+                        const tmp = doc.data()
                         tmp.resetProfile = false
                         await updateDoc(doc?.ref, tmp)
                     }
@@ -245,7 +243,9 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             }
         }
         // Otherwise just remove staged image
-        imageToUpload && setImageToUpload(null)
+        if (imageToUpload) {
+            setImageToUpload(null)
+        }
 
         if (targetEvent) {
             // Reset the event state so the user can reload
