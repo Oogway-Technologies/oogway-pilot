@@ -68,7 +68,6 @@ module.exports = {
         'prefer-spread': 'error', // ts transpiles spread to apply, so no need for manual apply
         'valid-typeof': 'off', // ts(2367),
         'react/react-in-jsx-scope': 'off', // for react 17 imports
-        'no-extra-semi': 'off',
         'tailwindcss/classnames-order': 'warn',
         'tailwindcss/enforces-negative-arbitrary-values': 'warn',
         'tailwindcss/enforces-shorthand': 'warn',
