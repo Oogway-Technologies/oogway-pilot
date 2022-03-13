@@ -45,8 +45,10 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
                         leaveTo="opacity-0 scale-95"
                     >
                         <div
-                            className="overflow-hidden justify-center items-center p-6 my-8 max-w-6xl text-left
-                        bg-white dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all"
+                            className={
+                                'overflow-hidden justify-center items-center p-6 my-8 max-w-6xl text-left' +
+                                'bg-white dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all'
+                            }
                         >
                             {content}
                         </div>
