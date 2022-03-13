@@ -61,6 +61,7 @@ module.exports = {
         'no-this-before-super': 'off', // ts(2376)
         'no-undef': 'off', // ts(2304)
         'no-unreachable': 'off', // ts(7027)
+        'no-unused-vars': 'off', // ts(6133)
         'no-unsafe-negation': 'off', // ts(2365) & ts(2360) & ts(2358)
         'no-var': 'error', // ts transpiles let/const to var, so no need for vars any more
         'prefer-const': 'error', // ts provides better types with const

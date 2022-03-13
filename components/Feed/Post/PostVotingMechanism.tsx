@@ -33,17 +33,13 @@ const PostVotingMechanism = ({
     const userProfile = useRecoilValue(userProfileState)
 
     // Track voting button state
-    const [winningChoice, setWinningChoice] = useState(-1) // Instantiate to value that's not possible
-    const [userVoteChoice, setUserVoteChoice] = useState(-1) // Instantiate to value that's never in index
-    const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle />)
-    const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle />)
-
-    // Track winning choice
-    useEffect(() => {
-        if (votesList[0] > votesList[1]) setWinningChoice(0)
-        else if (votesList[1] > votesList[0]) setWinningChoice(1)
-        else setWinningChoice(-1) // reset to default in event of a tie
-    }, [votesList])
+    const [userVoteChoice, setUserVoteChoice] = useState<number>(-1) // Instantiate to value that's never in index
+    const [voteButtonLeft, setVoteButtonLeft] = useState<JSX.Element>(
+        <UilCircle />
+    )
+    const [voteButtonRight, setVoteButtonRight] = useState<JSX.Element>(
+        <UilCircle />
+    )
 
     // track user vote choice
     useEffect(() => {
@@ -277,15 +273,7 @@ const PostVotingMechanism = ({
                             )
                         )}
                         {user && (
-                            <div
-                                className={
-                                    postCardClass.voteButtonContainer +
-                                    (winningChoice === idx &&
-                                    userVoteChoice != -1
-                                        ? ' shadow-lg shadow-black/10 dark:shadow-neutralDark-150/20'
-                                        : '')
-                                }
-                            >
+                            <div className={postCardClass.voteButtonContainer}>
                                 <button
                                     className={
                                         postCardClass.voteButton +

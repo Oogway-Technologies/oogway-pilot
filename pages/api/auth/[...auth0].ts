@@ -21,8 +21,7 @@ const setFirebaseCustomToken = async (token: string) => {
     return response.json()
 }
 
-// TODO: check these parameters and create types for them to remove any.
-const afterCallback = async (session: any, state: any) => {
+const afterCallback = async (req: any, res: any, session: any, state: any) => {
     // Retrieve the Firebase custom token from the Auth0 user
     const firebaseResponse = await setFirebaseCustomToken(session.idToken)
 
@@ -64,13 +63,6 @@ const afterCallback = async (session: any, state: any) => {
 
     // Update auth0 UserProfile image
     session.user.picture = userProfile?.profilePic
-
-    // Note: session.user already contains the Auth0 user
-    // as Session.user.sub. This should be the same as
-    // the userCredentials returned by Firebase, i.e.,
-    // if (userCredential) {
-    //    session.user.sub === userCredential.user.uid
-    // }
 
     // Return the session
     return session
