@@ -72,7 +72,7 @@ export const postCardClass = {
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
     textVote:
-        'bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 ' +
+        'flex bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 ' +
         'rounded-sm shadow-sm shadow-black/30  dark:shadow-black/50 whitespace-pre-wrap',
     voteButton:
         'p-sm justify-center ' +
@@ -208,7 +208,7 @@ export const compareFormClass = {
         'dark:active:text-primaryDark',
     undoChoice:
         'flex mt-md mx-auto cursor-pointer text-neutral-700 hover:text-error',
-    image: 'flex rounded-[8px] w-48 object-contain',
+    image: 'flex rounded-[8px] w-48 object-contain mx-auto',
 }
 
 // Comments
