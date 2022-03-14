@@ -66,121 +66,114 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
     }
 
     return (
-        <>
-            <div className={'flex flex-col items-center mx-sm sm:mx-0'}>
-                <div className={profileCard.mainDiv}>
-                    {/* profile image*/}
-                    <Avatar
-                        sx={sizeAvatar}
-                        src={userProfileSnapshot?.profilePic || profilePic}
-                        alt={username}
-                    />
-                    {/* container for user details*/}
-                    <div className={profileCard.userDetailsDiv}>
-                        {/* User profile name and buttons list*/}
-                        <div className={'flex items-center mb-1'}>
-                            <div className={profileCard.userProfileName}>
-                                {userProfileSnapshot?.name || name}{' '}
-                                {userProfileSnapshot?.lastName || lastName}
-                            </div>
-
-                            <div
-                                className={
-                                    'flex justify-self-end items-center space-x-2'
-                                }
-                            >
-                                {uid !== currentUserUid ? (
-                                    <>
-                                        {/* TODO: uncomment FOLLOW button when its done. */}
-                                        {/* <Button*/}
-                                        {/*    onClick={() => {*/}
-                                        {/*        alert('TODO: Follow')*/}
-                                        {/*    }}*/}
-                                        {/*    text={'Follow'}*/}
-                                        {/*    keepText={true}*/}
-                                        {/*    addStyle={profileCard.newPostButton}*/}
-                                        {/* />*/}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Button
-                                            onClick={openProfileModal}
-                                            text={'Edit Profile'}
-                                            type={'button'}
-                                            addStyle={profileCard.editButton}
-                                            keepText={true}
-                                        />
-                                        {!isMobile && (
-                                            <Button
-                                                onClick={openPostModal}
-                                                icon={
-                                                    <UilPen
-                                                        className={
-                                                            'mr-1 w-5 h-5'
-                                                        }
-                                                    />
-                                                }
-                                                text={'New Post'}
-                                                addStyle={
-                                                    profileCard.newPostButton
-                                                }
-                                            />
-                                        )}
-                                    </>
-                                )}
-                            </div>
+        <div className={'flex flex-col items-center mx-sm sm:mx-0'}>
+            <div className={profileCard.mainDiv}>
+                {/* profile image*/}
+                <Avatar
+                    sx={sizeAvatar}
+                    src={userProfileSnapshot?.profilePic || profilePic}
+                    alt={username}
+                />
+                {/* container for user details*/}
+                <div className={profileCard.userDetailsDiv}>
+                    {/* User profile name and buttons list*/}
+                    <div className={'flex items-center mb-1'}>
+                        <div className={profileCard.userProfileName}>
+                            {userProfileSnapshot?.name || name}{' '}
+                            {userProfileSnapshot?.lastName || lastName}
                         </div>
-                        {/* username*/}
-                        {username && (
-                            <span className={profileCard.usernameText}>
-                                {userProfileSnapshot?.username || username}
-                            </span>
-                        )}
-                        {/* location and date of joining*/}
-                        {(joinedAt || location) && (
-                            <span className={profileCard.joinedAndLocationText}>
-                                {joinedAt && (
-                                    <>
-                                        Joined {joinedAt}
-                                        {bull}
-                                    </>
-                                )}
-                                {location && (
-                                    <>
-                                        <UilLocationPoint
-                                            className={'mr-2 w-6 h-6'}
-                                        />{' '}
-                                        {userProfileSnapshot?.location ||
-                                            location}
-                                    </>
-                                )}
-                            </span>
-                        )}
-                        {/* user bio if not on mobile device*/}
-                        {bio && !isMobile && (
-                            <span className={profileCard.bioText}>
-                                {userProfileSnapshot?.bio || bio}
-                            </span>
-                        )}
+
+                        <div
+                            className={
+                                'flex justify-self-end items-center space-x-2'
+                            }
+                        >
+                            {uid !== currentUserUid ? (
+                                <>
+                                    {/* TODO: uncomment FOLLOW button when its done. */}
+                                    {/* <Button*/}
+                                    {/*    onClick={() => {*/}
+                                    {/*        alert('TODO: Follow')*/}
+                                    {/*    }}*/}
+                                    {/*    text={'Follow'}*/}
+                                    {/*    keepText={true}*/}
+                                    {/*    addStyle={profileCard.newPostButton}*/}
+                                    {/* />*/}
+                                </>
+                            ) : (
+                                <>
+                                    <Button
+                                        onClick={openProfileModal}
+                                        text={'Edit Profile'}
+                                        type={'button'}
+                                        addStyle={profileCard.editButton}
+                                        keepText={true}
+                                    />
+                                    {!isMobile && (
+                                        <Button
+                                            onClick={openPostModal}
+                                            icon={
+                                                <UilPen
+                                                    className={'mr-1 w-5 h-5'}
+                                                />
+                                            }
+                                            text={'New Post'}
+                                            addStyle={profileCard.newPostButton}
+                                        />
+                                    )}
+                                </>
+                            )}
+                        </div>
                     </div>
+                    {/* username*/}
+                    {username && (
+                        <span className={profileCard.usernameText}>
+                            {userProfileSnapshot?.username || username}
+                        </span>
+                    )}
+                    {/* location and date of joining*/}
+                    {(joinedAt || location) && (
+                        <span className={profileCard.joinedAndLocationText}>
+                            {joinedAt && (
+                                <>
+                                    Joined {joinedAt}
+                                    {bull}
+                                </>
+                            )}
+                            {location && (
+                                <>
+                                    <UilLocationPoint
+                                        className={'mr-2 w-6 h-6'}
+                                    />{' '}
+                                    {userProfileSnapshot?.location || location}
+                                </>
+                            )}
+                        </span>
+                    )}
+                    {/* user bio if not on mobile device*/}
+                    {bio && !isMobile && (
+                        <span className={profileCard.bioText}>
+                            {userProfileSnapshot?.bio || bio}
+                        </span>
+                    )}
                 </div>
-                {/* user bio if on mobile device.*/}
-                {bio && isMobile && (
-                    <span className={profileCard.bioText}>
-                        {userProfileSnapshot?.bio || bio}
-                    </span>
-                )}
-                <Modal show={showProfileForm} onClose={closeProfileModal}>
-                    <UserProfileForm
-                        closeModal={closeProfileModal}
-                        cancelButtonText="Cancel"
-                        headerText="Edit Profile"
-                    />
-                </Modal>
             </div>
+            {/* user bio if on mobile device.*/}
+            {bio && isMobile && (
+                <span className={profileCard.bioText}>
+                    {userProfileSnapshot?.bio || bio}
+                </span>
+            )}
+            <Modal show={showProfileForm} onClose={closeProfileModal}>
+                <UserProfileForm
+                    closeModal={closeProfileModal}
+                    cancelButtonText="Cancel"
+                    headerText="Edit Profile"
+                />
+            </Modal>
             <Modal show={showNewPostForm} onClose={closePostModal}>
                 <NewPostForm closeModal={closePostModal} />
             </Modal>
-        </>
+        </div>
     )
 }

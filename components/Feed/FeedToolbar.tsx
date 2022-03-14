@@ -23,53 +23,50 @@ const FeedToolbar = () => {
 
     // TODO: Center buttons when New Post button is not displayed
     return (
-        <>
-            <div className={feedToolbarClass.div}>
-                {/* Left: Tabs */}
-                <div className={feedToolbarClass.leftDiv}>
-                    {/* TODO: uncomment buttons when its done. */}
+        <div className={feedToolbarClass.div}>
+            {/* Left: Tabs */}
+            <div className={feedToolbarClass.leftDiv}>
+                {/* TODO: uncomment buttons when its done. */}
 
-                    {/* <Button text="Home" keepText={false} icon={<UilEstate/>} */}
-                    {/*    type='button'*/}
-                    {/*    addStyle={feedToolbarClass.leftTabButtons} */}
-                    {/*    onClick={needsHook}*/}
-                    {/* />*/}
-                    {/* <Button text="Hot" keepText={false} icon={<UilFire/>} */}
-                    {/*    type='button'*/}
-                    {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
-                    {/*    onClick={needsHook}*/}
-                    {/* />*/}
-                    {/* <Button text="New" keepText={false} icon={<UilNewspaper/>}*/}
-                    {/*    type='button'*/}
-                    {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
-                    {/*    onClick={needsHook}*/}
-                    {/* />*/}
-                    {/* <Button text="Unanswered" keepText={false} icon={<UilQuestionCircle/>}*/}
-                    {/*    type='button'*/}
-                    {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
-                    {/*    onClick={needsHook}*/}
-                    {/* />*/}
-                </div>
-
-                {/* Right: new post button */}
-                {user && (
-                    <div className={feedToolbarClass.rightDiv}>
-                        <Button
-                            text="New Post"
-                            keepText={false}
-                            icon={<UilPen />}
-                            type="button"
-                            addStyle={feedToolbarClass.newPostButton}
-                            onClick={openModal}
-                        />
-                    </div>
-                )}
+                {/* <Button text="Home" keepText={false} icon={<UilEstate/>} */}
+                {/*    type='button'*/}
+                {/*    addStyle={feedToolbarClass.leftTabButtons} */}
+                {/*    onClick={needsHook}*/}
+                {/* />*/}
+                {/* <Button text="Hot" keepText={false} icon={<UilFire/>} */}
+                {/*    type='button'*/}
+                {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
+                {/*    onClick={needsHook}*/}
+                {/* />*/}
+                {/* <Button text="New" keepText={false} icon={<UilNewspaper/>}*/}
+                {/*    type='button'*/}
+                {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
+                {/*    onClick={needsHook}*/}
+                {/* />*/}
+                {/* <Button text="Unanswered" keepText={false} icon={<UilQuestionCircle/>}*/}
+                {/*    type='button'*/}
+                {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
+                {/*    onClick={needsHook}*/}
+                {/* />*/}
             </div>
 
+            {/* Right: new post button */}
+            {user && (
+                <div className={feedToolbarClass.rightDiv}>
+                    <Button
+                        text="New Post"
+                        keepText={false}
+                        icon={<UilPen />}
+                        type="button"
+                        addStyle={feedToolbarClass.newPostButton}
+                        onClick={openModal}
+                    />
+                </div>
+            )}
             <Modal show={isOpen} onClose={closeModal}>
                 <NewPostForm closeModal={closeModal} />
             </Modal>
-        </>
+        </div>
     )
 }
 
