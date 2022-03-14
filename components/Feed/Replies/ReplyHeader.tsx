@@ -68,9 +68,11 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                         <span className="pl-sm font-bold">
                             { getAuthorName(authorProfile, parentPostData) }
                         </span>
-                        <span className="pl-sm font-bold">
+                        {(parentPostData.authorUid == authorUid) &&
+                        (<span className="pl-sm font-bold">
                             {authorLabel}
                         </span>
+                        )}
                     </div>
 
                     <div className={postCardClass.leftMobileRowTwo}>

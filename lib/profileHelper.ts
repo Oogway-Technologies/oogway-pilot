@@ -57,7 +57,7 @@ export const getProfilePic = (
 ) => {
     
     if( parentPost.authorUid == authorProfile?.uid && parentPost.isAnonymous) {
-        return anonymousUserName
+        return undefined
     }
     return authorProfile?.profilePic || undefined
 }
