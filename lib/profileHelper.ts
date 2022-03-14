@@ -61,8 +61,9 @@ export const getProfilePic = (
     authorProfile: FirebaseProfile | undefined,
     parentPost: staticPostData
 ) => {
-    if (parentPost.authorUid == authorProfile?.uid && parentPost.isAnonymous) {
-        return anonymousUserName
+    
+    if( parentPost.authorUid == authorProfile?.uid && parentPost.isAnonymous) {
+        return undefined
     }
     return authorProfile?.profilePic || undefined
 }
