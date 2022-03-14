@@ -80,7 +80,7 @@ const _CompareChooseTypeForm = React.forwardRef<
     const isMobile = useMediaQuery('(max-width: 500px)')
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col text-black dark:text-neutralDark-50">
             <div className={compareFormClass.header}>
                 <div>Create Poll</div>
                 <div>

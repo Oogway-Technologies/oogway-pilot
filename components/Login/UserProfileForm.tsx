@@ -274,7 +274,9 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             <div className={loginDivs.signIn}>
                 {/* Header */}
                 <div className={loginDivs.modalHeader}>{headerText}</div>
-                <div>Complete your profile below.</div>
+                <div className={loginDivs.modalSubheader}>
+                    Complete your profile below.
+                </div>
 
                 {/* Upload Image */}
                 <div className={loginInputs.inputHeader}>Profile Picture</div>

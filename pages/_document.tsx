@@ -23,6 +23,7 @@ class MyDocument extends Document {
                 <body className="bg-neutral-25 dark:bg-neutralDark-600">
                     <Main />
                     <NextScript />
+                    <div id="modal" />
                 </body>
             </Html>
         )

@@ -170,14 +170,14 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
                         {userProfileSnapshot?.bio || bio}
                     </span>
                 )}
+                <Modal show={showProfileForm} onClose={closeProfileModal}>
+                    <UserProfileForm
+                        closeModal={closeProfileModal}
+                        cancelButtonText="Cancel"
+                        headerText="Edit Profile"
+                    />
+                </Modal>
             </div>
-            <Modal show={showProfileForm} onClose={closeProfileModal}>
-                <UserProfileForm
-                    closeModal={closeProfileModal}
-                    cancelButtonText="Cancel"
-                    headerText="Edit Profile"
-                />
-            </Modal>
             <Modal show={showNewPostForm} onClose={closePostModal}>
                 <NewPostForm closeModal={closePostModal} />
             </Modal>

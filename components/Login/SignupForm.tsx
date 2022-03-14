@@ -154,7 +154,12 @@ const SignUpForm: FC<SignUpFormProps> = ({ goToLogin, closeModal }) => {
 
     const PrivacyModal = useMemo(
         () => (
-            <Modal show={isPrivacyModal} onClose={setIsPrivacyModal}>
+            <Modal
+                show={isPrivacyModal}
+                onClose={() => {
+                    setIsPrivacyModal(false)
+                }}
+            >
                 <PrivacyPolicy />
             </Modal>
         ),
@@ -163,7 +168,12 @@ const SignUpForm: FC<SignUpFormProps> = ({ goToLogin, closeModal }) => {
 
     const TermModal = useMemo(
         () => (
-            <Modal show={isTerm} onClose={setIsTerm}>
+            <Modal
+                show={isTerm}
+                onClose={() => {
+                    setIsTerm(false)
+                }}
+            >
                 <TermsConditions />
             </Modal>
         ),

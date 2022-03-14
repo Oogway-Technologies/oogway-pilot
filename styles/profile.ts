@@ -5,7 +5,8 @@ export const profilePage = {
 
 export const profileCard = {
     mainDiv: 'flex items-center mx-3 my-5 md:my-9 w-full',
-    userProfileName: 'mr-auto justify-self-start font-bold text-2xl',
+    userProfileName:
+        'mr-auto justify-self-start font-bold text-2xl text-black dark:text-neutralDark-150',
     userDetailsDiv: 'flex flex-col space-y-2 w-full h-full  ml-4',
     profileImg: 'w-32 h-32 rounded-full self-start md:h-40 md:w-40',
     newPostButton:

@@ -1,5 +1,4 @@
 import { getDownloadURL, ref, uploadString } from '@firebase/storage'
-import { Dialog } from '@headlessui/react'
 import {
     UilBalanceScale,
     UilImagePlus,
@@ -662,12 +661,12 @@ const NewPostForm: FC<NewPostProps> = ({
 
     return (
         <div className={postFormClass.modalDiv}>
-            <Dialog.Title as="div" className={postFormClass.dialogTitle}>
+            <div className={postFormClass.dialogTitle}>
                 <div>{`What's your question?`}</div>
                 <ToggleIncognito
                     onChange={() => setIsIncognito(!isIncognito)}
                 />
-            </Dialog.Title>
+            </div>
             {/* Question form */}
             <form className={postFormClass.form}>
                 {/* Question: required */}

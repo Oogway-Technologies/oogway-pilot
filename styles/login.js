@@ -53,7 +53,7 @@ export const loginInputs = {
         'inline-flex pt-sm ml-sm items-center text-sm text-alert dark:text-alert',
 }
 export const loginDivs = {
-    customSignIn: 'flex justify-between items-center min-h-50',
+    customSignIn: 'flex justify-between items-center min-h-50 mt-md',
     customSignUp: 'flex justify-between items-center min-h-50 mt-3',
     customLink: 'text-base float-right cursor-pointer text-primary',
     recoveryNotification:
@@ -61,7 +61,10 @@ export const loginDivs = {
     sideBySide: 'inline-flex space-x-lg w-full md:w-128 items-center',
     textDisplay: 'max-w-lg',
     recoveryText: 'text-base p-0.5 m-1.5 text-neutral-700 ',
-    modalHeader: 'flex items-start justify-start text-2xl font-bold py-2.5',
+    modalHeader:
+        'flex items-start justify-start text-2xl font-bold py-2.5 text-black dark:text-neutralDark-150',
+    modalSubheader:
+        'flex items-start justify-center py-2.5 text-black dark:text-neutralDark-150',
     signIn: 'flex flex-col p-1',
     container: 'grid place-items-center h-screen bg-white ',
     logo: 'h-52 w-52 mb-12 ',
