@@ -50,10 +50,12 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
                     className={modal.wrapper}
                     aria-modal="true"
                     ref={modalWrapperRef}
-                    onClick={()=>  onClose()}
-                    
+                    onClick={() => onClose()}
                 >
-                    <div className={modal.container} onClick={(e)=>e.stopPropagation()}>
+                    <div
+                        className={modal.container}
+                        onClick={e => e.stopPropagation()}
+                    >
                         {centerModal}
                         <div className={modal.content}>{content}</div>
                     </div>
@@ -72,6 +74,5 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
         return null
     }
 }
-
 
 export default Modal
