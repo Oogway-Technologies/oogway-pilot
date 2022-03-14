@@ -12,6 +12,7 @@ module.exports = {
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:tailwindcss/recommended',
+        'plugin:@next/next/recommended',
     ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -27,6 +28,7 @@ module.exports = {
         '@typescript-eslint',
         'simple-import-sort',
         'tailwindcss',
+        '@next/eslint-plugin-next',
     ],
     settings: {
         react: {
