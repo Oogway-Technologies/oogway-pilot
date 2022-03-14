@@ -1,9 +1,9 @@
+import { FieldValue } from 'firebase/firestore'
 import moment from 'moment'
 import React from 'react'
-import {FieldValue} from "firebase/firestore";
 
-interface TimeObject extends FieldValue{
-    seconds:number
+interface TimeObject extends FieldValue {
+    seconds: number
 }
 interface TimestampProps {
     timestamp: FieldValue | Date | null
@@ -23,11 +23,10 @@ const Timestamp = ({ timestamp }: TimestampProps) => {
             if (!('seconds' in timestamp)) {
                 return 'Cannot fetch time'
             }
-            const timestampType:TimeObject = timestamp as TimeObject;
+            const timestampType: TimeObject = timestamp as TimeObject
             if (timestampType && timestampType.seconds) {
-                timestamp = new Date((timestampType?.seconds * 1000) || '')
+                timestamp = new Date(timestampType?.seconds * 1000 || '')
             }
-
         }
 
         // Convert to fromNow time

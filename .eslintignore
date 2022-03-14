@@ -1,0 +1,14 @@
+.next
+next-env.d.ts
+node_modules
+yarn.lock
+package-lock.json
+public
+
+# config files
+tailwind.config.js
+postcss.config.js
+next.config.js
+.eslintrc.js
+decs.d.ts
+functions

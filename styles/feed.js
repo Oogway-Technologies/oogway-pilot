@@ -14,8 +14,7 @@ export const feedApiClass = {
 
 export const endOfFeedMessageClass = {
     outerDiv:
-        'flex flex-col m-md align-items-center text-sm text-neutral-700 \
-    dark:text-neutralDark-150',
+        'flex flex-col m-md align-items-center text-sm text-neutral-700 dark:text-neutralDark-150',
     topMessage: 'm-auto p-sm',
     bottomMessage: 'm-auto',
 }
@@ -26,27 +25,30 @@ export const feedToolbarClass = {
     leftDiv: 'flex items-center justify-self-start md:mr-auto',
     rightDiv: 'flex items-center justify-self-end md:ml-auto',
     leftTabButtons:
-        'rounded-[20px] p-sm md:px-md md:space-x-2 border-2 border-solid border-transparent\
-        text-neutral-700 dark:text-neutralDark-150 \
-        hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
-        hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
-        hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
+        'rounded-[20px] p-sm md:px-md md:space-x-2 border-2 border-solid border-transparent ' +
+        'text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold ' +
+        'hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20 ' +
+        'hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
     newPostButton:
-        'rounded-[20px] p-sm md:px-md md:space-x-2 \
-        bg-primary dark:bg-primaryDark hover:bg-primaryActive \
-        active:bg-primaryActive dark:hover:bg-primaryActive \
-        dark:active:bg-primaryActive text-white font-bold',
+        'rounded-[20px] p-sm md:px-md md:space-x-2 ' +
+        'bg-primary dark:bg-primaryDark hover:bg-primaryActive' +
+        'active:bg-primaryActive dark:hover:bg-primaryActive ' +
+        'dark:active:bg-primaryActive text-white font-bold',
 }
 
 // PostCard
 export const postCardClass = {
-    card: 'flex flex-col mx-3 px-md pt-md pb-sm rounded-md shadow-sm shadow-black/20 dark:shadow-black/60 \
-        dark:bg-neutralDark-500',
+    card:
+        'flex flex-col px-md pt-md pb-sm rounded-md shadow-sm shadow-black/20 dark:shadow-black/60 ' +
+        'dark:bg-neutralDark-500',
     // Header
-    header: 'overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 \
-          space-x-1 items-center',
-    avatar: 'h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25\
-        hover:opacity-80 hover:scale-125 cursor-pointer',
+    header:
+        'overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 ' +
+        'space-x-1 items-center',
+    avatar:
+        'h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
+        'hover:opacity-80 hover:scale-125 cursor-pointer',
     infoDiv: 'flex flex-col',
     headerLeft: 'flex w-11/12 items-center',
     headerRight: 'flex w-1/12 justify-end',
@@ -70,19 +72,19 @@ export const postCardClass = {
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
     textVote:
-        'bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 \
-        rounded-sm shadow-sm shadow-black/30  dark:shadow-black/50 whitespace-pre-wrap',
+        'flex bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 ' +
+        'rounded-sm shadow-sm shadow-black/30  dark:shadow-black/50 whitespace-pre-wrap',
     voteButton:
-        'p-sm justify-center \
-            hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary \
-            focus:text-primary dark:focus:text-primary text-sm',
+        'p-sm justify-center ' +
+        'hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary ' +
+        'focus:text-primary dark:focus:text-primary text-sm',
     voteCounter: 'text-sm text-neutral-700 dark:text-neutralDark-150',
     // Engagement
     engagementBar: 'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-sm',
     engagementButton:
-        'items-center space-x-2  \
-            hover:text-neutral-800 dark:hover:text-neutralDark-50  \
-            active:text-primary whitespace-nowrap',
+        'items-center space-x-2  ' +
+        'hover:text-neutral-800 dark:hover:text-neutralDark-50  ' +
+        'active:text-primary',
 }
 
 export const postOptionsDropdownClass = {
@@ -90,23 +92,23 @@ export const postOptionsDropdownClass = {
     menuButtonClass:
         'inline-flex top-sm right-sm text-neutral-700 cursor-pointer',
     menuItemsClass:
-        'w-auto h-auto mt-2 p-2 bg-white dark:bg-neutralDark-500 rounded-md shadow-lg \
-        ring-2 ring-primary dark:ring-white ring-opacity-50 focus:outline-none before:font-bold',
+        'w-auto h-auto mt-2 p-2 bg-white dark:bg-neutralDark-500 rounded-md shadow-lg ' +
+        'ring-2 ring-primary dark:ring-white ring-opacity-50 focus:outline-none before:font-bold',
     buttonAddStyle:
-        'items-center space-x-2 px-sm text-neutral-700 dark:text-neutralDark-150 \
-                hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
-                hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
+        'items-center space-x-2 px-sm text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold ' +
+        'hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
     // Delete post confirmation modal
     modalDiv: 'flex-col bg-white dark:bg-neutralDark-500',
     modalTitle:
         'flex px-2 py-md text-lg font-bold  text-neutral-800 dark:text-neutralDark-50',
     modalCancelButton:
-        'rounded-[20px] p-sm w-full justify-center bg-neutral-150 hover:bg-neutral-300\
-            text-neutral-700 text-sm font-bold',
+        'rounded-[20px] p-sm w-full justify-center bg-neutral-150 hover:bg-neutral-300 ' +
+        'text-neutral-700 text-sm font-bold',
     modalConfirmButton:
-        'rounded-[20px] p-sm w-full space-x-2 justify-center bg-alert dark:bg-alertDark\
-            hover:bg-error active:bg-error dark:hover:bg-errorDark \
-            dark:active:bg-errorDark text-white dark:text-white font-bold',
+        'rounded-[20px] p-sm w-full space-x-2 justify-center bg-alert dark:bg-alertDark ' +
+        'hover:bg-error active:bg-error dark:hover:bg-errorDark ' +
+        'dark:active:bg-errorDark text-white dark:text-white font-bold',
 }
 
 export const postFormClass = {
@@ -116,25 +118,25 @@ export const postFormClass = {
     // Form
     form: 'flex flex-col p-sm space-y-3',
     formQuestion:
-        'border-solid border-[1px] border-neutral-300 \
-            focus-within:border-primary focus-visible:border-primary active:border-neutral-300\
-           rounded-[8px]',
+        'border-solid border-[1px] border-neutral-300 ' +
+        'focus-within:border-primary focus-visible:border-primary active:border-neutral-300 ' +
+        'rounded-[8px]',
     formQuestionInput:
         'h-12 bg-transparent w-full max-w-full px-5 focus:outline-none text-sm',
     formDescription:
-        'border-solid border-[1px] border-neutral-300 \
-            focus-within:border-primary focus-visible:border-primary active:border-neutral-300\
-            alert:border-alert rounded-[8px]',
+        'border-solid border-[1px] border-neutral-300 ' +
+        'focus-within:border-primary focus-visible:border-primary active:border-neutral-300 ' +
+        'alert:border-alert rounded-[8px]',
     formDescriptionInput:
-        'resize-none w-full h-28 bg-transparent flex-grow py-2 px-5\
-            focus:outline-none text-sm',
+        'resize-none w-full h-28 bg-transparent flex-grow py-2 px-5 ' +
+        'focus:outline-none text-sm',
     uploadBar: 'inline-flex flex-col w-full space-y-3 px-2 py-md',
     imageSizeAlert:
         'inline-flex items-center m-0 text-sm text-alert dark:text-alert',
     formCompareText:
-        'border-solid border-[1px] border-neutral-300 w-36 lg:w-96 xl:w-96 \
-            focus-within:border-primary focus-visible:border-primary active:border-neutral-300\
-            alert:border-alert rounded-[8px]',
+        'border-solid border-[1px] border-neutral-300 w-36 lg:w-96 xl:w-96 ' +
+        'focus-within:border-primary focus-visible:border-primary active:border-neutral-300 ' +
+        'alert:border-alert rounded-[8px]',
     formAlert: 'inline-flex items-center text-sm text-alert dark:text-alert',
     imageComparisonDiv: 'flex place-content-between pb-md',
     imageSelectedText:
@@ -148,17 +150,17 @@ export const postFormClass = {
     image: 'flex rounded-[8px] h-20  object-contain',
     // Button styles
     cancelButton:
-        'rounded-[20px] p-sm w-full justify-center bg-neutral-150 hover:bg-neutral-300\
-            text-neutral-700 text-sm font-bold',
+        'rounded-[20px] p-sm w-full justify-center bg-neutral-150 hover:bg-neutral-300 ' +
+        'text-neutral-700 text-sm font-bold',
     PostButton:
-        'rounded-[20px] p-sm w-full space-x-2 justify-center bg-primary dark:bg-primaryDark\
-            hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive \
-            dark:active:bg-primaryActive text-white font-bold disabled-style',
+        'rounded-[20px] p-sm w-full space-x-2 justify-center bg-primary dark:bg-primaryDark ' +
+        'hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive ' +
+        'dark:active:bg-primaryActive text-white font-bold disabled-style',
     imageButton:
-        'inline-flex p-sm rounded-[20px] text-neutral-700 dark:text-neutralDark-150 \
-            hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
-            hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
-            hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
+        'inline-flex p-sm rounded-[20px] text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold ' +
+        'hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20 ' +
+        'hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
     removeImageButton:
         'flex my-md cursor-pointer text-neutral-700 hover:text-error',
     compareUpload:
@@ -167,19 +169,19 @@ export const postFormClass = {
 
 export const toggleIncognitoClass = {
     switchSlide:
-        'relative inline-flex items-center h-7 rounded-full w-12 px-0.5 \
-        transition-colors ease-in-out duration-300',
+        'relative inline-flex items-center h-7 rounded-full w-12 px-0.5 ' +
+        'transition-colors ease-in-out duration-300',
     switchButton:
-        'rounded-full inline-block w-6 h-6 transform bg-white \
-        transition ease-in-out duration-300',
+        'rounded-full inline-block w-6 h-6 transform bg-white ' +
+        'transition ease-in-out duration-300',
 }
 
 export const compareFormClass = {
     container: 'flex flex-col',
     header: 'inline-flex font-bold items-center justify-between pb-md',
     cancelButton:
-        'p-1 text-error rounded-full inline-flex font-bold items-center \
-        hover:scale-110 dark:hover:scale-110',
+        'p-1 text-error rounded-full inline-flex font-bold items-center ' +
+        'hover:scale-110 dark:hover:scale-110',
     tab: 'flex flex-col w-full h-fit rounded-md border border-1 border-neutralDark-150 divide-y divide-neutralDark-150',
     formContainer:
         'grid grid-cols-1 md:grid-cols-2 grid-rows-auto gap-x-sm gap-y-sm p-sm',
@@ -192,21 +194,21 @@ export const compareFormClass = {
     smallGreyText: 'text-sm text-neutral-700 dark:text-neutralDark-50',
     textInputDiv: 'rounded-[8px] bg-primary/25 dark:bg-primaryDark/25',
     textInput:
-        'resize-none w-full h-xxl bg-transparent flex-grow py-2 px-5 \
-        focus:outline-none text-sm max-h-[100px] scrollbar-hide',
+        'resize-none w-full h-xxl bg-transparent flex-grow py-2 px-5 ' +
+        'focus:outline-none text-sm max-h-[100px] scrollbar-hide',
     caption:
-        'resize-none w-full h-xl bg-transparent flex-grow py-2 px-5 \
-        focus:outline-none text-sm max-h-[100px] scrollbar-hide',
+        'resize-none w-full h-xl bg-transparent flex-grow py-2 px-5 ' +
+        'focus:outline-none text-sm max-h-[100px] scrollbar-hide',
     previewText: 'm-auto w-full flex-grow',
     // Image only subform
     uploadButton:
-        'inline-flex space-x-sm items-center text-neutral-700 dark:text-neutralDark-150 \
-        hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
-        hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary \
-        dark:active:text-primaryDark',
+        'inline-flex space-x-sm items-center text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold ' +
+        'hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary ' +
+        'dark:active:text-primaryDark',
     undoChoice:
         'flex mt-md mx-auto cursor-pointer text-neutral-700 hover:text-error',
-    image: 'flex rounded-[8px] w-48 object-contain',
+    image: 'flex rounded-[8px] w-48 object-contain mx-auto',
 }
 
 // Comments
@@ -219,16 +221,17 @@ export const commentsPageClass = {
         'flex-grow h-screen pb-60 xl:mr-40 overflow-y-auto scrollbar-hide',
     contentDiv: 'mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
     goBackButton:
-        'rounded-[20px] p-sm space-x-sm text-primary dark:text-primaryDark bg-transparent dark:bg-transparent \
-        hover:text-white dark:hover:text-white hover:bg-primary dark:hover:bg-primaryDark font-semibold text-lg items-center',
+        'rounded-[20px] p-sm space-x-sm text-primary dark:text-primaryDark bg-transparent dark:bg-transparent ' +
+        'hover:text-white dark:hover:text-white hover:bg-primary dark:hover:bg-primaryDark font-semibold text-lg items-center',
 }
 
 export const commentsApiClass = {
     outerDiv: 'mb-md ml-xl',
     hr: 'mt-sm mb-lg text-neutralDark-50',
     innerDiv: 'flex flex-row mb-xl',
-    avatar: 'h-[45px] w-[45px] mr-md ring-1 ring-black/25 dark:ring-neutralDark-50/25\
-        hover:opacity-80 hover:scale-125',
+    avatar:
+        'h-[45px] w-[45px] mr-md ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
+        'hover:opacity-80 hover:scale-125',
     loginReminder:
         'justify-center text-xs text-neutral-700 dark:text-neutralDark-150',
     counter: 'mb-sm font-bold text-neutral-700 dark:text-neutralDark-150',
@@ -238,32 +241,32 @@ export const commentFormClass = {
     form: 'flex flex-col',
     body: 'inline-flex items-center space-x-md',
     commentBar:
-        'inline-flex rounded-[10px] items-center py-2 pl-2 pr-1 md:pl-5 md:pr-3 lg:w-96 xl:w-96 \
-        border-solid border-2 border-neutral-50 dark:border-neutralDark-150 \
-        focus-within:border-primary focus-visible:border-primary \
-        dark:focus-within:border-primary dark:focus-visible:border-primary \
-        active:border-neutral-300 dark:active:border-neutralDark-50 \
-        hover:border-neutral-150 dark:hover:border-neutralDark-50 w-full',
+        'inline-flex rounded-[10px] items-center py-2 pl-2 pr-1 md:pl-5 md:pr-3 lg:w-96 xl:w-96 ' +
+        'border-solid border-2 border-neutral-50 dark:border-neutralDark-150 ' +
+        'focus-within:border-primary focus-visible:border-primary ' +
+        'dark:focus-within:border-primary dark:focus-visible:border-primary ' +
+        'active:border-neutral-300 dark:active:border-neutralDark-50 ' +
+        'hover:border-neutral-150 dark:hover:border-neutralDark-50',
     commentInput:
-        'md:w-52 lg:w-80 justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white \
-        text-sm lg:text-base',
+        'md:w-52 lg:w-80 justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white ' +
+        'text-sm lg:text-base',
     commentTextArea:
-        'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
-        text-black dark:text-white text-sm md:text-base',
+        'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent ' +
+        'text-black dark:text-white text-sm md:text-base',
     growingTextArea:
-        'w-full p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent \
-        text-black dark:text-white text-sm md:text-base h-[24px] max-h-[100px] scrollbar-hide p-0',
+        'w-full p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent ' +
+        'text-black dark:text-white text-sm md:text-base h-[24px] max-h-[100px] scrollbar-hide p-0',
     mobileSubmitDiv: 'inline-flex justify-between mt-sm',
     imageButton:
-        'p-sm rounded-[20px] ml-1 justify-self-end text-neutral-700 dark:text-neutralDark-150 \
-        hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold \
-        hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20\
-        hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
+        'p-sm rounded-[20px] ml-1 justify-self-end text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold ' +
+        'hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20 ' +
+        'hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
     submitButton:
-        'rounded-[20px] p-sm md:px-md md:space-x-2 \
-      bg-primary dark:bg-primaryDark hover:bg-primaryActive \
-      active:bg-primaryActive dark:hover:bg-primaryActive \
-      dark:active:bg-primaryActive text-white font-bold items-center',
+        'rounded-[20px] p-sm md:px-md md:space-x-2 ' +
+        'bg-primary dark:bg-primaryDark hover:bg-primaryActive ' +
+        'active:bg-primaryActive dark:hover:bg-primaryActive ' +
+        'dark:active:bg-primaryActive text-white font-bold items-center',
     imageSizeAlert:
         'inline-flex items-center m-0 text-sm text-alert dark:text-alert mt-1',
     formAlert:
@@ -287,9 +290,9 @@ export const commentClass = {
 export const commentEngagementBarClass = {
     engagementBar: 'flex px-md mt-md pb-md ml-xl w-3/5 space-x-md text-sm',
     engagementButton:
-        'inline-flex items-center space-x-2 \
-            hover:text-neutral-800 dark:hover:text-neutralDark-50 \
-            active:text-primary whitespace-nowrap',
+        'inline-flex items-center space-x-2 ' +
+        'hover:text-neutral-800 dark:hover:text-neutralDark-50 ' +
+        'active:text-primary',
 }
 
 // Replies
@@ -314,29 +317,30 @@ export const replyClass = {
 export const replyFormClass = {
     form: 'flex flex-col',
     body: 'inline-flex items-center space-x-md',
-    avatar: 'h-[45px] w-[45px] ring-1 ring-black/25 dark:ring-neutralDark-50/25\
-        hover:opacity-80 hover:scale-125',
+    avatar:
+        'h-[45px] w-[45px] ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
+        'hover:opacity-80 hover:scale-125',
     replyBar:
-        'rounded-[10px] items-center py-2 px-2 md:px-5 lg:w-80 \
-          border-solid border-2 border-neutral-50 dark:border-neutralDark-150 \
-          focus-within:border-primary focus-visible:border-primary \
-          dark:focus-within:border-primary dark:focus-visible:border-primary \
-          active:border-neutral-300 dark:active:border-neutralDark-50 \
-          hover:border-neutral-150 dark:hover:border-neutralDark-50 w-full',
+        'rounded-[10px] items-center py-2 px-2 md:px-5 lg:w-80 ' +
+        'border-solid border-2 border-neutral-50 dark:border-neutralDark-150 ' +
+        'focus-within:border-primary focus-visible:border-primary ' +
+        'dark:focus-within:border-primary dark:focus-visible:border-primary ' +
+        'active:border-neutral-300 dark:active:border-neutralDark-50 ' +
+        'hover:border-neutral-150 dark:hover:border-neutralDark-50',
     replyInput:
-        'w-full focus:outline-none border-none bg-transparent text-black dark:text-white \
-          text-sm',
+        'w-full focus:outline-none border-none bg-transparent text-black dark:text-white ' +
+        'text-sm',
     replyTextArea:
-        'w-full p-sm flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
-            text-sm',
+        'w-full p-sm flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white ' +
+        'text-sm',
     growingTextArea:
-        'w-full flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white \
-            text-sm h-[20px] max-h-[80px] scrollbar-hide p-0',
+        'w-full flex-wrap resize-none focus:outline-none border-none bg-transparent text-black dark:text-white ' +
+        'text-sm h-[20px] max-h-[80px] scrollbar-hide p-0',
     submitButton:
-        'rounded-[20px] p-sm md:px-md md:space-x-2 \
-            bg-primary dark:bg-primaryDark hover:bg-primaryActive \
-            active:bg-primaryActive dark:hover:bg-primaryActive \
-            dark:active:bg-primaryActive text-white font-bold justify-self-end',
+        'rounded-[20px] p-sm md:px-md md:space-x-2 ' +
+        'bg-primary dark:bg-primaryDark hover:bg-primaryActive ' +
+        'active:bg-primaryActive dark:hover:bg-primaryActive ' +
+        'dark:active:bg-primaryActive text-white font-bold',
     formAlert:
         'inline-flex pt-sm ml-xxl items-center text-sm text-alert dark:text-alert',
     formAlertMobile:
@@ -344,8 +348,9 @@ export const replyFormClass = {
 }
 
 export const replyHeaderClass = {
-    avatar: 'h-[30px] w-[30px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25\
-        hover:opacity-80 hover:scale-125',
+    avatar:
+        'h-[30px] w-[30px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
+        'hover:opacity-80 hover:scale-125',
 }
 
 export const replyEngagementBarClass = {

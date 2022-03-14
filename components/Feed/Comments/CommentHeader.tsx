@@ -1,17 +1,25 @@
-import Timestamp from '../../Utils/Timestamp'
-import React, {FC} from 'react'
-import needsHook from '../../../hooks/needsHook'
-import {postCardClass} from '../../../styles/feed'
-import PostOptionsDropdown from '../Post/PostOptionsDropdown'
-import {db} from '../../../firebase'
-import {Avatar} from '@mui/material'
-import { useProfileData } from '../../../hooks/useProfileData'
-import { collection, where, query, deleteDoc, doc, getDocs, FieldValue} from 'firebase/firestore'
-import { deleteMedia } from '../../../lib/storageHelper'
-import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
-import { staticPostData } from '../../../utils/types/params'
-import { authorLabel } from '../../../utils/constants/global'
+import { Avatar } from '@mui/material'
+import {
+    collection,
+    deleteDoc,
+    doc,
+    FieldValue,
+    getDocs,
+    query,
+    where,
+} from 'firebase/firestore'
+import React, { FC } from 'react'
 
+import { db } from '../../../firebase'
+import needsHook from '../../../hooks/needsHook'
+import { useProfileData } from '../../../hooks/useProfileData'
+import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
+import { deleteMedia } from '../../../lib/storageHelper'
+import { postCardClass } from '../../../styles/feed'
+import { authorLabel } from '../../../utils/constants/global'
+import { staticPostData } from '../../../utils/types/params'
+import Timestamp from '../../Utils/Timestamp'
+import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 
 type CommentHeaderProps = {
     postId: string
@@ -25,7 +33,6 @@ type CommentHeaderProps = {
 const CommentHeader: FC<CommentHeaderProps> = ({
     postId,
     commentId,
-    name,
     authorUid,
     timestamp,
     parentPostData,
@@ -36,7 +43,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
     // Deletes a post
     const deleteCommentEntry = async () => {
         const commentDocRef = doc(db, 'post-activity', commentId)
-        await deleteDoc(commentDocRef).catch((err) => {
+        await deleteDoc(commentDocRef).catch(err => {
             console.log('Cannot delete coment: ', err)
         })
 
@@ -46,22 +53,23 @@ const CommentHeader: FC<CommentHeaderProps> = ({
 
     // Deletes a comment
     const deleteComment = async () => {
-        let repliesQuery = query( 
-                        collection(db, "post-activity"), 
-                        where("parentId", '==', commentId)
-                    )
-        
-        getDocs(repliesQuery).then(async (sub) => {
-            sub.forEach((reply) => {
-                deleteDoc(reply?.ref).catch((err) => {
-                    console.log('Cannot delete reply: ', err)
+        const repliesQuery = query(
+            collection(db, 'post-activity'),
+            where('parentId', '==', commentId)
+        )
+
+        getDocs(repliesQuery)
+            .then(async sub => {
+                sub.forEach(reply => {
+                    deleteDoc(reply?.ref).catch(err => {
+                        console.log('Cannot delete reply: ', err)
+                    })
                 })
+                deleteCommentEntry()
             })
-            deleteCommentEntry()
-        })
-        .catch((err) => {
-            console.log('Cannot delete replies: ', err)
-        })
+            .catch(err => {
+                console.log('Cannot delete replies: ', err)
+            })
         return `/comments/${postId}`
     }
 
@@ -73,9 +81,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                 <Avatar
                     onClick={needsHook}
                     className={postCardClass.avatar}
-                    src={
-                        getProfilePic(authorProfile, parentPostData)
-                    }
+                    src={getProfilePic(authorProfile, parentPostData)}
                 />
 
                 {/* Split into two rows on mobile */}
@@ -83,12 +89,12 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            { getAuthorName(authorProfile, parentPostData) }
+                            {getAuthorName(authorProfile, parentPostData)}
                         </span>
-                        {(parentPostData.authorUid == authorUid) &&
-                        (<span className="pl-sm font-bold">
-                            {authorLabel}
-                        </span>
+                        {parentPostData.authorUid == authorUid && (
+                            <span className="pl-sm font-bold">
+                                {authorLabel}
+                            </span>
                         )}
                     </div>
 
@@ -107,7 +113,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                     authorUid={authorUid}
                     authorProfile={authorProfile}
                     deletePost={deleteComment}
-                    postType='Comment'
+                    postType="Comment"
                 />
             </div>
         </div>

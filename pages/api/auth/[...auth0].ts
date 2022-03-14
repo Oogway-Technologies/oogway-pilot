@@ -1,7 +1,8 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
-import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 import { NextApiRequest, NextApiResponse } from 'next'
+
+import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 
 const setFirebaseCustomToken = async (token: string) => {
     // Fetch the Firebase custom token from the Auth0 user
@@ -20,7 +21,6 @@ const setFirebaseCustomToken = async (token: string) => {
     return response.json()
 }
 
-// TODO: check these parameters and create types for them to remove any.
 const afterCallback = async (req: any, res: any, session: any, state: any) => {
     // Retrieve the Firebase custom token from the Auth0 user
     const firebaseResponse = await setFirebaseCustomToken(session.idToken)
@@ -30,7 +30,7 @@ const afterCallback = async (req: any, res: any, session: any, state: any) => {
     const userCredential = await signInWithCustomToken(
         auth,
         firebaseResponse.firebaseToken
-    ).catch((error) => {
+    ).catch(error => {
         // Something went wrong trying to authenticate with Firebase
         const errorMessage = error.message
         console.log('error:', errorMessage)
@@ -63,13 +63,6 @@ const afterCallback = async (req: any, res: any, session: any, state: any) => {
 
     // Update auth0 UserProfile image
     session.user.picture = userProfile?.profilePic
-
-    // Note: session.user already contains the Auth0 user
-    // as Session.user.sub. This should be the same as
-    // the userCredentials returned by Firebase, i.e.,
-    // if (userCredential) {
-    //    session.user.sub === userCredential.user.uid
-    // }
 
     // Return the session
     return session

@@ -1,22 +1,14 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { UilEye, UilEyeSlash } from '@iconscout/react-unicons'
 import firebase from 'firebase/compat/app'
-import Button from '../Utils/Button'
-import {
-    UilEye,
-    UilEyeSlash,
-    UilExclamationTriangle,
-    //@ts-ignore
-} from '@iconscout/react-unicons'
-import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
-
+import { useRouter } from 'next/router'
+import { FC, useEffect, useRef, useState } from 'react'
 // Form
 import { useForm } from 'react-hook-form'
-import FlashErrorMessage, {
-    FlashErrorMessageProps,
-} from '../Utils/FlashErrorMessage'
-import useTimeout from '../../hooks/useTimeout'
-import { useRouter } from 'next/router'
+
+import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
+import Button from '../Utils/Button'
+import FlashErrorMessage from '../Utils/FlashErrorMessage'
 
 type LoginFormProps = {
     goToSignUp: () => void
@@ -40,7 +32,6 @@ const LoginForm: FC<LoginFormProps> = ({
     const {
         register,
         setError,
-        clearErrors,
         formState: { errors },
     } = useForm()
     const warningTime = 3000 // set warning to flash for 3 sec
@@ -81,11 +72,7 @@ const LoginForm: FC<LoginFormProps> = ({
                 inputEmailRef.current.value,
                 inputPasswordRef.current.value
             )
-            .then((userCredential) => {
-                // Signed in: not much to do here
-                // redirection happend on shate change from the _app
-                const user = userCredential.user
-            })
+            .then()
             .catch(() => {
                 setError('form', {
                     type: 'required', // Actually a validation error, but since manually checking any will do
@@ -199,7 +186,7 @@ const LoginForm: FC<LoginFormProps> = ({
             )}
 
             <div className={loginInputs.inputHeader}>
-                Don't have an account?&nbsp;
+                {`Don't have an account?`}&nbsp;
                 <div className={loginDivs.customLink} onClick={goToSignUp}>
                     Sign up
                 </div>

@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react'
-import Head from 'next/head'
-import Header from './Header/Header'
 import { useUser } from '@auth0/nextjs-auth0'
-import { userProfileState } from '../atoms/user'
+import firebase from 'firebase/compat'
+import Head from 'next/head'
+import React, { useEffect } from 'react'
 import { useSetRecoilState } from 'recoil'
+
+import { userProfileState } from '../atoms/user'
 import { getOrCreateUserFromFirebase } from '../lib/userHelper'
 import { FirebaseProfile } from '../utils/types/firebase'
-import firebase from 'firebase/compat'
+import Header from './Header/Header'
 import DocumentData = firebase.firestore.DocumentData
 
 interface LayoutProps {
@@ -41,7 +42,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Head>
                 <title>Oogway | Social - Wisdom of the crowd</title>
             </Head>
-            <div className="flex flex-col min-h-screen max-h-screen overflow-y-hidden">
+            <div className="flex overflow-y-hidden flex-col min-h-screen max-h-screen">
                 <div className="sticky">
                     <Header />
                 </div>

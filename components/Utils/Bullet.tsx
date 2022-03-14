@@ -1,6 +1,6 @@
 // Bullet point
 const bull = (
-    <span className="inline-block text-neutral-300 px-sm scale-90">•</span>
-);
+    <span className="inline-block px-sm text-neutral-300 scale-90">•</span>
+)
 
-export default bull;
+export default bull

@@ -1,23 +1,18 @@
-import React, { FC, useState } from 'react'
-import { commentClass, postCardClass } from '../../../styles/feed'
-import {
-    CardMedia,
-    Collapse,
-    Link,
-    Typography,
-    useMediaQuery,
-} from '@mui/material'
-import CommentHeader from './CommentHeader'
-import CommentEngagementBar from './CommentEngagementBar'
-import NewReplyForm from '../Forms/NewReplyForm'
-import RepliesAPI from '../Replies/RepliesAPI'
-import Modal from '../../Utils/Modal'
 import { useUser } from '@auth0/nextjs-auth0'
+import { CardMedia, Collapse, Link, useMediaQuery } from '@mui/material'
+import React, { FC, useState } from 'react'
+import Linkify from 'react-linkify'
+
+import { commentClass } from '../../../styles/feed'
+import { isValidURL } from '../../../utils/helpers/common'
 import { FirebaseComment } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
+import Modal from '../../Utils/Modal'
 import { PreviewDecider } from '../../Utils/PreviewDecider'
-import { isValidURL } from '../../../utils/helpers/common'
-import Linkify from 'react-linkify'
+import NewReplyForm from '../Forms/NewReplyForm'
+import RepliesAPI from '../Replies/RepliesAPI'
+import CommentEngagementBar from './CommentEngagementBar'
+import CommentHeader from './CommentHeader'
 
 interface CommentProps {
     commentOwner: string
@@ -59,9 +54,13 @@ const Comment: FC<CommentProps> = ({
         if (!user) {
             // TODO: Add a generic popover telling
             // anonymous users they must login with a link to log-in
-            return null
+            return
         } else {
-            isMobile ? openModal() : setExpandedReplyForm(!expandedReplyForm)
+            if (isMobile) {
+                openModal()
+            } else {
+                setExpandedReplyForm(!expandedReplyForm)
+            }
         }
     }
 
@@ -85,7 +84,7 @@ const Comment: FC<CommentProps> = ({
                             componentDecorator={(
                                 decoratedHref,
                                 decoratedText,
-                                key,
+                                key
                             ) => (
                                 <Link
                                     className={
@@ -148,19 +147,14 @@ const Comment: FC<CommentProps> = ({
                 />
             </div>
 
-            <Modal
-                children={
-                    <NewReplyForm
-                        commentId={commentId}
-                        placeholder="What would you like to say back?"
-                        closeModal={closeModal}
-                        isMobile={isMobile}
-                    />
-                }
-                show={isOpen}
-                onClose={closeModal}
-                className={'w-full'}
-            />
+            <Modal show={isOpen} onClose={closeModal}>
+                <NewReplyForm
+                    commentId={commentId}
+                    placeholder="What would you like to say back?"
+                    closeModal={closeModal}
+                    isMobile={isMobile}
+                />
+            </Modal>
         </>
     )
 }

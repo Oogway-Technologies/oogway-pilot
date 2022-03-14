@@ -43,7 +43,7 @@ const devOptions = {
     algorithms: ['RS256'],
 }
 
-const checkReq = (req) => {
+const checkReq = req => {
     const headerErr = ['must specify an Authorization header', null]
     const formatErr = ["format is 'Authorization: Bearer <token>'", null]
     if (!req) return 'server error (request was invalid)'

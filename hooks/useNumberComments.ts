@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
+
 import { streamCommentsCollection } from '../lib/commentsHelper'
 import { streamRepliesCollection } from '../lib/repliesHelper'
-
 
 export const usePostNumberComments = (id: string) => {
     // Track number of comments
@@ -13,14 +13,16 @@ export const usePostNumberComments = (id: string) => {
     useEffect(() => {
         const unsubscribe = streamCommentsCollection(
             id,
-            (querySnapshot) => {
+            querySnapshot => {
                 setNumComments(querySnapshot.docs.length || 0)
             },
-            (error) => {console.log(error)}
+            error => {
+                console.log(error)
+            }
         )
         return () => {
-            setNumComments(0);
-            unsubscribe;
+            setNumComments(0)
+            unsubscribe()
         }
     }, [id])
 
@@ -28,26 +30,28 @@ export const usePostNumberComments = (id: string) => {
 }
 
 export const useCommentNumberReplies = (postId: string, commentId: string) => {
-        // Track number of comments
-        const [numReplies, setNumReplies] = useState(0)
+    // Track number of comments
+    const [numReplies, setNumReplies] = useState(0)
 
-        // Use useEffect to bind on document loading the
-        // function that will set the number of comments on
-        // each change of the DB (triggered by onSnapshot)
-        useEffect(() => {
-            const unsubscribe = streamRepliesCollection(
-                postId,
-                commentId,
-                (querySnapshot) => {
-                    setNumReplies(querySnapshot.docs.length || 0)
-                },
-                (error) => {console.log(error)}
-            )
-            return () => {
-                setNumReplies(0);
-                unsubscribe;
+    // Use useEffect to bind on document loading the
+    // function that will set the number of comments on
+    // each change of the DB (triggered by onSnapshot)
+
+    useEffect(() => {
+        const unsubscribe = streamRepliesCollection(
+            commentId,
+            querySnapshot => {
+                setNumReplies(querySnapshot.docs.length || 0)
+            },
+            error => {
+                console.log(error)
             }
-        }, [postId, commentId])
-    
-        return [numReplies, setNumReplies] as const
+        )
+        return () => {
+            setNumReplies(0)
+            unsubscribe()
+        }
+    }, [postId, commentId])
+
+    return [numReplies, setNumReplies] as const
 }

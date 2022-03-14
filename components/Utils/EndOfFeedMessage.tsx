@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+
 import { endOfFeedMessageClass } from '../../styles/feed'
 
 type EndOfFeedProps = {
@@ -8,7 +9,7 @@ type EndOfFeedProps = {
 
 const EndOfFeedMessage: FC<EndOfFeedProps> = ({
     topMessage = "You've read it all...",
-    bottomMessage='Now share your wisdom!',
+    bottomMessage = 'Now share your wisdom!',
 }) => {
     return (
         <div className={endOfFeedMessageClass.outerDiv}>

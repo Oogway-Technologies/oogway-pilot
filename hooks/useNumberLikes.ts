@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
-import { getLikes, getLikesForCommentEngagementBar, getLikesForReplyEngagementBar } from '../lib/getLikesHelper'
 
+import {
+    getLikes,
+    getLikesForCommentEngagementBar,
+    getLikesForReplyEngagementBar,
+} from '../lib/getLikesHelper'
 
 export const usePostNumberLikes = (id: string) => {
     // Track number of likes
@@ -27,8 +31,8 @@ export const useCommentNumberLikes = (postId: string, commentId: string) => {
     // function that will set the number of likes on
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
-        getLikesForCommentEngagementBar(postId, commentId, setNumLikes)
-        return() => {
+        getLikesForCommentEngagementBar(commentId, setNumLikes)
+        return () => {
             setNumLikes(0)
         }
     }, [postId, commentId])
@@ -36,7 +40,11 @@ export const useCommentNumberLikes = (postId: string, commentId: string) => {
     return [numLikes, setNumLikes] as const
 }
 
-export const useReplyNumberLikes = (postId: string, commentId: string, replyId: string) => {
+export const useReplyNumberLikes = (
+    postId: string,
+    commentId: string,
+    replyId: string
+) => {
     // Track number of likes
     const [numLikes, setNumLikes] = useState(0)
 
@@ -44,8 +52,8 @@ export const useReplyNumberLikes = (postId: string, commentId: string, replyId: 
     // function that will set the number of likes on
     // each change of the DB (triggered by onSnapshot)
     useEffect(() => {
-        getLikesForReplyEngagementBar(postId, commentId, replyId, setNumLikes)
-        return() => {
+        getLikesForReplyEngagementBar(replyId, setNumLikes)
+        return () => {
             setNumLikes(0)
         }
     }, [postId, commentId, replyId])

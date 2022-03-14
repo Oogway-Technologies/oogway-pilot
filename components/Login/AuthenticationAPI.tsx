@@ -4,7 +4,6 @@ import { FC, useState } from 'react'
 import LoginForm from './LoginForm'
 import PWForm from './PWForm'
 import SignUpForm from './SignupForm'
-import UserProfileForm from './UserProfileForm'
 
 type AuthenticationAPIProps = {
     closeModal: () => void

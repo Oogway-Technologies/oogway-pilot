@@ -1,16 +1,25 @@
-import React, {FC} from 'react'
-import PostOptionsDropdown from './PostOptionsDropdown'
-import {Avatar} from '@mui/material'
-import {postCardClass} from '../../../styles/feed'
-import Timestamp from '../../Utils/Timestamp'
-import {useProfileData} from '../../../hooks/useProfileData'
-import {deleteMedia} from '../../../lib/storageHelper'
-import {useRouter} from 'next/router'
-import {query, getDocs, collection, where, deleteDoc, doc, FieldValue} from 'firebase/firestore'
+import { Avatar } from '@mui/material'
+import {
+    collection,
+    deleteDoc,
+    doc,
+    FieldValue,
+    getDocs,
+    query,
+    where,
+} from 'firebase/firestore'
+import { useRouter } from 'next/router'
+import React, { FC } from 'react'
+
 import { db } from '../../../firebase'
-import {getAuthorName, getProfilePic} from '../../../lib/profileHelper'
-import { staticPostData } from '../../../utils/types/params'
+import { useProfileData } from '../../../hooks/useProfileData'
+import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
+import { deleteMedia } from '../../../lib/storageHelper'
+import { postCardClass } from '../../../styles/feed'
 import { FirebaseProfile } from '../../../utils/types/firebase'
+import { staticPostData } from '../../../utils/types/params'
+import Timestamp from '../../Utils/Timestamp'
+import PostOptionsDropdown from './PostOptionsDropdown'
 
 type PostHeaderProps = {
     id: string
@@ -22,7 +31,6 @@ type PostHeaderProps = {
 
 const PostHeader: FC<PostHeaderProps> = ({
     id,
-    name,
     authorUid,
     timestamp,
     isAnonymous,
@@ -33,8 +41,8 @@ const PostHeader: FC<PostHeaderProps> = ({
     const router = useRouter()
 
     // Create params
-    const staticPostData : staticPostData = {
-        id: id, 
+    const staticPostData: staticPostData = {
+        id: id,
         authorUid: authorUid,
         isAnonymous: isAnonymous,
     }
@@ -43,7 +51,7 @@ const PostHeader: FC<PostHeaderProps> = ({
     // Note: this post should NOT have any comments
     const deletePostEntry = async () => {
         const postDocRef = doc(db, 'posts', id)
-        await deleteDoc(postDocRef).catch((err) => {
+        await deleteDoc(postDocRef).catch(err => {
             console.log('Cannot delete post: ', err)
         })
 
@@ -53,23 +61,23 @@ const PostHeader: FC<PostHeaderProps> = ({
 
     // Deletes a post
     const deletePost = async () => {
-
-        let activitiesQuery = query( 
-            collection(db, "post-activity"), 
-            where("postId", '==', id)
+        const activitiesQuery = query(
+            collection(db, 'post-activity'),
+            where('postId', '==', id)
         )
 
-        getDocs(activitiesQuery).then(async (sub) => {
-            sub.forEach((activity) => {
-                deleteDoc(activity?.ref).catch((err) => {
-                    console.log('Cannot delete activity: ', err)
+        getDocs(activitiesQuery)
+            .then(async sub => {
+                sub.forEach(activity => {
+                    deleteDoc(activity?.ref).catch(err => {
+                        console.log('Cannot delete activity: ', err)
+                    })
                 })
+                deletePostEntry()
             })
-            deletePostEntry()
-        })
-        .catch((err) => {
-        console.log('Cannot delete activities: ', err)
-        })
+            .catch(err => {
+                console.log('Cannot delete activities: ', err)
+            })
 
         // Return where the user should be routed
         // If the user deletes the parent post from
@@ -91,21 +99,24 @@ const PostHeader: FC<PostHeaderProps> = ({
     }
     // TODO : Generalize getAvatar function to use it for comments and replies too
     const getAvatar = (
-        authorProfile : FirebaseProfile | undefined,
-        parentPost : staticPostData,
-
+        authorProfile: FirebaseProfile | undefined,
+        parentPost: staticPostData
     ) => {
-        if(parentPost.isAnonymous) {
-            return (<Avatar
-                        className={postCardClass.avatar}
-                        src={ getProfilePic(authorProfile, parentPost) }
-                    />)
+        if (parentPost.isAnonymous) {
+            return (
+                <Avatar
+                    className={postCardClass.avatar}
+                    src={getProfilePic(authorProfile, parentPost)}
+                />
+            )
         }
-        return (<Avatar
+        return (
+            <Avatar
                 onClick={handleProfileAvatarClick}
                 className={postCardClass.avatar}
-                src={ getProfilePic(authorProfile, parentPost) }
-            />)
+                src={getProfilePic(authorProfile, parentPost)}
+            />
+        )
     }
     return (
         <div className={postCardClass.header}>
@@ -119,7 +130,7 @@ const PostHeader: FC<PostHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            { getAuthorName(authorProfile, staticPostData) }
+                            {getAuthorName(authorProfile, staticPostData)}
                         </span>
                     </div>
                     <div className={postCardClass.leftMobileRowTwo}>
@@ -138,7 +149,7 @@ const PostHeader: FC<PostHeaderProps> = ({
                     authorUid={authorUid}
                     authorProfile={authorProfile}
                     deletePost={deletePost}
-                    postType='Post'
+                    postType="Post"
                 />
             </div>
         </div>

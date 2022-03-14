@@ -1,13 +1,14 @@
 import React from 'react'
-import { compareFormClass } from '../../../../styles/feed'
 import { useRecoilState } from 'recoil'
+
 import {
     hasPreviewedCompare,
     textCompareLeft,
     textCompareRight,
 } from '../../../../atoms/compareForm'
-import _CompareInputForm from './_CompareInputForm'
+import { compareFormClass } from '../../../../styles/feed'
 import { shortLimit } from '../../../../utils/constants/global'
+import _CompareInputForm from './_CompareInputForm'
 import _ComparePreview from './_ComparePreview'
 
 const _CompareTextInputForm = () => {

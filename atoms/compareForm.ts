@@ -1,4 +1,5 @@
 import { atom } from 'recoil'
+
 import { compareFormOptions } from '../utils/types/global'
 
 export const comparePostType = atom<compareFormOptions>({

@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+
 import { parseYoutubeVideoId } from '../../utils/helpers/common'
 
 interface YoutubeEmbedProps {
@@ -11,7 +12,7 @@ const YoutubeEmbed: FC<YoutubeEmbedProps> = ({ text, addStyle }) => {
         <div className={'m-2' + addStyle}>
             <iframe
                 src={`https://www.youtube.com/embed/${parseYoutubeVideoId(
-                    text,
+                    text
                 )}`}
                 frameBorder="0"
                 allow="autoplay; encrypted-media"

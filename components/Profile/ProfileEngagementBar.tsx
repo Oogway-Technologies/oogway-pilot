@@ -1,44 +1,48 @@
-import React, {FC} from 'react'
+import {
+    UilComment,
+    UilEstate,
+    UilThumbsUp,
+    UilUsersAlt,
+} from '@iconscout/react-unicons'
+import React, { FC } from 'react'
 
-import {EngagementItems} from "../../utils/types/global";
-import Button from "../Utils/Button";
-import {profileEngagementBarClass} from "../../styles/profile";
-
-// @ts-ignore
-import {UilComment, UilEstate, UilThumbsUp, UilUsersAlt} from '@iconscout/react-unicons'
+import { profileEngagementBarClass } from '../../styles/profile'
+import { EngagementItems } from '../../utils/types/global'
+import Button from '../Utils/Button'
 
 interface ProfileEngagementBarProps {
-
-    expanded: boolean
+    expanded?: boolean
 }
 
-const ProfileEngagementBar: FC<ProfileEngagementBarProps> = ({}) => {
-
-
+const ProfileEngagementBar: FC<ProfileEngagementBarProps> = () => {
     // Items
     const engagementItems: EngagementItems[] = [
         {
-            icon: <UilEstate/>,
+            icon: <UilEstate />,
             text: 'Posts',
             onClick: () => {
+                alert('TODO')
             },
         },
         {
-            icon: <UilComment/>,
+            icon: <UilComment />,
             text: 'Comments',
             onClick: () => {
+                alert('TODO')
             },
         },
         {
-            icon: <UilThumbsUp/>,
+            icon: <UilThumbsUp />,
             text: 'Likes',
             onClick: () => {
+                alert('TODO')
             },
         },
         {
-            icon: <UilUsersAlt/>,
+            icon: <UilUsersAlt />,
             text: '123 Following',
             onClick: () => {
+                alert('TODO')
             },
         },
     ]

@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { postCardClass } from '../../../styles/feed'
 import { Card, CardContent, CardMedia, Link, Typography } from '@mui/material'
+import { FieldValue } from 'firebase/firestore'
+import React, { useEffect, useState } from 'react'
+import Linkify from 'react-linkify'
+
+import { streamPostData } from '../../../lib/postsHelper'
+import { postCardClass } from '../../../styles/feed'
+import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
+import { FirebasePost } from '../../../utils/types/firebase'
+import { staticPostData } from '../../../utils/types/params'
+import CommentsAPI from '../Comments/CommentsAPI'
 import PostEngagementBar from './PostEngagementBar'
 import PostHeader from './PostHeader'
 import PostVotingMechanism from './PostVotingMechanism'
-import CommentsAPI from '../Comments/CommentsAPI'
-import { streamPostData } from '../../../lib/postsHelper'
-import Linkify from 'react-linkify'
-import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
-import { FirebasePost } from '../../../utils/types/firebase'
-import { FieldValue } from 'firebase/firestore'
-import { staticPostData } from '../../../utils/types/params'
 interface PostProps {
     authorUid: string
     id: string
@@ -42,12 +43,12 @@ const PostCard: React.FC<PostProps> = ({
 }) => {
     // Track state for voting mechanism
     const [votesList, setVotesList] = useState(Array<number>())
-    const [compareData, setCompareData] = useState(Array())
+    const [compareData, setCompareData] = useState([])
     const [URL, setURL] = useState<string>('')
     const [YouTubeURLID, setYouTubeURLID] = useState<string>('')
 
     // Set params for child components
-    let staticPostData: staticPostData = {
+    const staticPostData: staticPostData = {
         authorUid: authorUid,
         id: id,
         isAnonymous: isAnonymous,
@@ -70,18 +71,18 @@ const PostCard: React.FC<PostProps> = ({
 
                     setURL(isValidURL(postData?.description))
                     setYouTubeURLID(
-                        parseYoutubeVideoId(postData?.description) || '',
+                        parseYoutubeVideoId(postData?.description) || ''
                     )
 
                     if (isComparePost(postData)) {
                         // Add a counter of votes for each object to compare.
                         // Note: this should generally be an array of 2 objects
-                        let votesCounter = new Array(
-                            postData.compare.votesObjMapList.length,
+                        const votesCounter = new Array(
+                            postData.compare.votesObjMapList.length
                         ).fill(0)
-                        for (var i = 0; i < votesCounter.length; i++) {
+                        for (let i = 0; i < votesCounter.length; i++) {
                             votesCounter[i] = Object.keys(
-                                postData.compare.votesObjMapList[i],
+                                postData.compare.votesObjMapList[i]
                             ).length
                         }
 
@@ -95,7 +96,7 @@ const PostCard: React.FC<PostProps> = ({
             },
             err => {
                 console.log(err)
-            },
+            }
         )
 
         return () => unsubscribe()
@@ -129,7 +130,7 @@ const PostCard: React.FC<PostProps> = ({
                         componentDecorator={(
                             decoratedHref,
                             decoratedText,
-                            key,
+                            key
                         ) => (
                             <Link
                                 className={postCardClass.bodyDescription}
@@ -154,11 +155,11 @@ const PostCard: React.FC<PostProps> = ({
 
             {/* Media */}
             {postImage ? (
-                <div className="flex mx-xl p-md">
+                <div className="flex p-md mx-xl">
                     <CardMedia component="img" src={postImage} />
                 </div>
             ) : YouTubeURLID && YouTubeURLID.length > 0 ? (
-                <div className="flex ml-xl p-md">
+                <div className="flex p-md ml-xl">
                     <iframe
                         width="800"
                         height="400"
@@ -172,7 +173,7 @@ const PostCard: React.FC<PostProps> = ({
             ) : (
                 previewImage &&
                 previewImage.length > 2 && (
-                    <div className="flex mx-xl p-md">
+                    <div className="flex p-md mx-xl">
                         <CardMedia
                             component="img"
                             src={previewImage}

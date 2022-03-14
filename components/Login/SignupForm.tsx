@@ -1,30 +1,22 @@
-// @ts-ignore
-import {
-    UilExclamationTriangle,
-    UilEye,
-    UilEyeSlash,
-    //@ts-ignore
-} from '@iconscout/react-unicons'
-
-import { FC, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
-// JSX and Styles
-import Button from '../Utils/Button'
-import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
-
+import { UilEye, UilEyeSlash } from '@iconscout/react-unicons'
 // Form
 import * as EmailValidator from 'email-validator'
-import { useForm } from 'react-hook-form'
-
 // db
 import firebase from 'firebase/compat/app'
 import { useRouter } from 'next/router'
+import { FC, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+
 import { createUserProfile } from '../../lib/db'
 import { getRandomProfilePic, getRandomUsername } from '../../lib/user'
+import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
+// JSX and Styles
+import Button from '../Utils/Button'
 import FlashErrorMessage from '../Utils/FlashErrorMessage'
 import Modal from '../Utils/Modal'
 import PrivacyPolicy from './PrivacyPolicy'
 import TermsConditions from './TermsConditions'
-import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 
 type SignUpFormProps = {
     goToLogin: () => void
@@ -32,11 +24,7 @@ type SignUpFormProps = {
     closeModal: () => void
 }
 
-const SignUpForm: FC<SignUpFormProps> = ({
-    goToLogin,
-    goToProfile,
-    closeModal,
-}) => {
+const SignUpForm: FC<SignUpFormProps> = ({ goToLogin, closeModal }) => {
     // Router
     const router = useRouter()
 
@@ -128,7 +116,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
                             inputEmailRef.current.value,
                             inputPasswordRef.current.value
                         )
-                        .then((userCredential) => {
+                        .then(userCredential => {
                             // Signed in: not much to do here,
                             // redirection happend on state change from the _app
                             const user = userCredential.user
@@ -145,7 +133,7 @@ const SignUpForm: FC<SignUpFormProps> = ({
                                 resetProfile: true,
                             })
                         })
-                        .catch((error) => {
+                        .catch(error => {
                             console.log(error)
                         })
                 }
@@ -166,7 +154,12 @@ const SignUpForm: FC<SignUpFormProps> = ({
 
     const PrivacyModal = useMemo(
         () => (
-            <Modal show={isPrivacyModal} onClose={setIsPrivacyModal}>
+            <Modal
+                show={isPrivacyModal}
+                onClose={() => {
+                    setIsPrivacyModal(false)
+                }}
+            >
                 <PrivacyPolicy />
             </Modal>
         ),
@@ -175,7 +168,12 @@ const SignUpForm: FC<SignUpFormProps> = ({
 
     const TermModal = useMemo(
         () => (
-            <Modal show={isTerm} onClose={setIsTerm}>
+            <Modal
+                show={isTerm}
+                onClose={() => {
+                    setIsTerm(false)
+                }}
+            >
                 <TermsConditions />
             </Modal>
         ),
@@ -296,14 +294,14 @@ const SignUpForm: FC<SignUpFormProps> = ({
                 <b>
                     I have read and accept Oogway’s{' '}
                     <span
-                        className={'text-primary cursor-pointer mx-1'}
+                        className={'mx-1 text-primary cursor-pointer'}
                         onClick={() => setIsTerm(!isTerm)}
                     >
                         Terms of Use
                     </span>{' '}
                     and{' '}
                     <span
-                        className={'text-primary cursor-pointer mx-1'}
+                        className={'mx-1 text-primary cursor-pointer'}
                         onClick={() => setIsPrivacyModal(!isPrivacyModal)}
                     >
                         Privacy Policy

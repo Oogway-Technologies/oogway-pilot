@@ -1,6 +1,6 @@
-// @ts-ignore
 import { UilApps } from '@iconscout/react-unicons'
 import Link from 'next/link'
+
 import { appsButtonClass } from '../../styles/header'
 
 const AppsButton = () => {

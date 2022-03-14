@@ -1,7 +1,7 @@
+import { UilExchange } from '@iconscout/react-unicons'
 import React from 'react'
 import { Search } from 'react-feather'
-//@ts-ignore
-import { UilExchange } from '@iconscout/react-unicons'
+
 import needsHook from '../../hooks/needsHook'
 import { searchBarButtonClass } from '../../styles/header'
 

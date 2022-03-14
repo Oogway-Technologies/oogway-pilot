@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { db } from '../../../firebase'
-import { postCardClass } from '../../../styles/feed'
-// @ts-ignore
-import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
-import { userProfileState } from '../../../atoms/user'
-import { useRecoilValue } from 'recoil'
-import { streamPostData } from '../../../lib/postsHelper'
 import { useUser } from '@auth0/nextjs-auth0'
+import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
+import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
+import { useRecoilValue } from 'recoil'
+
+import { userProfileState } from '../../../atoms/user'
+import { db } from '../../../firebase'
+import { streamPostData } from '../../../lib/postsHelper'
+import { postCardClass } from '../../../styles/feed'
 import {
     isValidURL,
     parseYoutubeVideoId,
@@ -33,17 +33,13 @@ const PostVotingMechanism = ({
     const userProfile = useRecoilValue(userProfileState)
 
     // Track voting button state
-    const [winningChoice, setWinningChoice] = useState(-1) // Instantiate to value that's not possible
-    const [userVoteChoice, setUserVoteChoice] = useState(-1) // Instantiate to value that's never in index
-    const [voteButtonLeft, setVoteButtonLeft] = useState(<UilCircle />)
-    const [voteButtonRight, setVoteButtonRight] = useState(<UilCircle />)
-
-    // Track winning choice
-    useEffect(() => {
-        if (votesList[0] > votesList[1]) setWinningChoice(0)
-        else if (votesList[1] > votesList[0]) setWinningChoice(1)
-        else setWinningChoice(-1) // reset to default in event of a tie
-    }, [votesList])
+    const [userVoteChoice, setUserVoteChoice] = useState<number>(-1) // Instantiate to value that's never in index
+    const [voteButtonLeft, setVoteButtonLeft] = useState<JSX.Element>(
+        <UilCircle />
+    )
+    const [voteButtonRight, setVoteButtonRight] = useState<JSX.Element>(
+        <UilCircle />
+    )
 
     // track user vote choice
     useEffect(() => {
@@ -86,7 +82,7 @@ const PostVotingMechanism = ({
             },
             error => {
                 console.log(error)
-            },
+            }
         )
 
         // Stop listening
@@ -99,14 +95,14 @@ const PostVotingMechanism = ({
         // Do not vote if user is not logged in
         if (!user) return
         // Add a vote, for this user, to one of the images
-        let docRef = db.collection('posts').doc(id)
+        const docRef = db.collection('posts').doc(id)
 
         return db.runTransaction(async transaction => {
             const doc = await transaction.get(docRef)
             const postData = doc.data()
             if (postData) {
                 for (
-                    var i = 0;
+                    let i = 0;
                     i < postData.compare.votesObjMapList.length;
                     i++
                 ) {
@@ -213,7 +209,7 @@ const PostVotingMechanism = ({
                                 componentDecorator={(
                                     decoratedHref,
                                     decoratedText,
-                                    key,
+                                    key
                                 ) => (
                                     <a
                                         className={
@@ -277,15 +273,7 @@ const PostVotingMechanism = ({
                             )
                         )}
                         {user && (
-                            <div
-                                className={
-                                    postCardClass.voteButtonContainer +
-                                    (winningChoice === idx &&
-                                    userVoteChoice != -1
-                                        ? ' shadow-lg shadow-black/10 dark:shadow-neutralDark-150/20'
-                                        : '')
-                                }
-                            >
+                            <div className={postCardClass.voteButtonContainer}>
                                 <button
                                     className={
                                         postCardClass.voteButton +
