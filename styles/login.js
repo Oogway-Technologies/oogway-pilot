@@ -64,7 +64,7 @@ export const loginDivs = {
     modalHeader:
         'flex items-start justify-start text-2xl font-bold py-2.5 text-black dark:text-neutralDark-150',
     modalSubheader:
-        'flex items-start justify-center py-2.5 text-black dark:text-neutralDark-150',
+        'flex items-start justify-center py-2.5 text-neutral-700 dark:text-neutralDark-150',
     signIn: 'flex flex-col p-1',
     container: 'grid place-items-center h-screen bg-white ',
     logo: 'h-52 w-52 mb-12 ',
