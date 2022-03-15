@@ -15,3 +15,5 @@ export const sidebarWidget = {
         'bg-white dark:bg-neutralDark-500 shadow-sm shadow-black/20 dark:shadow-black/60',
     title: 'ml-md mt-lg text-md font-bold text-neutral-700 dark:text-neutralDark-150',
 }
+export const avatarStyle =
+    'h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 object-cover text-center text-transparent rounded-full'

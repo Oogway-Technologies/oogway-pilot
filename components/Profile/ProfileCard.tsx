@@ -1,5 +1,5 @@
 import { UilLocationPoint, UilPen } from '@iconscout/react-unicons'
-import { Avatar, useMediaQuery } from '@mui/material'
+import { useMediaQuery } from '@mui/material'
 import React, { FC, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 
@@ -10,6 +10,7 @@ import NewPostForm from '../Feed/Forms/NewPostForm'
 import UserProfileForm from '../Login/UserProfileForm'
 import bull from '../Utils/Bullet'
 import Button from '../Utils/Button'
+import { Avatar } from '../Utils/common/Avatar'
 import Modal from '../Utils/Modal'
 
 interface ProfileCardProps {
@@ -61,8 +62,8 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
     }
 
     const sizeAvatar = () => {
-        if (isMobile) return { height: 75, width: 75 }
-        return { height: 150, width: 150 }
+        if (isMobile) return true
+        return false
     }
 
     return (
@@ -70,9 +71,14 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
             <div className={profileCard.mainDiv}>
                 {/* profile image*/}
                 <Avatar
-                    sx={sizeAvatar}
                     src={userProfileSnapshot?.profilePic || profilePic}
                     alt={username}
+                    className={
+                        sizeAvatar()
+                            ? 'h-[75px] w-[75px]'
+                            : 'h-[150px] w-[150px]'
+                    }
+                    isHoverEffect={false}
                 />
                 {/* container for user details*/}
                 <div className={profileCard.userDetailsDiv}>

@@ -391,12 +391,6 @@ export const replyFormClass = {
         'inline-flex pt-sm items-center text-sm text-alert dark:text-alert',
 }
 
-export const replyHeaderClass = {
-    avatar:
-        'h-[30px] w-[30px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
-        'hover:opacity-80 hover:scale-125',
-}
-
 export const replyEngagementBarClass = {
     engagementBar: 'flex px-md mt-md pb-md ml-md w-3/5 space-x-md text-sm',
 }

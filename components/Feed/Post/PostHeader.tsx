@@ -1,4 +1,3 @@
-import { Avatar, useMediaQuery } from '@mui/material'
 import {
     collection,
     deleteDoc,
@@ -19,6 +18,7 @@ import { postCardClass } from '../../../styles/feed'
 import { FirebaseProfile } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
 import bull from '../../Utils/Bullet'
+import { Avatar } from '../../Utils/common/Avatar'
 import Timestamp from '../../Utils/Timestamp'
 import PostOptionsDropdown from './PostOptionsDropdown'
 
@@ -115,7 +115,7 @@ const PostHeader: FC<PostHeaderProps> = ({
             return (
                 <Avatar
                     className={postCardClass.avatar}
-                    src={getProfilePic(authorProfile, parentPost)}
+                    src={getProfilePic(authorProfile, parentPost) || ''}
                 />
             )
         }
@@ -123,7 +123,7 @@ const PostHeader: FC<PostHeaderProps> = ({
             <Avatar
                 onClick={handleProfileAvatarClick}
                 className={postCardClass.avatar}
-                src={getProfilePic(authorProfile, parentPost)}
+                src={getProfilePic(authorProfile, parentPost) || ''}
             />
         )
     }
