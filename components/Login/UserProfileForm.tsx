@@ -258,8 +258,8 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
     const sizeAvatar = () => {
         const isMobile = useMediaQuery('(max-width: 1024px)')
 
-        if (isMobile) return true
-        return false
+        if (isMobile) return 'lg'
+        return 'xl'
     }
 
     return (
@@ -279,11 +279,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                 <div className={loginInputs.inputHeader}>Profile Picture</div>
                 <div className={loginDivs.sideBySide}>
                     <Avatar
-                        className={
-                            sizeAvatar()
-                                ? 'h-[75px] w-[75px]'
-                                : 'h-[150px] w-[150px]'
-                        }
+                        size={sizeAvatar()}
                         isHoverEffect={false}
                         src={
                             imageToUpload

@@ -4,6 +4,9 @@
 export const avatarURL =
     'https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d'
 
+export const loadingAvatarURL =
+    'https://www.sibberhuuske.nl/wp-content/uploads/2016/10/default-avatar.png'
+
 // Feed API
 export const feedApiClass = {
     toolbarDiv: 'flex-grow z-10 ',
@@ -84,9 +87,6 @@ export const postCardClass = {
     header:
         'overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 ' +
         'space-x-1 items-center',
-    avatar:
-        'h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
-        'hover:opacity-80 hover:scale-125 cursor-pointer',
     infoDiv: 'flex flex-col',
     headerLeft: 'flex w-11/12 items-center',
     headerRight: 'flex w-1/12 justify-end',
@@ -273,9 +273,6 @@ export const commentsApiClass = {
     outerDiv: 'mb-md ml-xl',
     hr: 'mt-sm mb-lg text-neutralDark-50',
     innerDiv: 'flex flex-row mb-xl',
-    avatar:
-        'h-[45px] w-[45px] mr-md ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
-        'hover:opacity-80 hover:scale-125',
     loginReminder:
         'justify-center text-xs text-neutral-700 dark:text-neutralDark-150',
     counter: 'mb-sm font-bold text-neutral-700 dark:text-neutralDark-150',

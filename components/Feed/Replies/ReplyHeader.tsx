@@ -50,7 +50,7 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                 {/* Avatar */}
                 <Avatar
                     onClick={needsHook}
-                    className={'w-[35px] h-[35px]'}
+                    size={'sm'}
                     src={getProfilePic(authorProfile, parentPostData) || ''}
                 />
 

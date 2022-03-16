@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Link, Typography } from '@mui/material'
+import { Card, CardContent, Link, Typography } from '@mui/material'
 import { FieldValue } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
@@ -6,6 +6,7 @@ import Linkify from 'react-linkify'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { streamPostData } from '../../../lib/postsHelper'
 import { postCardClass } from '../../../styles/feed'
+import { cardMediaStyle } from '../../../styles/utils'
 import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
 import { FirebasePost } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
@@ -165,7 +166,7 @@ const PostCard: React.FC<PostProps> = ({
             {/* Media */}
             {postImage ? (
                 <div className="flex p-md mx-xl">
-                    <CardMedia component="img" src={postImage} />
+                    <img src={postImage} className={cardMediaStyle} />
                 </div>
             ) : YouTubeURLID && YouTubeURLID.length > 0 ? (
                 <div className="flex p-md ml-xl">
@@ -183,10 +184,10 @@ const PostCard: React.FC<PostProps> = ({
                 previewImage &&
                 previewImage.length > 2 && (
                     <div className="flex p-md mx-xl">
-                        <CardMedia
-                            component="img"
+                        <img
                             src={previewImage}
                             alt="banner"
+                            className={cardMediaStyle}
                         />
                     </div>
                 )

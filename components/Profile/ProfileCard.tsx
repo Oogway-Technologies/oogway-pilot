@@ -62,8 +62,8 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
     }
 
     const sizeAvatar = () => {
-        if (isMobile) return true
-        return false
+        if (isMobile) return 'lg'
+        return 'xl'
     }
 
     return (
@@ -73,11 +73,7 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
                 <Avatar
                     src={userProfileSnapshot?.profilePic || profilePic}
                     alt={username}
-                    className={
-                        sizeAvatar()
-                            ? 'h-[75px] w-[75px]'
-                            : 'h-[150px] w-[150px]'
-                    }
+                    size={sizeAvatar()}
                     isHoverEffect={false}
                 />
                 {/* container for user details*/}

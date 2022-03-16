@@ -113,16 +113,12 @@ const PostHeader: FC<PostHeaderProps> = ({
     ) => {
         if (parentPost.isAnonymous) {
             return (
-                <Avatar
-                    className={postCardClass.avatar}
-                    src={getProfilePic(authorProfile, parentPost) || ''}
-                />
+                <Avatar src={getProfilePic(authorProfile, parentPost) || ''} />
             )
         }
         return (
             <Avatar
                 onClick={handleProfileAvatarClick}
-                className={postCardClass.avatar}
                 src={getProfilePic(authorProfile, parentPost) || ''}
             />
         )

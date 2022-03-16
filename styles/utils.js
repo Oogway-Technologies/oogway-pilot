@@ -16,4 +16,9 @@ export const sidebarWidget = {
     title: 'ml-md mt-lg text-md font-bold text-neutral-700 dark:text-neutralDark-150',
 }
 export const avatarStyle =
-    'h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 object-cover text-center text-transparent rounded-full'
+    'mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 object-cover text-center text-transparent rounded-full'
+
+export const CollapseStyle = 'ease-in-out overflow-hidden'
+
+export const cardMediaStyle =
+    'block object-cover w-full max-w-full h-auto align-middle bg-center bg-no-repeat bg-cover'
