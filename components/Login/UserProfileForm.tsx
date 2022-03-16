@@ -1,7 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
-import { useMediaQuery } from '@mui/material'
 // Firebase
 import { deleteField, doc, updateDoc } from 'firebase/firestore'
 import Head from 'next/head'
@@ -11,6 +10,7 @@ import { useRecoilState } from 'recoil'
 import { userProfileState } from '../../atoms/user'
 import API from '../../axios'
 import { db, storage } from '../../firebase'
+import useMediaQuery from '../../hooks/useMediaQuery'
 import { getProfileDoc } from '../../lib/profileHelper'
 import { deleteMedia } from '../../lib/storageHelper'
 import {

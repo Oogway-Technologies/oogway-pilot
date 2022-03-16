@@ -1,8 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { CardMedia, Collapse, Link, useMediaQuery } from '@mui/material'
+import { CardMedia, Collapse, Link } from '@mui/material'
 import React, { FC, useState } from 'react'
 import Linkify from 'react-linkify'
 
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { commentClass } from '../../../styles/feed'
 import { isValidURL } from '../../../utils/helpers/common'
 import { FirebaseComment } from '../../../utils/types/firebase'

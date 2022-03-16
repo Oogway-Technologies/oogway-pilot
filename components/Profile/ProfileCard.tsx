@@ -1,9 +1,9 @@
 import { UilLocationPoint, UilPen } from '@iconscout/react-unicons'
-import { useMediaQuery } from '@mui/material'
 import React, { FC, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 
 import { userProfileState } from '../../atoms/user'
+import useMediaQuery from '../../hooks/useMediaQuery'
 import { useProfileData } from '../../hooks/useProfileData'
 import { profileCard } from '../../styles/profile'
 import NewPostForm from '../Feed/Forms/NewPostForm'
