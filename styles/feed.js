@@ -98,7 +98,7 @@ export const postCardClass = {
     leftMobileRowTwo:
         'inline-flex flex-wrap items-center ml-sm md:ml text-xs md:text-sm',
     // Body
-    body: 'flex flex-col ml-xl',
+    body: 'flex flex-col ml-xl p-4',
     bodyQuestion:
         'font-bold mb-[8px] text-md text-neutral-800 dark:text-neutralDark-50',
     bodyDescription:

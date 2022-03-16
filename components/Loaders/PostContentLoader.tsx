@@ -1,9 +1,9 @@
 /* eslint-disable react/display-name */
-import { Card } from '@mui/material'
 import React, { FC, forwardRef } from 'react'
 import ContentLoader from 'react-content-loader'
 
 import { postCardClass } from '../../styles/feed'
+import { Card } from '../Utils/common/Card'
 
 export const PostContent: FC = props => (
     <ContentLoader

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { cardMediaStyle } from '../../styles/utils'
 
+import { cardMediaStyle } from '../../styles/utils'
 import {
     fetcher,
     isValidURL,

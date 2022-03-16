@@ -1,4 +1,3 @@
-import { Card, CardContent, Link, Typography } from '@mui/material'
 import { FieldValue } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
@@ -10,6 +9,7 @@ import { cardMediaStyle } from '../../../styles/utils'
 import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
 import { FirebasePost } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
+import { Card } from '../../Utils/common/Card'
 import CommentsAPI from '../Comments/CommentsAPI'
 import PostEngagementBar from './PostEngagementBar'
 import PostHeader from './PostHeader'
@@ -126,15 +126,9 @@ const PostCard: React.FC<PostProps> = ({
                 timestamp={timestamp}
                 isAnonymous={isAnonymous}
             />
-
             {/* Body */}
-            <CardContent className={postCardClass.body}>
-                <Typography
-                    component={'h4'}
-                    className={postCardClass.bodyQuestion}
-                >
-                    {message}
-                </Typography>
+            <div className={postCardClass.body}>
+                <h4 className={postCardClass.bodyQuestion}>{message}</h4>
                 {URL && URL.length > 0 ? (
                     <Linkify
                         componentDecorator={(
@@ -142,27 +136,26 @@ const PostCard: React.FC<PostProps> = ({
                             decoratedText,
                             key
                         ) => (
-                            <Link
+                            <a
                                 className={postCardClass.bodyDescription}
                                 target="blank"
                                 href={decoratedHref}
                                 key={key}
                             >
                                 {decoratedText}
-                            </Link>
+                            </a>
                         )}
                     >
-                        <Typography className={postCardClass.bodyDescription}>
+                        <p className={postCardClass.bodyDescription}>
                             {description}
-                        </Typography>
+                        </p>
                     </Linkify>
                 ) : (
-                    <Typography className={postCardClass.bodyDescription}>
+                    <p className={postCardClass.bodyDescription}>
                         {description}
-                    </Typography>
+                    </p>
                 )}
-            </CardContent>
-
+            </div>
             {/* Media */}
             {postImage ? (
                 <div className="flex p-md mx-xl">
@@ -192,7 +185,6 @@ const PostCard: React.FC<PostProps> = ({
                     </div>
                 )
             )}
-
             {/* Voting for compare posts */}
             {isCompare && (
                 <PostVotingMechanism
@@ -202,7 +194,6 @@ const PostCard: React.FC<PostProps> = ({
                     votesList={votesList}
                 />
             )}
-
             {/* Engagement */}
             <PostEngagementBar id={id} numComments={numComments} />
 
