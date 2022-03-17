@@ -38,11 +38,12 @@ export const Avatar: FC<AvatarProps> = ({
                 isHoverEffect
                     ? 'hover:opacity-80 hover:scale-125 cursor-pointer'
                     : ''
-            }  ${className}`}
+            }  ${className ? className : ''}`}
             onClick={onClick}
             onError={({ currentTarget }) => {
-                currentTarget.onerror = null
                 currentTarget.src = loadingAvatarURL
+                currentTarget.style.borderRadius = '50%'
+                currentTarget.onerror = null
             }}
         />
     )

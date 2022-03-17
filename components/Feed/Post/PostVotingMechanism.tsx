@@ -220,7 +220,7 @@ const PostVotingMechanism = ({
                                             (userVoteChoice === idx
                                                 ? ' text-primary dark:text-primaryDark font-bold'
                                                 : ' text-neutral-700 dark:text-neutralDark-150') +
-                                            (obj.text.split('').length > 20 &&
+                                            (obj.text.split('').length > 15 &&
                                             isValidURL(obj.text)
                                                 ? ' text-center truncate p-sm'
                                                 : ' text-center inline-flex w-full justify-center p-sm') +
@@ -255,7 +255,7 @@ const PostVotingMechanism = ({
                                         (userVoteChoice === idx
                                             ? ' text-primary dark:text-primaryDark font-bold'
                                             : ' text-neutral-700 dark:text-neutralDark-150') +
-                                        (obj.text.split('').length > 20
+                                        (obj.text.split('').length > 15
                                             ? ' text-start truncate w-full p-sm'
                                             : ' inline-flex w-full justify-center p-sm') +
                                         (winnerCall(votesList) === idx &&

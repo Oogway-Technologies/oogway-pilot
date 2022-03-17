@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, FC, MouseEventHandler, ReactNode } from 'react'
+
 import useMediaQuery from '../../hooks/useMediaQuery'
 
 interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -33,12 +34,9 @@ const Button: FC<ToolbarButtonProps> = (
             className={'inline-flex ' + addStyle}
         >
             {icon}{' '}
-            {!forceNoText && (
-                <a
-                    data-text={keepText || !isMobile ? text : null}
-                    className="buttonText"
-                >
-                    {(keepText || !isMobile) && text}
+            {!forceNoText && (keepText || !isMobile) && (
+                <a data-text={text} className="buttonText">
+                    {text}
                 </a>
             )}
         </button>

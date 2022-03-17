@@ -104,8 +104,8 @@ export const postCardClass = {
     bodyDescription:
         'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line break-words',
     // Media
-    voteDiv: 'flex px-md space-x-lg mx-xl',
-    voteContainer: 'flex flex-col w-full items-center space-y-sm',
+    voteDiv: 'flex items-center mx-4 sm:mx-3',
+    voteContainer: 'flex flex-col w-full items-center m-3 w-6/12',
     imageVote: 'flex rounded-[8px] object-contain cursor-pointer m-auto',
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
@@ -123,7 +123,7 @@ export const postCardClass = {
     engagementButton:
         'items-center space-x-2  ' +
         'hover:text-neutral-800 dark:hover:text-neutralDark-50  ' +
-        'active:text-primary',
+        'active:text-primary whitespace-nowrap',
 }
 
 export const postOptionsDropdownClass = {
@@ -333,7 +333,7 @@ export const commentEngagementBarClass = {
     engagementButton:
         'inline-flex items-center space-x-2 ' +
         'hover:text-neutral-800 dark:hover:text-neutralDark-50 ' +
-        'active:text-primary',
+        'active:text-primary whitespace-nowrap',
 }
 
 // Replies

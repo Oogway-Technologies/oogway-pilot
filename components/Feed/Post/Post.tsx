@@ -164,8 +164,6 @@ const PostCard: React.FC<PostProps> = ({
             ) : YouTubeURLID && YouTubeURLID.length > 0 ? (
                 <div className="flex p-md ml-xl">
                     <iframe
-                        width="800"
-                        height="400"
                         src={`https://www.youtube.com/embed/${YouTubeURLID}`}
                         frameBorder="0"
                         allow="autoplay; encrypted-media"

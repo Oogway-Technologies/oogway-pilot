@@ -13,7 +13,7 @@ export const Card: FC<CardProps> = ({
 }: CardProps) => {
     return (
         <div
-            className={`shadow rounded overflow-hidden ${
+            className={`shadow rounded overflow-hidden mx-3 ${
                 className ? className : ''
             }`}
             ref={ref}
