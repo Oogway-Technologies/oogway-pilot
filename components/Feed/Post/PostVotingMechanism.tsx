@@ -8,6 +8,7 @@ import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
 import { streamPostData } from '../../../lib/postsHelper'
 import { postCardClass } from '../../../styles/feed'
+import { truncateLength } from '../../../utils/constants/global'
 import {
     isValidURL,
     parseYoutubeVideoId,
@@ -164,7 +165,8 @@ const PostVotingMechanism = ({
                                         <div
                                             className={
                                                 'm-auto' +
-                                                (obj.label.split('').length > 20
+                                                (obj.label.split('').length >
+                                                truncateLength
                                                     ? ' break-words text-center truncate p-sm'
                                                     : ' inline-flex w-full justify-center p-sm')
                                             }
@@ -228,7 +230,8 @@ const PostVotingMechanism = ({
                                                 ? ' text-primary dark:text-primaryDark font-bold'
                                                 : ' text-neutral-700 dark:text-neutralDark-150') +
                                             // string truncate logic
-                                            (obj.text.split('').length > 15
+                                            (obj.text.split('').length >
+                                            truncateLength
                                                 ? ' text-start truncate w-full p-sm'
                                                 : ' inline-flex w-full justify-center p-sm whitespace-nowrap') +
                                             // winning color change logic
@@ -266,8 +269,9 @@ const PostVotingMechanism = ({
                                             : ' text-neutral-700 dark:text-neutralDark-150') +
                                         // string truncate logic
 
-                                        (obj.text.split('').length > 15
-                                            ? ' text-start truncate w-full p-sm'
+                                        (obj.text.split('').length >
+                                        truncateLength
+                                            ? ' text-center truncate w-full p-sm'
                                             : ' inline-flex w-full justify-center p-sm whitespace-nowrap') +
                                         // winning color change logic
                                         (winnerCall(votesList) === idx &&
