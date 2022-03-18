@@ -104,14 +104,14 @@ export const postCardClass = {
     bodyDescription:
         'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line break-words',
     // Media
-    voteDiv: 'flex items-center mx-4 sm:mx-3',
-    voteContainer: 'flex flex-col w-full items-center m-3 w-6/12',
+    voteDiv: 'grid grid-cols-2 gap-3 mx-3',
+    voteContainer: 'flex flex-col items-center m-3 sm:m-2',
     imageVote: 'flex rounded-[8px] object-contain cursor-pointer m-auto',
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
     textVote:
-        'flex bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 ' +
-        'rounded-sm shadow-sm shadow-black/30  dark:shadow-black/50 whitespace-pre-wrap',
+        'bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 ' +
+        'rounded-sm shadow-sm shadow-black/30 dark:shadow-black/50',
     voteButton:
         'p-sm justify-center ' +
         'hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary ' +
@@ -258,7 +258,7 @@ export const compareFormClass = {
 // Comments
 export const commentsPageClass = {
     outerDiv: 'flex flex-col w-full justify-center',
-    toolbarDiv: 'flex-grow',
+    toolbarDiv: 'flex-grow mx-3',
     backButtonDiv:
         'items-center my-md mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
     innerDiv:
@@ -280,20 +280,20 @@ export const commentsApiClass = {
 
 export const commentFormClass = {
     form: 'flex flex-col',
-    body: 'inline-flex items-center space-x-md',
+    body: 'inline-flex items-center space-x-md w-full',
     commentBar:
         'inline-flex rounded-[10px] items-center py-2 pl-2 pr-1 md:pl-5 md:pr-3 lg:w-96 xl:w-96 ' +
         'border-solid border-2 border-neutral-50 dark:border-neutralDark-150 ' +
         'focus-within:border-primary focus-visible:border-primary ' +
         'dark:focus-within:border-primary dark:focus-visible:border-primary ' +
         'active:border-neutral-300 dark:active:border-neutralDark-50 ' +
-        'hover:border-neutral-150 dark:hover:border-neutralDark-50',
+        'hover:border-neutral-150 dark:hover:border-neutralDark-50 w-inherit',
     commentInput:
         'md:w-52 lg:w-80 justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white ' +
         'text-sm lg:text-base',
     commentTextArea:
         'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent ' +
-        'text-black dark:text-white text-sm md:text-base',
+        'text-black dark:text-white text-sm md:text-base w-inherit',
     growingTextArea:
         'w-full p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent ' +
         'text-black dark:text-white text-sm md:text-base h-[24px] max-h-[100px] scrollbar-hide p-0',
@@ -367,7 +367,7 @@ export const replyFormClass = {
         'focus-within:border-primary focus-visible:border-primary ' +
         'dark:focus-within:border-primary dark:focus-visible:border-primary ' +
         'active:border-neutral-300 dark:active:border-neutralDark-50 ' +
-        'hover:border-neutral-150 dark:hover:border-neutralDark-50',
+        'hover:border-neutral-150 dark:hover:border-neutralDark-50 w-full',
     replyInput:
         'w-full focus:outline-none border-none bg-transparent text-black dark:text-white ' +
         'text-sm',

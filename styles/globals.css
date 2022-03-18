@@ -41,3 +41,7 @@ img[alt]:after {
     text-align: center;
     content: attr(alt);
 }
+
+.w-inherit {
+    width: inherit;
+}
