@@ -1,5 +1,7 @@
 import React, { Fragment, useRef } from 'react'
+import { useRecoilValue } from 'recoil'
 
+import { feedState } from '../../../atoms/feeds'
 // Custom hook
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver'
 // Queries
@@ -15,12 +17,14 @@ import PostCard from './Post'
 
 function PostsAPI() {
     // Instantiate infinite posts query
+    const feed = useRecoilValue(feedState)
     const { status, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
-        useInfinitePostsQuery()
+        useInfinitePostsQuery(feed)
 
     // Instantiate intersection observer
     const loadMoreRef = useRef<HTMLDivElement>(null)
     useIntersectionObserver({
+        threshold: 0.5,
         target: loadMoreRef,
         onIntersect: fetchNextPage,
         enabled: !!hasNextPage,

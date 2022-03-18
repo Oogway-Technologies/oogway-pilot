@@ -59,14 +59,13 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                     <div className={postCardClass.leftMobileRowOne}>
                         {/* User Name */}
                         <span className="pl-sm font-bold">
-                            { getAuthorName(authorProfile, parentPostData) }
+                            {getAuthorName(authorProfile, parentPostData)}
                         </span>
-                        {(parentPostData.authorUid == authorUid) &&
-                        (<span className="pl-sm font-bold">
-                            {authorLabel}
-                        </span>
+                        {parentPostData.authorUid == authorUid && (
+                            <span className="pl-sm font-bold">
+                                {authorLabel}
+                            </span>
                         )}
-
                     </div>
 
                     <div className={postCardClass.leftMobileRowTwo}>

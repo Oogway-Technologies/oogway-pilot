@@ -7,6 +7,7 @@ module.exports = {
     darkMode: 'class',
     theme: {
         screens: {
+            xs: '320px',
             sm: '480px',
             md: '768px',
             lg: '976px',
@@ -39,6 +40,7 @@ module.exports = {
                 primaryActive: '#5A34BE',
                 // Light
                 primary: '#7041EE',
+                tertiary: '#E2D9FC',
                 secondary: '#EA7979',
                 alert: '#E77C40',
                 error: '#E0232E',

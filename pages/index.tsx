@@ -1,6 +1,6 @@
 // Next and react
 import Head from 'next/head'
-import React, { useState } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 // Recoil states
 // import {userProfileState} from '../atoms/user'
 // import {useRecoilValue} from 'recoil'
@@ -9,10 +9,27 @@ import { dehydrate, QueryClient } from 'react-query'
 
 // Components and styling
 import FeedAPI from '../components/Feed/FeedAPI'
+import FeedSelector from '../components/Feed/FeedSelector'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import { getPosts } from '../queries/posts'
 import { queryClientConfig } from '../query'
+
+interface Props {
+    children: ReactNode
+}
+
+const Sidebar: FC<Props> = ({ children }) => (
+    <div className="hidden md:flex md:visible  md:flex-col md:w-3/12 md:align-top">
+        {children}
+    </div>
+)
+
+const MainContent = () => (
+    <div className="flex flex-col justify-center px-1 w-full md:px-0 md:w-6/12">
+        <FeedAPI />
+    </div>
+)
 
 /**
  * Home: The public (or personalized user) feed of the app
@@ -28,12 +45,19 @@ export default function Home() {
     }
 
     return (
-        <>
-            <div className="flex flex-col justify-center w-full">
-                <Head>
-                    <title>Oogway | Social - Wisdom of the crowd</title>
-                </Head>
-                <FeedAPI />
+        <div>
+            <Head>
+                <title>Oogway | Social - Wisdom of the crowd</title>
+            </Head>
+
+            <div className="flex flex-row">
+                <Sidebar>
+                    <FeedSelector />
+                </Sidebar>
+                <MainContent />
+                <Sidebar>
+                    <div></div>
+                </Sidebar>
             </div>
 
             {/* Modal for user profile */}
@@ -44,7 +68,7 @@ export default function Home() {
                     cancelButtonText="skip"
                 />
             </Modal>
-        </>
+        </div>
     )
 }
 

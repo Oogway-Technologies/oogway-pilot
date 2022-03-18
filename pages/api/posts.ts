@@ -7,6 +7,7 @@ import {
     OrderByDirection,
     query,
     startAfter,
+    where,
 } from 'firebase/firestore'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -30,7 +31,7 @@ export default async function postsHandler(
     res: NextApiResponse
 ) {
     let {
-        query: { _index, _order, _after, _size },
+        query: { _index, _order, _after, _size, _feed },
         method,
     } = req
 
@@ -81,16 +82,22 @@ export default async function postsHandler(
         limitSize =
             parseInt(_size as string) > 100 ? 100 : parseInt(_size as string)
     }
+    _feed = _feed ? _feed : 'All'
 
     // Perform request
     if (method === 'GET') {
-        // Get posts from firebase
-        const q = query(
-            collection(db, 'posts'),
+        // Create query constraints
+        const constraints = [
             orderBy(_index, <OrderByDirection>_order),
-            startAfter(afterTimestamp), // Default to current time
-            limit(limitSize) // Default to 25
-        )
+            startAfter(afterTimestamp),
+            limit(limitSize),
+        ]
+        if (_feed !== 'All') {
+            constraints.push(where('feed', '==', _feed))
+        }
+
+        // Get posts from firebase
+        const q = query(collection(db, 'posts'), ...constraints)
         const postsSnapshot = await getDocs(q)
         const posts = postsSnapshot.docs.map(post => ({
             id: post.id,

@@ -7,13 +7,14 @@ Branch: [Link to branch]
 ### Acceptance Criteria
 
 New/modified functionality to test:
-- [ ] [Criteria 1]
-- [ ] [Criteria 2]
+
+-   [ ] [Criteria 1]
+-   [ ] [Criteria 2]
 
 Regression testing areas to focus on:
-- [ ] [Area 1]
-- [ ] [Area 2]
 
+-   [ ] [Area 1]
+-   [ ] [Area 2]
 
 ### Branching / JIRA
 
