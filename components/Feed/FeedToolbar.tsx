@@ -1,7 +1,7 @@
 // Auth0
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilPen } from '@iconscout/react-unicons'
-import { UilEstate } from '@iconscout/react-unicons'
+import { UilEstate, UilPen } from '@iconscout/react-unicons'
+import { useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
 import { useRecoilState } from 'recoil'
 
@@ -9,16 +9,20 @@ import { feedState } from '../../atoms/feeds'
 import { feedApiClass, feedToolbarClass } from '../../styles/feed'
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'
+import { FeedSelectorMobile } from './FeedSelector'
 import NewPostForm from './Forms/NewPostForm'
 
 const FeedToolbar = () => {
     const [isOpen, setIsOpen] = useState(false)
     const { user } = useUser()
 
+    // Tracking feed / new post button swap
+    const isMobile = useMediaQuery('(max-width: 965px)')
+
     // Store selected feed in global state
     const [feed, setFeed] = useRecoilState(feedState)
 
-    // Modal helper functions
+    // helper functions
     const openModal = () => {
         setIsOpen(true)
     }
@@ -66,8 +70,8 @@ const FeedToolbar = () => {
                 </div>
 
                 {/* Right: new post button */}
-                {user && (
-                    <div className={feedToolbarClass.rightDiv}>
+                <div className={feedToolbarClass.rightDiv}>
+                    {!isMobile && user ? (
                         <Button
                             text="New Post"
                             keepText={false}
@@ -76,8 +80,10 @@ const FeedToolbar = () => {
                             addStyle={feedToolbarClass.newPostButton}
                             onClick={openModal}
                         />
-                    </div>
-                )}
+                    ) : (
+                        <FeedSelectorMobile />
+                    )}
+                </div>
                 <Modal show={isOpen} onClose={closeModal}>
                     <NewPostForm closeModal={closeModal} />
                 </Modal>

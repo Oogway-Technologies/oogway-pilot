@@ -7,7 +7,8 @@ export const avatarURL =
 // Feed API
 export const feedApiClass = {
     toolbarDiv: 'flex-grow',
-    feedToolbar: 'items-center my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
+    feedToolbar:
+        'items-center my-sm xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
     innerDiv: 'flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide',
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
     feedTitle: 'flex gap-x-sm items-center text-xl font-bold',
@@ -15,6 +16,9 @@ export const feedApiClass = {
         'rounded-full p-1 ' +
         'text-primary dark:text-primaryDark bg-tertiary dark:bg-primaryDark/50 ' +
         'hover:scale-110 ',
+    mobileNewPostButton:
+        'absolute bottom-xl left-1/2 z-10 -translate-x-1/2 ' +
+        'shadow-lg shadow-black/20 dark:shadow-black/60 ',
 }
 
 export const endOfFeedMessageClass = {
@@ -30,7 +34,7 @@ export const feedToolbarClass = {
     leftDiv: 'flex items-center justify-self-start md:mr-auto',
     rightDiv: 'flex items-center justify-self-end md:ml-auto',
     leftTabButtons:
-        'rounded-[20px] p-sm md:px-md md:space-x-2 border-2 border-solid border-transparent ' +
+        'rounded-[20px] p-sm md:px-md md:space-x-2  ' +
         'hover:font-bold dark:hover:font-bold ' +
         'hover:bg-neutral-50 dark:hover:bg-neutralDark-300 ' +
         'hover:text-neutral-700 dark:hover:text-neutralDark-150  ',
@@ -40,17 +44,29 @@ export const feedToolbarClass = {
         'hover:text-primary dark:hover:text-primaryDark ',
     leftTabInactive: 'text-neutral-700 dark:text-neutralDark-150 ',
     newPostButton:
-        'rounded-[20px] p-sm md:px-md md:space-x-2 ' +
+        'rounded-[20px] py-sm px-md space-x-2 ' +
         'bg-primary dark:bg-primaryDark hover:bg-primaryActive' +
         'active:bg-primaryActive dark:hover:bg-primaryActive ' +
-        'dark:active:bg-primaryActive text-white font-bold',
+        'dark:active:bg-primaryActive text-white font-bold ',
+    feedButton:
+        'rounded-[20px] border-2 border-solid border-transparent p-sm md:px-md ' +
+        'md:space-x-2 font-bold text-neutral-700 dark:text-neutralDark-150',
 }
 
 // Feed filter
 export const feedSelectorClass = {
+    dropdownButton:
+        'inline-flex items-center font-bold text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:cursor-pointer hover:scale-110 ',
+    dropdown:
+        'flex w-auto h-auto p-2 mr-2 z-10 ' +
+        'bg-white dark:bg-neutralDark-500 divide-y divide-neutral-300 ' +
+        'dark:divide-neutralDark-300 rounded-md shadow-lg ' +
+        'ring-2 ring-primary dark:ring-white ring-opacity-50 ' +
+        'focus:outline-none',
     list: 'flex flex-col p-md space-y-sm',
     feed:
-        'px-md text-sm lg:text-base truncate py-0.5 rounded-md ' +
+        'px-md py-0.5 text-base truncate rounded-md ' +
         'hover:bg-neutral-50 dark:hover:bg-neutralDark-300 ' +
         'hover:font-bold dark:hover:font-bold hover:cursor-pointer ',
     feedActive:

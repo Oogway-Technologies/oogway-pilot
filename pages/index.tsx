@@ -1,4 +1,5 @@
 // Next and react
+import { useMediaQuery } from '@mui/material'
 import Head from 'next/head'
 import React, { FC, ReactNode, useState } from 'react'
 // Recoil states
@@ -12,6 +13,7 @@ import FeedAPI from '../components/Feed/FeedAPI'
 import FeedSelector from '../components/Feed/FeedSelector'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
+import SidebarWidget from '../components/Utils/SidebarWidget'
 import { getPosts } from '../queries/posts'
 import { queryClientConfig } from '../query'
 
@@ -19,17 +21,33 @@ interface Props {
     children: ReactNode
 }
 
-const Sidebar: FC<Props> = ({ children }) => (
-    <div className="hidden md:flex md:visible  md:flex-col md:w-3/12 md:align-top">
-        {children}
-    </div>
-)
+const Sidebar: FC<Props> = ({ children }) => {
+    const isMobile = useMediaQuery('(max-width: 965px)')
+    return (
+        <div
+            className={
+                isMobile ? 'hidden' : 'visible flex flex-col w-3/12 align-top'
+            }
+        >
+            {children}
+        </div>
+    )
+}
 
-const MainContent = () => (
-    <div className="flex flex-col justify-center px-1 w-full md:px-0 md:w-6/12">
-        <FeedAPI />
-    </div>
-)
+const MainContent = () => {
+    const isMobile = useMediaQuery('(max-width: 965px)')
+
+    return (
+        <div
+            className={
+                'flex flex-col justify-center ' +
+                (isMobile ? 'px-1 w-full ' : 'px-0 w-6/12 ')
+            }
+        >
+            <FeedAPI />
+        </div>
+    )
+}
 
 /**
  * Home: The public (or personalized user) feed of the app
@@ -52,7 +70,9 @@ export default function Home() {
 
             <div className="flex flex-row">
                 <Sidebar>
-                    <FeedSelector />
+                    <SidebarWidget title={'Jump to a Feed'}>
+                        <FeedSelector />
+                    </SidebarWidget>
                 </Sidebar>
                 <MainContent />
                 <Sidebar>
