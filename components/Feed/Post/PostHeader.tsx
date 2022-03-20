@@ -18,6 +18,7 @@ import { deleteMedia } from '../../../lib/storageHelper'
 import { postCardClass } from '../../../styles/feed'
 import { FirebaseProfile } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
+import bull from '../../Utils/Bullet'
 import Timestamp from '../../Utils/Timestamp'
 import PostOptionsDropdown from './PostOptionsDropdown'
 
@@ -25,6 +26,8 @@ type PostHeaderProps = {
     id: string
     authorUid: string
     name: string
+    numComments: number
+    feed: string | undefined
     timestamp: FieldValue
     isAnonymous: boolean
 }
@@ -32,6 +35,8 @@ type PostHeaderProps = {
 const PostHeader: FC<PostHeaderProps> = ({
     id,
     authorUid,
+    numComments,
+    feed,
     timestamp,
     isAnonymous,
 }) => {
@@ -134,9 +139,14 @@ const PostHeader: FC<PostHeaderProps> = ({
                         </span>
                     </div>
                     <div className={postCardClass.leftMobileRowTwo}>
-                        {/* TODO: interpolate post category below */}
-                        {/* <p className={postCardClass.categoryP}>Education</p>
-                        {bull} */}
+                        {/* Number of answers */}
+                        <p>{`${numComments} Comments`}</p>
+                        {bull}
+                        {/* Post category */}
+                        {feed && (
+                            <p className={postCardClass.categoryP}>{feed}</p>
+                        )}
+                        {feed && bull}
                         {/* Time stamp */}
                         <Timestamp timestamp={timestamp} />
                     </div>

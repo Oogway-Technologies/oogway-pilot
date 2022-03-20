@@ -1,5 +1,6 @@
 import { Popover, Transition } from '@headlessui/react'
 import { UilAngleDown, UilAngleUp } from '@iconscout/react-unicons'
+import { useRouter } from 'next/router'
 import React, { FC, Fragment, useState } from 'react'
 import { usePopper } from 'react-popper'
 import { useRecoilState } from 'recoil'
@@ -13,6 +14,9 @@ import { FeedSelectorLoader } from '../Loaders/FeedSelectorLoader'
 const FeedSelector: FC = () => {
     // Track feed categories
     const { data: feedCategories, status } = useFeedsQuery()
+
+    // Router for shallow routing to feeds
+    const router = useRouter()
 
     // Store selected feed in global state
     const [feed, setFeed] = useRecoilState(feedState)
@@ -43,7 +47,14 @@ const FeedSelector: FC = () => {
                                         ' buttonText'
                                     }
                                     data-text={elem.label}
-                                    onClick={() => setFeed(elem.label)}
+                                    onClick={() => {
+                                        setFeed(elem.label)
+                                        router.push(
+                                            `/?feed=${elem.label}`,
+                                            undefined,
+                                            { shallow: true }
+                                        )
+                                    }}
                                 >
                                     {elem.label}
                                 </li>
@@ -69,6 +80,9 @@ export const FeedSelectorMobile: FC = () => {
 
     // Track feed categories
     const { data: feedCategories, status } = useFeedsQuery()
+
+    // Router for shallow routing to feeds
+    const router = useRouter()
 
     // Store selected feed in global state
     const [feed, setFeed] = useRecoilState(feedState)
@@ -138,6 +152,11 @@ export const FeedSelectorMobile: FC = () => {
                                                     data-text={elem.label}
                                                     onClick={() => {
                                                         setFeed(elem.label)
+                                                        router.push(
+                                                            `/?feed=${elem.label}`,
+                                                            undefined,
+                                                            { shallow: true }
+                                                        )
                                                         close()
                                                     }}
                                                 >

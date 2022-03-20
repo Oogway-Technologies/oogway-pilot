@@ -1,7 +1,10 @@
 import { UilPen } from '@iconscout/react-unicons'
 import { useMediaQuery } from '@mui/material'
-import React, { useState } from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+import { useSetRecoilState } from 'recoil'
 
+import { feedState } from '../../atoms/feeds'
 import { feedApiClass, feedToolbarClass } from '../../styles/feed'
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'
@@ -13,6 +16,14 @@ import PostsAPI from './Post/PostsAPI'
 const FeedAPI = () => {
     const [isOpen, setIsOpen] = useState(false)
     const isMobile = useMediaQuery('(max-width: 965px)')
+
+    // Initialize feed state
+    const router = useRouter()
+    const setFeed = useSetRecoilState(feedState)
+    useEffect(() => {
+        const { feed: currentFeed } = router.query
+        if (currentFeed) setFeed(currentFeed as string)
+    }, [router])
 
     // helper functions
     const openModal = () => {

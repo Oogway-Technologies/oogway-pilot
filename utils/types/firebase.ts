@@ -54,7 +54,7 @@ export interface FirebasePost {
     compare?: compare
     description: string
     message: string
-    feed: string
+    feed?: string | undefined
     isCompare: boolean
     likes: userMap
     name: string

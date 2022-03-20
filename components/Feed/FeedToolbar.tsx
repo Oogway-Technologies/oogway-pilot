@@ -2,6 +2,7 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilEstate, UilPen } from '@iconscout/react-unicons'
 import { useMediaQuery } from '@mui/material'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useRecoilState } from 'recoil'
 
@@ -18,6 +19,9 @@ const FeedToolbar = () => {
 
     // Tracking feed / new post button swap
     const isMobile = useMediaQuery('(max-width: 965px)')
+
+    // Router for shallow routing to feeds
+    const router = useRouter()
 
     // Store selected feed in global state
     const [feed, setFeed] = useRecoilState(feedState)
@@ -50,7 +54,12 @@ const FeedToolbar = () => {
                                 ? feedToolbarClass.leftTabActive
                                 : feedToolbarClass.leftTabInactive)
                         }
-                        onClick={() => setFeed('All')}
+                        onClick={() => {
+                            setFeed('All')
+                            router.push('/?feed=All', undefined, {
+                                shallow: true,
+                            })
+                        }}
                     />
                     {/* <Button text="Hot" keepText={false} icon={<UilFire/>} */}
                     {/*    type='button'*/}

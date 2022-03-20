@@ -14,6 +14,7 @@ import {
     setDoc,
     updateDoc,
 } from 'firebase/firestore'
+import { useRouter } from 'next/router'
 import { useTheme } from 'next-themes'
 import React, {
     ChangeEvent,
@@ -90,8 +91,9 @@ const NewPostForm: FC<NewPostProps> = ({
     const userProfile = useRecoilValue(userProfileState)
 
     // Feed Category drop down
+    const router = useRouter()
     const [feedOptions] = useFeedOptions()
-    const currentFeed = useRecoilValue(feedState)
+    const [currentFeed, setCurrentFeed] = useRecoilState(feedState)
     const { theme } = useTheme()
 
     // For triggering posts refetch on form submission
@@ -670,6 +672,14 @@ const NewPostForm: FC<NewPostProps> = ({
             // Trigger a post re-fetch with a timeout to give the database
             // time to register the new post
             setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
+
+            // Re-route to proper feed
+            if (selectedFeed !== currentFeed) {
+                setCurrentFeed(selectedFeed)
+                router.push(`/?feed=${selectedFeed}`, undefined, {
+                    shallow: true,
+                })
+            }
         }
     }
 

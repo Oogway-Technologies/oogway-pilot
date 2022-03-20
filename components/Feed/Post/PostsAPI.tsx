@@ -54,6 +54,7 @@ function PostsAPI() {
                                         name={post.name}
                                         message={post.message}
                                         description={post.description}
+                                        feed={post.feed || undefined}
                                         isCompare={post.isCompare}
                                         timestamp={post.timestamp}
                                         postImage={post.postImage}

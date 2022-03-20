@@ -1,4 +1,5 @@
 import { UilArrowLeft } from '@iconscout/react-unicons'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { useRecoilState } from 'recoil'
 
@@ -9,6 +10,10 @@ import Button from '../Utils/Button'
 const FeedTitle = () => {
     // Track feed
     const [feed, setFeed] = useRecoilState(feedState)
+
+    // Router for shallow routing to feeds
+    const router = useRouter()
+
     return (
         <>
             {feed !== 'All' && (
@@ -21,7 +26,12 @@ const FeedTitle = () => {
                             keepText={false}
                             addStyle={feedApiClass.backbutton}
                             type="button"
-                            onClick={() => setFeed('All')}
+                            onClick={() => {
+                                setFeed('All')
+                                router.push('/?feed=All', undefined, {
+                                    shallow: true,
+                                })
+                            }}
                         />
                         {`${feed}`}
                     </span>

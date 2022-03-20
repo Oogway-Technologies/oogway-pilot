@@ -30,7 +30,7 @@ export const endOfFeedMessageClass = {
 
 // Feed toolbar
 export const feedToolbarClass = {
-    div: 'grid grid-cols-2',
+    div: 'relative grid grid-cols-2',
     leftDiv: 'flex items-center justify-self-start md:mr-auto',
     rightDiv: 'flex items-center justify-self-end md:ml-auto',
     leftTabButtons:
@@ -118,7 +118,8 @@ export const postCardClass = {
         'focus:text-primary dark:focus:text-primary text-sm',
     voteCounter: 'text-sm text-neutral-700 dark:text-neutralDark-150',
     // Engagement
-    engagementBar: 'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-sm',
+    engagementBar:
+        'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-xs sm:text-sm',
     engagementButton:
         'items-center space-x-2  ' +
         'hover:text-neutral-800 dark:hover:text-neutralDark-50  ' +
