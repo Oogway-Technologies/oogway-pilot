@@ -1,6 +1,6 @@
 // Auth0
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilEstate, UilPen } from '@iconscout/react-unicons'
+import { UilArrowLeft, UilPen } from '@iconscout/react-unicons'
 import { useMediaQuery } from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -20,11 +20,11 @@ const FeedToolbar = () => {
     // Tracking feed / new post button swap
     const isMobile = useMediaQuery('(max-width: 965px)')
 
+    // Track feed
+    const [feed, setFeed] = useRecoilState(feedState)
+
     // Router for shallow routing to feeds
     const router = useRouter()
-
-    // Store selected feed in global state
-    const [feed, setFeed] = useRecoilState(feedState)
 
     // helper functions
     const openModal = () => {
@@ -42,25 +42,25 @@ const FeedToolbar = () => {
                 {/* Left: Tabs */}
                 <div className={feedToolbarClass.leftDiv}>
                     {/* TODO: uncomment buttons when its done. */}
-
-                    <Button
-                        text="Home"
-                        keepText={false}
-                        icon={<UilEstate />}
-                        type="button"
-                        addStyle={
-                            feedToolbarClass.leftTabButtons +
-                            (feed == 'All'
-                                ? feedToolbarClass.leftTabActive
-                                : feedToolbarClass.leftTabInactive)
-                        }
-                        onClick={() => {
-                            setFeed('All')
-                            router.push('/?feed=All', undefined, {
-                                shallow: true,
-                            })
-                        }}
-                    />
+                    <span className={feedApiClass.feedTitle}>
+                        {feed !== 'All' && (
+                            <Button
+                                icon={<UilArrowLeft />}
+                                text={undefined}
+                                forceNoText={true}
+                                keepText={false}
+                                addStyle={feedApiClass.backbutton}
+                                type="button"
+                                onClick={() => {
+                                    setFeed('All')
+                                    router.push('/?feed=All', undefined, {
+                                        shallow: true,
+                                    })
+                                }}
+                            />
+                        )}
+                        {feed === 'All' ? 'Home' : `${feed}`}
+                    </span>
                     {/* <Button text="Hot" keepText={false} icon={<UilFire/>} */}
                     {/*    type='button'*/}
                     {/*    addStyle={feedToolbarClass.leftTabButtons}*/}

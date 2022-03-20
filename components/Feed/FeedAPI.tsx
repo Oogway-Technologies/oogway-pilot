@@ -38,7 +38,7 @@ const FeedAPI = () => {
         <>
             <div className={feedApiClass.toolbarDiv}>
                 <FeedToolbar />
-                <FeedTitle />
+                {/* <FeedTitle /> */}
             </div>
 
             <div id="infiniteScrollTarget" className={feedApiClass.innerDiv}>

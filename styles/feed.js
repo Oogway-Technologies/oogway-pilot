@@ -56,7 +56,7 @@ export const feedToolbarClass = {
 // Feed filter
 export const feedSelectorClass = {
     dropdownButton:
-        'inline-flex items-center font-bold text-neutral-700 dark:text-neutralDark-150 ' +
+        'inline-flex relative items-center font-bold text-neutral-700 dark:text-neutralDark-150 ' +
         'hover:cursor-pointer hover:scale-110 ',
     dropdown:
         'flex w-auto h-auto p-2 mr-2 z-10 ' +

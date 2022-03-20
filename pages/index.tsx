@@ -10,7 +10,7 @@ import { dehydrate, QueryClient } from 'react-query'
 
 // Components and styling
 import FeedAPI from '../components/Feed/FeedAPI'
-import FeedSelector from '../components/Feed/FeedSelector'
+import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
@@ -70,8 +70,8 @@ export default function Home() {
 
             <div className="flex flex-row">
                 <Sidebar>
-                    <SidebarWidget title={'Jump to a Feed'}>
-                        <FeedSelector />
+                    <SidebarWidget>
+                        <FeedSelectorMenu />
                     </SidebarWidget>
                 </Sidebar>
                 <MainContent />
