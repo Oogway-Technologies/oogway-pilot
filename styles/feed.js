@@ -6,10 +6,19 @@ export const avatarURL =
 
 // Feed API
 export const feedApiClass = {
-    toolbarDiv: 'flex-grow',
-    feedToolbar: 'items-center my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
+    toolbarDiv: 'flex-grow z-10 ',
+    feedToolbar:
+        'items-center my-sm xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl ',
     innerDiv: 'flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide',
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
+    feedTitle: 'flex gap-x-sm items-center text-xl font-bold',
+    backbutton:
+        'rounded-full p-1 ' +
+        'text-primary dark:text-primaryDark bg-tertiary dark:bg-primaryDark/50 ' +
+        'hover:scale-110 ',
+    mobileNewPostButton:
+        'absolute bottom-xl left-1/2 z-10 -translate-x-1/2 ' +
+        'shadow-lg shadow-black/20 dark:shadow-black/60 ',
 }
 
 export const endOfFeedMessageClass = {
@@ -21,20 +30,49 @@ export const endOfFeedMessageClass = {
 
 // Feed toolbar
 export const feedToolbarClass = {
-    div: 'grid grid-cols-2',
+    div: 'relative grid grid-cols-2 ',
     leftDiv: 'flex items-center justify-self-start md:mr-auto',
     rightDiv: 'flex items-center justify-self-end md:ml-auto',
     leftTabButtons:
-        'rounded-[20px] p-sm md:px-md md:space-x-2 border-2 border-solid border-transparent ' +
-        'text-neutral-700 dark:text-neutralDark-150 ' +
-        'hover:font-bold active:font-bold dark:hover:font-bold dark:active:font-bold ' +
-        'hover:bg-neutral-50 dark:hover:bg-neutralDark-300 active:bg-primary/20 dark:active:bg-primaryDark/20 ' +
-        'hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-primary dark:active:text-primaryDark',
+        'rounded-[20px] p-sm md:px-md md:space-x-2  ' +
+        'hover:font-bold dark:hover:font-bold ' +
+        'hover:bg-neutral-50 dark:hover:bg-neutralDark-300 ' +
+        'hover:text-neutral-700 dark:hover:text-neutralDark-150  ',
+    leftTabActive:
+        'bg-primary/20 dark:bg-primaryDark/20 font-bold dark:font-bold ' +
+        'text-primary dark:text-primaryDark hover:bg-primary/20 dark:hover:bg-primaryDark/20 ' +
+        'hover:text-primary dark:hover:text-primaryDark ',
+    leftTabInactive: 'text-neutral-700 dark:text-neutralDark-150 ',
     newPostButton:
-        'rounded-[20px] p-sm md:px-md md:space-x-2 ' +
+        'rounded-[20px] py-sm px-md space-x-2 ' +
         'bg-primary dark:bg-primaryDark hover:bg-primaryActive' +
         'active:bg-primaryActive dark:hover:bg-primaryActive ' +
-        'dark:active:bg-primaryActive text-white font-bold',
+        'dark:active:bg-primaryActive text-white font-bold ',
+    feedButton:
+        'rounded-[20px] border-2 border-solid border-transparent p-sm md:px-md ' +
+        'md:space-x-2 font-bold text-neutral-700 dark:text-neutralDark-150',
+}
+
+// Feed filter
+export const feedSelectorClass = {
+    dropdownButton:
+        'inline-flex items-center font-bold text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:cursor-pointer hover:scale-110 ',
+    dropdown:
+        'flex w-11/12 sm:w-auto h-auto p-2 mr-2 ' +
+        'bg-white dark:bg-neutralDark-500 divide-y divide-neutral-300 ' +
+        'dark:divide-neutralDark-300 rounded-md shadow-lg ' +
+        'ring-2 ring-primary dark:ring-white ring-opacity-50 ' +
+        'focus:outline-none',
+    list: 'flex flex-col p-md space-y-sm',
+    feed:
+        'px-md py-0.5 text-base truncate rounded-md ' +
+        'hover:bg-neutral-50 dark:hover:bg-neutralDark-300 ' +
+        'hover:font-bold dark:hover:font-bold hover:cursor-pointer ',
+    feedActive:
+        'text-primary dark:text-primaryDark bg-tertiary dark:bg-primaryDark/50 font-bold ' +
+        'hover:bg-tertiary hover:dark:bg-primaryDark/50 ',
+    feedInactive: 'text-neutral-700 dark:text-neutralDark-50 ',
 }
 
 // PostCard
@@ -58,7 +96,7 @@ export const postCardClass = {
     categoryP: 'font-bold text-primary',
     leftMobileRowOne: 'inline-flex items-center',
     leftMobileRowTwo:
-        'inline-flex items-center ml-sm md:ml  text-xs md:text-sm',
+        'inline-flex flex-wrap items-center ml-sm md:ml text-xs md:text-sm',
     // Body
     body: 'flex flex-col ml-xl',
     bodyQuestion:
@@ -80,7 +118,8 @@ export const postCardClass = {
         'focus:text-primary dark:focus:text-primary text-sm',
     voteCounter: 'text-sm text-neutral-700 dark:text-neutralDark-150',
     // Engagement
-    engagementBar: 'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-sm',
+    engagementBar:
+        'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-xs sm:text-sm',
     engagementButton:
         'items-center space-x-2  ' +
         'hover:text-neutral-800 dark:hover:text-neutralDark-50  ' +
@@ -130,7 +169,7 @@ export const postFormClass = {
     formDescriptionInput:
         'resize-none w-full h-28 bg-transparent flex-grow py-2 px-5 ' +
         'focus:outline-none text-sm',
-    uploadBar: 'inline-flex flex-col w-full space-y-3 px-2 py-md',
+    uploadBar: 'inline-flex flex-col w-full space-y-3 px-2 pb-md',
     imageSizeAlert:
         'inline-flex items-center m-0 text-sm text-alert dark:text-alert',
     formCompareText:
@@ -144,6 +183,11 @@ export const postFormClass = {
     orText: 'inline-flex items-center px-md',
     imageSelectedSpan: 'italic ml-2',
     cancelSubmitDiv: 'inline-flex w-full space-x-3 px-2 pt-md',
+    // feed
+    fixedFeed: 'ml-md text-sm text-neutral-700 dark:text-neutralDark-150',
+    feedSpan:
+        'text-primary dark:text-tertiary bg-tertiary dark:bg-primaryDark/50 font-bold ' +
+        'p-1 rounded-md ',
     // Media
     previewDiv: 'inline-flex px-2 space-x-md',
     imagePreview: 'flex flex-col items-center',

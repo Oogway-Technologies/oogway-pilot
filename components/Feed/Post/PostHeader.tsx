@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material'
+import { Avatar, useMediaQuery } from '@mui/material'
 import {
     collection,
     deleteDoc,
@@ -18,6 +18,7 @@ import { deleteMedia } from '../../../lib/storageHelper'
 import { postCardClass } from '../../../styles/feed'
 import { FirebaseProfile } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
+import bull from '../../Utils/Bullet'
 import Timestamp from '../../Utils/Timestamp'
 import PostOptionsDropdown from './PostOptionsDropdown'
 
@@ -25,6 +26,8 @@ type PostHeaderProps = {
     id: string
     authorUid: string
     name: string
+    numComments: number
+    feed: string | undefined
     timestamp: FieldValue
     isAnonymous: boolean
 }
@@ -32,13 +35,19 @@ type PostHeaderProps = {
 const PostHeader: FC<PostHeaderProps> = ({
     id,
     authorUid,
+    numComments,
+    feed,
     timestamp,
     isAnonymous,
 }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
+
     // router from next.js to use location functions.
     const router = useRouter()
+
+    // Track mobile state
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     // Create params
     const staticPostData: staticPostData = {
@@ -134,9 +143,14 @@ const PostHeader: FC<PostHeaderProps> = ({
                         </span>
                     </div>
                     <div className={postCardClass.leftMobileRowTwo}>
-                        {/* TODO: interpolate post category below */}
-                        {/* <p className={postCardClass.categoryP}>Education</p>
-                        {bull} */}
+                        {/* Number of answers */}
+                        {!isMobile && <p>{`${numComments} Comments`}</p>}
+                        {!isMobile && bull}
+                        {/* Post category */}
+                        {feed && (
+                            <p className={postCardClass.categoryP}>{feed}</p>
+                        )}
+                        {feed && bull}
                         {/* Time stamp */}
                         <Timestamp timestamp={timestamp} />
                     </div>

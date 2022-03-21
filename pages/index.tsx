@@ -1,6 +1,7 @@
 // Next and react
+import { useMediaQuery } from '@mui/material'
 import Head from 'next/head'
-import React, { useState } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 // Recoil states
 // import {userProfileState} from '../atoms/user'
 // import {useRecoilValue} from 'recoil'
@@ -9,10 +10,44 @@ import { dehydrate, QueryClient } from 'react-query'
 
 // Components and styling
 import FeedAPI from '../components/Feed/FeedAPI'
+import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
+import SidebarWidget from '../components/Utils/SidebarWidget'
 import { getPosts } from '../queries/posts'
 import { queryClientConfig } from '../query'
+
+interface Props {
+    children: ReactNode
+}
+
+const Sidebar: FC<Props> = ({ children }) => {
+    const isMobile = useMediaQuery('(max-width: 965px)')
+    return (
+        <div
+            className={
+                isMobile ? 'hidden' : 'visible flex flex-col w-3/12 align-top'
+            }
+        >
+            {children}
+        </div>
+    )
+}
+
+const MainContent = () => {
+    const isMobile = useMediaQuery('(max-width: 965px)')
+
+    return (
+        <div
+            className={
+                'flex flex-col justify-center ' +
+                (isMobile ? 'px-1 w-full ' : 'px-0 w-6/12 ')
+            }
+        >
+            <FeedAPI />
+        </div>
+    )
+}
 
 /**
  * Home: The public (or personalized user) feed of the app
@@ -28,12 +63,21 @@ export default function Home() {
     }
 
     return (
-        <>
-            <div className="flex flex-col justify-center w-full">
-                <Head>
-                    <title>Oogway | Social - Wisdom of the crowd</title>
-                </Head>
-                <FeedAPI />
+        <div>
+            <Head>
+                <title>Oogway | Social - Wisdom of the crowd</title>
+            </Head>
+
+            <div className="flex flex-row">
+                <Sidebar>
+                    <SidebarWidget>
+                        <FeedSelectorMenu />
+                    </SidebarWidget>
+                </Sidebar>
+                <MainContent />
+                <Sidebar>
+                    <div></div>
+                </Sidebar>
             </div>
 
             {/* Modal for user profile */}
@@ -44,7 +88,7 @@ export default function Home() {
                     cancelButtonText="skip"
                 />
             </Modal>
-        </>
+        </div>
     )
 }
 

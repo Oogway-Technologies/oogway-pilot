@@ -1,3 +1,8 @@
+export type jsonTimeObj = {
+    seconds: number
+    nanoseconds: number
+}
+
 export interface EngagementItems {
     icon: JSX.Element
     text: string

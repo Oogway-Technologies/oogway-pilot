@@ -14,6 +14,8 @@ import {
     setDoc,
     updateDoc,
 } from 'firebase/firestore'
+import { useRouter } from 'next/router'
+import { useTheme } from 'next-themes'
 import React, {
     ChangeEvent,
     FC,
@@ -27,6 +29,7 @@ import React, {
 import { useForm } from 'react-hook-form'
 // Queries
 import { useQueryClient } from 'react-query'
+import Select from 'react-select'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
 import {
@@ -42,11 +45,13 @@ import {
     textCompareLeft,
     textCompareRight,
 } from '../../../atoms/compareForm'
+import { feedState } from '../../../atoms/feeds'
 import { fileSizeTooLarge } from '../../../atoms/forms'
 // Recoil states
 import { userProfileState } from '../../../atoms/user'
 // Database
 import { db, storage } from '../../../firebase'
+import { useFeedOptions } from '../../../hooks/useFeedOptions'
 import { postFormClass } from '../../../styles/feed'
 import {
     longLimit,
@@ -63,6 +68,7 @@ import {
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import { FirebasePost } from '../../../utils/types/firebase'
 import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
+import { staticFeedOptions } from '../../../utils/types/params'
 // JSX components
 import Button from '../../Utils/Button'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
@@ -84,6 +90,12 @@ const NewPostForm: FC<NewPostProps> = ({
     // Track current user profile data
     const userProfile = useRecoilValue(userProfileState)
 
+    // Feed Category drop down
+    const router = useRouter()
+    const [feedOptions] = useFeedOptions()
+    const [currentFeed, setCurrentFeed] = useRecoilState(feedState)
+    const { theme } = useTheme()
+
     // For triggering posts refetch on form submission
     const queryClient = useQueryClient()
 
@@ -101,6 +113,9 @@ const NewPostForm: FC<NewPostProps> = ({
     useEffect(() => {
         register('compare', { required: true })
     }, [register])
+    useEffect(() => {
+        register('feed', { required: true })
+    }, [register])
 
     const [loading, setLoading] = useState(false)
 
@@ -109,6 +124,14 @@ const NewPostForm: FC<NewPostProps> = ({
 
     // Get a reference to the description text
     const descriptionRef = useRef<HTMLTextAreaElement>(null)
+
+    // Get a reference to the feed selection
+    const [selectedFeed, setSelectedFeed] = useState<string>('')
+    useEffect(() => {
+        if (currentFeed !== 'All') {
+            setSelectedFeed(currentFeed)
+        }
+    }, [setSelectedFeed, currentFeed])
 
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
@@ -178,6 +201,7 @@ const NewPostForm: FC<NewPostProps> = ({
             setLabelToCompareLeft('')
             setLabelToCompareRight('')
             setHasPreviewed(false)
+            setSelectedFeed('')
         }
     }, [
         setExpanded,
@@ -190,7 +214,13 @@ const NewPostForm: FC<NewPostProps> = ({
         setTextToCompareLeft,
         setTextToCompareRight,
         setHasPreviewed,
+        setSelectedFeed,
     ])
+
+    // Update form selection
+    const selectFeedHandler = (selectedOption: staticFeedOptions | null) => {
+        setSelectedFeed(selectedOption ? selectedOption.label : '')
+    }
 
     // Processing the images received from backend for description field
     const previewImagecallBack = async (res: string[]) => {
@@ -266,6 +296,17 @@ const NewPostForm: FC<NewPostProps> = ({
             questionProvided = false
         }
 
+        // Ensure feed has been selected
+        let feedProvided = true
+        if (selectedFeed === '') {
+            setError(
+                'feed',
+                { type: 'required', message: 'Please select a feed category.' },
+                { shouldFocus: true }
+            )
+            feedProvided = false
+        }
+
         // If the post is a compare post and not all media is specified, return asap
         let questionHasMedia = true
         if (isMissingDataForComparePost() && !isComparePost()) {
@@ -280,12 +321,15 @@ const NewPostForm: FC<NewPostProps> = ({
             )
             questionHasMedia = false
         }
-        if (!questionProvided || !questionHasMedia) {
+
+        if (!questionProvided || !questionHasMedia || !feedProvided) {
             setTimeout(() => clearErrors(), 3000)
         }
 
         // Whether to sendPost or not
-        return questionProvided && questionHasMedia && !isTitleURL
+        return (
+            questionProvided && feedProvided && questionHasMedia && !isTitleURL
+        )
     }
 
     const sendPost = async () => {
@@ -305,6 +349,7 @@ const NewPostForm: FC<NewPostProps> = ({
             description: amazonURLAppendQueryString(
                 descriptionRef?.current?.value || ''
             ), // Optional description
+            feed: selectedFeed,
             previewImage: previewImage, // Saves preview Image from Link
             name: userProfile.username, // Change this with username or incognito
             uid: userProfile.uid, // uid of the user that created this post
@@ -628,6 +673,14 @@ const NewPostForm: FC<NewPostProps> = ({
             // Trigger a post re-fetch with a timeout to give the database
             // time to register the new post
             setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
+
+            // Re-route to proper feed
+            if (selectedFeed !== currentFeed) {
+                setCurrentFeed(selectedFeed)
+                router.push(`/?feed=${selectedFeed}`, undefined, {
+                    shallow: true,
+                })
+            }
         }
     }
 
@@ -715,6 +768,80 @@ const NewPostForm: FC<NewPostProps> = ({
                         maxLength={longLimit}
                     />
                 </div>
+                {/* Feed Selector */}
+                {/* {currentFeed === 'All' ? (
+                    <> */}
+                <Select
+                    options={feedOptions}
+                    onChange={selectFeedHandler}
+                    defaultValue={
+                        currentFeed !== 'All'
+                            ? { value: currentFeed, label: currentFeed }
+                            : null
+                    }
+                    placeholder="Select Feed..."
+                    isClearable={true}
+                    maxMenuHeight={135}
+                    menuPosition={'fixed'}
+                    styles={{
+                        placeholder: (provided, state) => ({
+                            ...provided,
+                            marginLeft: '16px',
+                            fontWeight: 'normal',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                        }),
+                        input: (provided, state) => ({
+                            ...provided,
+                            marginLeft: '16px',
+                            fontWeight: 'normal',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                        }),
+                        singleValue: (provided, state) => ({
+                            ...provided,
+                            marginLeft: '16px',
+                            fontWeight: 'normal',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                        }),
+                    }}
+                    theme={prevTheme => ({
+                        ...prevTheme,
+                        borderRadius: 8,
+                        colors: {
+                            ...prevTheme.colors,
+                            primary: '#7269FF',
+                            primary25:
+                                theme === 'light' ? '#D8D8D8' : '#3A3B3C',
+                            primary50:
+                                theme === 'light' ? '#BFBFBF' : '#2E2E2E',
+                            primary75:
+                                theme === 'light' ? '#BFBFBF' : '#2E2E2E',
+                            neutral0: theme === 'light' ? 'white' : '#242526',
+                            neutral80: theme === 'light' ? 'black' : 'white',
+                            neutral90:
+                                theme === 'light' ? '#D8D8D8' : '#242526',
+                        },
+                    })}
+                />
+                {errors.feed && errors.feed.type === 'required' && (
+                    <FlashErrorMessage
+                        message={errors.feed.message}
+                        ms={warningTime}
+                        style={postFormClass.formAlert}
+                    />
+                )}
+                {/* </>
+                ) : (
+                    <div className={postFormClass.fixedFeed}>
+                        Posting to{' '}
+                        <span className={postFormClass.feedSpan}>
+                            {currentFeed}
+                        </span>{' '}
+                        feed.
+                    </div>
+                )} */}
             </form>
 
             {/* Upload Image OR compare*/}

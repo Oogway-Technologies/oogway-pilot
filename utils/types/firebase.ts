@@ -54,6 +54,7 @@ export interface FirebasePost {
     compare?: compare
     description: string
     message: string
+    feed?: string | undefined
     isCompare: boolean
     likes: userMap
     name: string
@@ -84,6 +85,13 @@ export interface FirebaseProfile {
     resetProfile: boolean
     username: string
     uid: string
+}
+
+export interface FirebaseFeed {
+    id?: string
+    label: string
+    timestamp: FieldValue
+    createdBy: string
 }
 
 /**

@@ -5,7 +5,6 @@ import React, { FC } from 'react'
 import { useRecoilValue } from 'recoil'
 
 import { userProfileState } from '../../../atoms/user'
-import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { usePostNumberLikes } from '../../../hooks/useNumberLikes'
 import { useOnCommmentsPage } from '../../../hooks/useOnCommentsPage'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
@@ -17,16 +16,16 @@ import Button from '../../Utils/Button'
 
 type PostEngagementBarProps = {
     id: string
+    numComments: number
 }
 
-const PostEngagementBar: FC<PostEngagementBarProps> = ({ id }) => {
+const PostEngagementBar: FC<PostEngagementBarProps> = ({ id, numComments }) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
 
     // Track likes and comments
     const [userHasLiked] = useUserHasLiked(`posts/${id}`, userProfile.uid)
     const [numLikes] = usePostNumberLikes(id)
-    const [numComments] = usePostNumberComments(id)
 
     // Use the router to redirect the user to the comments page
     // and track whether on comments paage

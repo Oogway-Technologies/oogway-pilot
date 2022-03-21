@@ -3,6 +3,7 @@ import { FieldValue } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
 
+import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { streamPostData } from '../../../lib/postsHelper'
 import { postCardClass } from '../../../styles/feed'
 import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
@@ -12,12 +13,14 @@ import CommentsAPI from '../Comments/CommentsAPI'
 import PostEngagementBar from './PostEngagementBar'
 import PostHeader from './PostHeader'
 import PostVotingMechanism from './PostVotingMechanism'
+
 interface PostProps {
     authorUid: string
     id: string
     name: string
     message: string
     description: string | null
+    feed?: string | undefined
     isCompare: boolean
     postImage: string | null | undefined
     timestamp: FieldValue
@@ -33,6 +36,7 @@ const PostCard: React.FC<PostProps> = ({
     name,
     message,
     description,
+    feed,
     isCompare,
     postImage,
     timestamp,
@@ -47,6 +51,9 @@ const PostCard: React.FC<PostProps> = ({
     const [URL, setURL] = useState<string>('')
     const [YouTubeURLID, setYouTubeURLID] = useState<string>('')
 
+    // Track number of comments
+    const [numComments] = usePostNumberComments(id)
+
     // Set params for child components
     const staticPostData: staticPostData = {
         authorUid: authorUid,
@@ -58,7 +65,7 @@ const PostCard: React.FC<PostProps> = ({
     // setters of number of votes for a comparison
     // post
     useEffect(() => {
-        // Store reference to snapshot
+        // Store reference to snapshot{bull})
         const unsubscribe = streamPostData(
             id,
             snapshot => {
@@ -113,6 +120,8 @@ const PostCard: React.FC<PostProps> = ({
                 id={id}
                 authorUid={authorUid}
                 name={name}
+                numComments={numComments}
+                feed={feed}
                 timestamp={timestamp}
                 isAnonymous={isAnonymous}
             />
@@ -194,7 +203,7 @@ const PostCard: React.FC<PostProps> = ({
             )}
 
             {/* Engagement */}
-            <PostEngagementBar id={id} />
+            <PostEngagementBar id={id} numComments={numComments} />
 
             {/* Comments */}
             {/* Note: pass the server-rendered comments to the panel */}

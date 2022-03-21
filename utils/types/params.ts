@@ -3,3 +3,8 @@ export interface staticPostData {
     id: string
     isAnonymous: boolean
 }
+
+export interface staticFeedOptions {
+    value: string
+    label: string
+}

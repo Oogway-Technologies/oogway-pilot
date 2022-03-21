@@ -2,6 +2,7 @@ import { useUser } from '@auth0/nextjs-auth0'
 import Link from 'next/link'
 import { useRecoilValue } from 'recoil'
 
+import { feedState } from '../../atoms/feeds'
 import { userProfileState } from '../../atoms/user'
 import { headerClass } from '../../styles/header'
 import Logo from '../Logo'
@@ -12,6 +13,7 @@ const Header = () => {
     // Call UserProfile to pass uid into links
     const { user, isLoading } = useUser()
     const userProfile = useRecoilValue(userProfileState)
+    const feed = useRecoilValue(feedState)
     let links = [
         // TODO: Add as pages created
         // {
@@ -19,7 +21,7 @@ const Header = () => {
         //     text: 'Search',
         // },
         {
-            href: ['/'],
+            href: [`/?feed=${feed}`],
             text: 'Feed',
         },
     ]
@@ -45,7 +47,7 @@ const Header = () => {
             <div className={headerClass.toolbar}>
                 {/* Left: Logo */}
                 <div className={headerClass.logo}>
-                    <Link href="/" passHref>
+                    <Link href="/?feed=All" passHref>
                         <a>
                             <Logo fill="currentColor" />
                         </a>
