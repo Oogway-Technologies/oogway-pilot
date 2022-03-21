@@ -30,7 +30,7 @@ export const endOfFeedMessageClass = {
 
 // Feed toolbar
 export const feedToolbarClass = {
-    div: 'relative grid grid-cols-2',
+    div: 'relative grid grid-cols-2 -z-10',
     leftDiv: 'flex items-center justify-self-start md:mr-auto',
     rightDiv: 'flex items-center justify-self-end md:ml-auto',
     leftTabButtons:
@@ -49,7 +49,7 @@ export const feedToolbarClass = {
         'active:bg-primaryActive dark:hover:bg-primaryActive ' +
         'dark:active:bg-primaryActive text-white font-bold ',
     feedButton:
-        'rounded-[20px] border-2 border-solid border-transparent p-sm md:px-md ' +
+        'rounded-[20px] border-2 border-solid border-transparent p-sm md:px-md z-0 ' +
         'md:space-x-2 font-bold text-neutral-700 dark:text-neutralDark-150',
 }
 
@@ -59,7 +59,7 @@ export const feedSelectorClass = {
         'inline-flex items-center font-bold text-neutral-700 dark:text-neutralDark-150 ' +
         'hover:cursor-pointer hover:scale-110 ',
     dropdown:
-        'flex w-11/12 sm:w-auto h-auto p-2 mr-2 z-10 ' +
+        'flex w-11/12 sm:w-auto h-auto p-2 mr-2 ' +
         'bg-white dark:bg-neutralDark-500 divide-y divide-neutral-300 ' +
         'dark:divide-neutralDark-300 rounded-md shadow-lg ' +
         'ring-2 ring-primary dark:ring-white ring-opacity-50 ' +
