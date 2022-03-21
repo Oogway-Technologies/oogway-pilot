@@ -80,8 +80,8 @@ const FeedToolbar = () => {
 
                 {/* Right: new post button */}
                 <div className={feedToolbarClass.rightDiv}>
-                    {user &&
-                        (!isMobile ? (
+                    {!isMobile ? (
+                        user && (
                             <Button
                                 text="New Post"
                                 keepText={false}
@@ -90,9 +90,10 @@ const FeedToolbar = () => {
                                 addStyle={feedToolbarClass.newPostButton}
                                 onClick={openModal}
                             />
-                        ) : (
-                            <FeedSelectorMobile />
-                        ))}
+                        )
+                    ) : (
+                        <FeedSelectorMobile />
+                    )}
                 </div>
                 <Modal show={isOpen} onClose={closeModal}>
                     <NewPostForm closeModal={closeModal} />

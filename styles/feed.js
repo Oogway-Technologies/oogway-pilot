@@ -6,9 +6,9 @@ export const avatarURL =
 
 // Feed API
 export const feedApiClass = {
-    toolbarDiv: 'flex-grow',
+    toolbarDiv: 'flex-grow z-10 ',
     feedToolbar:
-        'items-center my-sm xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
+        'items-center my-sm xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl ',
     innerDiv: 'flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide',
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
     feedTitle: 'flex gap-x-sm items-center text-xl font-bold',
@@ -30,7 +30,7 @@ export const endOfFeedMessageClass = {
 
 // Feed toolbar
 export const feedToolbarClass = {
-    div: 'relative grid grid-cols-2 -z-10',
+    div: 'relative grid grid-cols-2 ',
     leftDiv: 'flex items-center justify-self-start md:mr-auto',
     rightDiv: 'flex items-center justify-self-end md:ml-auto',
     leftTabButtons:
@@ -49,7 +49,7 @@ export const feedToolbarClass = {
         'active:bg-primaryActive dark:hover:bg-primaryActive ' +
         'dark:active:bg-primaryActive text-white font-bold ',
     feedButton:
-        'rounded-[20px] border-2 border-solid border-transparent p-sm md:px-md z-0 ' +
+        'rounded-[20px] border-2 border-solid border-transparent p-sm md:px-md ' +
         'md:space-x-2 font-bold text-neutral-700 dark:text-neutralDark-150',
 }
 

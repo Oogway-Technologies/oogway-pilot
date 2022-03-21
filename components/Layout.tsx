@@ -43,10 +43,10 @@ const Layout = ({ children }: LayoutProps) => {
                 <title>Oogway | Social - Wisdom of the crowd</title>
             </Head>
             <div className="flex overflow-y-hidden flex-col min-h-screen max-h-screen">
-                <div className="sticky">
+                <div className="sticky z-10">
                     <Header />
                 </div>
-                <div className="">
+                <div className="z-0">
                     <main>{children}</main>
                 </div>
             </div>
