@@ -80,18 +80,19 @@ const FeedToolbar = () => {
 
                 {/* Right: new post button */}
                 <div className={feedToolbarClass.rightDiv}>
-                    {!isMobile && user ? (
-                        <Button
-                            text="New Post"
-                            keepText={false}
-                            icon={<UilPen />}
-                            type="button"
-                            addStyle={feedToolbarClass.newPostButton}
-                            onClick={openModal}
-                        />
-                    ) : (
-                        <FeedSelectorMobile />
-                    )}
+                    {user &&
+                        (!isMobile ? (
+                            <Button
+                                text="New Post"
+                                keepText={false}
+                                icon={<UilPen />}
+                                type="button"
+                                addStyle={feedToolbarClass.newPostButton}
+                                onClick={openModal}
+                            />
+                        ) : (
+                            <FeedSelectorMobile />
+                        ))}
                 </div>
                 <Modal show={isOpen} onClose={closeModal}>
                     <NewPostForm closeModal={closeModal} />

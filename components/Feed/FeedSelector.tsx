@@ -1,7 +1,7 @@
 import { Popover, Transition } from '@headlessui/react'
 import {
     UilAngleDown,
-    UilAngleUp,
+    UilAngleRight,
     UilEstate,
     UilTimes,
 } from '@iconscout/react-unicons'
@@ -117,7 +117,7 @@ export const FeedSelectorMobile: FC = () => {
                         <div className={feedSelectorClass.dropdownButton}>
                             Feeds{' '}
                             <span>
-                                {open ? <UilAngleDown /> : <UilAngleUp />}
+                                {open ? <UilAngleDown /> : <UilAngleRight />}
                             </span>
                         </div>
                     </Popover.Button>
@@ -223,7 +223,7 @@ export const FeedSelectorMenu: FC = () => {
             <Button
                 text="Select Feed"
                 keepText={true}
-                icon={expanded ? <UilAngleDown /> : <UilAngleUp />}
+                icon={expanded ? <UilAngleDown /> : <UilAngleRight />}
                 type="button"
                 addStyle={
                     feedToolbarClass.leftTabButtons +
