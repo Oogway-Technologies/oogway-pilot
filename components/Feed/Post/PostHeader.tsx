@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material'
+import { Avatar, useMediaQuery } from '@mui/material'
 import {
     collection,
     deleteDoc,
@@ -42,8 +42,12 @@ const PostHeader: FC<PostHeaderProps> = ({
 }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
+
     // router from next.js to use location functions.
     const router = useRouter()
+
+    // Track mobile state
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     // Create params
     const staticPostData: staticPostData = {
@@ -140,8 +144,8 @@ const PostHeader: FC<PostHeaderProps> = ({
                     </div>
                     <div className={postCardClass.leftMobileRowTwo}>
                         {/* Number of answers */}
-                        <p>{`${numComments} Comments`}</p>
-                        {bull}
+                        {!isMobile && <p>{`${numComments} Comments`}</p>}
+                        {!isMobile && bull}
                         {/* Post category */}
                         {feed && (
                             <p className={postCardClass.categoryP}>{feed}</p>

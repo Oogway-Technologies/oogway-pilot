@@ -128,11 +128,10 @@ const NewPostForm: FC<NewPostProps> = ({
     // Get a reference to the feed selection
     const [selectedFeed, setSelectedFeed] = useState<string>('')
     useEffect(() => {
-        // If user in specific feed, lock the selected feed
         if (currentFeed !== 'All') {
             setSelectedFeed(currentFeed)
         }
-    }, [currentFeed, setSelectedFeed])
+    }, [setSelectedFeed, currentFeed])
 
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
@@ -202,6 +201,7 @@ const NewPostForm: FC<NewPostProps> = ({
             setLabelToCompareLeft('')
             setLabelToCompareRight('')
             setHasPreviewed(false)
+            setSelectedFeed('')
         }
     }, [
         setExpanded,
@@ -214,6 +214,7 @@ const NewPostForm: FC<NewPostProps> = ({
         setTextToCompareLeft,
         setTextToCompareRight,
         setHasPreviewed,
+        setSelectedFeed,
     ])
 
     // Update form selection
@@ -768,75 +769,70 @@ const NewPostForm: FC<NewPostProps> = ({
                     />
                 </div>
                 {/* Feed Selector */}
-                {currentFeed === 'All' ? (
-                    <>
-                        <Select
-                            options={feedOptions}
-                            onChange={selectFeedHandler}
-                            placeholder="Select Feed..."
-                            isClearable={true}
-                            maxMenuHeight={135}
-                            menuPosition={'fixed'}
-                            styles={{
-                                placeholder: (provided, state) => ({
-                                    ...provided,
-                                    marginLeft: '16px',
-                                    fontWeight: 'normal',
-                                    fontSize: '14px',
-                                    fontStyle: 'normal',
-                                }),
-                                input: (provided, state) => ({
-                                    ...provided,
-                                    marginLeft: '16px',
-                                    fontWeight: 'normal',
-                                    fontSize: '14px',
-                                    fontStyle: 'normal',
-                                }),
-                                singleValue: (provided, state) => ({
-                                    ...provided,
-                                    marginLeft: '16px',
-                                    fontWeight: 'normal',
-                                    fontSize: '14px',
-                                    fontStyle: 'normal',
-                                }),
-                            }}
-                            theme={prevTheme => ({
-                                ...prevTheme,
-                                borderRadius: 8,
-                                colors: {
-                                    ...prevTheme.colors,
-                                    primary: '#7269FF',
-                                    primary25:
-                                        theme === 'light'
-                                            ? '#D8D8D8'
-                                            : '#3A3B3C',
-                                    primary50:
-                                        theme === 'light'
-                                            ? '#BFBFBF'
-                                            : '#2E2E2E',
-                                    primary75:
-                                        theme === 'light'
-                                            ? '#BFBFBF'
-                                            : '#2E2E2E',
-                                    neutral0:
-                                        theme === 'light' ? 'white' : '#242526',
-                                    neutral80:
-                                        theme === 'light' ? 'black' : 'white',
-                                    neutral90:
-                                        theme === 'light'
-                                            ? '#D8D8D8'
-                                            : '#242526',
-                                },
-                            })}
-                        />
-                        {errors.feed && errors.feed.type === 'required' && (
-                            <FlashErrorMessage
-                                message={errors.feed.message}
-                                ms={warningTime}
-                                style={postFormClass.formAlert}
-                            />
-                        )}
-                    </>
+                {/* {currentFeed === 'All' ? (
+                    <> */}
+                <Select
+                    options={feedOptions}
+                    onChange={selectFeedHandler}
+                    defaultValue={
+                        currentFeed !== 'All'
+                            ? { value: currentFeed, label: currentFeed }
+                            : null
+                    }
+                    placeholder="Select Feed..."
+                    isClearable={true}
+                    maxMenuHeight={135}
+                    menuPosition={'fixed'}
+                    styles={{
+                        placeholder: (provided, state) => ({
+                            ...provided,
+                            marginLeft: '16px',
+                            fontWeight: 'normal',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                        }),
+                        input: (provided, state) => ({
+                            ...provided,
+                            marginLeft: '16px',
+                            fontWeight: 'normal',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                        }),
+                        singleValue: (provided, state) => ({
+                            ...provided,
+                            marginLeft: '16px',
+                            fontWeight: 'normal',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                        }),
+                    }}
+                    theme={prevTheme => ({
+                        ...prevTheme,
+                        borderRadius: 8,
+                        colors: {
+                            ...prevTheme.colors,
+                            primary: '#7269FF',
+                            primary25:
+                                theme === 'light' ? '#D8D8D8' : '#3A3B3C',
+                            primary50:
+                                theme === 'light' ? '#BFBFBF' : '#2E2E2E',
+                            primary75:
+                                theme === 'light' ? '#BFBFBF' : '#2E2E2E',
+                            neutral0: theme === 'light' ? 'white' : '#242526',
+                            neutral80: theme === 'light' ? 'black' : 'white',
+                            neutral90:
+                                theme === 'light' ? '#D8D8D8' : '#242526',
+                        },
+                    })}
+                />
+                {errors.feed && errors.feed.type === 'required' && (
+                    <FlashErrorMessage
+                        message={errors.feed.message}
+                        ms={warningTime}
+                        style={postFormClass.formAlert}
+                    />
+                )}
+                {/* </>
                 ) : (
                     <div className={postFormClass.fixedFeed}>
                         Posting to{' '}
@@ -845,7 +841,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         </span>{' '}
                         feed.
                     </div>
-                )}
+                )} */}
             </form>
 
             {/* Upload Image OR compare*/}

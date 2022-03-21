@@ -115,10 +115,10 @@ export const FeedSelectorMobile: FC = () => {
                         ref={setReferenceElement as unknown as string}
                     >
                         <div className={feedSelectorClass.dropdownButton}>
-                            Feeds{' '}
                             <span>
-                                {open ? <UilAngleDown /> : <UilAngleRight />}
-                            </span>
+                                {open ? <UilAngleRight /> : <UilAngleDown />}
+                            </span>{' '}
+                            Feeds
                         </div>
                     </Popover.Button>
                     <Transition
@@ -223,7 +223,7 @@ export const FeedSelectorMenu: FC = () => {
             <Button
                 text="Select Feed"
                 keepText={true}
-                icon={expanded ? <UilAngleDown /> : <UilAngleRight />}
+                icon={expanded ? <UilAngleRight /> : <UilAngleDown />}
                 type="button"
                 addStyle={
                     feedToolbarClass.leftTabButtons +

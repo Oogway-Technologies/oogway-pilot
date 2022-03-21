@@ -56,10 +56,10 @@ export const feedToolbarClass = {
 // Feed filter
 export const feedSelectorClass = {
     dropdownButton:
-        'inline-flex relative items-center font-bold text-neutral-700 dark:text-neutralDark-150 ' +
+        'inline-flex items-center font-bold text-neutral-700 dark:text-neutralDark-150 ' +
         'hover:cursor-pointer hover:scale-110 ',
     dropdown:
-        'flex w-auto h-auto p-2 mr-2 z-10 ' +
+        'flex w-11/12 sm:w-auto h-auto p-2 mr-2 z-10 ' +
         'bg-white dark:bg-neutralDark-500 divide-y divide-neutral-300 ' +
         'dark:divide-neutralDark-300 rounded-md shadow-lg ' +
         'ring-2 ring-primary dark:ring-white ring-opacity-50 ' +
@@ -96,7 +96,7 @@ export const postCardClass = {
     categoryP: 'font-bold text-primary',
     leftMobileRowOne: 'inline-flex items-center',
     leftMobileRowTwo:
-        'inline-flex items-center ml-sm md:ml  text-xs md:text-sm',
+        'inline-flex flex-wrap items-center ml-sm md:ml text-xs md:text-sm',
     // Body
     body: 'flex flex-col ml-xl',
     bodyQuestion:
