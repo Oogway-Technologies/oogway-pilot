@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { UilPen } from '@iconscout/react-unicons'
 import { useMediaQuery } from '@mui/material'
 import { useRouter } from 'next/router'
@@ -14,6 +15,9 @@ import PostsAPI from './Post/PostsAPI'
 
 const FeedAPI = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const { user } = useUser()
+
+    // Track mobile
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     // Initialize feed state
@@ -44,7 +48,7 @@ const FeedAPI = () => {
                 {/* Posts */}
                 <div className={feedApiClass.contentDiv}>
                     {/* New Post button on mobile devices */}
-                    {isMobile && (
+                    {isMobile && user && (
                         <Button
                             text="New Post"
                             keepText={true}
