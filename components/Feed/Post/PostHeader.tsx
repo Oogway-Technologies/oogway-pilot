@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 
 import { db } from '../../../firebase'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
 import { deleteMedia } from '../../../lib/storageHelper'
