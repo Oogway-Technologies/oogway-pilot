@@ -27,7 +27,8 @@ export const PostCardLoader = forwardRef(
     (props, ref: React.Ref<HTMLDivElement>) => (
         <div
             className={
-                postCardClass.card + ' shadow rounded overflow-auto mx-3 w-auto'
+                postCardClass.card +
+                ' shadow overflow-hidden rounded mx-3 w-auto'
             }
             {...props}
             ref={ref}
