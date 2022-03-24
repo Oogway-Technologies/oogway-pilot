@@ -113,10 +113,10 @@ export const postCardClass = {
         'bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 ' +
         'rounded-sm shadow-sm shadow-black/30 dark:shadow-black/50',
     voteButton:
-        'p-sm justify-center ' +
-        'hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary ' +
-        'focus:text-primary dark:focus:text-primary text-sm',
-    voteCounter: 'text-sm text-neutral-700 dark:text-neutralDark-150',
+        'p-sm justify-center text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-neutral-700 dark:active:text-neutralDark-150 ' +
+        'focus:text-neutral-700 dark:focus:text-neutralDark-150 text-sm',
+    voteCounter: 'text-sm text-neutral-700 dark:text-neutralDark-150 font-bold',
     // Engagement
     engagementBar:
         'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-xs sm:text-sm',

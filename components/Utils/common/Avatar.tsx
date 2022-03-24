@@ -23,17 +23,18 @@ export const Avatar: FC<AvatarProps> = ({
 }: AvatarProps) => {
     const selectedSize =
         size === 'sm'
-            ? 'h-[35px] w-[35px]'
+            ? 'h-[35px] w-[35px] min-h-[35px] min-w-[35px]'
             : size === 'md'
-            ? 'h-[45px] w-[45px]'
+            ? 'h-[45px] w-[45px] min-h-[45px] min-w-[45px]'
             : size === 'lg'
-            ? 'h-[70px] w-[70px]'
-            : 'h-[150px] w-[150px]'
+            ? 'h-[70px] w-[70px] min-h-[70px] min-w-[70px]'
+            : 'h-[150px] w-[150px] min-h-[150px] min-w-[150px]'
 
     return (
         <img
             alt={alt}
             src={src}
+            loading={'lazy'}
             className={`${selectedSize} ${avatarStyle} ${
                 isHoverEffect
                     ? 'hover:opacity-80 hover:scale-125 cursor-pointer'

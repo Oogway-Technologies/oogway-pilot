@@ -143,11 +143,7 @@ const PostVotingMechanism = ({
                                 <img
                                     className={
                                         postCardClass.imageVote +
-                                        (!user ? ' cursor-default' : '') +
-                                        (winnerCall(votesList) === idx &&
-                                        userVoteChoice != -1
-                                            ? ' border-3 border-primary'
-                                            : ' border-3 border-transparent')
+                                        (!user ? ' cursor-default' : '')
                                     }
                                     src={obj.image}
                                     onClick={() => {
@@ -164,11 +160,7 @@ const PostVotingMechanism = ({
                                     >
                                         <div
                                             className={
-                                                'm-auto' +
-                                                (obj.label.split('').length >
-                                                truncateLength
-                                                    ? ' break-words text-center truncate p-sm'
-                                                    : ' inline-flex w-full justify-center p-sm')
+                                                'inline-flex justify-center p-sm w-full'
                                             }
                                         >
                                             {obj.label}
@@ -178,15 +170,7 @@ const PostVotingMechanism = ({
                             </div>
                         ) : parseYoutubeVideoId(obj.text) ? (
                             // if the compare item is a youtube link
-                            <YoutubeEmbed
-                                text={obj.text}
-                                addStyle={
-                                    winnerCall(votesList) === idx &&
-                                    userVoteChoice != -1
-                                        ? ' border-3 border-primary'
-                                        : ' border-3 border-transparent'
-                                }
-                            />
+                            <YoutubeEmbed text={obj.text} />
                         ) : (
                             obj.previewImage &&
                             obj.previewImage.length > 1 && (
@@ -195,11 +179,7 @@ const PostVotingMechanism = ({
                                     <img
                                         className={
                                             postCardClass.imageVote +
-                                            (!user ? ' cursor-default' : '') +
-                                            (winnerCall(votesList) === idx &&
-                                            userVoteChoice != -1
-                                                ? ' border-3 border-primary'
-                                                : ' border-3 border-transparent')
+                                            (!user ? ' cursor-default' : '')
                                         }
                                         src={obj.previewImage}
                                         onClick={() => {
@@ -225,21 +205,12 @@ const PostVotingMechanism = ({
                                             (user
                                                 ? ' cursor-pointer'
                                                 : ' cursor-default') +
-                                            // selected option color logic
-                                            (userVoteChoice === idx
-                                                ? ' text-primary dark:text-primaryDark font-bold'
-                                                : ' text-neutral-700 dark:text-neutralDark-150') +
+                                            'text-neutral-700 dark:text-neutralDark-150' +
                                             // string truncate logic
                                             (obj.text.split('').length >
                                             truncateLength
                                                 ? ' text-start truncate w-full p-sm'
-                                                : ' inline-flex w-full justify-center p-sm whitespace-nowrap') +
-                                            // winning color change logic
-                                            (winnerCall(votesList) === idx &&
-                                            (userVoteChoice != -1 ||
-                                                authorUid == userProfile.uid)
-                                                ? ' border-3 border-primary'
-                                                : ' border-3 border-transparent')
+                                                : ' inline-flex w-full justify-center p-sm whitespace-nowrap')
                                         }
                                         target="blank"
                                         href={decoratedHref}
@@ -263,22 +234,7 @@ const PostVotingMechanism = ({
                                         (user
                                             ? ' cursor-pointer'
                                             : ' cursor-default') +
-                                        // selected option color logic
-                                        (userVoteChoice === idx
-                                            ? ' text-primary dark:text-primaryDark font-bold'
-                                            : ' text-neutral-700 dark:text-neutralDark-150') +
-                                        // string truncate logic
-
-                                        (obj.text.split('').length >
-                                        truncateLength
-                                            ? ' text-center truncate w-full p-sm'
-                                            : ' inline-flex w-full justify-center p-sm whitespace-nowrap') +
-                                        // winning color change logic
-                                        (winnerCall(votesList) === idx &&
-                                        (userVoteChoice != -1 ||
-                                            authorUid == userProfile.uid)
-                                            ? ' border-3 border-primary'
-                                            : ' border-3 border-transparent')
+                                        'text-neutral-700 dark:text-neutralDark-150 inline-flex w-full justify-center p-sm'
                                     }
                                     onClick={() => {
                                         voteOnImage(idx)
@@ -294,10 +250,7 @@ const PostVotingMechanism = ({
                                 <button
                                     className={
                                         postCardClass.voteButton +
-                                        (!user && ' cursor-default') +
-                                        (userVoteChoice === idx
-                                            ? ' text-primary dark:text-primaryDark'
-                                            : ' text-neutral-700 dark:text-neutralDark-150')
+                                        (!user && ' cursor-default')
                                     }
                                     onClick={() => {
                                         voteOnImage(idx)
@@ -309,7 +262,15 @@ const PostVotingMechanism = ({
                                 </button>
                                 {(userVoteChoice != -1 ||
                                     authorUid == userProfile.uid) && (
-                                    <p className={postCardClass.voteCounter}>
+                                    <p
+                                        className={
+                                            postCardClass.voteCounter +
+                                            (winnerCall(votesList) === idx &&
+                                            userVoteChoice != -1
+                                                ? ' text-primary dark:text-primaryDark'
+                                                : ' text-neutral-700 dark:text-neutralDark-150')
+                                        }
+                                    >
                                         {votesList[idx]}{' '}
                                         {votesList[idx] == 1 ? 'vote' : 'votes'}
                                     </p>

@@ -162,7 +162,7 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
             </div>
             {/* user bio if on mobile device.*/}
             {bio && isMobile && (
-                <span className={profileCard.bioText}>
+                <span className={profileCard.bioText + ' self-start'}>
                     {userProfileSnapshot?.bio || bio}
                 </span>
             )}
