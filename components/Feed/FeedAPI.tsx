@@ -1,11 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilPen } from '@iconscout/react-unicons'
+import { useMediaQuery } from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useSetRecoilState } from 'recoil'
 
 import { feedState } from '../../atoms/feeds'
-import useMediaQuery from '../../hooks/useMediaQuery'
 import { feedApiClass, feedToolbarClass } from '../../styles/feed'
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'

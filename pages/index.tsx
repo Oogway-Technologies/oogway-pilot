@@ -1,4 +1,5 @@
 // Next and react
+import { useMediaQuery } from '@mui/material'
 import Head from 'next/head'
 import React, { FC, ReactNode, useState } from 'react'
 // Recoil states
@@ -13,7 +14,6 @@ import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
-import useMediaQuery from '../hooks/useMediaQuery'
 import { getPosts } from '../queries/posts'
 import { queryClientConfig } from '../query'
 

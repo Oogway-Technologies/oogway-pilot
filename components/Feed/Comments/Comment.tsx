@@ -1,14 +1,12 @@
 import { useUser } from '@auth0/nextjs-auth0'
+import { CardMedia, Collapse, Link, useMediaQuery } from '@mui/material'
 import React, { FC, useState } from 'react'
 import Linkify from 'react-linkify'
 
-import useMediaQuery from '../../../hooks/useMediaQuery'
 import { commentClass } from '../../../styles/feed'
-import { cardMediaStyle } from '../../../styles/utils'
 import { isValidURL } from '../../../utils/helpers/common'
 import { FirebaseComment } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
-import { Collapse } from '../../Utils/common/Collapse'
 import Modal from '../../Utils/Modal'
 import { PreviewDecider } from '../../Utils/PreviewDecider'
 import NewReplyForm from '../Forms/NewReplyForm'
@@ -88,7 +86,7 @@ const Comment: FC<CommentProps> = ({
                                 decoratedText,
                                 key
                             ) => (
-                                <a
+                                <Link
                                     className={
                                         commentClass.bodyDescription + ' ml-0'
                                     }
@@ -97,7 +95,7 @@ const Comment: FC<CommentProps> = ({
                                     key={key}
                                 >
                                     {decoratedText}
-                                </a>
+                                </Link>
                             )}
                         >
                             <p className={commentClass.bodyDescription}>
@@ -114,10 +112,7 @@ const Comment: FC<CommentProps> = ({
                 {/* Media */}
                 {comment.postImage && (
                     <div className={commentClass.media}>
-                        <img
-                            src={comment.postImage}
-                            className={cardMediaStyle}
-                        />
+                        <CardMedia component="img" src={comment.postImage} />
                     </div>
                 )}
 
@@ -134,7 +129,7 @@ const Comment: FC<CommentProps> = ({
                 />
 
                 {/* Reply Form */}
-                <Collapse show={expandedReplyForm}>
+                <Collapse in={expandedReplyForm} timeout="auto" unmountOnExit>
                     <div className={commentClass.replyDropdown}>
                         <NewReplyForm
                             commentId={commentId}

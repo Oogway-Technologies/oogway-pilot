@@ -46,8 +46,8 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
                     >
                         <div
                             className={
-                                'max-h-[80vh] overflow-auto justify-center items-center p-6 my-8 max-w-6xl text-left' +
-                                ' bg-neutral-25 dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all z-10 sm:w-inherit scrollbar-hide'
+                                'overflow-hidden justify-center items-center p-6 my-8 max-w-6xl text-left' +
+                                ' bg-neutral-25 dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all z-10'
                             }
                         >
                             {content}

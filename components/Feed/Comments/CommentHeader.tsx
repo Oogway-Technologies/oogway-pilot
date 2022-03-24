@@ -1,3 +1,4 @@
+import { Avatar } from '@mui/material'
 import {
     collection,
     deleteDoc,
@@ -17,7 +18,6 @@ import { deleteMedia } from '../../../lib/storageHelper'
 import { postCardClass } from '../../../styles/feed'
 import { authorLabel } from '../../../utils/constants/global'
 import { staticPostData } from '../../../utils/types/params'
-import { Avatar } from '../../Utils/common/Avatar'
 import Timestamp from '../../Utils/Timestamp'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 
@@ -80,7 +80,8 @@ const CommentHeader: FC<CommentHeaderProps> = ({
                 {/* Avatar */}
                 <Avatar
                     onClick={needsHook}
-                    src={getProfilePic(authorProfile, parentPostData) || ''}
+                    className={postCardClass.avatar}
+                    src={getProfilePic(authorProfile, parentPostData)}
                 />
 
                 {/* Split into two rows on mobile */}

@@ -61,7 +61,6 @@ export const winnerCall = (optionsArray: number[]) => {
         ? 1
         : -1
 }
-
 export const amazonURLAppendQueryString = (url: string) => {
     if (url && url.length > 0) {
         const urlArray = url.split(' ')

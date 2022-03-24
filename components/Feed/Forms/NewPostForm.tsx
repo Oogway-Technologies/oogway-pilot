@@ -5,6 +5,7 @@ import {
     UilNavigator,
     UilTimesCircle,
 } from '@iconscout/react-unicons'
+import { Collapse } from '@mui/material'
 import {
     addDoc,
     collection,
@@ -70,7 +71,6 @@ import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
 import { staticFeedOptions } from '../../../utils/types/params'
 // JSX components
 import Button from '../../Utils/Button'
-import { Collapse } from '../../Utils/common/Collapse'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import { Tooltip } from '../../Utils/Tooltip'
 import ToggleIncognito from '../Post/ToggleIncognito'
@@ -903,7 +903,12 @@ const NewPostForm: FC<NewPostProps> = ({
                 </div>
             )}
 
-            <Collapse className="px-2" show={expanded}>
+            <Collapse
+                className="px-2"
+                in={expanded}
+                timeout="auto"
+                unmountOnExit
+            >
                 <_CompareChooseTypeForm
                     handleLeftUpload={handleCompareLeftUpload}
                     handleRightUpload={handleCompareRightUpload}
