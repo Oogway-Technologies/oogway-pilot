@@ -75,6 +75,7 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                                       name={post.data().name}
                                       message={post.data().message}
                                       description={post.data().description}
+                                      feed={post.data().feed}
                                       isCompare={post.data().isCompare}
                                       timestamp={post.data().timestamp}
                                       postImage={post.data().postImage}

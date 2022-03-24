@@ -11,7 +11,7 @@ export const loadingAvatarURL =
 export const feedApiClass = {
     toolbarDiv: 'flex-grow z-10 ',
     feedToolbar:
-        'items-center my-sm xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl ',
+        'items-center mb-sm mt-md xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl ',
     innerDiv: 'flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide',
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
     feedTitle: 'flex gap-x-sm items-center text-xl font-bold',
@@ -52,8 +52,7 @@ export const feedToolbarClass = {
         'active:bg-primaryActive dark:hover:bg-primaryActive ' +
         'dark:active:bg-primaryActive text-white font-bold ',
     feedButton:
-        'rounded-[20px] border-2 border-solid border-transparent p-sm md:px-md ' +
-        'md:space-x-2 font-bold text-neutral-700 dark:text-neutralDark-150',
+        'md:space-x-2 font-bold mx-sm  text-neutral-700 dark:text-neutralDark-150',
 }
 
 // Feed filter
