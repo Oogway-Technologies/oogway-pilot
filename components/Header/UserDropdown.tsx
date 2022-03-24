@@ -1,7 +1,6 @@
 // Auth0
 import { useUser } from '@auth0/nextjs-auth0'
 // JSX and styling
-import { Avatar } from '@mui/material'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useRecoilValue } from 'recoil'
@@ -11,6 +10,7 @@ import { userProfileState } from '../../atoms/user'
 import { userDropdownClass } from '../../styles/header'
 import { loginButtons } from '../../styles/login'
 import Button from '../Utils/Button'
+import { Avatar } from '../Utils/common/Avatar'
 import DropdownMenu from '../Utils/DropdownMenu'
 import LogoutButton from './LogoutButton'
 import ProfileButton from './ProfileButton'
@@ -42,7 +42,7 @@ const UserDropdown: React.FC = () => {
     const menuButton = (
         <Avatar
             className={userDropdownClass.avatar}
-            src={userProfile?.profilePic || user?.picture || undefined}
+            src={userProfile?.profilePic || user?.picture || ''}
         />
     )
 

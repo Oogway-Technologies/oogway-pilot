@@ -1,6 +1,6 @@
-import { CardMedia } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 
+import { cardMediaStyle } from '../../styles/utils'
 import {
     fetcher,
     isValidURL,
@@ -29,8 +29,6 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
         <div className={'flex p-md ml-xl'}>
             {isYoutubeLink && isYoutubeLink.length > 0 ? (
                 <iframe
-                    width="800"
-                    height="400"
                     src={`https://www.youtube.com/embed/${isYoutubeLink}`}
                     frameBorder="0"
                     allow="autoplay; encrypted-media"
@@ -38,7 +36,11 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
                     title="video"
                 />
             ) : (
-                <CardMedia component="img" src={isUrlPreviewImage} alt="img" />
+                <img
+                    src={isUrlPreviewImage}
+                    alt="img"
+                    className={cardMediaStyle}
+                />
             )}
         </div>
     )

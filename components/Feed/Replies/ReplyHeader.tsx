@@ -1,4 +1,3 @@
-import { Avatar } from '@mui/material'
 import { deleteDoc, doc } from 'firebase/firestore'
 import React from 'react'
 
@@ -6,9 +5,10 @@ import { db } from '../../../firebase'
 import needsHook from '../../../hooks/needsHook'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
-import { postCardClass, replyHeaderClass } from '../../../styles/feed'
+import { postCardClass } from '../../../styles/feed'
 import { authorLabel } from '../../../utils/constants/global'
 import { staticPostData } from '../../../utils/types/params'
+import { Avatar } from '../../Utils/common/Avatar'
 import Timestamp from '../../Utils/Timestamp'
 import PostOptionsDropdown from '../Post/PostOptionsDropdown'
 type ReplyHeaderProps = {
@@ -50,8 +50,8 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
                 {/* Avatar */}
                 <Avatar
                     onClick={needsHook}
-                    className={replyHeaderClass.avatar}
-                    src={getProfilePic(authorProfile, parentPostData)}
+                    size={'sm'}
+                    src={getProfilePic(authorProfile, parentPostData) || ''}
                 />
 
                 {/* Split into two rows on mobile */}

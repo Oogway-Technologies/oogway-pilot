@@ -1,4 +1,3 @@
-import { Avatar, useMediaQuery } from '@mui/material'
 import {
     collection,
     deleteDoc,
@@ -12,6 +11,7 @@ import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 
 import { db } from '../../../firebase'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
 import { deleteMedia } from '../../../lib/storageHelper'
@@ -19,6 +19,7 @@ import { postCardClass } from '../../../styles/feed'
 import { FirebaseProfile } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
 import bull from '../../Utils/Bullet'
+import { Avatar } from '../../Utils/common/Avatar'
 import Timestamp from '../../Utils/Timestamp'
 import PostOptionsDropdown from './PostOptionsDropdown'
 
@@ -113,17 +114,13 @@ const PostHeader: FC<PostHeaderProps> = ({
     ) => {
         if (parentPost.isAnonymous) {
             return (
-                <Avatar
-                    className={postCardClass.avatar}
-                    src={getProfilePic(authorProfile, parentPost)}
-                />
+                <Avatar src={getProfilePic(authorProfile, parentPost) || ''} />
             )
         }
         return (
             <Avatar
                 onClick={handleProfileAvatarClick}
-                className={postCardClass.avatar}
-                src={getProfilePic(authorProfile, parentPost)}
+                src={getProfilePic(authorProfile, parentPost) || ''}
             />
         )
     }

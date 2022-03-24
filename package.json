@@ -21,7 +21,7 @@
         "@headlessui/react": "^1.4.3",
         "@heroicons/react": "^1.0.5",
         "@iconscout/react-unicons": "^1.1.6",
-        "@mui/material": "^5.2.8",
+        "@popperjs/core": "^2.11.4",
         "auth0": "^2.40.0",
         "axios": "^0.26.0",
         "babel-plugin-superjson-next": "^0.4.2",

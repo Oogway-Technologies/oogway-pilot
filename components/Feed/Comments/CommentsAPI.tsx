@@ -1,5 +1,4 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { Avatar, useMediaQuery } from '@mui/material'
 import firebase from 'firebase/compat/app'
 import { collection, orderBy, query, where } from 'firebase/firestore'
 import { useRouter } from 'next/router'
@@ -10,6 +9,7 @@ import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
 import needsHook from '../../../hooks/needsHook'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { commentFormClass, commentsApiClass } from '../../../styles/feed'
 import {
@@ -18,6 +18,7 @@ import {
 } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
 import Button from '../../Utils/Button'
+import { Avatar } from '../../Utils/common/Avatar'
 import Modal from '../../Utils/Modal'
 import NewCommentForm from '../Forms/NewCommentForm'
 import Comment from './Comment'
@@ -103,12 +104,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
             <>
                 <Avatar
                     onClick={needsHook}
-                    className={commentsApiClass.avatar}
-                    src={
-                        userProfile?.profilePic
-                            ? userProfile.profilePic
-                            : undefined
-                    }
+                    src={userProfile?.profilePic ? userProfile.profilePic : ''}
                 />
                 {isMobile ? (
                     <Button
