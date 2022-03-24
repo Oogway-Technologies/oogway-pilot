@@ -5,6 +5,7 @@ import {
     UilEstate,
     UilTimes,
 } from '@iconscout/react-unicons'
+import { Collapse } from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { FC, Fragment, useState } from 'react'
 import { usePopper } from 'react-popper'
@@ -16,7 +17,6 @@ import { feedSelectorClass, feedToolbarClass } from '../../styles/feed'
 import { sidebarWidget } from '../../styles/utils'
 import { FeedSelectorLoader } from '../Loaders/FeedSelectorLoader'
 import Button from '../Utils/Button'
-import { Collapse } from '../Utils/common/Collapse'
 
 interface FeedSelectorProps {
     feedClickHandler?: () => void
@@ -248,7 +248,12 @@ export const FeedSelectorMenu: FC = () => {
                     />
                 </div>
             )}
-            <Collapse className="px-2" show={expanded}>
+            <Collapse
+                className="px-2"
+                in={expanded}
+                timeout="auto"
+                unmountOnExit
+            >
                 <FeedSelector feedClickHandler={() => setExpanded(!expanded)} />
             </Collapse>
         </div>

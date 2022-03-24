@@ -1,4 +1,5 @@
 import { UilCommentPlus } from '@iconscout/react-unicons'
+import { Avatar } from '@mui/material'
 import firebase from 'firebase/compat/app'
 import {
     addDoc,
@@ -19,7 +20,6 @@ import { replyFormClass } from '../../../styles/feed'
 import { longLimit, warningTime } from '../../../utils/constants/global'
 import { FirebaseReply } from '../../../utils/types/firebase'
 import Button from '../../Utils/Button'
-import { Avatar } from '../../Utils/common/Avatar'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 
 type NewReplyFormProps = {
@@ -124,10 +124,11 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                 {!isMobile && (
                     <Avatar
                         onClick={needsHook}
+                        className={replyFormClass.avatar}
                         src={
                             userProfile?.profilePic
                                 ? userProfile.profilePic
-                                : ''
+                                : undefined
                         }
                     />
                 )}

@@ -1,3 +1,4 @@
+import { Link } from '@mui/material'
 import firebase from 'firebase/compat/app'
 import React from 'react'
 import Linkify from 'react-linkify'
@@ -52,7 +53,7 @@ const Reply: React.FC<ReplyProps> = ({
                                     decoratedText,
                                     key
                                 ) => (
-                                    <a
+                                    <Link
                                         className={
                                             replyClass.bodyDescription + ' ml-0'
                                         }
@@ -61,7 +62,7 @@ const Reply: React.FC<ReplyProps> = ({
                                         key={key}
                                     >
                                         {decoratedText}
-                                    </a>
+                                    </Link>
                                 )}
                             >
                                 <p className={replyClass.bodyDescription}>

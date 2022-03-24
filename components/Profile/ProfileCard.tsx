@@ -1,16 +1,15 @@
 import { UilLocationPoint, UilPen } from '@iconscout/react-unicons'
+import { Avatar, useMediaQuery } from '@mui/material'
 import React, { FC, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 
 import { userProfileState } from '../../atoms/user'
-import useMediaQuery from '../../hooks/useMediaQuery'
 import { useProfileData } from '../../hooks/useProfileData'
 import { profileCard } from '../../styles/profile'
 import NewPostForm from '../Feed/Forms/NewPostForm'
 import UserProfileForm from '../Login/UserProfileForm'
 import bull from '../Utils/Bullet'
 import Button from '../Utils/Button'
-import { Avatar } from '../Utils/common/Avatar'
 import Modal from '../Utils/Modal'
 
 interface ProfileCardProps {
@@ -62,8 +61,8 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
     }
 
     const sizeAvatar = () => {
-        if (isMobile) return 'lg'
-        return 'xl'
+        if (isMobile) return { height: 75, width: 75 }
+        return { height: 150, width: 150 }
     }
 
     return (
@@ -71,10 +70,9 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
             <div className={profileCard.mainDiv}>
                 {/* profile image*/}
                 <Avatar
+                    sx={sizeAvatar}
                     src={userProfileSnapshot?.profilePic || profilePic}
                     alt={username}
-                    size={sizeAvatar()}
-                    isHoverEffect={false}
                 />
                 {/* container for user details*/}
                 <div className={profileCard.userDetailsDiv}>
@@ -162,7 +160,7 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
             </div>
             {/* user bio if on mobile device.*/}
             {bio && isMobile && (
-                <span className={profileCard.bioText + ' self-start'}>
+                <span className={profileCard.bioText}>
                     {userProfileSnapshot?.bio || bio}
                 </span>
             )}

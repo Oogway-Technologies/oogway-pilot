@@ -56,7 +56,6 @@ const CommentPage: FC<CommentPageProps> = ({
                         name={post.name}
                         message={post.message}
                         description={post.description}
-                        feed={post.feed}
                         isCompare={post.isCompare}
                         timestamp={post.timestamp}
                         postImage={post.postImage}

@@ -1,6 +1,5 @@
+import { useMediaQuery } from '@mui/material'
 import { ButtonHTMLAttributes, FC, MouseEventHandler, ReactNode } from 'react'
-
-import useMediaQuery from '../../hooks/useMediaQuery'
 
 interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     icon?: JSX.Element | null
@@ -34,9 +33,12 @@ const Button: FC<ToolbarButtonProps> = (
             className={'inline-flex ' + addStyle}
         >
             {icon}{' '}
-            {!forceNoText && (keepText || !isMobile) && (
-                <a data-text={text} className="buttonText">
-                    {text}
+            {!forceNoText && (
+                <a
+                    data-text={keepText || !isMobile ? text : null}
+                    className="buttonText"
+                >
+                    {(keepText || !isMobile) && text}
                 </a>
             )}
         </button>
