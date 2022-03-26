@@ -13,7 +13,6 @@ import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
-import useMediaQuery from '../hooks/useMediaQuery'
 import { getPosts } from '../queries/posts'
 import { queryClientConfig } from '../query'
 
@@ -22,11 +21,10 @@ interface Props {
 }
 
 const Sidebar: FC<Props> = ({ children }) => {
-    const isMobile = useMediaQuery('(max-width: 965px)')
     return (
         <div
             className={
-                isMobile ? 'hidden' : 'visible flex flex-col w-3/12 align-top'
+                'hidden lg:flex lg:visible lg:flex-col lg:w-3/12 lg:align-top'
             }
         >
             {children}
@@ -34,17 +32,14 @@ const Sidebar: FC<Props> = ({ children }) => {
     )
 }
 
-const MainContent = () => {
-    const isMobile = useMediaQuery('(max-width: 965px)')
-
+const MainContent: FC<Props> = ({ children }) => {
     return (
         <div
             className={
-                'flex flex-col justify-center ' +
-                (isMobile ? 'px-1 w-full ' : 'px-0 w-6/12 ')
+                'flex flex-col justify-center px-1 w-full lg:px-0 lg:w-6/12'
             }
         >
-            <FeedAPI />
+            {children}
         </div>
     )
 }
@@ -74,7 +69,9 @@ export default function Home() {
                         <FeedSelectorMenu />
                     </SidebarWidget>
                 </Sidebar>
-                <MainContent />
+                <MainContent>
+                    <FeedAPI />
+                </MainContent>
                 <Sidebar>
                     <div></div>
                 </Sidebar>
