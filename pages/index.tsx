@@ -13,7 +13,6 @@ import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
 import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
-import useMediaQuery from '../hooks/useMediaQuery'
 import { getPosts } from '../queries/posts'
 import { queryClientConfig } from '../query'
 
