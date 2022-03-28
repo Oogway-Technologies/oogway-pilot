@@ -1,5 +1,4 @@
 /* eslint-disable react/display-name */
-import { Card } from '@mui/material'
 import React, { FC, forwardRef } from 'react'
 import ContentLoader from 'react-content-loader'
 
@@ -26,9 +25,16 @@ export const PostContent: FC = props => (
 
 export const PostCardLoader = forwardRef(
     (props, ref: React.Ref<HTMLDivElement>) => (
-        <Card className={postCardClass.card} {...props} ref={ref}>
+        <div
+            className={
+                postCardClass.card +
+                ' shadow overflow-hidden rounded mx-3 w-auto'
+            }
+            {...props}
+            ref={ref}
+        >
             <PostContent />
-        </Card>
+        </div>
     )
 )
 

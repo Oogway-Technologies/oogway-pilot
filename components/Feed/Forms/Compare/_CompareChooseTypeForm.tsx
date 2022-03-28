@@ -4,7 +4,6 @@ import {
     UilImageUpload,
     UilTextFields,
 } from '@iconscout/react-unicons'
-import { useMediaQuery } from '@mui/material'
 import React, { ChangeEvent } from 'react'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 
@@ -19,6 +18,7 @@ import {
     textCompareLeft,
     textCompareRight,
 } from '../../../../atoms/compareForm'
+import useMediaQuery from '../../../../hooks/useMediaQuery'
 // Styles and JSX
 import { compareFormClass } from '../../../../styles/feed'
 import { compareFilePickerRefs } from '../../../../utils/types/global'

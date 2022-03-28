@@ -1,7 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
-import { Avatar, useMediaQuery } from '@mui/material'
 // Firebase
 import { deleteField, doc, updateDoc } from 'firebase/firestore'
 import Head from 'next/head'
@@ -11,6 +10,7 @@ import { useRecoilState } from 'recoil'
 import { userProfileState } from '../../atoms/user'
 import API from '../../axios'
 import { db, storage } from '../../firebase'
+import useMediaQuery from '../../hooks/useMediaQuery'
 import { getProfileDoc } from '../../lib/profileHelper'
 import { deleteMedia } from '../../lib/storageHelper'
 import {
@@ -23,6 +23,7 @@ import { warningTime } from '../../utils/constants/global'
 import { checkFileSize } from '../../utils/helpers/common'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 import Button from '../Utils/Button'
+import { Avatar } from '../Utils/common/Avatar'
 import FlashErrorMessage from '../Utils/FlashErrorMessage'
 
 type UserProfileFormProps = {
@@ -256,13 +257,9 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
 
     const sizeAvatar = () => {
         const isMobile = useMediaQuery('(max-width: 1024px)')
-        let size
-        if (isMobile) {
-            size = 75
-        } else {
-            size = 150
-        }
-        return { width: size, height: size }
+
+        if (isMobile) return 'lg'
+        return 'xl'
     }
 
     return (
@@ -282,8 +279,8 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                 <div className={loginInputs.inputHeader}>Profile Picture</div>
                 <div className={loginDivs.sideBySide}>
                     <Avatar
-                        className={loginImages.avatar}
-                        sx={sizeAvatar}
+                        size={sizeAvatar()}
+                        isHoverEffect={false}
                         src={
                             imageToUpload
                                 ? (imageToUpload as string)

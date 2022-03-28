@@ -4,11 +4,14 @@
 export const avatarURL =
     'https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d'
 
+export const loadingAvatarURL =
+    'https://www.sibberhuuske.nl/wp-content/uploads/2016/10/default-avatar.png'
+
 // Feed API
 export const feedApiClass = {
     toolbarDiv: 'flex-grow z-10 ',
     feedToolbar:
-        'items-center my-sm xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl ',
+        'items-center mb-sm mt-md xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl ',
     innerDiv: 'flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide',
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
     feedTitle: 'flex gap-x-sm items-center text-xl font-bold',
@@ -49,8 +52,7 @@ export const feedToolbarClass = {
         'active:bg-primaryActive dark:hover:bg-primaryActive ' +
         'dark:active:bg-primaryActive text-white font-bold ',
     feedButton:
-        'rounded-[20px] border-2 border-solid border-transparent p-sm md:px-md ' +
-        'md:space-x-2 font-bold text-neutral-700 dark:text-neutralDark-150',
+        'md:space-x-2 font-bold mx-sm  text-neutral-700 dark:text-neutralDark-150',
 }
 
 // Feed filter
@@ -84,9 +86,6 @@ export const postCardClass = {
     header:
         'overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 ' +
         'space-x-1 items-center',
-    avatar:
-        'h-[45px] w-[45px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
-        'hover:opacity-80 hover:scale-125 cursor-pointer',
     infoDiv: 'flex flex-col',
     headerLeft: 'flex w-11/12 items-center',
     headerRight: 'flex w-1/12 justify-end',
@@ -98,32 +97,32 @@ export const postCardClass = {
     leftMobileRowTwo:
         'inline-flex flex-wrap items-center ml-sm md:ml text-xs md:text-sm',
     // Body
-    body: 'flex flex-col ml-xl',
+    body: 'flex flex-col ml-xl p-4',
     bodyQuestion:
         'font-bold mb-[8px] text-md text-neutral-800 dark:text-neutralDark-50',
     bodyDescription:
         'text-neutral-700 dark:text-neutralDark-150 text-sm whitespace-pre-line break-words',
     // Media
-    voteDiv: 'flex px-md space-x-lg mx-xl',
-    voteContainer: 'flex flex-col w-full items-center space-y-sm',
+    voteDiv: 'grid grid-cols-2 gap-3 mx-3',
+    voteContainer: 'flex flex-col items-center m-3 sm:m-2',
     imageVote: 'flex rounded-[8px] object-contain cursor-pointer m-auto',
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
     textVote:
-        'flex bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 ' +
-        'rounded-sm shadow-sm shadow-black/30  dark:shadow-black/50 whitespace-pre-wrap',
+        'bg-neutral-50 dark:bg-neutralDark-400 text-neutral-700 dark:text-neutralDark-150 ' +
+        'rounded-sm shadow-sm shadow-black/30 dark:shadow-black/50',
     voteButton:
-        'p-sm justify-center ' +
-        'hover:text-primary dark:hover:text-primary active:text-primary dark:active:text-primary ' +
-        'focus:text-primary dark:focus:text-primary text-sm',
-    voteCounter: 'text-sm text-neutral-700 dark:text-neutralDark-150',
+        'p-sm justify-center text-neutral-700 dark:text-neutralDark-150 ' +
+        'hover:text-neutral-700 dark:hover:text-neutralDark-150 active:text-neutral-700 dark:active:text-neutralDark-150 ' +
+        'focus:text-neutral-700 dark:focus:text-neutralDark-150 text-sm',
+    voteCounter: 'text-sm text-neutral-700 dark:text-neutralDark-150 font-bold',
     // Engagement
     engagementBar:
         'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-xs sm:text-sm',
     engagementButton:
         'items-center space-x-2  ' +
         'hover:text-neutral-800 dark:hover:text-neutralDark-50  ' +
-        'active:text-primary',
+        'active:text-primary whitespace-nowrap',
 }
 
 export const postOptionsDropdownClass = {
@@ -258,7 +257,7 @@ export const compareFormClass = {
 // Comments
 export const commentsPageClass = {
     outerDiv: 'flex flex-col w-full justify-center',
-    toolbarDiv: 'flex-grow',
+    toolbarDiv: 'flex-grow mx-3',
     backButtonDiv:
         'items-center my-md mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
     innerDiv:
@@ -273,9 +272,6 @@ export const commentsApiClass = {
     outerDiv: 'mb-md ml-xl',
     hr: 'mt-sm mb-lg text-neutralDark-50',
     innerDiv: 'flex flex-row mb-xl',
-    avatar:
-        'h-[45px] w-[45px] mr-md ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
-        'hover:opacity-80 hover:scale-125',
     loginReminder:
         'justify-center text-xs text-neutral-700 dark:text-neutralDark-150',
     counter: 'mb-sm font-bold text-neutral-700 dark:text-neutralDark-150',
@@ -283,20 +279,20 @@ export const commentsApiClass = {
 
 export const commentFormClass = {
     form: 'flex flex-col',
-    body: 'inline-flex items-center space-x-md',
+    body: 'inline-flex items-center space-x-md w-full',
     commentBar:
         'inline-flex rounded-[10px] items-center py-2 pl-2 pr-1 md:pl-5 md:pr-3 lg:w-96 xl:w-96 ' +
         'border-solid border-2 border-neutral-50 dark:border-neutralDark-150 ' +
         'focus-within:border-primary focus-visible:border-primary ' +
         'dark:focus-within:border-primary dark:focus-visible:border-primary ' +
         'active:border-neutral-300 dark:active:border-neutralDark-50 ' +
-        'hover:border-neutral-150 dark:hover:border-neutralDark-50',
+        'hover:border-neutral-150 dark:hover:border-neutralDark-50 w-inherit',
     commentInput:
         'md:w-52 lg:w-80 justify-self-start focus:outline-none border-none bg-transparent text-black dark:text-white ' +
         'text-sm lg:text-base',
     commentTextArea:
         'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent ' +
-        'text-black dark:text-white text-sm md:text-base',
+        'text-black dark:text-white text-sm md:text-base w-inherit',
     growingTextArea:
         'w-full p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent ' +
         'text-black dark:text-white text-sm md:text-base h-[24px] max-h-[100px] scrollbar-hide p-0',
@@ -336,7 +332,7 @@ export const commentEngagementBarClass = {
     engagementButton:
         'inline-flex items-center space-x-2 ' +
         'hover:text-neutral-800 dark:hover:text-neutralDark-50 ' +
-        'active:text-primary',
+        'active:text-primary whitespace-nowrap',
 }
 
 // Replies
@@ -370,7 +366,7 @@ export const replyFormClass = {
         'focus-within:border-primary focus-visible:border-primary ' +
         'dark:focus-within:border-primary dark:focus-visible:border-primary ' +
         'active:border-neutral-300 dark:active:border-neutralDark-50 ' +
-        'hover:border-neutral-150 dark:hover:border-neutralDark-50',
+        'hover:border-neutral-150 dark:hover:border-neutralDark-50 w-full',
     replyInput:
         'w-full focus:outline-none border-none bg-transparent text-black dark:text-white ' +
         'text-sm',
@@ -389,12 +385,6 @@ export const replyFormClass = {
         'inline-flex pt-sm ml-xxl items-center text-sm text-alert dark:text-alert',
     formAlertMobile:
         'inline-flex pt-sm items-center text-sm text-alert dark:text-alert',
-}
-
-export const replyHeaderClass = {
-    avatar:
-        'h-[30px] w-[30px] mr-sm ring-1 ring-black/25 dark:ring-neutralDark-50/25 ' +
-        'hover:opacity-80 hover:scale-125',
 }
 
 export const replyEngagementBarClass = {

@@ -21,7 +21,7 @@ const Header = () => {
         //     text: 'Search',
         // },
         {
-            href: [`/?feed=${feed}`],
+            href: ['/', `/?feed=${feed}`],
             text: 'Feed',
         },
     ]
