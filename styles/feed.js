@@ -15,7 +15,7 @@ export const feedApiClass = {
     innerDiv: 'flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide',
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
     feedTitle:
-        'flex gap-x-sm items-center text-xl font-bold text-neutral-700 dark:text-white',
+        'flex gap-x-sm items-center text-xl font-bold text-black dark:text-white',
     backbutton:
         'rounded-full p-1 ' +
         'text-primary dark:text-primaryDark bg-tertiary dark:bg-primaryDark/50 ' +
