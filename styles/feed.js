@@ -15,7 +15,8 @@ export const feedApiClass = {
     innerDiv: 'flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide',
     contentDiv: 'space-y-sm mx-auto mb-64 max-w-md md:max-w-lg lg:max-w-2xl',
     feedTitle:
-        'flex gap-x-sm items-center text-xl font-bold text-black dark:text-white',
+        'flex gap-x-sm items-center text-xl font-bold ' +
+        'text-neutral-800 dark:text-neutralDark-50',
     backbutton:
         'rounded-full p-1 ' +
         'text-primary dark:text-primaryDark bg-tertiary dark:bg-primaryDark/50 ' +
@@ -35,7 +36,7 @@ export const endOfFeedMessageClass = {
 // Feed toolbar
 export const feedToolbarClass = {
     div: 'relative grid grid-cols-2 ',
-    leftDiv: 'flex items-center justify-self-start md:mr-auto',
+    leftDiv: 'flex items-center justify-self-start md:mr-auto ml-2',
     rightDiv: 'flex items-center justify-self-end md:ml-auto',
     leftTabButtons:
         'rounded-[20px] p-sm md:px-md md:space-x-2  ' +
