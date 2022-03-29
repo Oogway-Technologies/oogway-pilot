@@ -4,6 +4,7 @@ import React, { Fragment, useState } from 'react'
 import { usePopper } from 'react-popper'
 
 import { NotificationMenu } from './NotificationMenu'
+import { NotificationDropdownStyles } from './NotificationStyles'
 
 export const NotificationDropdown: React.FC = () => {
     const [referenceElement, setReferenceElement] = useState(null)
@@ -20,15 +21,11 @@ export const NotificationDropdown: React.FC = () => {
     return (
         <Popover as="div">
             <Popover.Button
-                className={
-                    'inline-block relative mx-2 align-middle bg-neutral-50 dark:bg-neutralDark-50 rounded-full cursor-pointer md:w-12 md:h-12'
-                }
+                className={NotificationDropdownStyles.button}
                 ref={setReferenceElement as unknown as string}
             >
-                <UilBell
-                    className={'my-2 mx-auto rotate-[25deg] fill-primary'}
-                />
-                <div className="inline-flex absolute top-2 right-1.5 w-2 h-2 bg-error dark:bg-errorDark rounded-full translate-x-1/2 -translate-y-1/2" />
+                <UilBell className={NotificationDropdownStyles.bellIcon} />
+                <div className={NotificationDropdownStyles.dot} />
             </Popover.Button>
             <Transition
                 as={Fragment}

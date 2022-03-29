@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 
 import { bodySmall, caption } from '../../../styles/typography'
+import { NotificationBlockStyles } from './NotificationStyles'
 
 interface NotificationBlockProps {
     className?: string
@@ -19,17 +20,16 @@ export const NotificationBlock: FC<NotificationBlockProps> = ({
 }: NotificationBlockProps) => {
     return (
         <div
-            className={`flex flex-col justify-start py-1.5 px-2 rounded-lg w-full ${
-                isNew ? 'bg-primary/10 dark:bg-primaryDark/10 ' : ''
-            } ${className ? className : ''}`}
+            className={
+                NotificationBlockStyles.body +
+                `${isNew ? 'bg-primary/10 dark:bg-primaryDark/10 ' : ''} ${
+                    className ? className : ''
+                }`
+            }
         >
             <span className={bodySmall}>{title}</span>
-            <div className="flex items-center mt-2">
-                <span
-                    className={
-                        caption + ' text-primary dark:text-primaryDark mr-2.5'
-                    }
-                >
+            <div className={NotificationBlockStyles.innerBody}>
+                <span className={caption + NotificationBlockStyles.username}>
                     @{username}
                 </span>
                 <span className={caption}>{time}</span>
