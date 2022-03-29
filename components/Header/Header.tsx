@@ -7,6 +7,7 @@ import { userProfileState } from '../../atoms/user'
 import { headerClass } from '../../styles/header'
 import Logo from '../Logo'
 import NavLinks from './NavLinks'
+import { NotificationDropdown } from './Notifications/NotificationDropdown'
 import UserDropdown from './UserDropdown'
 
 const Header = () => {
@@ -64,6 +65,7 @@ const Header = () => {
                 <div className={headerClass.user}>
                     {/* Uncomment Apps when we have hook */}
                     {/* <AppsButton /> */}
+                    <NotificationDropdown />
                     <UserDropdown />
                 </div>
             </div>
