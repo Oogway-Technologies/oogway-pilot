@@ -1,4 +1,5 @@
 // Firebase imports
+import { UilPen } from '@iconscout/react-unicons'
 import firebase from 'firebase/compat'
 import {
     collection,
@@ -10,14 +11,19 @@ import {
 } from 'firebase/firestore'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { useRecoilValue } from 'recoil'
 
 import { userProfileState } from '../../atoms/user'
+import NewPostForm from '../../components/Feed/Forms/NewPostForm'
 import PostCard from '../../components/Feed/Post/Post'
 import { ProfileCard } from '../../components/Profile/ProfileCard'
+import Button from '../../components/Utils/Button'
+import Modal from '../../components/Utils/Modal'
 import { db } from '../../firebase'
+import useMediaQuery from '../../hooks/useMediaQuery'
+import { feedApiClass, feedToolbarClass } from '../../styles/feed'
 import { profilePage } from '../../styles/profile'
 import { FirebasePost, FirebaseProfile } from '../../utils/types/firebase'
 
@@ -30,6 +36,8 @@ interface ProfileProps {
 
 const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
     const { bio, profilePic, uid, username, lastName, location } = userProfile
+    const [isOpen, setIsOpen] = useState(false)
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     const authUserProfile = useRecoilValue(userProfileState)
     // Get real-time connection with DB
@@ -112,6 +120,23 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
                                       isAnonymous={post.isAnonymous}
                                   />
                               ))}
+                    {/* New Post button on mobile devices */}
+                    {isMobile && (
+                        <Button
+                            text="New Post"
+                            keepText={true}
+                            icon={<UilPen />}
+                            type="button"
+                            addStyle={
+                                feedToolbarClass.newPostButton +
+                                feedApiClass.mobileNewPostButton
+                            }
+                            onClick={() => setIsOpen(true)}
+                        />
+                    )}
+                    <Modal show={isOpen} onClose={() => setIsOpen(false)}>
+                        <NewPostForm closeModal={() => setIsOpen(false)} />
+                    </Modal>
                 </>
             </div>
         </div>

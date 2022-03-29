@@ -9,7 +9,7 @@ export const loadingAvatarURL =
 
 // Feed API
 export const feedApiClass = {
-    toolbarDiv: 'flex-grow z-10 ',
+    toolbarDiv: 'flex-grow z-10 ml-3 mr-1',
     feedToolbar:
         'items-center mb-sm mt-md xl:my-lg mx-auto max-w-md md:max-w-lg lg:max-w-2xl ',
     innerDiv: 'flex-grow h-screen space-y-4 overflow-y-auto scrollbar-hide',
