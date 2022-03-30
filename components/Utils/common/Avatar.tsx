@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { FC, MouseEvent } from 'react'
-import { loadingAvatarURL } from '../../../styles/feed'
 
+import { loadingAvatarURL } from '../../../styles/feed'
 import { avatarStyle } from '../../../styles/utils'
 
 interface AvatarProps {

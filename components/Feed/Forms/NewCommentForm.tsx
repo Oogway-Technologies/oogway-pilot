@@ -2,6 +2,7 @@ import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 import {
     UilCommentPlus,
     UilImagePlus,
+    UilSpinner,
     UilTimesCircle,
 } from '@iconscout/react-unicons'
 import firebase from 'firebase/compat/app'
@@ -127,27 +128,15 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
         if (imageToPost) {
             // There is one image to upload: get its refernce in the DB
             const imageRef = ref(storage, `comments/${docRef.id}/image`)
-
-            // Upload the image
-            await uploadString(
-                imageRef,
-                imageToPost as string,
-                'data_url'
-            ).then(async () => {
-                // Get the downloaded URL for the image
-                const downloadURL = await getDownloadURL(imageRef)
-
-                // Update the comment with the image URL
-                await updateDoc(
-                    doc(db, `posts/${router.query.id}/comments/${docRef.id}`),
-                    {
-                        postImage: downloadURL,
-                    }
-                )
-
-                // Remove image preview
-                setImageToPost(null)
+            await uploadString(imageRef, imageToPost as string, 'data_url')
+            // Get the downloaded URL for the image
+            const downloadURL = await getDownloadURL(imageRef)
+            // Update the comment with the image URL
+            await updateDoc(doc(db, `post-activity`, docRef.id as string), {
+                postImage: downloadURL,
             })
+            // Remove image preview
+            setImageToPost(null)
         }
 
         // Everything is done
@@ -256,7 +245,13 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus />}
+                        icon={
+                            loading ? (
+                                <UilSpinner className={'animate-spin'} />
+                            ) : (
+                                <UilCommentPlus />
+                            )
+                        }
                         type="submit"
                         onClick={addComment}
                         addStyle={commentFormClass.submitButton}
@@ -292,7 +287,13 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
                     <Button
                         text="Add"
                         keepText={false}
-                        icon={<UilCommentPlus />}
+                        icon={
+                            loading ? (
+                                <UilSpinner className={'animate-spin'} />
+                            ) : (
+                                <UilCommentPlus />
+                            )
+                        }
                         type="submit"
                         onClick={addAndClose}
                         addStyle={commentFormClass.submitButton}

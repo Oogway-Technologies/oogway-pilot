@@ -1,5 +1,4 @@
 import { UilTimesCircle } from '@iconscout/react-unicons'
-
 import React, { FC } from 'react'
 
 import { useFetchUrlPreview } from '../../../../hooks/useFetchUrlPreview'
