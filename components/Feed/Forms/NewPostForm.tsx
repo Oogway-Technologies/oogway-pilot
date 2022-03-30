@@ -675,11 +675,15 @@ const NewPostForm: FC<NewPostProps> = ({
             setTimeout(() => queryClient.invalidateQueries('posts'), 2000)
 
             // Re-route to proper feed
-            if (selectedFeed !== currentFeed) {
+            if (
+                selectedFeed !== currentFeed &&
+                !router.pathname.includes('/profile')
+            ) {
                 setCurrentFeed(selectedFeed)
                 router.push(`/?feed=${selectedFeed}`, undefined, {
                     shallow: true,
                 })
+                selectFeedHandler(null)
             }
         }
     }
