@@ -5,12 +5,12 @@ import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
 import { deleteField, doc, updateDoc } from 'firebase/firestore'
 import Head from 'next/head'
 import React, { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
-import { useRecoilState } from 'recoil'
 
-import { userProfileState } from '../../atoms/user'
+import { setUser } from '../../features/user/userSlice'
 import API from '../../axios'
 import { db, storage } from '../../firebase'
 import useMediaQuery from '../../hooks/useMediaQuery'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import { getProfileDoc } from '../../lib/profileHelper'
 import { deleteMedia } from '../../lib/storageHelper'
 import {
@@ -39,7 +39,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
 }) => {
     // Get current user profile
     const { user, isLoading } = useUser()
-    const [userProfile, setUserProfile] = useRecoilState(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Form state
     const [dm] = useState(userProfile.dm || false)
@@ -79,11 +79,12 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             resetProfile: false,
             dm: dm,
         }
-        // Update recoil state
-        setUserProfile({
-            ...userProfile, // First old data
-            ...updatedUserProfile, // Then add and update with new data
-        })
+        useAppDispatch(
+            setUser({
+                ...userProfile, // First old data
+                ...updatedUserProfile, // Then add and update with new data
+            })
+        )
         // Update profile in DB
         await updateDoc(
             doc(db, 'profiles', userProfile.uid),
@@ -113,11 +114,12 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                     username: username,
                     photoUrl: downloadURL,
                 })
-                // Update atom
-                setUserProfile({
-                    ...userProfile,
-                    profilePic: downloadURL,
-                })
+                useAppDispatch(
+                    setUser({
+                        ...userProfile,
+                        profilePic: downloadURL,
+                    })
+                )
             } catch (e) {
                 console.log(e)
             }
@@ -214,7 +216,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             await updateDoc(doc(db, 'profiles', userProfile.uid), {
                 profilePic: '',
             })
-            setUserProfile({ ...userProfile, profilePic: '' })
+            useAppDispatch(setUser({ ...userProfile, profilePic: '' }))
         } catch (e) {
             console.log(e)
         }
@@ -225,10 +227,12 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         // and profile pic exists
         if (userProfile.profilePic) {
             // Update user profile atom
-            setUserProfile({
-                ...userProfile,
-                profilePic: '',
-            })
+            useAppDispatch(
+                setUser({
+                    ...userProfile,
+                    profilePic: '',
+                })
+            )
 
             // Update auth0 user object
             if (!isLoading && user) {

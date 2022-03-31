@@ -1,9 +1,7 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import Link from 'next/link'
-import { useRecoilValue } from 'recoil'
 
-import { feedState } from '../../atoms/feeds'
-import { userProfileState } from '../../atoms/user'
+import { useAppSelector } from '../../hooks/useRedux'
 import { headerClass } from '../../styles/header'
 import Logo from '../Logo'
 import NavLinks from './NavLinks'
@@ -13,8 +11,8 @@ import UserDropdown from './UserDropdown'
 const Header = () => {
     // Call UserProfile to pass uid into links
     const { user, isLoading } = useUser()
-    const userProfile = useRecoilValue(userProfileState)
-    const feed = useRecoilValue(feedState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
+    const feed = useAppSelector(state => state.utilsSlice.feedState)
     let links = [
         // TODO: Add as pages created
         // {

@@ -29,28 +29,26 @@ import { useForm } from 'react-hook-form'
 // Queries
 import { useQueryClient } from 'react-query'
 import Select from 'react-select'
-import { useRecoilState, useRecoilValue } from 'recoil'
 
 import {
-    compareFormExpanded,
-    comparePostType,
-    hasPreviewedCompare,
-    imageCompareLeft,
-    imageCompareRight,
-    labelCompareLeft,
-    labelCompareRight,
-    leftPreviewImage,
-    rightPreviewImage,
-    textCompareLeft,
-    textCompareRight,
-} from '../../../atoms/compareForm'
-import { feedState } from '../../../atoms/feeds'
-import { fileSizeTooLarge } from '../../../atoms/forms'
-// Recoil states
-import { userProfileState } from '../../../atoms/user'
+    setCompareFormExpanded,
+    setComparePostType,
+    setFeedState,
+    setFileSizeTooLarge,
+    setHasPreviewedCompare,
+    setImageCompareLeft,
+    setImageCompareRight,
+    setLabelCompareLeft,
+    setLabelCompareRight,
+    setLeftPreviewImage,
+    setRightPreviewImage,
+    setTextCompareLeft,
+    setTextCompareRight,
+} from '../../../features/utils/utilsSlice'
 // Database
 import { db, storage } from '../../../firebase'
 import { useFeedOptions } from '../../../hooks/useFeedOptions'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { postFormClass } from '../../../styles/feed'
 import {
     longLimit,
@@ -88,12 +86,13 @@ const NewPostForm: FC<NewPostProps> = ({
     descPlaceholder,
 }) => {
     // Track current user profile data
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Feed Category drop down
     const router = useRouter()
+
     const [feedOptions] = useFeedOptions()
-    const [currentFeed, setCurrentFeed] = useRecoilState(feedState)
+    const currentFeed = useAppSelector(state => state.utilsSlice.feedState)
     const { theme } = useTheme()
 
     // For triggering posts refetch on form submission
@@ -149,39 +148,34 @@ const NewPostForm: FC<NewPostProps> = ({
         useState<ChangeEvent<HTMLInputElement>>()
 
     // Refs and state for Compare post
-    const [expanded, setExpanded] = useRecoilState(compareFormExpanded)
-    const [compareType, setCompareType] = useRecoilState(comparePostType)
-    useRecoilState(textCompareLeft)
-    const [hasPreviewed, setHasPreviewed] = useRecoilState(hasPreviewedCompare)
-    const [textToCompareRight, setTextToCompareRight] =
-        useRecoilState(textCompareRight)
-    const [textToCompareLeft, setTextToCompareLeft] =
-        useRecoilState(textCompareLeft)
-    const [imageToCompareLeft, setImageToCompareLeft] =
-        useRecoilState(imageCompareLeft)
-    const [imageToCompareRight, setImageToCompareRight] =
-        useRecoilState(imageCompareRight)
-    const [labelToCompareLeft, setLabelToCompareLeft] =
-        useRecoilState(labelCompareLeft)
-    const [labelToCompareRight, setLabelToCompareRight] =
-        useRecoilState(labelCompareRight)
+    const isImageSizeLarge = useAppSelector(
+        state => state.utilsSlice.fileSizeTooLarge
+    )
+    const {
+        compareFormExpanded,
+        comparePostType,
+        hasPreviewedCompare,
+        imageCompareLeft,
+        imageCompareRight,
+        labelCompareLeft,
+        labelCompareRight,
+        leftPreviewImage,
+        rightPreviewImage,
+        textCompareLeft,
+        textCompareRight,
+    } = useAppSelector(state => state.utilsSlice.compareForm)
+
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
     const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
     const compareFilePickers = useRef<compareFilePickerRefs>({
         left: filePickerCompareLeftRef,
         right: filePickerCompareRightRef,
     })
-    const [isImageSizeLarge, setIsImageSizeLarge] =
-        useRecoilState(fileSizeTooLarge)
     const [previewImage, setPreviewImage] = useState<string>('')
-    const [leftComparePreviewImage, setLeftComparePreviewImage] =
-        useRecoilState(leftPreviewImage)
-    const [rightComparePreviewImage, setRightComparePreviewImage] =
-        useRecoilState(rightPreviewImage)
     const [isTitleURL, setIsTitleURL] = useState<boolean>(false)
 
     // I'm pretty sure this is introducing a memory leak
-    // useEffect cannot unclude async logic
+    // useEffect cannot include async logic
     useEffect(() => {
         if (previewImage) {
             sendPost().finally()
@@ -191,29 +185,28 @@ const NewPostForm: FC<NewPostProps> = ({
     // Reset form global state on umount
     useEffect(() => {
         return () => {
-            setExpanded(false)
-            setIsImageSizeLarge(false)
-            setCompareType('textOnly')
-            setImageToCompareLeft(null)
-            setImageToCompareRight(null)
-            setTextToCompareLeft('')
-            setTextToCompareRight('')
-            setLabelToCompareLeft('')
-            setLabelToCompareRight('')
-            setHasPreviewed(false)
+            useAppDispatch(setCompareFormExpanded(false))
+            useAppDispatch(setFileSizeTooLarge(false))
+            useAppDispatch(setComparePostType('textOnly'))
+            useAppDispatch(setImageCompareLeft(null))
+            useAppDispatch(setImageCompareRight(null))
+            useAppDispatch(setTextCompareLeft(''))
+            useAppDispatch(setTextCompareRight(''))
+            useAppDispatch(setLabelCompareLeft(''))
+            useAppDispatch(setLabelCompareRight(''))
+            useAppDispatch(setHasPreviewedCompare(false))
             setSelectedFeed('')
         }
     }, [
-        setExpanded,
-        setCompareType,
-        setIsImageSizeLarge,
-        setImageToCompareLeft,
-        setImageToCompareRight,
-        setLabelToCompareLeft,
-        setLabelToCompareRight,
-        setTextToCompareLeft,
-        setTextToCompareRight,
-        setHasPreviewed,
+        setCompareFormExpanded,
+        setComparePostType,
+        setImageCompareLeft,
+        setImageCompareRight,
+        setLabelCompareLeft,
+        setLabelCompareRight,
+        setTextCompareLeft,
+        setTextCompareRight,
+        setHasPreviewedCompare,
         setSelectedFeed,
     ])
 
@@ -232,20 +225,20 @@ const NewPostForm: FC<NewPostProps> = ({
     }
 
     // Processing the images received from backend for left compare Link field
-    const leftComparePreviewImagecallBack = async (res: string[]) => {
+    const leftPreviewImagecallBack = async (res: string[]) => {
         if (res.length > 0) {
-            setLeftComparePreviewImage(res[0])
+            useAppDispatch(setLeftPreviewImage(res[0]))
         } else {
-            setLeftComparePreviewImage(' ')
+            useAppDispatch(setLeftPreviewImage(' '))
         }
     }
 
     // Processing the images received from backend for right compare Link field
-    const rightComparePreviewImagecallBack = async (res: string[]) => {
+    const rightPreviewImagecallBack = async (res: string[]) => {
         if (res.length > 0) {
-            setRightComparePreviewImage(res[0])
+            useAppDispatch(setRightPreviewImage(res[0]))
         } else {
-            setRightComparePreviewImage(' ')
+            useAppDispatch(setRightPreviewImage(' '))
         }
     }
 
@@ -262,24 +255,24 @@ const NewPostForm: FC<NewPostProps> = ({
         // Utility function, returns true if it is a compare post,
         // return false otherwise
         return (
-            (imageToCompareLeft && imageToCompareRight) ||
-            (textToCompareLeft && textToCompareRight)
+            (imageCompareLeft && imageCompareRight) ||
+            (textCompareLeft && textCompareRight)
             // ||
-            // (imageToCompareLeft && textToCompareRight) ||
-            // (textToCompareLeft && imageToCompareRight)
+            // (imageCompareLeft && textCompareRight) ||
+            // (textCompareLeft && imageCompareRight)
         )
     }
 
     const isMissingDataForPreview = () => {
-        return !isComparePost() && compareType != 'chooseType'
+        return !isComparePost() && comparePostType != 'chooseType'
     }
 
     const isMissingDataForComparePost = () => {
         return (
-            (imageToCompareLeft ||
-                imageToCompareRight ||
-                textToCompareLeft ||
-                textToCompareRight) &&
+            (imageCompareLeft ||
+                imageCompareRight ||
+                textCompareLeft ||
+                textCompareRight) &&
             !isComparePost()
         )
     }
@@ -420,11 +413,11 @@ const NewPostForm: FC<NewPostProps> = ({
             const votesObjMapList: object[] = [] // TODO: remove and fix likes
 
             // Upload the left image, if there is one
-            if (imageToCompareLeft) {
+            if (imageCompareLeft) {
                 const imageRef = ref(storage, `posts/${docRef.id}/imageLeft`)
                 await uploadString(
                     imageRef,
-                    imageToCompareLeft as string,
+                    imageCompareLeft as string,
                     'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
@@ -434,19 +427,19 @@ const NewPostForm: FC<NewPostProps> = ({
                 })
 
                 // Optionally, append label
-                if (labelToCompareLeft) {
-                    leftMediaObject.label = labelToCompareLeft
+                if (labelCompareLeft) {
+                    leftMediaObject.label = labelCompareLeft
                 }
             } else {
-                leftMediaObject.previewImage = leftComparePreviewImage
+                leftMediaObject.previewImage = leftPreviewImage
             }
 
             // Upload the right image, if there is one
-            if (imageToCompareRight) {
+            if (imageCompareRight) {
                 const imageRef = ref(storage, `posts/${docRef.id}/imageRight`)
                 await uploadString(
                     imageRef,
-                    imageToCompareRight as string,
+                    imageCompareRight as string,
                     'data_url'
                 ).then(async () => {
                     // Get the download URL for the image
@@ -456,22 +449,22 @@ const NewPostForm: FC<NewPostProps> = ({
                 })
 
                 // Optionally, append label
-                if (labelToCompareRight) {
-                    rightMediaObject.label = labelToCompareRight
+                if (labelCompareRight) {
+                    rightMediaObject.label = labelCompareRight
                 }
             } else {
-                rightMediaObject.previewImage = rightComparePreviewImage
+                rightMediaObject.previewImage = rightPreviewImage
             }
 
-            if (textToCompareLeft) {
+            if (textCompareLeft) {
                 leftMediaObject.text =
-                    amazonURLAppendQueryString(textToCompareLeft)
+                    amazonURLAppendQueryString(textCompareLeft)
                 votesObjMapList.push({})
             }
 
-            if (textToCompareRight) {
+            if (textCompareRight) {
                 rightMediaObject.text =
-                    amazonURLAppendQueryString(textToCompareRight)
+                    amazonURLAppendQueryString(textCompareRight)
                 votesObjMapList.push({})
             }
 
@@ -514,7 +507,7 @@ const NewPostForm: FC<NewPostProps> = ({
         setPreviewImage('')
     }
 
-    const addImageToCompareLeft = (e: ChangeEvent<HTMLInputElement>) => {
+    const addimageCompareLeft = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const reader = new FileReader()
         const { target } = e
@@ -530,8 +523,8 @@ const NewPostForm: FC<NewPostProps> = ({
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
         reader.onload = readerEvent => {
-            setImageToCompareLeft(readerEvent?.target?.result)
-            setTextToCompareLeft('')
+            useAppDispatch(setImageCompareLeft(readerEvent?.target?.result))
+            useAppDispatch(setTextCompareLeft(''))
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice
@@ -540,7 +533,7 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }
 
-    const addImageToCompareRight = (e: ChangeEvent<HTMLInputElement>) => {
+    const addimageCompareRight = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const reader = new FileReader()
         const { target } = e
@@ -556,8 +549,8 @@ const NewPostForm: FC<NewPostProps> = ({
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
         reader.onload = readerEvent => {
-            setImageToCompareRight(readerEvent?.target?.result)
-            setTextToCompareRight('')
+            useAppDispatch(setImageCompareRight(readerEvent?.target?.result))
+            useAppDispatch(setTextCompareRight(''))
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice
@@ -591,10 +584,10 @@ const NewPostForm: FC<NewPostProps> = ({
     }
 
     const removeCompareObjects = () => {
-        setImageToCompareLeft('')
-        setImageToCompareRight('')
-        setTextToCompareLeft('')
-        setTextToCompareRight('')
+        useAppDispatch(setImageCompareLeft(''))
+        useAppDispatch(setImageCompareRight(''))
+        useAppDispatch(setTextCompareLeft(''))
+        useAppDispatch(setTextCompareRight(''))
         if (targetEvent) {
             targetEvent.target.value = ''
         }
@@ -608,7 +601,7 @@ const NewPostForm: FC<NewPostProps> = ({
             setTargetEvent(e)
             addImageToPost(e)
         } else {
-            setIsImageSizeLarge(true)
+            useAppDispatch(setFileSizeTooLarge(true))
         }
     }
 
@@ -618,9 +611,9 @@ const NewPostForm: FC<NewPostProps> = ({
         // if needed
         if (checkFileSize(e.target.files)) {
             setTargetEvent(e)
-            addImageToCompareLeft(e)
+            addimageCompareLeft(e)
         } else {
-            setIsImageSizeLarge(true)
+            useAppDispatch(setFileSizeTooLarge(true))
         }
     }
 
@@ -630,9 +623,9 @@ const NewPostForm: FC<NewPostProps> = ({
         // if needed
         if (checkFileSize(e.target.files)) {
             setTargetEvent(e)
-            addImageToCompareRight(e)
+            addimageCompareRight(e)
         } else {
-            setIsImageSizeLarge(true)
+            useAppDispatch(setFileSizeTooLarge(true))
         }
     }
 
@@ -646,17 +639,17 @@ const NewPostForm: FC<NewPostProps> = ({
 
         if (isValid) {
             if (isComparePost()) {
-                const leftUrl = isValidURL(textToCompareLeft || '')
-                if (leftUrl && leftUrl.length > 1 && !imageToCompareLeft) {
+                const leftUrl = isValidURL(textCompareLeft || '')
+                if (leftUrl && leftUrl.length > 1 && !imageCompareLeft) {
                     await checkPreviewImage(leftUrl).then(async res => {
-                        await leftComparePreviewImagecallBack(res)
+                        await leftPreviewImagecallBack(res)
                     })
                 }
 
-                const rightUrl = isValidURL(textToCompareRight || '')
-                if (rightUrl && rightUrl.length > 1 && !imageToCompareRight) {
+                const rightUrl = isValidURL(textCompareRight || '')
+                if (rightUrl && rightUrl.length > 1 && !imageCompareRight) {
                     await checkPreviewImage(rightUrl).then(async res => {
-                        await rightComparePreviewImagecallBack(res)
+                        await rightPreviewImagecallBack(res)
                     })
                 }
             }
@@ -679,7 +672,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 selectedFeed !== currentFeed &&
                 !router.pathname.includes('/profile')
             ) {
-                setCurrentFeed(selectedFeed)
+                useAppDispatch(setFeedState(selectedFeed))
                 router.push(`/?feed=${selectedFeed}`, undefined, {
                     shallow: true,
                 })
@@ -689,7 +682,7 @@ const NewPostForm: FC<NewPostProps> = ({
     }
 
     const handleCompareClick = () => {
-        setExpanded(!expanded)
+        useAppDispatch(setCompareFormExpanded(!compareFormExpanded))
     }
 
     const handleKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {
@@ -873,7 +866,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         <button
                             onClick={handleCompareClick}
                             className={postFormClass.imageButton}
-                            aria-expanded={expanded}
+                            aria-compareFormExpanded={compareFormExpanded}
                             aria-label="poll"
                         >
                             <UilBalanceScale />
@@ -885,7 +878,9 @@ const NewPostForm: FC<NewPostProps> = ({
                         message={`Image should be less then 10 MB`}
                         ms={warningTime}
                         style={postFormClass.imageSizeAlert}
-                        onClose={() => setIsImageSizeLarge(false)}
+                        onClose={() =>
+                            useAppDispatch(setFileSizeTooLarge(false))
+                        }
                     />
                 )}
             </div>
@@ -907,7 +902,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 </div>
             )}
 
-            <Collapse className="px-2" show={expanded}>
+            <Collapse className="px-2" show={compareFormExpanded}>
                 <_CompareChooseTypeForm
                     handleLeftUpload={handleCompareLeftUpload}
                     handleRightUpload={handleCompareRightUpload}
@@ -925,7 +920,9 @@ const NewPostForm: FC<NewPostProps> = ({
                     addStyle={postFormClass.cancelButton}
                     onClick={closeModal}
                 />
-                {expanded && !hasPreviewed && compareType != 'chooseType' ? (
+                {compareFormExpanded &&
+                !hasPreviewedCompare &&
+                comparePostType != 'chooseType' ? (
                     <Button
                         text="Preview"
                         keepText={true}
@@ -938,7 +935,9 @@ const NewPostForm: FC<NewPostProps> = ({
                                 ? ' cursor-not-allowed opacity-50'
                                 : '')
                         }
-                        onClick={() => setHasPreviewed(true)}
+                        onClick={() =>
+                            useAppDispatch(setHasPreviewedCompare(true))
+                        }
                     />
                 ) : (
                     <Button

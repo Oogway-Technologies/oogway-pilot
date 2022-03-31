@@ -1,11 +1,10 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilCornerUpLeftAlt, UilThumbsUp } from '@iconscout/react-unicons'
 import React from 'react'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import { useCommentNumberReplies } from '../../../hooks/useNumberComments'
 import { useCommentNumberLikes } from '../../../hooks/useNumberLikes'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 import { getComment } from '../../../lib/commentsHelper'
 import { addLike } from '../../../lib/getLikesHelper'
@@ -31,7 +30,7 @@ const CommentEngagementBar = ({
     expanded,
 }: CommentEngagementBarProps) => {
     const { user } = useUser()
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Track likes and replies
     const [userHasLiked] = useUserHasLiked(

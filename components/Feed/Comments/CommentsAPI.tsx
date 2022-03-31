@@ -4,12 +4,11 @@ import { collection, orderBy, query, where } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { commentFormClass, commentsApiClass } from '../../../styles/feed'
 import {
     commmentConverter,
@@ -32,8 +31,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
     parentPostData,
 }) => {
     // Retrieve user profile
-    const userProfile = useRecoilValue(userProfileState)
-
+    const userProfile = useAppSelector(state => state.userSlice.user)
     const { user } = useUser()
 
     // Get a snapshot of the comments from the DB

@@ -1,10 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilThumbsUp } from '@iconscout/react-unicons'
 import React from 'react'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import { useReplyNumberLikes } from '../../../hooks/useNumberLikes'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 import { addLike } from '../../../lib/getLikesHelper'
 import { getReply } from '../../../lib/repliesHelper'
@@ -31,7 +30,7 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
     authorUid,
 }) => {
     const { user } = useUser()
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Track likes
     const [userHasLiked] = useUserHasLiked(

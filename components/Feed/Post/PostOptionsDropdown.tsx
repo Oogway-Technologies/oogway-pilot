@@ -5,14 +5,12 @@ import { useRouter } from 'next/router'
 import React, { MouseEvent, useState } from 'react'
 // Queries
 import { useQueryClient } from 'react-query'
-import { useRecoilValue } from 'recoil'
 
-// Recoil
-import { userProfileState } from '../../../atoms/user'
+import { useAppSelector } from '../../../hooks/useRedux'
 // Database
 import { postOptionsDropdownClass } from '../../../styles/feed'
 import { FirebaseProfile } from '../../../utils/types/firebase'
-// Styles and Coomponents
+// Styles and Components
 import Button from '../../Utils/Button'
 import DropdownMenu from '../../Utils/DropdownMenu'
 import Modal from '../../Utils/Modal'
@@ -30,7 +28,7 @@ const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
     deletePost,
     postType,
 }) => {
-    const userProfile = useRecoilValue(userProfileState) // Get user profile
+    const userProfile = useAppSelector(state => state.userSlice.user)
     // const currentUserDoc = getUserDoc(userProfile?.uid) // Get user document data
 
     // For triggering posts refetch on form submission

@@ -10,10 +10,9 @@ import {
 import { useRouter } from 'next/router'
 import React, { MouseEvent, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { replyFormClass } from '../../../styles/feed'
 import { longLimit, warningTime } from '../../../utils/constants/global'
@@ -40,7 +39,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
     placeholder,
     commentOwner,
 }) => {
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
     const router = useRouter()
 
     // Engagement mutation hoook
@@ -203,7 +202,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                 )}
             </div>
             {isMobile && (
-                <div className="inline-flex mt-sm ml-auto">
+                <div className="inline-flex ml-auto mt-sm">
                     <Button
                         text="Add"
                         keepText={false}

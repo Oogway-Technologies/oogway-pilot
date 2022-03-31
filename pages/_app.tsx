@@ -1,4 +1,3 @@
-// Next
 // Styles and Componenets
 import '../styles/globals.css'
 
@@ -11,9 +10,9 @@ import { hotjar } from 'react-hotjar'
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 // Query Management
 import { ReactQueryDevtools } from 'react-query/devtools'
-// Recoil
-import { RecoilRoot } from 'recoil'
+import { Provider } from 'react-redux'
 
+import store from '../features/store'
 import Layout from '../components/Layout'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -30,13 +29,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={queryClient}>
             <Hydrate state={pageProps.dehydratedState}>
                 <ThemeProvider attribute="class" enableSystem={true}>
-                    <RecoilRoot>
+                    <Provider store={store}>
                         <UserProvider>
                             <Layout>
                                 <Component {...pageProps} />
                             </Layout>
                         </UserProvider>
-                    </RecoilRoot>
+                    </Provider>
                 </ThemeProvider>
                 <ReactQueryDevtools initialIsOpen={true} />
             </Hydrate>

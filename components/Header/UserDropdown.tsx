@@ -3,10 +3,8 @@ import { useUser } from '@auth0/nextjs-auth0'
 // JSX and styling
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useRecoilValue } from 'recoil'
 
-// Recoil state
-import { userProfileState } from '../../atoms/user'
+import { useAppSelector } from '../../hooks/useRedux'
 import { userDropdownClass } from '../../styles/header'
 import { loginButtons } from '../../styles/login'
 import Button from '../Utils/Button'
@@ -21,11 +19,7 @@ import ToggleTheme from './ToggleTheme'
 const UserDropdown: React.FC = () => {
     const router = useRouter()
     const { user, isLoading } = useUser()
-    const userProfile = useRecoilValue(userProfileState)
-
-    // Listen to userProfile rather than using static values from recoil
-    // Why? Recoil only updates state on refreshes so when the user first
-    // const [authorProfile] = useProfileData(userProfile.uid)
+    const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Navigate to user settings
     // TODO: Implement page
@@ -38,7 +32,6 @@ const UserDropdown: React.FC = () => {
     }
 
     // Dropdown menu props
-    // TODO: use user profile image (if exists) from recoil state
     const menuButton = (
         <Avatar
             className={userDropdownClass.avatar}

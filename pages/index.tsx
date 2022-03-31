@@ -1,9 +1,6 @@
 // Next and react
 import Head from 'next/head'
 import React, { FC, ReactNode, useState } from 'react'
-// Recoil states
-// import {userProfileState} from '../atoms/user'
-// import {useRecoilValue} from 'recoil'
 // Queries
 import { dehydrate, QueryClient } from 'react-query'
 
@@ -51,7 +48,6 @@ const MainContent: FC<Props> = ({ children }) => {
 export default function Home() {
     // Call user Profile and check whether profile requires updating
     // Should only be called on user first log-in
-    // const userProfile = useRecoilValue(userProfileState)
     const [show, setShow] = useState(false)
     const closeModal = () => {
         setShow(false)

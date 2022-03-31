@@ -1,41 +1,37 @@
 import React from 'react'
-import { useRecoilState } from 'recoil'
 
 import {
-    hasPreviewedCompare,
-    textCompareLeft,
-    textCompareRight,
-} from '../../../../atoms/compareForm'
+    setHasPreviewedCompare,
+    setTextCompareLeft,
+    setTextCompareRight,
+} from '../../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux'
 import { compareFormClass } from '../../../../styles/feed'
 import { shortLimit } from '../../../../utils/constants/global'
 import _CompareInputForm from './_CompareInputForm'
 import _ComparePreview from './_ComparePreview'
 
 const _CompareTextInputForm = () => {
-    // Form state
-    const [textToCompareLeft, setTextToCompareLeft] =
-        useRecoilState(textCompareLeft)
-    const [textToCompareRight, setTextToCompareRight] =
-        useRecoilState(textCompareRight)
-    const [hasPreviewed, setHasPreviewed] = useRecoilState(hasPreviewedCompare)
+    const { hasPreviewedCompare, textCompareLeft, textCompareRight } =
+        useAppSelector(state => state.utilsSlice.compareForm)
 
     return (
         <div className={compareFormClass.formContainer}>
-            {hasPreviewed ? (
+            {hasPreviewedCompare ? (
                 <>
                     <_ComparePreview
-                        text={textToCompareLeft}
+                        text={textCompareLeft}
                         onClick={() => {
-                            setHasPreviewed(false)
-                            setTextToCompareLeft('')
+                            useAppDispatch(setHasPreviewedCompare(false))
+                            useAppDispatch(setTextCompareLeft(''))
                         }}
                     />
 
                     <_ComparePreview
-                        text={textToCompareRight}
+                        text={textCompareRight}
                         onClick={() => {
-                            setHasPreviewed(false)
-                            setTextToCompareRight('')
+                            useAppDispatch(setHasPreviewedCompare(false))
+                            useAppDispatch(setTextCompareRight(''))
                         }}
                     />
                 </>
@@ -46,9 +42,11 @@ const _CompareTextInputForm = () => {
                             className={compareFormClass.textInput}
                             placeholder="First option ..."
                             onChange={e => {
-                                setTextToCompareLeft(e.target.value)
+                                useAppDispatch(
+                                    setTextCompareLeft(e.target.value)
+                                )
                             }}
-                            value={textToCompareLeft}
+                            value={textCompareLeft}
                             maxLength={shortLimit}
                         />
                     </div>
@@ -57,9 +55,11 @@ const _CompareTextInputForm = () => {
                             className={compareFormClass.textInput}
                             placeholder="Second option ..."
                             onChange={e => {
-                                setTextToCompareRight(e.target.value)
+                                useAppDispatch(
+                                    setTextCompareRight(e.target.value)
+                                )
                             }}
-                            value={textToCompareRight}
+                            value={textCompareRight}
                             maxLength={shortLimit}
                         />
                     </div>

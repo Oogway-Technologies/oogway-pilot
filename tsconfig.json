@@ -34,7 +34,7 @@
         "hooks",
         "functions",
         "components",
-        "atoms",
+        "features",
         "decs.d.ts"
     ],
     "exclude": ["node_modules"]
