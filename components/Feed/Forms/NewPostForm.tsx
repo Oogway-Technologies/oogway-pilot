@@ -127,10 +127,10 @@ const NewPostForm: FC<NewPostProps> = ({
     // Get a reference to the feed selection
     const [selectedFeed, setSelectedFeed] = useState<string>('')
     useEffect(() => {
-        if (currentFeed !== 'All') {
+        if (currentFeed !== 'All' && !router.pathname.includes('/profile')) {
             setSelectedFeed(currentFeed)
         }
-    }, [setSelectedFeed, currentFeed])
+    }, [currentFeed])
 
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
@@ -676,7 +676,6 @@ const NewPostForm: FC<NewPostProps> = ({
                 router.push(`/?feed=${selectedFeed}`, undefined, {
                     shallow: true,
                 })
-                selectFeedHandler(null)
             }
         }
     }

@@ -12,8 +12,8 @@ import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { Provider } from 'react-redux'
 
-import store from '../features/store'
 import Layout from '../components/Layout'
+import store from '../features/store'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient())
