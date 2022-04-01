@@ -137,7 +137,10 @@ const PostCard: React.FC<PostProps> = ({
                             key
                         ) => (
                             <a
-                                className={postCardClass.bodyDescription}
+                                className={
+                                    postCardClass.bodyDescription +
+                                    ' hover:underline'
+                                }
                                 target="blank"
                                 href={decoratedHref}
                                 key={key}

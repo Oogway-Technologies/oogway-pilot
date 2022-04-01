@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 
-import { cardMediaStyle } from '../../styles/utils'
 import {
     fetcher,
     isValidURL,
@@ -20,13 +19,17 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
             fetcher(
                 `/api/fetchPreviewData?urlToHit=${isValidURL(textToDetect)}`
             ).then(imageUrl => {
-                setIsUrlPreviewImage(imageUrl)
+                if (imageUrl.length) {
+                    setIsUrlPreviewImage(imageUrl[0])
+                } else {
+                    setIsUrlPreviewImage('')
+                }
             })
         }
-    }, [textToDetect])
+    }, [])
 
-    return (
-        <div className={'flex p-md ml-xl'}>
+    return isUrlPreviewImage || isYoutubeLink ? (
+        <div className={'flex justify-start p-md ml-xl'}>
             {isYoutubeLink && isYoutubeLink.length > 0 ? (
                 <iframe
                     src={`https://www.youtube.com/embed/${isYoutubeLink}`}
@@ -35,13 +38,17 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
                     allowFullScreen
                     title="video"
                 />
-            ) : (
+            ) : isUrlPreviewImage ? (
                 <img
                     src={isUrlPreviewImage}
                     alt="img"
-                    className={cardMediaStyle}
+                    className={'max-w-full h-full'}
                 />
+            ) : (
+                <></>
             )}
         </div>
+    ) : (
+        <></>
     )
 }
