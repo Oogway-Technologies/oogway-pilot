@@ -205,7 +205,7 @@ const PostVotingMechanism = ({
                                             (user
                                                 ? ' cursor-pointer'
                                                 : ' cursor-default') +
-                                            'text-neutral-700 dark:text-neutralDark-150' +
+                                            'text-neutral-700 dark:text-neutralDark-150 hover:underline' +
                                             // string truncate logic
                                             (obj.text.split('').length >
                                             truncateLength

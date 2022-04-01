@@ -54,7 +54,7 @@ const Reply: React.FC<ReplyProps> = ({
                                 ) => (
                                     <a
                                         className={
-                                            replyClass.bodyDescription + ' ml-0'
+                                            'pr-sm ml-0 text-sm text-neutral-700 dark:text-neutralDark-150 hover:underline whitespace-pre-line break-words'
                                         }
                                         target="blank"
                                         href={decoratedHref}

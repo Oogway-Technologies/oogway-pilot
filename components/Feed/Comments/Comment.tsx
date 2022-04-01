@@ -90,7 +90,7 @@ const Comment: FC<CommentProps> = ({
                             ) => (
                                 <a
                                     className={
-                                        commentClass.bodyDescription + ' ml-0'
+                                        'pr-sm ml-0 text-sm text-neutral-700 dark:text-neutralDark-150 hover:underline whitespace-pre-line break-words'
                                     }
                                     target="blank"
                                     href={decoratedHref}
@@ -120,7 +120,6 @@ const Comment: FC<CommentProps> = ({
                         />
                     </div>
                 )}
-
                 {isValidURL(comment.message) && (
                     <PreviewDecider textToDetect={comment.message || ''} />
                 )}

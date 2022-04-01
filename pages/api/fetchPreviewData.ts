@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { getLinkPreview } from 'link-preview-js'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -34,7 +33,7 @@ export default function handler(
         imagesPropertyType: 'og',
         timeout: 5000,
     }).then((data: ResponseURL) => {
-        const image: string[] = data.images || []
+        const image: string[] = data.images?.length ? data.images : []
         return res.status(200).json(image)
     })
 }
