@@ -83,3 +83,19 @@ export const amazonURLAppendQueryString = (url: string) => {
     }
     return url
 }
+
+export const checkOrientation = (src: string) => {
+    const postImg = new Image()
+    postImg.src = src
+
+    if (postImg.naturalWidth > postImg.naturalHeight) {
+        // landscape
+        return 'h-64'
+    } else if (postImg.naturalWidth < postImg.naturalHeight) {
+        // portrait
+        return ''
+    } else {
+        // even
+        return ' h-64'
+    }
+}

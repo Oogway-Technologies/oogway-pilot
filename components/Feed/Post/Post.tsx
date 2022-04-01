@@ -6,7 +6,11 @@ import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { streamPostData } from '../../../lib/postsHelper'
 import { postCardClass } from '../../../styles/feed'
 import { cardMediaStyle } from '../../../styles/utils'
-import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
+import {
+    checkOrientation,
+    isValidURL,
+    parseYoutubeVideoId,
+} from '../../../utils/helpers/common'
 import { FirebasePost } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
 import { Card } from '../../Utils/common/Card'
@@ -161,17 +165,25 @@ const PostCard: React.FC<PostProps> = ({
             </div>
             {/* Media */}
             {postImage ? (
-                <div className="flex p-md mx-xl">
-                    <img src={postImage} className={cardMediaStyle} />
+                <div
+                    className={`flex p-md mx-xl ${checkOrientation(postImage)}`}
+                >
+                    <img
+                        src={postImage}
+                        className={
+                            'block w-full max-w-full h-auto align-middle bg-center bg-no-repeat bg-cover rounded-lg'
+                        }
+                    />
                 </div>
             ) : YouTubeURLID && YouTubeURLID.length > 0 ? (
-                <div className="flex p-md ml-xl">
+                <div className="flex object-contain justify-center p-md ml-xl h-60">
                     <iframe
                         src={`https://www.youtube.com/embed/${YouTubeURLID}`}
                         frameBorder="0"
                         allow="autoplay; encrypted-media"
                         allowFullScreen
                         title="video"
+                        className="w-auto"
                     />
                 </div>
             ) : (

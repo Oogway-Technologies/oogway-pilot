@@ -162,15 +162,22 @@ const PostVotingMechanism = ({
                         {obj.image && obj.image.length > 1 ? (
                             <div className="w-full h-fit">
                                 {/* Image of compare */}
-                                <img
-                                    className={
-                                        postCardClass.imageVote +
-                                        (!user ? ' cursor-default' : '')
-                                    }
-                                    src={obj.image}
-                                    onClick={() => voteHandler(idx)}
-                                    alt=""
-                                />
+                                <div
+                                    className="flex justify-center items-center"
+                                    style={{ height: '17.5rem' }}
+                                >
+                                    <img
+                                        className={
+                                            postCardClass.imageVote +
+                                            (!user ? ' cursor-default' : '')
+                                        }
+                                        src={obj.image}
+                                        onClick={() => {
+                                            voteOnImage(idx)
+                                        }}
+                                        alt=""
+                                    />
+                                </div>
                                 {/* If the compare image has a label */}
                                 {obj.label && (
                                     <div
