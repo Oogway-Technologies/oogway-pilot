@@ -9,13 +9,16 @@ import { useCommentNumberLikes } from '../../../hooks/useNumberLikes'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 import { getComment } from '../../../lib/commentsHelper'
 import { addLike } from '../../../lib/getLikesHelper'
+import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { commentEngagementBarClass } from '../../../styles/feed'
+import { FirebaseEngagement } from '../../../utils/types/firebase'
 import { EngagementItems } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
 
 type CommentEngagementBarProps = {
     postId: string
     commentId: string
+    authorUid: string
     handleReply: React.MouseEventHandler<HTMLButtonElement>
     expanded: boolean
 }
@@ -23,6 +26,7 @@ type CommentEngagementBarProps = {
 const CommentEngagementBar = ({
     postId,
     commentId,
+    authorUid,
     handleReply,
     expanded,
 }: CommentEngagementBarProps) => {
@@ -36,6 +40,25 @@ const CommentEngagementBar = ({
     )
     const [numLikes] = useCommentNumberLikes(postId, commentId)
     const [numReplies] = useCommentNumberReplies(postId, commentId)
+    const engagementMutation = useCreateEngagemmentActivity(authorUid)
+
+    // Handler functions
+    const likeHandler = async () => {
+        // Add like
+        addLike(user, userProfile, getComment(commentId))
+
+        // Create engagement record for notifications
+        const engagement: FirebaseEngagement = {
+            engagerId: userProfile.uid,
+            engageeId: authorUid,
+            action: 'like',
+            targetId: commentId,
+            targetObject: 'Comment',
+            targetRoute: `comments/${postId}`,
+            isNew: true,
+        }
+        engagementMutation.mutate(engagement)
+    }
 
     // Items
     const engagementItems: EngagementItems[] = [
@@ -53,9 +76,7 @@ const CommentEngagementBar = ({
             text: `${
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
-            onClick: () => {
-                addLike(user, userProfile, getComment(commentId))
-            },
+            onClick: likeHandler,
             expanded: expanded,
         },
         // {

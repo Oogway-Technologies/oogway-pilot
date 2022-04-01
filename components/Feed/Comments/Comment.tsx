@@ -68,7 +68,7 @@ const Comment: FC<CommentProps> = ({
 
     return (
         <>
-            <div className={commentClass.outerDiv}>
+            <div id={`comment-${commentId}`} className={commentClass.outerDiv}>
                 {/* Header */}
                 <CommentHeader
                     postId={postId}
@@ -129,6 +129,7 @@ const Comment: FC<CommentProps> = ({
                 <CommentEngagementBar
                     postId={postId}
                     commentId={commentId}
+                    authorUid={commentOwner}
                     handleReply={handleReply}
                     expanded={expandedReplyForm}
                 />
@@ -141,6 +142,7 @@ const Comment: FC<CommentProps> = ({
                             placeholder="What would you like to say back?"
                             closeModal={closeModal}
                             isMobile={isMobile}
+                            commentOwner={commentOwner}
                         />
                     </div>
                 </Collapse>
@@ -158,6 +160,7 @@ const Comment: FC<CommentProps> = ({
                     placeholder="What would you like to say back?"
                     closeModal={closeModal}
                     isMobile={isMobile}
+                    commentOwner={commentOwner}
                 />
             </Modal>
         </>

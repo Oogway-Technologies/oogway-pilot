@@ -115,7 +115,7 @@ const PostCard: React.FC<PostProps> = ({
     }
 
     return (
-        <Card className={postCardClass.card}>
+        <Card id={`post-${id}`} className={postCardClass.card}>
             {/* Header */}
             <PostHeader
                 id={id}
@@ -193,7 +193,11 @@ const PostCard: React.FC<PostProps> = ({
                 />
             )}
             {/* Engagement */}
-            <PostEngagementBar id={id} numComments={numComments} />
+            <PostEngagementBar
+                id={id}
+                authorUid={authorUid}
+                numComments={numComments}
+            />
 
             {/* Comments */}
             {/* Note: pass the server-rendered comments to the panel */}

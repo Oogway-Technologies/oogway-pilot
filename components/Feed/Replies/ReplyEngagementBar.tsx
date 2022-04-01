@@ -8,10 +8,12 @@ import { useReplyNumberLikes } from '../../../hooks/useNumberLikes'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 import { addLike } from '../../../lib/getLikesHelper'
 import { getReply } from '../../../lib/repliesHelper'
+import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import {
     commentEngagementBarClass,
     replyEngagementBarClass,
 } from '../../../styles/feed'
+import { FirebaseEngagement } from '../../../utils/types/firebase'
 import { EngagementItems } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
 
@@ -19,12 +21,14 @@ type ReplyEngagementBarProps = {
     postId: string
     commentId: string
     replyId: string
+    authorUid: string
 }
 
 const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
     postId,
     commentId,
     replyId,
+    authorUid,
 }) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
@@ -35,6 +39,25 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
         userProfile.uid
     )
     const [numLikes] = useReplyNumberLikes(postId, commentId, replyId)
+    const engagementMutation = useCreateEngagemmentActivity(authorUid)
+
+    // Handler functions
+    const likeHandler = async () => {
+        // Add like
+        addLike(user, userProfile, getReply(replyId))
+
+        // Create engagement record for notifications
+        const engagement: FirebaseEngagement = {
+            engagerId: userProfile.uid,
+            engageeId: authorUid,
+            action: 'like',
+            targetId: replyId,
+            targetObject: 'Reply',
+            targetRoute: `comments/${postId}`,
+            isNew: true,
+        }
+        engagementMutation.mutate(engagement)
+    }
 
     // Items
     const engagementItems: EngagementItems[] = [
@@ -43,10 +66,7 @@ const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
             text: `${
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
-            onClick: (): null | void => {
-                if (!user) return null // TODO: add popover about logging in
-                addLike(user, userProfile, getReply(postId))
-            },
+            onClick: likeHandler,
         },
         // {
         //     icon: <UilUpload/>,

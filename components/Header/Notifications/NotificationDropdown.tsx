@@ -2,7 +2,10 @@ import { Popover, Transition } from '@headlessui/react'
 import { UilBell } from '@iconscout/react-unicons'
 import React, { Fragment, useState } from 'react'
 import { usePopper } from 'react-popper'
+import { useRecoilValue } from 'recoil'
 
+import { userProfileState } from '../../../atoms/user'
+import { useHasNotifications } from '../../../hooks/useHasNotifications'
 import { NotificationMenu } from './NotificationMenu'
 import { NotificationDropdownStyles } from './NotificationStyles'
 
@@ -10,6 +13,10 @@ export const NotificationDropdown: React.FC = () => {
     const [referenceElement, setReferenceElement] = useState(null)
     const [popperElement, setPopperElement] = useState(null)
     const { styles, attributes } = usePopper(referenceElement, popperElement)
+
+    // Track notifications state
+    const userProfile = useRecoilValue(userProfileState)
+    const [hasNewNotifications] = useHasNotifications(userProfile.uid)
 
     // Update popper location
     styles.popper = {
@@ -25,7 +32,9 @@ export const NotificationDropdown: React.FC = () => {
                 ref={setReferenceElement as unknown as string}
             >
                 <UilBell className={NotificationDropdownStyles.bellIcon} />
-                <div className={NotificationDropdownStyles.dot} />
+                {hasNewNotifications && (
+                    <div className={NotificationDropdownStyles.dot} />
+                )}
             </Popover.Button>
             <Transition
                 as={Fragment}
@@ -42,7 +51,7 @@ export const NotificationDropdown: React.FC = () => {
                     style={styles.popper}
                     {...attributes.popper}
                 >
-                    <NotificationMenu />
+                    {({ close }) => <NotificationMenu close={close} />}
                 </Popover.Panel>
             </Transition>
         </Popover>

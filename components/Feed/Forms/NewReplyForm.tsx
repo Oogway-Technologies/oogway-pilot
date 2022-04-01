@@ -15,9 +15,13 @@ import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
 import needsHook from '../../../hooks/needsHook'
+import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { replyFormClass } from '../../../styles/feed'
 import { longLimit, warningTime } from '../../../utils/constants/global'
-import { FirebaseReply } from '../../../utils/types/firebase'
+import {
+    FirebaseEngagement,
+    FirebaseReply,
+} from '../../../utils/types/firebase'
 import Button from '../../Utils/Button'
 import { Avatar } from '../../Utils/common/Avatar'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
@@ -27,6 +31,7 @@ type NewReplyFormProps = {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
     isMobile: boolean
     placeholder: string
+    commentOwner: string
 }
 
 const NewReplyForm: React.FC<NewReplyFormProps> = ({
@@ -34,9 +39,13 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
     closeModal,
     isMobile,
     placeholder,
+    commentOwner,
 }) => {
     const userProfile = useRecoilValue(userProfileState)
     const router = useRouter()
+
+    // Engagement mutation hoook
+    const engagementMutation = useCreateEngagemmentActivity(commentOwner)
 
     // Get a reference to the input text
     const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -98,7 +107,19 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             authorUid: userProfile.uid,
             likes: {}, // This is a map <user.uid, bool> for liked/disliked for each user
         }
-        await addDoc(collection(db, `post-activity`), replyData)
+        const docRef = await addDoc(collection(db, `post-activity`), replyData)
+
+        // Create engagement record for notifications
+        const engagement: FirebaseEngagement = {
+            engagerId: userProfile.uid,
+            engageeId: commentOwner, // comment author'ss uid,
+            action: 'reply',
+            targetId: docRef.id,
+            targetObject: 'Comment',
+            targetRoute: `comments/${router.query.id}`,
+            isNew: true,
+        }
+        engagementMutation.mutate(engagement)
 
         // Clear the input
         setLoading(false)

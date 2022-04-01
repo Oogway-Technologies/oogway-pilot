@@ -9,6 +9,36 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { db } from '../../firebase'
 
+async function handleGet(res: NextApiResponse, _index: string, _order: string) {
+    try {
+        // Get feeds from firebase
+        const q = query(
+            collection(db, 'feeds'),
+            orderBy(_index, <OrderByDirection>_order)
+        )
+        const feedSnapshot = await getDocs(q)
+        const feeds = feedSnapshot.docs.map(feed => ({
+            id: feed.id,
+            ...feed.data(),
+        }))
+
+        // Check to ensure feeds found
+        if (feeds.length === 0) {
+            res.status(404).end(
+                'No Results Found. Please check the query parameters.'
+            )
+        }
+
+        // Return payload
+        const payload = {
+            feeds: feeds,
+        }
+        res.status(200).json(payload)
+    } catch (err) {
+        res.status(403).json({ err: 'Error!' })
+    }
+}
+
 export default async function feedHandler(
     req: NextApiRequest,
     res: NextApiResponse
@@ -19,6 +49,7 @@ export default async function feedHandler(
     } = req
 
     // Check query params and set defaults
+    //  TODO: may want to wrap this into the GET handler function
     _index = _index ? (_index as string) : 'label'
     if (!(_index === 'label' || _index === 'timestamp')) {
         res.status(400).end(
@@ -34,35 +65,12 @@ export default async function feedHandler(
     }
 
     // Perform request
-    if (method === 'GET') {
-        // Get posts from firebase
-        const q = query(
-            collection(db, 'feeds'),
-            orderBy(_index, <OrderByDirection>_order)
-        )
-        const feedSnapshot = await getDocs(q)
-        const feeds = feedSnapshot.docs.map(feed => ({
-            id: feed.id,
-            ...feed.data(),
-        }))
-
-        // Check to ensure posts found
-        if (feeds.length === 0) {
-            res.status(404).end(
-                'No Results Found. Please check the query parameters.'
-            )
-        }
-
-        // Return payload
-        const payload = {
-            feeds: feeds,
-            // lastTimestamp: lastTime?.timestamp || 0,
-            // firstTimestamp: firstTime?.timestamp || 0,
-            // hasNextPage: posts.length === limitSize, // If full limit reached there may be another page, edge case is modulo 0
-        }
-        res.status(200).json(payload)
-    } else {
-        res.setHeader('Allow', ['GET'])
-        res.status(405).end(`Method ${method} Not Allowed.`)
+    switch (method) {
+        case 'GET':
+            await handleGet(res, _index, _order)
+            break
+        default:
+            res.setHeader('Allow', ['GET'])
+            res.status(405).end(`Method ${method} Not Allowed.`)
     }
 }
