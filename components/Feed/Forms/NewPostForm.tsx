@@ -126,11 +126,6 @@ const NewPostForm: FC<NewPostProps> = ({
 
     // Get a reference to the feed selection
     const [selectedFeed, setSelectedFeed] = useState<string>('')
-    useEffect(() => {
-        if (currentFeed !== 'All' && !router.pathname.includes('/profile')) {
-            setSelectedFeed(currentFeed)
-        }
-    }, [currentFeed])
 
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
@@ -765,16 +760,10 @@ const NewPostForm: FC<NewPostProps> = ({
                     />
                 </div>
                 {/* Feed Selector */}
-                {/* {currentFeed === 'All' ? (
-                    <> */}
                 <Select
                     options={feedOptions}
                     onChange={selectFeedHandler}
-                    defaultValue={
-                        currentFeed !== 'All'
-                            ? { value: currentFeed, label: currentFeed }
-                            : null
-                    }
+                    defaultValue={null}
                     placeholder="Select Feed..."
                     isClearable={true}
                     maxMenuHeight={135}
