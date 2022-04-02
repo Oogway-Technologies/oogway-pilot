@@ -14,7 +14,6 @@ import { useRecoilValue } from 'recoil'
 
 import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
-import needsHook from '../../../hooks/needsHook'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { replyFormClass } from '../../../styles/feed'
 import { longLimit, warningTime } from '../../../utils/constants/global'
@@ -144,7 +143,6 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
             <div className={replyFormClass.body}>
                 {!isMobile && (
                     <Avatar
-                        onClick={needsHook}
                         src={
                             userProfile?.profilePic
                                 ? userProfile.profilePic

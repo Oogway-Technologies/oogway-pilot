@@ -7,10 +7,10 @@ import {
     query,
     where,
 } from 'firebase/firestore'
+import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 
 import { db } from '../../../firebase'
-import needsHook from '../../../hooks/needsHook'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
 import { deleteMedia } from '../../../lib/storageHelper'
@@ -39,6 +39,8 @@ const CommentHeader: FC<CommentHeaderProps> = ({
 }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
+
+    const router = useRouter()
 
     // Deletes a post
     const deleteCommentEntry = async () => {
@@ -72,6 +74,12 @@ const CommentHeader: FC<CommentHeaderProps> = ({
             })
         return `/comments/${postId}`
     }
+    const handleProfileAvatarClick = async (
+        e: React.MouseEvent<HTMLDivElement>
+    ) => {
+        e.preventDefault()
+        await router.push(`/profile/${authorUid}`)
+    }
 
     return (
         <div className={postCardClass.header}>
@@ -79,7 +87,7 @@ const CommentHeader: FC<CommentHeaderProps> = ({
             <div className={postCardClass.headerLeft}>
                 {/* Avatar */}
                 <Avatar
-                    onClick={needsHook}
+                    onClick={handleProfileAvatarClick}
                     src={getProfilePic(authorProfile, parentPostData) || ''}
                 />
 

@@ -1,8 +1,8 @@
 import { deleteDoc, doc } from 'firebase/firestore'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 import { db } from '../../../firebase'
-import needsHook from '../../../hooks/needsHook'
 import { useProfileData } from '../../../hooks/useProfileData'
 import { getAuthorName, getProfilePic } from '../../../lib/profileHelper'
 import { postCardClass } from '../../../styles/feed'
@@ -32,6 +32,8 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
     // Get author profile
     const [authorProfile] = useProfileData(authorUid)
 
+    const router = useRouter()
+
     // Deletes a reply
     const deleteReplyEntry = async () => {
         const replyDocRef = doc(db, `post-activity/${replyId}`)
@@ -42,14 +44,19 @@ const ReplyHeader: React.FC<ReplyHeaderProps> = ({
         // Return where the user should be routed
         return `/comments/${postId}`
     }
-
+    const handleProfileAvatarClick = async (
+        e: React.MouseEvent<HTMLDivElement>
+    ) => {
+        e.preventDefault()
+        await router.push(`/profile/${authorUid}`)
+    }
     return (
         <div className={postCardClass.header}>
             {/* Left content */}
             <div className={postCardClass.headerLeft}>
                 {/* Avatar */}
                 <Avatar
-                    onClick={needsHook}
+                    onClick={handleProfileAvatarClick}
                     size={'sm'}
                     src={getProfilePic(authorProfile, parentPostData) || ''}
                 />

@@ -8,7 +8,6 @@ import { useRecoilValue } from 'recoil'
 
 import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
-import needsHook from '../../../hooks/needsHook'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { commentFormClass, commentsApiClass } from '../../../styles/feed'
@@ -34,6 +33,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
 }) => {
     // Retrieve user profile
     const userProfile = useRecoilValue(userProfileState)
+
     const { user } = useUser()
 
     // Get a snapshot of the comments from the DB
@@ -98,12 +98,10 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
             )
         }
     }
-
     const showCommentForm = () => {
         return (
             <>
                 <Avatar
-                    onClick={needsHook}
                     src={userProfile?.profilePic ? userProfile.profilePic : ''}
                 />
                 {isMobile ? (
