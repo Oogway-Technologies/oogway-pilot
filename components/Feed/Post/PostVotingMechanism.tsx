@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
 import { streamPostData } from '../../../lib/postsHelper'
+import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { postCardClass } from '../../../styles/feed'
 import { truncateLength } from '../../../utils/constants/global'
 import {
@@ -14,6 +15,7 @@ import {
     parseYoutubeVideoId,
     winnerCall,
 } from '../../../utils/helpers/common'
+import { FirebaseEngagement } from '../../../utils/types/firebase'
 import { MediaObject } from '../../../utils/types/global'
 import YoutubeEmbed from '../../Utils/YoutubeEmbed'
 
@@ -32,6 +34,9 @@ const PostVotingMechanism = ({
 }: PostVotingMechanismProps) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
+
+    // Update notifications
+    const engagementMutation = useCreateEngagemmentActivity(authorUid)
 
     // Track voting button state
     const [userVoteChoice, setUserVoteChoice] = useState<number>(-1) // Instantiate to value that's never in index
@@ -132,6 +137,23 @@ const PostVotingMechanism = ({
         })
     }
 
+    const voteHandler = (idx: number) => {
+        // Send vote
+        voteOnImage(idx)
+
+        // Create engagement notification
+        const engagement: FirebaseEngagement = {
+            engagerId: userProfile.uid,
+            engageeId: authorUid,
+            action: 'vote',
+            targetId: id,
+            targetObject: 'Poll',
+            targetRoute: `comments/${id}`,
+            isNew: true,
+        }
+        engagementMutation.mutate(engagement)
+    }
+
     return (
         <div className={postCardClass.voteDiv}>
             {compareData.map((obj: MediaObject, idx: number) => {
@@ -146,9 +168,7 @@ const PostVotingMechanism = ({
                                         (!user ? ' cursor-default' : '')
                                     }
                                     src={obj.image}
-                                    onClick={() => {
-                                        voteOnImage(idx)
-                                    }}
+                                    onClick={() => voteHandler(idx)}
                                     alt=""
                                 />
                                 {/* If the compare image has a label */}
@@ -182,9 +202,7 @@ const PostVotingMechanism = ({
                                             (!user ? ' cursor-default' : '')
                                         }
                                         src={obj.previewImage}
-                                        onClick={() => {
-                                            voteOnImage(idx)
-                                        }}
+                                        onClick={() => voteHandler(idx)}
                                         alt=""
                                     />
                                 </div>
@@ -215,9 +233,7 @@ const PostVotingMechanism = ({
                                         target="blank"
                                         href={decoratedHref}
                                         key={key}
-                                        onClick={() => {
-                                            voteOnImage(idx)
-                                        }}
+                                        onClick={() => voteHandler(idx)}
                                     >
                                         {decoratedText}
                                     </a>
@@ -236,9 +252,7 @@ const PostVotingMechanism = ({
                                             : ' cursor-default') +
                                         'text-neutral-700 dark:text-neutralDark-150 inline-flex w-full justify-center p-sm'
                                     }
-                                    onClick={() => {
-                                        voteOnImage(idx)
-                                    }}
+                                    onClick={() => voteHandler(idx)}
                                 >
                                     {obj.text}
                                 </span>
@@ -252,9 +266,7 @@ const PostVotingMechanism = ({
                                         postCardClass.voteButton +
                                         (!user && ' cursor-default')
                                     }
-                                    onClick={() => {
-                                        voteOnImage(idx)
-                                    }}
+                                    onClick={() => voteHandler(idx)}
                                 >
                                     {idx == 0
                                         ? voteButtonLeft

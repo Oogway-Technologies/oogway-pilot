@@ -30,13 +30,18 @@ import { useRecoilValue } from 'recoil'
 import { userProfileState } from '../../../atoms/user'
 // Database
 import { db, storage } from '../../../firebase'
+import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 // JSX and Styles
 import { commentFormClass } from '../../../styles/feed'
 import { longLimit, warningTime } from '../../../utils/constants/global'
 import { checkFileSize } from '../../../utils/helpers/common'
 // Other and utilities
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import { FirebaseComment } from '../../../utils/types/firebase'
+import {
+    FirebaseComment,
+    FirebaseEngagement,
+} from '../../../utils/types/firebase'
+import { staticPostData } from '../../../utils/types/params'
 import Button from '../../Utils/Button'
 import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 
@@ -44,15 +49,22 @@ type NewCommentFormProps = {
     closeModal: () => void
     isMobile: boolean
     placeholder: string
+    parentPostData: staticPostData
 }
 
 const NewCommentForm: React.FC<NewCommentFormProps> = ({
     closeModal,
     isMobile,
     placeholder,
+    parentPostData,
 }) => {
     const userProfile = useRecoilValue(userProfileState)
     const router = useRouter()
+
+    // Engagement mutation hoook
+    const engagementMutation = useCreateEngagemmentActivity(
+        parentPostData.authorUid
+    )
 
     // The image to post and to display as preview
     const [imageToPost, setImageToPost] = useState<
@@ -65,7 +77,6 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
 
     // Track upload
     const [loading, setLoading] = useState(false)
-
     const [isImageSizeLarge, setIsImageSizeLarge] = useState(false)
 
     // Form management
@@ -138,6 +149,18 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
             // Remove image preview
             setImageToPost(null)
         }
+
+        // Create engagement record for notifications
+        const engagement: FirebaseEngagement = {
+            engagerId: userProfile.uid,
+            engageeId: parentPostData.authorUid,
+            action: 'comment',
+            targetId: docRef.id,
+            targetObject: 'Post',
+            targetRoute: `comments/${router.query.id}`,
+            isNew: true,
+        }
+        engagementMutation.mutate(engagement)
 
         // Everything is done
         setLoading(false)

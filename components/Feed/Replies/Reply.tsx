@@ -27,7 +27,7 @@ const Reply: React.FC<ReplyProps> = ({
     parentPostData,
 }) => {
     return (
-        <div className={replyClass.outerDiv}>
+        <div id={`reply-${replyId}`} className={replyClass.outerDiv}>
             {/* Header */}
             <ReplyHeader
                 postId={postId as string}
@@ -86,6 +86,7 @@ const Reply: React.FC<ReplyProps> = ({
                         postId={postId as string}
                         commentId={commentId}
                         replyId={replyId}
+                        authorUid={replyOwner}
                     />
                 </div>
             </div>

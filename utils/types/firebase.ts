@@ -94,6 +94,33 @@ export interface FirebaseFeed {
     createdBy: string
 }
 
+export type engagementAction = 'like' | 'comment' | 'reply' | 'vote'
+
+export type engagementTarget = 'Poll' | 'Comment' | 'Reply' | 'Post'
+
+export interface FirebaseEngagement {
+    id?: string
+    engagerId: string
+    engageeId: string
+    action: engagementAction
+    timestamp?: FieldValue
+    targetId: string
+    targetObject: engagementTarget
+    targetRoute: string
+    isNew: boolean
+}
+
+export interface FirebaseEngagementFragment {
+    engagerId?: string
+    engageeId?: string
+    action?: engagementAction
+    timestamp?: FieldValue
+    targetId?: string
+    targetObject?: engagementTarget
+    targetRoute?: string
+    isNew?: boolean
+}
+
 /**
  * Type converters for Firebase Snapshots
  * See: https://firebase.google.com/docs/reference/js/v8/firebase.firestore.FirestoreDataConverter

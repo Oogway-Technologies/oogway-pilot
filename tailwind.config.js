@@ -74,10 +74,12 @@ module.exports = {
     variants: {
         backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
         textColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+        scrollbar: ['dark'],
     },
     plugins: [
         require('tailwindcss-font-inter'),
         require('tailwindcss-aria-attributes'),
         require('tailwind-scrollbar-hide'),
+        require('tailwind-scrollbar'),
     ],
 }

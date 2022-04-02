@@ -21,7 +21,7 @@ export interface HTMLInputEvent extends Event {
     target: HTMLInputElement & EventTarget
 }
 
-export interface PostTimeStamp {
+export interface APITimeStamp {
     id: string
     timestamp: number
 }

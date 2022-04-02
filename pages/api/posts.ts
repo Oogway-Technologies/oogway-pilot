@@ -12,7 +12,62 @@ import {
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { db } from '../../firebase'
-import { PostTimeStamp } from '../../utils/types/global'
+import { APITimeStamp } from '../../utils/types/global'
+
+async function handleGet(
+    res: NextApiResponse,
+    _index: string,
+    _order: string,
+    _feed: string | string[],
+    afterTimestamp: Date,
+    limitSize: number
+) {
+    try {
+        // Create query constraints
+        const constraints = [
+            orderBy(_index, <OrderByDirection>_order),
+            startAfter(afterTimestamp),
+            limit(limitSize),
+        ]
+        if (_feed !== 'All') {
+            constraints.push(where('feed', '==', _feed))
+        }
+
+        // Get posts from firebase
+        const q = query(collection(db, 'posts'), ...constraints)
+        const postsSnapshot = await getDocs(q)
+        const posts = postsSnapshot.docs.map(post => ({
+            id: post.id,
+            ...post.data(),
+        }))
+
+        // Check to ensure posts found
+        if (posts.length === 0) {
+            res.status(404).end(
+                'No Results Found. Please check the query parameters.'
+            )
+        }
+
+        const lastTime = posts[posts.length - 1] as APITimeStamp
+        const firstTime = posts[0] as APITimeStamp
+        // Return payload
+        const payload = {
+            posts: posts,
+            lastTimestamp: lastTime?.timestamp || {
+                seconds: 0,
+                nanoseconds: 0,
+            },
+            firstTimestamp: firstTime?.timestamp || {
+                seconds: 0,
+                nanoseconds: 0,
+            },
+            hasNextPage: posts.length === limitSize, // If full limit reached there may be another page, edge case is modulo 0
+        }
+        res.status(200).json(payload)
+    } catch (err) {
+        res.status(403).json({ err: 'Error!' })
+    }
+}
 
 /**
  *
@@ -85,44 +140,19 @@ export default async function postsHandler(
     _feed = _feed ? _feed : 'All'
 
     // Perform request
-    if (method === 'GET') {
-        // Create query constraints
-        const constraints = [
-            orderBy(_index, <OrderByDirection>_order),
-            startAfter(afterTimestamp),
-            limit(limitSize),
-        ]
-        if (_feed !== 'All') {
-            constraints.push(where('feed', '==', _feed))
-        }
-
-        // Get posts from firebase
-        const q = query(collection(db, 'posts'), ...constraints)
-        const postsSnapshot = await getDocs(q)
-        const posts = postsSnapshot.docs.map(post => ({
-            id: post.id,
-            ...post.data(),
-        }))
-
-        // Check to ensure posts found
-        if (posts.length === 0) {
-            res.status(404).end(
-                'No Results Found. Please check the query parameters.'
+    switch (method) {
+        case 'GET':
+            await handleGet(
+                res,
+                _index,
+                _order,
+                _feed,
+                afterTimestamp,
+                limitSize
             )
-        }
-
-        const lastTime = posts[posts.length - 1] as PostTimeStamp
-        const firstTime = posts[0] as PostTimeStamp
-        // Return payload
-        const payload = {
-            posts: posts,
-            lastTimestamp: lastTime?.timestamp || 0,
-            firstTimestamp: firstTime?.timestamp || 0,
-            hasNextPage: posts.length === limitSize, // If full limit reached there may be another page, edge case is modulo 0
-        }
-        res.status(200).json(payload)
-    } else {
-        res.setHeader('Allow', ['GET'])
-        res.status(405).end(`Method ${method} Not Allowed.`)
+            break
+        default:
+            res.setHeader('Allow', ['GET'])
+            res.status(405).end(`Method ${method} Not Allowed.`)
     }
 }

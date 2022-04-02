@@ -10,31 +10,56 @@ import { useOnCommmentsPage } from '../../../hooks/useOnCommentsPage'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 import { addLike } from '../../../lib/getLikesHelper'
 import { getPost } from '../../../lib/postsHelper'
+import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { postCardClass } from '../../../styles/feed'
+import { FirebaseEngagement } from '../../../utils/types/firebase'
 import { EngagementItems } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
 
 type PostEngagementBarProps = {
     id: string
+    authorUid: string
     numComments: number
 }
 
-const PostEngagementBar: FC<PostEngagementBarProps> = ({ id, numComments }) => {
+const PostEngagementBar: FC<PostEngagementBarProps> = ({
+    id,
+    authorUid,
+    numComments,
+}) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
 
     // Track likes and comments
     const [userHasLiked] = useUserHasLiked(`posts/${id}`, userProfile.uid)
     const [numLikes] = usePostNumberLikes(id)
+    const engagementMutation = useCreateEngagemmentActivity(authorUid)
 
     // Use the router to redirect the user to the comments page
     // and track whether on comments paage
     const [onCommentsPage] = useOnCommmentsPage(id)
     const router = useRouter()
 
-    // Hooks
+    // Handler functions
     const enterComments = () => {
         router.push(`/comments/${id}`)
+    }
+
+    const likeHandler = async () => {
+        // Add like
+        addLike(user, userProfile, getPost(id))
+
+        // Create engagement record for notifications
+        const engagement: FirebaseEngagement = {
+            engagerId: userProfile.uid,
+            engageeId: authorUid,
+            action: 'like',
+            targetId: id,
+            targetObject: 'Post',
+            targetRoute: `comments/${id}`,
+            isNew: true,
+        }
+        engagementMutation.mutate(engagement)
     }
 
     // Items
@@ -53,7 +78,7 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({ id, numComments }) => {
             text: `${
                 numLikes === 1 ? `${numLikes} Like` : `${numLikes} Likes`
             }`,
-            onClick: () => addLike(user, userProfile, getPost(id)),
+            onClick: likeHandler,
         },
         // {
         //     icon: <UilUpload/>,

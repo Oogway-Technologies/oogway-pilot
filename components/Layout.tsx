@@ -42,7 +42,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Head>
                 <title>Oogway | Social - Wisdom of the crowd</title>
             </Head>
-            <div className="flex overflow-y-hidden flex-col min-h-screen max-h-screen">
+            <div className="flex overflow-y-clip flex-col min-h-screen max-h-screen">
                 <div className="sticky z-10">
                     <Header />
                 </div>

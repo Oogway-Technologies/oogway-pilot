@@ -259,11 +259,10 @@ export const compareFormClass = {
 // Comments
 export const commentsPageClass = {
     outerDiv: 'flex flex-col w-full justify-center',
-    toolbarDiv: 'flex-grow mx-3',
+    toolbarDiv: 'flex-grow',
     backButtonDiv:
         'items-center my-md mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
-    innerDiv:
-        'flex-grow h-screen pb-60 xl:mr-40 overflow-y-auto scrollbar-hide',
+    innerDiv: 'flex-grow h-screen pb-60 overflow-y-auto scrollbar-hide',
     contentDiv: 'mx-auto max-w-md md:max-w-lg lg:max-w-2xl',
     goBackButton:
         'rounded-[20px] p-sm space-x-sm text-primary dark:text-primaryDark bg-transparent dark:bg-transparent ' +

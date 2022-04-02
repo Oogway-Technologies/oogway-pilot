@@ -124,6 +124,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
                         }
                         isMobile={isMobile}
                         closeModal={closeModal}
+                        parentPostData={parentPostData}
                     />
                 )}
             </>
@@ -166,6 +167,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
                     }
                     closeModal={closeModal}
                     isMobile={isMobile}
+                    parentPostData={parentPostData}
                 />
             </Modal>
         </>
