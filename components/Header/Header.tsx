@@ -65,7 +65,7 @@ const Header = () => {
                 <div className={headerClass.user}>
                     {/* Uncomment Apps when we have hook */}
                     {/* <AppsButton /> */}
-                    <NotificationDropdown />
+                    {user && <NotificationDropdown />}
                     <UserDropdown />
                 </div>
             </div>

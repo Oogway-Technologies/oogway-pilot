@@ -17,9 +17,14 @@ export const NotificationBlockStyles = {
 }
 
 export const NotificationMenuStyles = {
-    body: 'flex flex-col px-3 pt-6 pb-3 mt-2 mr-sm max-h-screen bg-white dark:bg-neutralDark-500 rounded-2xl focus:outline-none drop-shadow',
+    body:
+        'flex flex-col px-3 pt-6 pb-1 mt-2 mr-sm max-h-96 ' +
+        'bg-white dark:bg-neutralDark-500 rounded-2xl focus:outline-none drop-shadow',
     header: 'flex gap-x-xl items-center',
-    main: 'flex flex-col my-5 space-y-2',
+    main:
+        'flex flex-col my-5 space-y-2 overflow-y-auto pr-3 snap-proximity ' +
+        'scrollbar scrollbar-sm scrollbar-rounded scrollbar-thumb-tertiary ' +
+        'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300',
     footer: 'flex items-end py-3',
     toggleOld:
         'inline-flex items-center ml-sm gap-x-md text-xs text-black dark:text-neutralDark-50 md:text-base',

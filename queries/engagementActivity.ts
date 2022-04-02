@@ -86,7 +86,7 @@ export const useInfiniteEngagementsQuery = (
     useInfiniteQuery(
         ['engagementActivity', engageeId, isNew],
         ({ pageParam }) =>
-            getEngagementActivity(pageParam, 'desc', 10, engageeId, isNew),
+            getEngagementActivity(pageParam, 'desc', 5, engageeId, isNew),
         {
             // Infinite query pagination
             getNextPageParam: lastPage =>
