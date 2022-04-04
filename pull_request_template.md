@@ -1,9 +1,3 @@
-### Issues
-
-JIRA Issue: [Link to JIRA issue]
-
-Branch: [Link to branch]
-
 ### Acceptance Criteria
 
 New/modified functionality to test:
@@ -19,5 +13,8 @@ Regression testing areas to focus on:
 ### Branching / JIRA
 
 -   [ ] I have named this PR in the following format: [JIRA-ISSUE-NUMBER] - [description of the work done in this PR]
--   [ ] I have pulled the latest code from master and merged it into this branch
--   [ ] I committed and pushed all my local code to this branch
+-   [ ] I have created this PR through the following steps:
+1. Fetched latest version of main (``git checkout main``)
+2. Rebased my branch onto main if there are new updates to main (``git pull upstream main``->``git checkout main``->``git rebase main``)
+3. Fixed any conflicts before pushing branch to main and creating PR
+-   [ ] I will follow the above steps every time I push new commits after review
