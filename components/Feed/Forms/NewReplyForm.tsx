@@ -202,7 +202,7 @@ const NewReplyForm: React.FC<NewReplyFormProps> = ({
                 )}
             </div>
             {isMobile && (
-                <div className="inline-flex mt-sm ml-auto">
+                <div className={'inline-flex mt-2 ml-auto'}>
                     <Button
                         text="Add"
                         keepText={false}

@@ -128,6 +128,7 @@ export const {
     setTextCompareLeft,
     setCompareFormExpanded,
     setNotificationsState,
+    resetCompareForm,
 } = utilsSlice.actions
 
 export default utilsSlice.reducer

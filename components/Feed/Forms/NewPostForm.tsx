@@ -31,6 +31,7 @@ import { useQueryClient } from 'react-query'
 import Select from 'react-select'
 
 import {
+    resetCompareForm,
     setCompareFormExpanded,
     setFeedState,
     setFileSizeTooLarge,
@@ -930,6 +931,3 @@ NewPostForm.defaultProps = {
 }
 
 export default NewPostForm
-function resetCompareForm(): any {
-    throw new Error('Function not implemented.')
-}
