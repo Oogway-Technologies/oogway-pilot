@@ -2,11 +2,10 @@ import { useUser } from '@auth0/nextjs-auth0'
 import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
 import useMediaQuery from '../../../hooks/useMediaQuery'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { streamPostData } from '../../../lib/postsHelper'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { postCardClass } from '../../../styles/feed'
@@ -34,8 +33,8 @@ const PostVotingMechanism = ({
     votesList,
 }: PostVotingMechanismProps) => {
     const { user } = useUser()
-    const userProfile = useRecoilValue(userProfileState)
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Update notifications
     const engagementMutation = useCreateEngagemmentActivity(authorUid)

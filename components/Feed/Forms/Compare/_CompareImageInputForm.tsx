@@ -1,16 +1,16 @@
 /* eslint-disable react/display-name */
 import { UilTimesCircle, UilUploadAlt } from '@iconscout/react-unicons'
 import React, { ChangeEvent, MutableRefObject } from 'react'
-import { useRecoilState } from 'recoil'
 
 import {
-    hasPreviewedCompare,
-    imageCompareLeft,
-    imageCompareRight,
-    labelCompareLeft,
-    labelCompareRight,
-} from '../../../../atoms/compareForm'
-import { fileSizeTooLarge } from '../../../../atoms/forms'
+    setFileSizeTooLarge,
+    setHasPreviewedCompare,
+    setImageCompareLeft,
+    setImageCompareRight,
+    setLabelCompareLeft,
+    setLabelCompareRight,
+} from '../../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux'
 import { compareFormClass, postFormClass } from '../../../../styles/feed'
 import { shortLimit, warningTime } from '../../../../utils/constants/global'
 import preventDefaultOnEnter from '../../../../utils/helpers/preventDefaultOnEnter'
@@ -29,17 +29,16 @@ const _CompareImageInputForm = React.forwardRef<
     _CompareImageInputFormProps
 >(({ handleLeftUpload, handleRightUpload }, ref) => {
     // Image state
-    const [isImageSizeLarge, setIsImageSizeLarge] =
-        useRecoilState(fileSizeTooLarge)
-    const [imageToCompareLeft, setImageToCompareLeft] =
-        useRecoilState(imageCompareLeft)
-    const [imageToCompareRight, setImageToCompareRight] =
-        useRecoilState(imageCompareRight)
-    const [labelToCompareLeft, setLabelToCompareLeft] =
-        useRecoilState(labelCompareLeft)
-    const [labelToCompareRight, setLabelToCompareRight] =
-        useRecoilState(labelCompareRight)
-    const [hasPreviewed, setHasPreviewed] = useRecoilState(hasPreviewedCompare)
+    const isImageSizeLarge = useAppSelector(
+        state => state.utilsSlice.fileSizeTooLarge
+    )
+    const {
+        hasPreviewedCompare,
+        imageCompareLeft,
+        imageCompareRight,
+        labelCompareLeft,
+        labelCompareRight,
+    } = useAppSelector(state => state.utilsSlice.compareForm)
 
     // Extract file picker refs
     const { left, right } = (ref as MutableRefObject<compareFilePickerRefs>)
@@ -47,40 +46,44 @@ const _CompareImageInputForm = React.forwardRef<
 
     return (
         <div className={compareFormClass.container}>
-            {hasPreviewed ? (
+            {hasPreviewedCompare ? (
                 <div className={compareFormClass.formContainer}>
                     <_CompareImagePreview
-                        image={imageToCompareLeft as string}
-                        label={labelToCompareLeft}
+                        image={imageCompareLeft as string}
+                        label={labelCompareLeft}
                         onClick={() => {
-                            setHasPreviewed(false)
-                            setImageToCompareLeft('')
-                            setLabelToCompareLeft('')
+                            useAppDispatch(setHasPreviewedCompare(false))
+                            useAppDispatch(setImageCompareLeft(''))
+                            useAppDispatch(setLabelCompareLeft(''))
                         }}
                     />
                     <_CompareImagePreview
-                        image={imageToCompareRight as string}
-                        label={labelToCompareRight}
+                        image={imageCompareRight as string}
+                        label={labelCompareRight}
                         onClick={() => {
-                            setHasPreviewed(false)
-                            setImageToCompareRight('')
-                            setLabelToCompareRight('')
+                            useAppDispatch(setHasPreviewedCompare(false))
+                            useAppDispatch(setImageCompareRight(''))
+                            useAppDispatch(setLabelCompareRight(''))
                         }}
                     />
                 </div>
             ) : (
                 <div className={compareFormClass.formContainer}>
                     <div>
-                        {imageToCompareLeft ? (
+                        {imageCompareLeft ? (
                             <div className={postFormClass.imagePreview}>
                                 <img
                                     className={compareFormClass.image}
-                                    src={imageToCompareLeft as string} // Pass image to src
+                                    src={imageCompareLeft as string} // Pass image to src
                                     alt=""
                                 />
                                 <UilTimesCircle
                                     className={postFormClass.removeImageButton}
-                                    onClick={() => setImageToCompareLeft(null)}
+                                    onClick={() =>
+                                        useAppDispatch(
+                                            setImageCompareLeft(null)
+                                        )
+                                    }
                                 />
                             </div>
                         ) : (
@@ -104,7 +107,9 @@ const _CompareImageInputForm = React.forwardRef<
                                 message={`Image should be less then 10 MB`}
                                 ms={warningTime}
                                 style={postFormClass.imageSizeAlert}
-                                onClose={() => setIsImageSizeLarge(false)}
+                                onClose={() =>
+                                    useAppDispatch(setFileSizeTooLarge(false))
+                                }
                             />
                         )}
                         <div className={compareFormClass.textInputDiv}>
@@ -112,24 +117,30 @@ const _CompareImageInputForm = React.forwardRef<
                                 className={compareFormClass.caption}
                                 placeholder="Caption (optional)"
                                 onChange={e => {
-                                    setLabelToCompareLeft(e.target.value)
+                                    useAppDispatch(
+                                        setLabelCompareLeft(e.target.value)
+                                    )
                                 }}
-                                value={labelToCompareLeft}
+                                value={labelCompareLeft}
                                 maxLength={shortLimit}
                             />
                         </div>
                     </div>
                     <div>
-                        {imageToCompareRight ? (
+                        {imageCompareRight ? (
                             <div className={postFormClass.imagePreview}>
                                 <img
                                     className={compareFormClass.image}
-                                    src={imageToCompareRight as string} // Pass image to src
+                                    src={imageCompareRight as string} // Pass image to src
                                     alt=""
                                 />
                                 <UilTimesCircle
                                     className={postFormClass.removeImageButton}
-                                    onClick={() => setImageToCompareRight(null)}
+                                    onClick={() =>
+                                        useAppDispatch(
+                                            setImageCompareRight(null)
+                                        )
+                                    }
                                 />
                             </div>
                         ) : (
@@ -153,7 +164,9 @@ const _CompareImageInputForm = React.forwardRef<
                                 message={`Image should be less then 10 MB`}
                                 ms={warningTime}
                                 style={postFormClass.imageSizeAlert}
-                                onClose={() => setIsImageSizeLarge(false)}
+                                onClose={() =>
+                                    useAppDispatch(setFileSizeTooLarge(false))
+                                }
                             />
                         )}
                         <div className={compareFormClass.textInputDiv}>
@@ -161,9 +174,11 @@ const _CompareImageInputForm = React.forwardRef<
                                 className={compareFormClass.caption}
                                 placeholder="Caption (optional)"
                                 onChange={e => {
-                                    setLabelToCompareRight(e.target.value)
+                                    useAppDispatch(
+                                        setLabelCompareRight(e.target.value)
+                                    )
                                 }}
-                                value={labelToCompareRight}
+                                value={labelCompareRight}
                                 maxLength={shortLimit}
                             />
                         </div>

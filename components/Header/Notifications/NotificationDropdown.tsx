@@ -2,10 +2,9 @@ import { Popover, Transition } from '@headlessui/react'
 import { UilBell } from '@iconscout/react-unicons'
 import React, { Fragment, useState } from 'react'
 import { usePopper } from 'react-popper'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import { useHasNotifications } from '../../../hooks/useHasNotifications'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { NotificationMenu } from './NotificationMenu'
 import { NotificationDropdownStyles } from './NotificationStyles'
 
@@ -15,7 +14,7 @@ export const NotificationDropdown: React.FC = () => {
     const { styles, attributes } = usePopper(referenceElement, popperElement)
 
     // Track notifications state
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
     const [hasNewNotifications] = useHasNotifications(userProfile.uid)
 
     // Update popper location

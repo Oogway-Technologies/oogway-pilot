@@ -8,9 +8,9 @@ import {
 import { useRouter } from 'next/router'
 import React, { FC, Fragment, useState } from 'react'
 import { usePopper } from 'react-popper'
-import { useRecoilState } from 'recoil'
 
-import { feedState } from '../../atoms/feeds'
+import { setFeedState } from '../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import { useFeedsQuery } from '../../queries/feeds'
 import { feedSelectorClass, feedToolbarClass } from '../../styles/feed'
 import { sidebarWidget } from '../../styles/utils'
@@ -30,7 +30,7 @@ export const FeedSelector: FC<FeedSelectorProps> = ({ feedClickHandler }) => {
     const router = useRouter()
 
     // Store selected feed in global state
-    const [feed, setFeed] = useRecoilState(feedState)
+    const feed = useAppSelector(state => state.utilsSlice.feedState)
 
     const errorMessage = (
         // TODO: need nicer error component
@@ -59,7 +59,7 @@ export const FeedSelector: FC<FeedSelectorProps> = ({ feedClickHandler }) => {
                                     }
                                     data-text={elem.label}
                                     onClick={() => {
-                                        setFeed(elem.label)
+                                        useAppDispatch(setFeedState(elem.label))
                                         router.push(
                                             `/?feed=${elem.label}`,
                                             undefined,
@@ -97,8 +97,7 @@ export const FeedSelectorMobile: FC = () => {
     const router = useRouter()
 
     // Store selected feed in global state
-    const [feed, setFeed] = useRecoilState(feedState)
-
+    const feed = useAppSelector(state => state.utilsSlice.feedState)
     const errorMessage = (
         // TODO: need nicer error component
         <div>Error: loading posts.</div>
@@ -163,7 +162,11 @@ export const FeedSelectorMobile: FC = () => {
                                                     }
                                                     data-text={elem.label}
                                                     onClick={() => {
-                                                        setFeed(elem.label)
+                                                        useAppDispatch(
+                                                            setFeedState(
+                                                                elem.label
+                                                            )
+                                                        )
                                                         router.push(
                                                             `/?feed=${elem.label}`,
                                                             undefined,
@@ -195,7 +198,7 @@ export const FeedSelectorMenu: FC = () => {
     const router = useRouter()
 
     // Store selected feed in global state
-    const [feed, setFeed] = useRecoilState(feedState)
+    const feed = useAppSelector(state => state.utilsSlice.feedState)
 
     return (
         <div className="flex flex-col m-sm w-64">
@@ -213,7 +216,7 @@ export const FeedSelectorMenu: FC = () => {
                     ' mb-sm'
                 }
                 onClick={() => {
-                    setFeed('All')
+                    useAppDispatch(setFeedState('All'))
                     router.push('/?feed=All', undefined, {
                         shallow: true,
                     })
@@ -244,7 +247,7 @@ export const FeedSelectorMenu: FC = () => {
                     {feed}
                     <UilTimes
                         className="text-neutral-700 dark:text-neutralDark-150 cursor-pointer"
-                        onClick={() => setFeed('All')}
+                        onClick={() => useAppDispatch(setFeedState('All'))}
                     />
                 </div>
             )}

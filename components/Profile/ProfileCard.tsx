@@ -1,10 +1,9 @@
 import { UilLocationPoint, UilPen } from '@iconscout/react-unicons'
 import React, { FC, useState } from 'react'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../atoms/user'
 import useMediaQuery from '../../hooks/useMediaQuery'
 import { useProfileData } from '../../hooks/useProfileData'
+import { useAppSelector } from '../../hooks/useRedux'
 import { profileCard } from '../../styles/profile'
 import NewPostForm from '../Feed/Forms/NewPostForm'
 import UserProfileForm from '../Login/UserProfileForm'
@@ -35,8 +34,9 @@ export const ProfileCard: FC<ProfileCardProps> = props => {
         uid,
         joinedAt,
     } = props
-    // recoil state to check if Profile card is for current user.
-    const { uid: currentUserUid } = useRecoilValue(userProfileState)
+    // redux state to check if Profile card is for current user.
+    const currentUserUid = useAppSelector(state => state.userSlice.user.uid)
+
     const [userProfileSnapshot] = useProfileData(uid as string)
 
     // hook to check is user is no mobile device or not.

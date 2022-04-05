@@ -5,20 +5,20 @@ import {
     UilTextFields,
 } from '@iconscout/react-unicons'
 import React, { ChangeEvent } from 'react'
-import { useRecoilState, useSetRecoilState } from 'recoil'
 
 import {
-    compareFormExpanded,
-    comparePostType,
-    hasPreviewedCompare,
-    imageCompareLeft,
-    imageCompareRight,
-    labelCompareLeft,
-    labelCompareRight,
-    textCompareLeft,
-    textCompareRight,
-} from '../../../../atoms/compareForm'
+    setCompareFormExpanded,
+    setComparePostType,
+    setHasPreviewedCompare,
+    setImageCompareLeft,
+    setImageCompareRight,
+    setLabelCompareLeft,
+    setLabelCompareRight,
+    setTextCompareLeft,
+    setTextCompareRight,
+} from '../../../../features/utils/utilsSlice'
 import useMediaQuery from '../../../../hooks/useMediaQuery'
+import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux'
 // Styles and JSX
 import { compareFormClass } from '../../../../styles/feed'
 import { compareFilePickerRefs } from '../../../../utils/types/global'
@@ -35,46 +35,38 @@ const _CompareChooseTypeForm = React.forwardRef<
     compareFilePickerRefs,
     _CompareChooseTypeFormProps
 >(({ handleLeftUpload, handleRightUpload }, ref) => {
-    // Update step
-    const [compareType, setCompareType] = useRecoilState(comparePostType)
+    const { comparePostType } = useAppSelector(
+        state => state.utilsSlice.compareForm
+    )
+
     const goToTextForm = () => {
-        if (compareType !== 'textOnly') {
-            setCompareType('textOnly')
-            setHasPreviewed(false)
-            setImageToCompareLeft('')
-            setImageToCompareRight('')
-            setLabelToCompareLeft('')
-            setLabelToCompareRight('')
+        if (comparePostType !== 'textOnly') {
+            useAppDispatch(setComparePostType('textOnly'))
+            useAppDispatch(setHasPreviewedCompare(false))
+            useAppDispatch(setImageCompareLeft(''))
+            useAppDispatch(setImageCompareRight(''))
+            useAppDispatch(setLabelCompareLeft(''))
+            useAppDispatch(setLabelCompareRight(''))
         }
     }
     const goToImageForm = () => {
-        if (compareType !== 'imageOnly') {
-            setCompareType('imageOnly')
-            setHasPreviewed(false)
-            setTextToCompareLeft('')
-            setTextToCompareRight('')
+        if (comparePostType !== 'imageOnly') {
+            useAppDispatch(setComparePostType('imageOnly'))
+            useAppDispatch(setHasPreviewedCompare(false))
+            useAppDispatch(setTextCompareLeft(''))
+            useAppDispatch(setTextCompareRight(''))
         }
     }
     const cancelCompare = () => {
-        setHasPreviewed(false)
-        setExpanded(false)
-        setTextToCompareLeft('')
-        setTextToCompareRight('')
-        setImageToCompareLeft('')
-        setImageToCompareRight('')
-        setLabelToCompareLeft('')
-        setLabelToCompareRight('')
+        useAppDispatch(setHasPreviewedCompare(false))
+        useAppDispatch(setCompareFormExpanded(false))
+        useAppDispatch(setTextCompareLeft(''))
+        useAppDispatch(setTextCompareRight(''))
+        useAppDispatch(setImageCompareLeft(''))
+        useAppDispatch(setImageCompareRight(''))
+        useAppDispatch(setLabelCompareLeft(''))
+        useAppDispatch(setLabelCompareRight(''))
     }
-
-    // Compare form state
-    const setTextToCompareLeft = useSetRecoilState(textCompareLeft)
-    const setTextToCompareRight = useSetRecoilState(textCompareRight)
-    const setImageToCompareLeft = useSetRecoilState(imageCompareLeft)
-    const setImageToCompareRight = useSetRecoilState(imageCompareRight)
-    const setLabelToCompareLeft = useSetRecoilState(labelCompareLeft)
-    const setLabelToCompareRight = useSetRecoilState(labelCompareRight)
-    const setExpanded = useSetRecoilState(compareFormExpanded)
-    const setHasPreviewed = useSetRecoilState(hasPreviewedCompare)
 
     // Track mobile state
     const isMobile = useMediaQuery('(max-width: 500px)')
@@ -104,7 +96,7 @@ const _CompareChooseTypeForm = React.forwardRef<
                             <div
                                 className={
                                     'text-xs ml-sm' +
-                                    (compareType === 'textOnly'
+                                    (comparePostType === 'textOnly'
                                         ? ' font-bold'
                                         : '')
                                 }
@@ -122,7 +114,7 @@ const _CompareChooseTypeForm = React.forwardRef<
                             <div
                                 className={
                                     'text-xs ml-sm' +
-                                    (compareType === 'imageOnly'
+                                    (comparePostType === 'imageOnly'
                                         ? ' font-bold'
                                         : '')
                                 }
@@ -134,7 +126,7 @@ const _CompareChooseTypeForm = React.forwardRef<
                     </div>
                     {/* Forms */}
                     <div className={compareFormClass.container}>
-                        {compareType === 'textOnly' ? (
+                        {comparePostType === 'textOnly' ? (
                             <_CompareTextInputForm />
                         ) : (
                             <_CompareImageInputForm

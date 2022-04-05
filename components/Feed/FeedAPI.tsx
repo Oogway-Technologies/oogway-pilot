@@ -2,10 +2,10 @@ import { useUser } from '@auth0/nextjs-auth0'
 import { UilPen } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useSetRecoilState } from 'recoil'
 
-import { feedState } from '../../atoms/feeds'
+import { setFeedState } from '../../features/utils/utilsSlice'
 import useMediaQuery from '../../hooks/useMediaQuery'
+import { useAppDispatch } from '../../hooks/useRedux'
 import { feedApiClass, feedToolbarClass } from '../../styles/feed'
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'
@@ -22,10 +22,12 @@ const FeedAPI = () => {
 
     // Initialize feed state
     const router = useRouter()
-    const setFeed = useSetRecoilState(feedState)
+
     useEffect(() => {
         const { feed: currentFeed } = router.query
-        if (currentFeed) setFeed(currentFeed as string)
+        if (currentFeed) {
+            useAppDispatch(setFeedState(currentFeed as string))
+        }
     }, [router])
 
     // helper functions

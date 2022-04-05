@@ -13,9 +13,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import React, { FC, useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../atoms/user'
 import NewPostForm from '../../components/Feed/Forms/NewPostForm'
 import PostCard from '../../components/Feed/Post/Post'
 import { ProfileCard } from '../../components/Profile/ProfileCard'
@@ -23,6 +21,7 @@ import Button from '../../components/Utils/Button'
 import Modal from '../../components/Utils/Modal'
 import { db } from '../../firebase'
 import useMediaQuery from '../../hooks/useMediaQuery'
+import { useAppSelector } from '../../hooks/useRedux'
 import { feedApiClass, feedToolbarClass } from '../../styles/feed'
 import { profilePage } from '../../styles/profile'
 import { FirebasePost, FirebaseProfile } from '../../utils/types/firebase'
@@ -38,8 +37,8 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
     const { bio, profilePic, uid, username, lastName, location } = userProfile
     const [isOpen, setIsOpen] = useState(false)
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const authUserProfile = useAppSelector(state => state.userSlice.user)
 
-    const authUserProfile = useRecoilValue(userProfileState)
     // Get real-time connection with DB
     const [realtimePosts] = useCollection(
         query(

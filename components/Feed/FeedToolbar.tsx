@@ -3,10 +3,10 @@ import { useUser } from '@auth0/nextjs-auth0'
 import { UilArrowLeft, UilPen } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useRecoilState } from 'recoil'
 
-import { feedState } from '../../atoms/feeds'
+import { setFeedState } from '../../features/utils/utilsSlice'
 import useMediaQuery from '../../hooks/useMediaQuery'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import { feedApiClass, feedToolbarClass } from '../../styles/feed'
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'
@@ -21,7 +21,7 @@ const FeedToolbar = () => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     // Track feed
-    const [feed, setFeed] = useRecoilState(feedState)
+    const feed = useAppSelector(state => state.utilsSlice.feedState)
 
     // Router for shallow routing to feeds
     const router = useRouter()
@@ -52,7 +52,7 @@ const FeedToolbar = () => {
                                 addStyle={feedApiClass.backbutton}
                                 type="button"
                                 onClick={() => {
-                                    setFeed('All')
+                                    useAppDispatch(setFeedState('All'))
                                     router.push('/?feed=All', undefined, {
                                         shallow: true,
                                     })

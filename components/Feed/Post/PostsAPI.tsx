@@ -1,9 +1,8 @@
 import React, { Fragment, useRef } from 'react'
-import { useRecoilValue } from 'recoil'
 
-import { feedState } from '../../../atoms/feeds'
 // Custom hook
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver'
+import { useAppSelector } from '../../../hooks/useRedux'
 // Queries
 import { useInfinitePostsQuery } from '../../../queries/posts'
 import { FirebasePost } from '../../../utils/types/firebase'
@@ -17,7 +16,7 @@ import PostCard from './Post'
 
 function PostsAPI() {
     // Instantiate infinite posts query
-    const feed = useRecoilValue(feedState)
+    const feed = useAppSelector(state => state.utilsSlice.feedState)
     const { status, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
         useInfinitePostsQuery(feed)
 

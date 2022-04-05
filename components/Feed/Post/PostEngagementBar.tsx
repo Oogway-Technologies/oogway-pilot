@@ -2,11 +2,10 @@ import { useUser } from '@auth0/nextjs-auth0'
 import { UilComment, UilThumbsUp } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import { usePostNumberLikes } from '../../../hooks/useNumberLikes'
 import { useOnCommmentsPage } from '../../../hooks/useOnCommentsPage'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 import { addLike } from '../../../lib/getLikesHelper'
 import { getPost } from '../../../lib/postsHelper'
@@ -28,7 +27,7 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({
     numComments,
 }) => {
     const { user } = useUser()
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Track likes and comments
     const [userHasLiked] = useUserHasLiked(`posts/${id}`, userProfile.uid)

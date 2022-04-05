@@ -1,9 +1,7 @@
-// import { UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, Fragment, useRef, useState } from 'react'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver'
+import { useAppSelector } from '../../../hooks/useRedux'
 import {
     useInfiniteEngagementsQuery,
     useUpdateEngagemmentActivity,
@@ -12,7 +10,6 @@ import { bodyHeavy, bodySmall } from '../../../styles/typography'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import { FirebaseEngagement } from '../../../utils/types/firebase'
 import EndOfNotificationsMessage from './EndOfNotificationsMessage'
-// import { BadgeButton } from './BadgeButton'
 import { NotificationBlock } from './NotificationBlock'
 import {
     GenerateNotificationLoaders,
@@ -30,7 +27,7 @@ interface NotificationMenuProps {
 }
 
 export const NotificationMenu: FC<NotificationMenuProps> = ({ close }) => {
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Instantiate infinite notifications query
     const [filterIsNew, setFilterIsNew] = useState<boolean | undefined>(true)

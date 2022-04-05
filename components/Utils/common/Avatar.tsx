@@ -37,9 +37,9 @@ export const Avatar: FC<AvatarProps> = ({
             loading={'lazy'}
             className={`${selectedSize} ${avatarStyle} ${
                 isHoverEffect
-                    ? 'hover:opacity-80 hover:scale-125 cursor-pointer'
+                    ? 'hover:opacity-80 hover:scale-125 cursor-pointer '
                     : ''
-            }  ${className ? className : ''}`}
+            } ${className ? className : ''}`}
             onClick={onClick}
             onError={({ currentTarget }) => {
                 currentTarget.src = loadingAvatarURL

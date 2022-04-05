@@ -24,12 +24,11 @@ import React, {
     useState,
 } from 'react'
 import { useForm } from 'react-hook-form'
-import { useRecoilValue } from 'recoil'
 
 // Recoil states
-import { userProfileState } from '../../../atoms/user'
 // Database
 import { db, storage } from '../../../firebase'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 // JSX and Styles
 import { commentFormClass } from '../../../styles/feed'
@@ -58,7 +57,7 @@ const NewCommentForm: React.FC<NewCommentFormProps> = ({
     placeholder,
     parentPostData,
 }) => {
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
     const router = useRouter()
 
     // Engagement mutation hoook
