@@ -161,17 +161,23 @@ const PostCard: React.FC<PostProps> = ({
             </div>
             {/* Media */}
             {postImage ? (
-                <div className="flex p-md mx-xl">
-                    <img src={postImage} className={cardMediaStyle} />
+                <div className={'flex p-md mx-xl'}>
+                    <img
+                        src={postImage}
+                        className={
+                            'block w-full max-w-full h-auto align-middle bg-center bg-no-repeat bg-cover rounded-lg'
+                        }
+                    />
                 </div>
             ) : YouTubeURLID && YouTubeURLID.length > 0 ? (
-                <div className="flex p-md ml-xl">
+                <div className="flex object-contain justify-center p-md ml-xl h-60">
                     <iframe
                         src={`https://www.youtube.com/embed/${YouTubeURLID}`}
                         frameBorder="0"
                         allow="autoplay; encrypted-media"
                         allowFullScreen
                         title="video"
+                        className="w-auto"
                     />
                 </div>
             ) : (

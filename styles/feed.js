@@ -107,7 +107,7 @@ export const postCardClass = {
     // Media
     voteDiv: 'grid grid-cols-2 gap-3 mx-3',
     voteContainer: 'flex flex-col items-center m-3 sm:m-2',
-    imageVote: 'flex rounded-[8px] object-contain cursor-pointer m-auto',
+    imageVote: 'rounded-[8px] cursor-pointer h-inherit',
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
     textVote:

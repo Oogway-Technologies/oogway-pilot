@@ -55,3 +55,7 @@ img[alt]:after {
 .w-inherit {
     width: inherit;
 }
+
+.h-inherit {
+    height: inherit;
+}

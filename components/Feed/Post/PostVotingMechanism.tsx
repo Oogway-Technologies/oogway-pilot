@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil'
 
 import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { streamPostData } from '../../../lib/postsHelper'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { postCardClass } from '../../../styles/feed'
@@ -34,6 +35,7 @@ const PostVotingMechanism = ({
 }: PostVotingMechanismProps) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     // Update notifications
     const engagementMutation = useCreateEngagemmentActivity(authorUid)
@@ -162,15 +164,24 @@ const PostVotingMechanism = ({
                         {obj.image && obj.image.length > 1 ? (
                             <div className="w-full h-fit">
                                 {/* Image of compare */}
-                                <img
-                                    className={
-                                        postCardClass.imageVote +
-                                        (!user ? ' cursor-default' : '')
-                                    }
-                                    src={obj.image}
-                                    onClick={() => voteHandler(idx)}
-                                    alt=""
-                                />
+                                <div
+                                    className="flex justify-center items-center"
+                                    style={{
+                                        height: isMobile ? '11rem' : '16rem',
+                                    }}
+                                >
+                                    <img
+                                        className={
+                                            postCardClass.imageVote +
+                                            (!user ? ' cursor-default' : '')
+                                        }
+                                        src={obj.image}
+                                        onClick={() => {
+                                            voteOnImage(idx)
+                                        }}
+                                        alt=""
+                                    />
+                                </div>
                                 {/* If the compare image has a label */}
                                 {obj.label && (
                                     <div

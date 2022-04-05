@@ -27,7 +27,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
     }
 
     return (
-        <Popover as="div">
+        <Popover as="div" className={'flex'}>
             <Popover.Button
                 className={menuButtonClass}
                 ref={setReferenceElement as unknown as string}
