@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil'
 
 import { userProfileState } from '../../../atoms/user'
 import { db } from '../../../firebase'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { streamPostData } from '../../../lib/postsHelper'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { postCardClass } from '../../../styles/feed'
@@ -34,6 +35,7 @@ const PostVotingMechanism = ({
 }: PostVotingMechanismProps) => {
     const { user } = useUser()
     const userProfile = useRecoilValue(userProfileState)
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     // Update notifications
     const engagementMutation = useCreateEngagemmentActivity(authorUid)
@@ -164,7 +166,9 @@ const PostVotingMechanism = ({
                                 {/* Image of compare */}
                                 <div
                                     className="flex justify-center items-center"
-                                    style={{ height: '16rem' }}
+                                    style={{
+                                        height: isMobile ? '11rem' : '16rem',
+                                    }}
                                 >
                                     <img
                                         className={
