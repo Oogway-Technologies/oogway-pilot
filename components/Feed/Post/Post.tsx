@@ -6,11 +6,7 @@ import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { streamPostData } from '../../../lib/postsHelper'
 import { postCardClass } from '../../../styles/feed'
 import { cardMediaStyle } from '../../../styles/utils'
-import {
-    checkOrientation,
-    isValidURL,
-    parseYoutubeVideoId,
-} from '../../../utils/helpers/common'
+import { isValidURL, parseYoutubeVideoId } from '../../../utils/helpers/common'
 import { FirebasePost } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
 import { Card } from '../../Utils/common/Card'
@@ -165,9 +161,7 @@ const PostCard: React.FC<PostProps> = ({
             </div>
             {/* Media */}
             {postImage ? (
-                <div
-                    className={`flex p-md mx-xl ${checkOrientation(postImage)}`}
-                >
+                <div className={'flex p-md mx-xl'}>
                     <img
                         src={postImage}
                         className={

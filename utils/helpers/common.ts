@@ -87,15 +87,15 @@ export const amazonURLAppendQueryString = (url: string) => {
 export const checkOrientation = (src: string) => {
     const postImg = new Image()
     postImg.src = src
-
+    // TODO: add styles for items
     if (postImg.naturalWidth > postImg.naturalHeight) {
         // landscape
-        return 'h-64'
+        return ''
     } else if (postImg.naturalWidth < postImg.naturalHeight) {
         // portrait
         return ''
     } else {
         // even
-        return ' h-64'
+        return ''
     }
 }

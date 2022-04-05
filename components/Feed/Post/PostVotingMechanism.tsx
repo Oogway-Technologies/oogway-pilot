@@ -164,7 +164,7 @@ const PostVotingMechanism = ({
                                 {/* Image of compare */}
                                 <div
                                     className="flex justify-center items-center"
-                                    style={{ height: '17.5rem' }}
+                                    style={{ height: '16rem' }}
                                 >
                                     <img
                                         className={
