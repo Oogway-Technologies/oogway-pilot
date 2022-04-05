@@ -2,10 +2,9 @@ import { FieldValue } from 'firebase/firestore'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
-import { useRecoilValue } from 'recoil'
 
-import { userProfileState } from '../../../atoms/user'
 import { useProfileData } from '../../../hooks/useProfileData'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { useUpdateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { bodySmall, caption } from '../../../styles/typography'
 import {
@@ -51,7 +50,7 @@ export const NotificationBlock: FC<NotificationBlockProps> = ({
     const [engagerProfile] = useProfileData(engagerId)
 
     // Notification mutation hook
-    const userProfile = useRecoilValue(userProfileState)
+    const userProfile = useAppSelector(state => state.userSlice.user)
     const engagementMutation = useUpdateEngagemmentActivity(userProfile.uid)
 
     // Handler functions

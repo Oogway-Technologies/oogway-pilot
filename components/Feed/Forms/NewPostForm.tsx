@@ -32,14 +32,11 @@ import Select from 'react-select'
 
 import {
     setCompareFormExpanded,
-    setComparePostType,
     setFeedState,
     setFileSizeTooLarge,
     setHasPreviewedCompare,
     setImageCompareLeft,
     setImageCompareRight,
-    setLabelCompareLeft,
-    setLabelCompareRight,
     setLeftPreviewImage,
     setRightPreviewImage,
     setTextCompareLeft,
@@ -92,7 +89,6 @@ const NewPostForm: FC<NewPostProps> = ({
     const router = useRouter()
 
     const [feedOptions] = useFeedOptions()
-    const currentFeed = useAppSelector(state => state.utilsSlice.feedState)
     const { theme } = useTheme()
 
     // For triggering posts refetch on form submission
@@ -142,24 +138,6 @@ const NewPostForm: FC<NewPostProps> = ({
     const [targetEvent, setTargetEvent] =
         useState<ChangeEvent<HTMLInputElement>>()
 
-    // Refs and state for Compare post
-    const isImageSizeLarge = useAppSelector(
-        state => state.utilsSlice.fileSizeTooLarge
-    )
-    const {
-        compareFormExpanded,
-        comparePostType,
-        hasPreviewedCompare,
-        imageCompareLeft,
-        imageCompareRight,
-        labelCompareLeft,
-        labelCompareRight,
-        leftPreviewImage,
-        rightPreviewImage,
-        textCompareLeft,
-        textCompareRight,
-    } = useAppSelector(state => state.utilsSlice.compareForm)
-
     const filePickerCompareLeftRef = useRef<HTMLInputElement>(null)
     const filePickerCompareRightRef = useRef<HTMLInputElement>(null)
     const compareFilePickers = useRef<compareFilePickerRefs>({
@@ -168,6 +146,33 @@ const NewPostForm: FC<NewPostProps> = ({
     })
     const [previewImage, setPreviewImage] = useState<string>('')
     const [isTitleURL, setIsTitleURL] = useState<boolean>(false)
+    const {
+        feedState: currentFeed,
+        fileSizeTooLarge: isImageSizeLarge,
+        compareForm: {
+            compareFormExpanded,
+            comparePostType,
+            hasPreviewedCompare,
+            imageCompareLeft,
+            imageCompareRight,
+            labelCompareLeft,
+            labelCompareRight,
+            leftPreviewImage,
+            rightPreviewImage,
+            textCompareLeft,
+            textCompareRight,
+        },
+    } = useAppSelector(state => state.utilsSlice)
+
+    useEffect(() => {
+        if (router.query.feed && router.query.feed !== 'All') {
+            setSelectedFeed(currentFeed)
+        }
+        return () => {
+            useAppDispatch(resetCompareForm())
+            setSelectedFeed('')
+        }
+    }, [])
 
     // I'm pretty sure this is introducing a memory leak
     // useEffect cannot include async logic
@@ -176,34 +181,6 @@ const NewPostForm: FC<NewPostProps> = ({
             sendPost().finally()
         }
     }, [previewImage])
-
-    // Reset form global state on umount
-    useEffect(() => {
-        return () => {
-            useAppDispatch(setCompareFormExpanded(false))
-            useAppDispatch(setFileSizeTooLarge(false))
-            useAppDispatch(setComparePostType('textOnly'))
-            useAppDispatch(setImageCompareLeft(null))
-            useAppDispatch(setImageCompareRight(null))
-            useAppDispatch(setTextCompareLeft(''))
-            useAppDispatch(setTextCompareRight(''))
-            useAppDispatch(setLabelCompareLeft(''))
-            useAppDispatch(setLabelCompareRight(''))
-            useAppDispatch(setHasPreviewedCompare(false))
-            setSelectedFeed('')
-        }
-    }, [
-        setCompareFormExpanded,
-        setComparePostType,
-        setImageCompareLeft,
-        setImageCompareRight,
-        setLabelCompareLeft,
-        setLabelCompareRight,
-        setTextCompareLeft,
-        setTextCompareRight,
-        setHasPreviewedCompare,
-        setSelectedFeed,
-    ])
 
     // Update form selection
     const selectFeedHandler = (selectedOption: staticFeedOptions | null) => {
@@ -763,7 +740,11 @@ const NewPostForm: FC<NewPostProps> = ({
                 <Select
                     options={feedOptions}
                     onChange={selectFeedHandler}
-                    defaultValue={null}
+                    defaultValue={
+                        router.query.feed && router.query.feed !== 'All'
+                            ? { value: currentFeed, label: currentFeed }
+                            : null
+                    }
                     placeholder="Select Feed..."
                     isClearable={true}
                     maxMenuHeight={135}
@@ -949,3 +930,6 @@ NewPostForm.defaultProps = {
 }
 
 export default NewPostForm
+function resetCompareForm(): any {
+    throw new Error('Function not implemented.')
+}

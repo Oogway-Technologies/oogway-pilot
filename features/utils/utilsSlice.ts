@@ -16,6 +16,7 @@ const initialState: {
         leftPreviewImage: string
         rightPreviewImage: string
     }
+    notificationsState: boolean
 } = {
     fileSizeTooLarge: false,
     feedState: 'All',
@@ -32,12 +33,31 @@ const initialState: {
         leftPreviewImage: '',
         rightPreviewImage: '',
     },
+    notificationsState: false,
 }
 
 export const utilsSlice = createSlice({
     name: 'utils',
     initialState,
     reducers: {
+        resetCompareForm: state => {
+            state.compareForm = {
+                comparePostType: 'textOnly',
+                compareFormExpanded: false,
+                textCompareLeft: '',
+                textCompareRight: '',
+                labelCompareLeft: '',
+                labelCompareRight: '',
+                imageCompareLeft: null,
+                imageCompareRight: null,
+                hasPreviewedCompare: false,
+                leftPreviewImage: '',
+                rightPreviewImage: '',
+            }
+        },
+        setNotificationsState: (state, { payload }: PayloadAction<boolean>) => {
+            state.notificationsState = payload
+        },
         setFileSizeTooLarge: (state, { payload }: PayloadAction<boolean>) => {
             state.fileSizeTooLarge = payload
         },
@@ -107,6 +127,7 @@ export const {
     setTextCompareRight,
     setTextCompareLeft,
     setCompareFormExpanded,
+    setNotificationsState,
 } = utilsSlice.actions
 
 export default utilsSlice.reducer
