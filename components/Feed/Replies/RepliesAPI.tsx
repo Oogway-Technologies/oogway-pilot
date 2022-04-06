@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
 
-import { db } from '../../../firebase'
+import { db } from '../../../services/firebase'
 import { repliesApiClass } from '../../../styles/feed'
 import { replyConverter } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'

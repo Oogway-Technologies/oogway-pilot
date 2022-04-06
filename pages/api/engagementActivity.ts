@@ -17,7 +17,7 @@ import {
 } from 'firebase/firestore'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { db } from '../../firebase'
+import { db } from '../../services/firebase'
 import { FirebaseEngagement } from '../../utils/types/firebase'
 import { APITimeStamp } from '../../utils/types/global'
 

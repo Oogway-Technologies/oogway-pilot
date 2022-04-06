@@ -43,10 +43,10 @@ import {
     setTextCompareLeft,
     setTextCompareRight,
 } from '../../../features/utils/utilsSlice'
-// Database
-import { db, storage } from '../../../firebase'
 import { useFeedOptions } from '../../../hooks/useFeedOptions'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+// Database
+import { db, storage } from '../../../services/firebase'
 import { postFormClass } from '../../../styles/feed'
 import {
     longLimit,
