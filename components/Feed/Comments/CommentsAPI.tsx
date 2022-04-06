@@ -5,10 +5,10 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
 
-import { db } from '../../../firebase'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { useAppSelector } from '../../../hooks/useRedux'
+import { db } from '../../../services/firebase'
 import { commentFormClass, commentsApiClass } from '../../../styles/feed'
 import {
     commmentConverter,

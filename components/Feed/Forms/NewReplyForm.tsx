@@ -11,9 +11,9 @@ import { useRouter } from 'next/router'
 import React, { MouseEvent, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { db } from '../../../firebase'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
+import { db } from '../../../services/firebase'
 import { replyFormClass } from '../../../styles/feed'
 import { longLimit, warningTime } from '../../../utils/constants/global'
 import {

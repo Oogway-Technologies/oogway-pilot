@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from 'react-query'
 
-import API from '../axios'
+import API from '../services/axios'
 import { FirebasePost } from '../utils/types/firebase'
 import { jsonTimeObj } from '../utils/types/global'
 

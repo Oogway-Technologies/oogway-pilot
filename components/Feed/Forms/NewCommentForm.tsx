@@ -25,11 +25,11 @@ import React, {
 } from 'react'
 import { useForm } from 'react-hook-form'
 
-// Recoil states
-// Database
-import { db, storage } from '../../../firebase'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
+// Recoil states
+// Database
+import { db, storage } from '../../../services/firebase'
 // JSX and Styles
 import { commentFormClass } from '../../../styles/feed'
 import { longLimit, warningTime } from '../../../utils/constants/global'
