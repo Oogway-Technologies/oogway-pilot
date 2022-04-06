@@ -1,6 +1,6 @@
 import { doc, getDoc, onSnapshot } from 'firebase/firestore'
 
-import { db } from '../firebase'
+import { db } from '../services/firebase'
 import { anonymousUserName } from '../utils/constants/global'
 import { FirebaseProfile } from '../utils/types/firebase'
 import { staticPostData } from '../utils/types/params'

@@ -5,10 +5,12 @@
  * https://react-query.tanstack.com/guides/important-defaultshttps://react-query.tanstack.com/guides/important-defaults
  */
 
-export const queryClientConfig = {
+const queryClientConfig = {
     defaultOptions: {
         queries: {
             staleTime: 30 * 1000, // Set to 30 seconds by default
         },
     },
 }
+
+export default queryClientConfig
