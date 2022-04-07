@@ -11,18 +11,15 @@ import { useRouter } from 'next/router'
 import React, { MouseEvent, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { db } from '../../../firebase'
-import { useAppSelector } from '../../../hooks/useRedux'
-import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
-import { replyFormClass } from '../../../styles/feed'
-import { longLimit, warningTime } from '../../../utils/constants/global'
-import {
-    FirebaseEngagement,
-    FirebaseReply,
-} from '../../../utils/types/firebase'
-import Button from '../../Utils/Button'
-import { Avatar } from '../../Utils/common/Avatar'
-import FlashErrorMessage from '../../Utils/FlashErrorMessage'
+import { db } from '../../firebase'
+import { useAppSelector } from '../../hooks/useRedux'
+import { useCreateEngagemmentActivity } from '../../queries/engagementActivity'
+import { replyFormClass } from '../../styles/feed'
+import { longLimit, warningTime } from '../../utils/constants/global'
+import { FirebaseEngagement, FirebaseReply } from '../../utils/types/firebase'
+import Button from '../Utils/Button'
+import { Avatar } from '../Utils/common/Avatar'
+import FlashErrorMessage from '../Utils/FlashErrorMessage'
 
 type NewReplyFormProps = {
     commentId: string

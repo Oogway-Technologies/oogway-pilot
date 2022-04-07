@@ -9,13 +9,13 @@ import {
     setImageCompareRight,
     setLabelCompareLeft,
     setLabelCompareRight,
-} from '../../../../features/utils/utilsSlice'
-import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux'
-import { compareFormClass, postFormClass } from '../../../../styles/feed'
-import { shortLimit, warningTime } from '../../../../utils/constants/global'
-import preventDefaultOnEnter from '../../../../utils/helpers/preventDefaultOnEnter'
-import { compareFilePickerRefs } from '../../../../utils/types/global'
-import FlashErrorMessage from '../../../Utils/FlashErrorMessage'
+} from '../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { compareFormClass, postFormClass } from '../../../styles/feed'
+import { shortLimit, warningTime } from '../../../utils/constants/global'
+import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
+import { compareFilePickerRefs } from '../../../utils/types/global'
+import FlashErrorMessage from '../../Utils/FlashErrorMessage'
 import _CompareImagePreview from './_CompareImagePreview'
 import _CompareInputForm from './_CompareInputForm'
 

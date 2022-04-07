@@ -1,11 +1,11 @@
 import { UilTimesCircle } from '@iconscout/react-unicons'
 import React, { FC } from 'react'
 
-import { useFetchUrlPreview } from '../../../../hooks/useFetchUrlPreview'
-import useMediaQuery from '../../../../hooks/useMediaQuery'
-import { compareFormClass, postCardClass } from '../../../../styles/feed'
-import { parseYoutubeVideoId } from '../../../../utils/helpers/common'
-import YoutubeEmbed from '../../../Utils/YoutubeEmbed'
+import { useFetchUrlPreview } from '../../../hooks/useFetchUrlPreview'
+import useMediaQuery from '../../../hooks/useMediaQuery'
+import { compareFormClass, postCardClass } from '../../../styles/feed'
+import { parseYoutubeVideoId } from '../../../utils/helpers/common'
+import YoutubeEmbed from '../../Utils/YoutubeEmbed'
 
 interface ComparePreviewProps {
     text: string

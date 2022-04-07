@@ -7,10 +7,10 @@ import { setFeedState } from '../../features/utils/utilsSlice'
 import useMediaQuery from '../../hooks/useMediaQuery'
 import { useAppDispatch } from '../../hooks/useRedux'
 import { feedApiClass, feedToolbarClass } from '../../styles/feed'
+import NewPostForm from '../Forms/NewPostForm'
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'
 import FeedToolbar from './FeedToolbar'
-import NewPostForm from './Forms/NewPostForm'
 import PostsAPI from './Post/PostsAPI'
 
 const FeedAPI = () => {

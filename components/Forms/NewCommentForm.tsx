@@ -27,22 +27,19 @@ import { useForm } from 'react-hook-form'
 
 // Recoil states
 // Database
-import { db, storage } from '../../../firebase'
-import { useAppSelector } from '../../../hooks/useRedux'
-import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
+import { db, storage } from '../../firebase'
+import { useAppSelector } from '../../hooks/useRedux'
+import { useCreateEngagemmentActivity } from '../../queries/engagementActivity'
 // JSX and Styles
-import { commentFormClass } from '../../../styles/feed'
-import { longLimit, warningTime } from '../../../utils/constants/global'
-import { checkFileSize } from '../../../utils/helpers/common'
+import { commentFormClass } from '../../styles/feed'
+import { longLimit, warningTime } from '../../utils/constants/global'
+import { checkFileSize } from '../../utils/helpers/common'
 // Other and utilities
-import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import {
-    FirebaseComment,
-    FirebaseEngagement,
-} from '../../../utils/types/firebase'
-import { staticPostData } from '../../../utils/types/params'
-import Button from '../../Utils/Button'
-import FlashErrorMessage from '../../Utils/FlashErrorMessage'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
+import { FirebaseComment, FirebaseEngagement } from '../../utils/types/firebase'
+import { staticPostData } from '../../utils/types/params'
+import Button from '../Utils/Button'
+import FlashErrorMessage from '../Utils/FlashErrorMessage'
 
 type NewCommentFormProps = {
     closeModal: () => void

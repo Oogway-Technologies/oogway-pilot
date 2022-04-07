@@ -8,10 +8,10 @@ import { setFeedState } from '../../features/utils/utilsSlice'
 import useMediaQuery from '../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import { feedApiClass, feedToolbarClass } from '../../styles/feed'
+import NewPostForm from '../Forms/NewPostForm'
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'
 import { FeedSelectorMobile } from './FeedSelector'
-import NewPostForm from './Forms/NewPostForm'
 
 const FeedToolbar = () => {
     const [isOpen, setIsOpen] = useState(false)

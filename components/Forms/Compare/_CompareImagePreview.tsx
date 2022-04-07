@@ -1,8 +1,8 @@
 import { UilTimesCircle } from '@iconscout/react-unicons'
 import React, { FC } from 'react'
 
-import { useFetchUrlPreview } from '../../../../hooks/useFetchUrlPreview'
-import { compareFormClass, postCardClass } from '../../../../styles/feed'
+import { useFetchUrlPreview } from '../../../hooks/useFetchUrlPreview'
+import { compareFormClass, postCardClass } from '../../../styles/feed'
 
 type CompareImagePreviewProps = {
     image: string

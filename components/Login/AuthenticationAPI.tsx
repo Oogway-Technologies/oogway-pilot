@@ -1,9 +1,9 @@
 import { FC, useState } from 'react'
 
 // JSX
-import LoginForm from './LoginForm'
-import PWForm from './PWForm'
-import SignUpForm from './SignupForm'
+import LoginForm from '../Forms/LoginForm'
+import PWForm from '../Forms/PWForm'
+import SignUpForm from '../Forms/SignupForm'
 
 type AuthenticationAPIProps = {
     closeModal: () => void

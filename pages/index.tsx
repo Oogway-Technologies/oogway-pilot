@@ -7,7 +7,7 @@ import { dehydrate, QueryClient } from 'react-query'
 // Components and styling
 import FeedAPI from '../components/Feed/FeedAPI'
 import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
-import UserProfileForm from '../components/Login/UserProfileForm'
+import UserProfileForm from '../components/Forms/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
 import { getPosts } from '../queries/posts'

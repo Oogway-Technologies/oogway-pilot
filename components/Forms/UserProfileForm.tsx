@@ -1,6 +1,12 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { getDownloadURL, ref, uploadString } from '@firebase/storage'
-import { UilImagePlus, UilTrashAlt } from '@iconscout/react-unicons'
+import {
+    UilCancel,
+    UilImagePlus,
+    UilSave,
+    UilSpinner,
+    UilTrashAlt,
+} from '@iconscout/react-unicons'
 // Firebase
 import { deleteField, doc, updateDoc } from 'firebase/firestore'
 import Head from 'next/head'
@@ -19,7 +25,7 @@ import {
     loginImages,
     loginInputs,
 } from '../../styles/login'
-import { warningTime } from '../../utils/constants/global'
+import { defaultProfileImage, warningTime } from '../../utils/constants/global'
 import { checkFileSize } from '../../utils/helpers/common'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
 import Button from '../Utils/Button'
@@ -48,6 +54,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
     const [last, setLast] = useState(userProfile.lastName || '')
     const [location, setLocation] = useState(userProfile.location || '')
     const [bio, setBio] = useState(userProfile.bio || '')
+    const [loading, setLoading] = useState(false)
 
     // Picture state
     const profilePicRef = useRef<HTMLInputElement>(null)
@@ -68,6 +75,8 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
 
     // Database Hook functions
     const uploadProfileAndContinue = async () => {
+        // set loading to true
+        setLoading(true)
         // Using Firebase v9+ which is nice and modular.
         // Update original profile with new information
         const updatedUserProfile = {
@@ -79,16 +88,17 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             resetProfile: false,
             dm: dm,
         }
+
+        // Update profile in DB
+        await updateDoc(
+            doc(db, 'profiles', userProfile.uid),
+            updatedUserProfile
+        )
         useAppDispatch(
             setUser({
                 ...userProfile, // First old data
                 ...updatedUserProfile, // Then add and update with new data
             })
-        )
-        // Update profile in DB
-        await updateDoc(
-            doc(db, 'profiles', userProfile.uid),
-            updatedUserProfile
         )
 
         // Upload the profile image in Firebase storage.
@@ -131,7 +141,8 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                 targetEvent.target.value = ''
             }
         }
-
+        // set loading to false
+        setLoading(false)
         // Close Modal
         closeModal()
     }
@@ -214,9 +225,14 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
 
             // Remove from profile doc
             await updateDoc(doc(db, 'profiles', userProfile.uid), {
-                profilePic: '',
+                profilePic: defaultProfileImage,
             })
-            useAppDispatch(setUser({ ...userProfile, profilePic: '' }))
+            useAppDispatch(
+                setUser({
+                    ...userProfile,
+                    profilePic: defaultProfileImage,
+                })
+            )
         } catch (e) {
             console.log(e)
         }
@@ -226,21 +242,12 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
         // Delete user image if there is not a staged image for upload
         // and profile pic exists
         if (userProfile.profilePic) {
-            // Update user profile atom
-            useAppDispatch(
-                setUser({
-                    ...userProfile,
-                    profilePic: '',
-                })
-            )
-
             // Update auth0 user object
             if (!isLoading && user) {
                 // We cannot use empty value in the picture, so we have to set a default image when we want to delete the image.
                 const userMetadata = {
                     // TODO: Change image link to our own personal drive link from where the image can never be removed.
-                    picture:
-                        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+                    picture: defaultProfileImage,
                 }
                 await API.patch('auth/updateUser', userMetadata)
                 // Delete from back-end
@@ -313,7 +320,8 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                                 loginButtons.removeImage +
                                 `${
                                     imageToUpload ||
-                                    userProfile.profilePic.length > 0
+                                    userProfile.profilePic !==
+                                        defaultProfileImage
                                         ? ' text-black dark:text-white'
                                         : ' text-neutral-100 dark:text-neutralDark-300'
                                 }`
@@ -321,7 +329,8 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                             disabled={
                                 !(
                                     imageToUpload ||
-                                    userProfile.profilePic.length > 0
+                                    userProfile.profilePic !==
+                                        defaultProfileImage
                                 )
                             }
                             onClick={handleRemoveImage}
@@ -344,7 +353,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
             {/* User Profile Form */}
             <form className={loginDivs.signIn}>
                 <div className={loginInputs.inputHeader}>Name</div>
-                <div className={loginDivs.sideBySide}>
+                <div className={'grid grid-cols-2 gap-4'}>
                     <div className="flex-col">
                         <div className={loginInputs.inputBorder}>
                             <input
@@ -458,7 +467,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                     text={cancelButtonText}
                     keepText={true}
                     forceNoText={false}
-                    icon={null}
+                    icon={<UilCancel />}
                     type="button"
                 />
                 <Button
@@ -467,7 +476,13 @@ const UserProfileForm: FC<UserProfileFormProps> = ({
                     text="Save"
                     keepText={true}
                     forceNoText={false}
-                    icon={null}
+                    icon={
+                        loading ? (
+                            <UilSpinner className={'animate-spin'} />
+                        ) : (
+                            <UilSave />
+                        )
+                    }
                     type="submit"
                 />
             </div>

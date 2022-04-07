@@ -30,6 +30,7 @@ import { useForm } from 'react-hook-form'
 import { useQueryClient } from 'react-query'
 import Select from 'react-select'
 
+// Database
 import {
     resetCompareForm,
     setCompareFormExpanded,
@@ -42,13 +43,10 @@ import {
     setRightPreviewImage,
     setTextCompareLeft,
     setTextCompareRight,
-} from '../../../features/utils/utilsSlice'
-// Database
-import { db, storage } from '../../../firebase'
-import { useFeedOptions } from '../../../hooks/useFeedOptions'
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { createAdviceBotComment } from '../../../queries/adviceBot'
-import { postFormClass } from '../../../styles/feed'
+} from '../../features/utils/utilsSlice'
+import { db, storage } from '../../firebase'
+import { useFeedOptions } from '../../hooks/useFeedOptions'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import {
     adviceBotId,
     demoAccountIdDev,
@@ -56,25 +54,26 @@ import {
     longLimit,
     shortLimit,
     warningTime,
-} from '../../../utils/constants/global'
+} from '../../utils/constants/global'
 import {
     amazonURLAppendQueryString,
     checkFileSize,
     fetcher,
     isValidURL,
-} from '../../../utils/helpers/common'
+} from '../../utils/helpers/common'
 // Other and utilities
-import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import { FirebasePost } from '../../../utils/types/firebase'
-import { compareFilePickerRefs, MediaObject } from '../../../utils/types/global'
-import { staticFeedOptions } from '../../../utils/types/params'
+import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
+import { FirebasePost } from '../../utils/types/firebase'
+import { compareFilePickerRefs, MediaObject } from '../../utils/types/global'
+import { staticFeedOptions } from '../../utils/types/params'
+import ToggleIncognito from '../Feed/Post/ToggleIncognito'
 // JSX components
-import Button from '../../Utils/Button'
-import { Collapse } from '../../Utils/common/Collapse'
-import FlashErrorMessage from '../../Utils/FlashErrorMessage'
-import { Tooltip } from '../../Utils/Tooltip'
-import ToggleIncognito from '../Post/ToggleIncognito'
+import Button from '../Utils/Button'
+import { Collapse } from '../Utils/common/Collapse'
+import FlashErrorMessage from '../Utils/FlashErrorMessage'
+import { Tooltip } from '../Utils/Tooltip'
 import _CompareChooseTypeForm from './Compare/_CompareChooseTypeForm'
+import { postFormClass } from '../../styles/feed'
 
 type NewPostProps = {
     closeModal: () => void
