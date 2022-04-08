@@ -1,13 +1,20 @@
 import { Dialog, Transition } from '@headlessui/react'
+import { UilTimesCircle } from '@iconscout/react-unicons'
 import React, { Fragment, ReactNode } from 'react'
 
 type ModalProps = {
     children: ReactNode
     show: boolean
     onClose: (value: boolean) => void
+    closeIcon?: boolean
 }
 
-const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
+const Modal: React.FC<ModalProps> = ({
+    children: content,
+    show,
+    onClose,
+    closeIcon,
+}) => {
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog
@@ -50,6 +57,12 @@ const Modal: React.FC<ModalProps> = ({ children: content, show, onClose }) => {
                                 ' bg-neutral-25 dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all z-10 sm:w-inherit scrollbar-hide'
                             }
                         >
+                            {closeIcon && (
+                                <UilTimesCircle
+                                    className={'mb-3 ml-auto cursor-pointer'}
+                                    onClick={() => onClose(false)}
+                                />
+                            )}
                             {content}
                         </div>
                     </Transition.Child>
