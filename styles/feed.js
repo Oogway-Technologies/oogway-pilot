@@ -122,7 +122,7 @@ export const postCardClass = {
     engagementBar:
         'flex px-md mt-[36px] pb-md ml-xl w-3/5 space-x-md text-xs sm:text-sm',
     engagementButton:
-        'items-center space-x-2  ' +
+        'items-center space-x-2 text-xs sm:text-sm ' +
         'hover:text-neutral-800 dark:hover:text-neutralDark-50  ' +
         'active:text-primary whitespace-nowrap',
 }
@@ -329,9 +329,16 @@ export const commentClass = {
 }
 
 export const commentEngagementBarClass = {
-    engagementBar: 'flex px-md mt-md pb-md ml-xl w-3/5 space-x-md text-sm',
+    engagementBar:
+        'flex items-center px-md mt-md pb-md ml-xl flex-wrap justify-between',
+    engagementBarLeft: 'space-x-md text-sm',
+    askDecisionCoashButton:
+        'rounded-[20px] text-xs sm:text-sm p-sm md:px-md space-x-2 ' +
+        'bg-primary dark:bg-primaryDark hover:bg-primaryActive ' +
+        'active:bg-primaryActive dark:hover:bg-primaryActive ' +
+        'dark:active:bg-primaryActive text-white font-bold items-center',
     engagementButton:
-        'inline-flex items-center space-x-2 ' +
+        'inline-flex items-center space-x-2 text-xs sm:text-sm ' +
         'hover:text-neutral-800 dark:hover:text-neutralDark-50 ' +
         'active:text-primary whitespace-nowrap',
 }

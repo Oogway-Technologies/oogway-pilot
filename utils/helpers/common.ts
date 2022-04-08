@@ -1,9 +1,12 @@
 /* eslint-disable no-useless-escape */
+
+import { DocumentSnapshot } from 'firebase/firestore'
+
 // count number of like in snapshot
 export const findLikes = (snapshot: any, setNumLikes: (n: number) => void) => {
-    if (snapshot.data()) {
+    if (snapshot.exists()) {
         // Get the likes map
-        const likesMap = snapshot && snapshot?.data()?.likes
+        const likesMap = snapshot?.data()?.likes
         // Count the entries that are True
         let ctr = 0
         // Count the entries that are True
@@ -13,6 +16,34 @@ export const findLikes = (snapshot: any, setNumLikes: (n: number) => void) => {
             }
         })
         setNumLikes(ctr)
+    }
+}
+
+// counter number of dislikes in snapshot
+// NOTE: only works for Oogway AI bot comments, otherwise returns 0
+export const findDislikes = (
+    snapshot: DocumentSnapshot,
+    setNumDislikes: (n: number) => void
+) => {
+    if (snapshot.exists()) {
+        // If the comment is from Oogway AI and
+        // it contains a dislike map (added to feature on 2022/04/07),
+        // then count number of dislikes, otherwise default to 0
+        if (snapshot.data().dislikes !== null) {
+            // Get the dislikes map
+            const dislikesMap = snapshot.data().dislikes
+
+            // Count the entries that are True
+            let ctr = 0
+            Object.values(dislikesMap).forEach(item => {
+                if (item) {
+                    ctr += 1
+                }
+            })
+            setNumDislikes(ctr)
+        } else {
+            setNumDislikes(0)
+        }
     }
 }
 
@@ -65,7 +96,7 @@ export const winnerCall = (optionsArray: number[]) => {
 export const amazonURLAppendQueryString = (url: string) => {
     if (url && url.length > 0) {
         const urlArray = url.split(' ')
-        urlArray.map((item, index) => {
+        urlArray.forEach((item, index) => {
             const res = item.match(
                 /https?:\/\/(?=(?:....)?amazon|smile)(www|smile)\S+com(((?:\/(?:dp|gp)\/([A-Z0-9]+))?\S*[?&]?(?:tag=))?\S*?)(?:#)?(\w*?-\w{2})?(\S*)(#?\S*)+/g
             )
@@ -98,4 +129,17 @@ export const checkOrientation = (src: string) => {
         // even
         return ''
     }
+}
+
+interface TruncateTextProps {
+    input: string
+    maxLength: number
+    bufferLength: number
+}
+export const truncateText = ({
+    input,
+    maxLength,
+    bufferLength = 0,
+}: TruncateTextProps) => {
+    return input.substring(0, maxLength - bufferLength)
 }

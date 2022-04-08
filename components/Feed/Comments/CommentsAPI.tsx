@@ -10,6 +10,7 @@ import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { db } from '../../../services/firebase'
 import { commentFormClass, commentsApiClass } from '../../../styles/feed'
+import { adviceBotId, demoAccountId } from '../../../utils/constants/global'
 import {
     commmentConverter,
     FirebaseComment,
@@ -66,6 +67,12 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
         // If not, show the props comments
         if (commentsSnapshot) {
             return commentsSnapshot?.docs.map(comment => {
+                // Only show oogway AI bot comments to Demo account
+                if (
+                    comment.data().authorUid === adviceBotId &&
+                    userProfile.uid !== demoAccountId
+                )
+                    return
                 return (
                     <Comment
                         key={comment.id}
@@ -83,16 +90,25 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
         } else {
             // Visualize the server-side rendered comments
             return JSON.parse(comments.toString()).map(
-                (comment: FirebaseComment) => (
-                    <Comment
-                        key={comment.id}
-                        commentOwner={comment.authorUid}
-                        postId={router.query.id as string}
-                        commentId={comment?.id || ''}
-                        comment={comment}
-                        parentPostData={parentPostData}
-                    />
-                )
+                (comment: FirebaseComment) => {
+                    // Only show oogway AI bot comments to Demo account
+                    if (
+                        comment.authorUid === adviceBotId &&
+                        userProfile.uid !== demoAccountId
+                    )
+                        return
+
+                    return (
+                        <Comment
+                            key={comment.id}
+                            commentOwner={comment.authorUid}
+                            postId={router.query.id as string}
+                            commentId={comment?.id || ''}
+                            comment={comment}
+                            parentPostData={parentPostData}
+                        />
+                    )
+                }
             )
         }
     }

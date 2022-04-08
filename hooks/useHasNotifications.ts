@@ -17,6 +17,7 @@ export const useHasNotifications = (userId: string) => {
             where('isNew', '==', true),
         ]
         const q = query(collection(db, 'engagement-activity'), ...constraints)
+
         const unsubscribe = onSnapshot(
             q,
             querySnapshot => {

@@ -45,6 +45,8 @@ export interface FirebaseComment {
     author: string
     authorUid: string
     likes: userMap
+    dislikes?: userMap // only for advice bot comment
+    filterStatus?: '0' | '1' | '2' // only for advice bot comment
     postImage?: string | null
     timestamp: FieldValue
 }

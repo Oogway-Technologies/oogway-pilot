@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+    getDislikesForCommentEngagementBar,
     getLikes,
     getLikesForCommentEngagementBar,
     getLikesForReplyEngagementBar,
@@ -38,6 +39,23 @@ export const useCommentNumberLikes = (postId: string, commentId: string) => {
     }, [postId, commentId])
 
     return [numLikes, setNumLikes] as const
+}
+
+export const useCommentNumberDislikes = (postId: string, commentId: string) => {
+    // Track number of dislikes
+    const [numDislikes, setNumDislikes] = useState(0)
+
+    // Use useEffect to bind on document loading the
+    // function that will set the number of dislikes on
+    // each change of the DB (triggered by onSnapshot)
+    useEffect(() => {
+        getDislikesForCommentEngagementBar(commentId, setNumDislikes)
+        return () => {
+            setNumDislikes(0)
+        }
+    }, [postId, commentId])
+
+    return [numDislikes, setNumDislikes] as const
 }
 
 export const useReplyNumberLikes = (
