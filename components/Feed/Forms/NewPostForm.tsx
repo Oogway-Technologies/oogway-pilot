@@ -45,10 +45,13 @@ import {
 } from '../../../features/utils/utilsSlice'
 import { useFeedOptions } from '../../../hooks/useFeedOptions'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { createAdviceBotComment } from '../../../queries/adviceBot'
 // Database
 import { db, storage } from '../../../services/firebase'
 import { postFormClass } from '../../../styles/feed'
 import {
+    adviceBotId,
+    demoAccountId,
     longLimit,
     shortLimit,
     warningTime,
@@ -94,6 +97,9 @@ const NewPostForm: FC<NewPostProps> = ({
 
     // For triggering posts refetch on form submission
     const queryClient = useQueryClient()
+
+    // For calling advice bot API
+    // const adviceBotMutation = useCreateAdviceBotComment()
 
     // Form management
     const {
@@ -338,6 +344,18 @@ const NewPostForm: FC<NewPostProps> = ({
 
         // Add the post to the firestore DB and get its ref
         const docRef = await addDoc(collection(db, 'posts'), postData)
+
+        // Make advice bot api call
+        if (!isComparePost() && userProfile.uid === demoAccountId) {
+            const payload = {
+                post: {
+                    ...postData,
+                    id: docRef.id,
+                },
+                id: adviceBotId,
+            }
+            await createAdviceBotComment(payload)
+        }
 
         // Add media
         if (imageToPost) {
@@ -836,7 +854,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         <button
                             onClick={handleCompareClick}
                             className={postFormClass.imageButton}
-                            aria-compareFormExpanded={compareFormExpanded}
+                            aria-expanded={compareFormExpanded}
                             aria-label="poll"
                         >
                             <UilBalanceScale />
