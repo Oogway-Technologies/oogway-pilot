@@ -1,4 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
+import { UilInfoCircle } from '@iconscout/react-unicons'
 import React, { FC, useState } from 'react'
 import Linkify from 'react-linkify'
 
@@ -11,6 +12,7 @@ import { staticPostData } from '../../../utils/types/params'
 import { Collapse } from '../../Utils/common/Collapse'
 import Modal from '../../Utils/Modal'
 import { PreviewDecider } from '../../Utils/PreviewDecider'
+import { Tooltip } from '../../Utils/Tooltip'
 import NewReplyForm from '../Forms/NewReplyForm'
 import RepliesAPI from '../Replies/RepliesAPI'
 import CommentEngagementBar from './CommentEngagementBar'
@@ -42,13 +44,20 @@ const Comment: FC<CommentProps> = ({
 
     // Modal helper functions
     const [isOpen, setIsOpen] = useState(false)
+    const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false)
 
     const openModal = () => {
         setIsOpen(true)
     }
+    const openMoreInfo = () => {
+        setIsMoreInfoOpen(true)
+    }
 
     const closeModal = () => {
         setIsOpen(false)
+    }
+    const closeMoreInfo = () => {
+        setIsMoreInfoOpen(false)
     }
 
     // Reply button handler
@@ -109,6 +118,23 @@ const Comment: FC<CommentProps> = ({
                             {comment.message}
                         </p>
                     )}
+                    {/* Display information tooltip for senstive AI bot comments */}
+                    {comment.filterStatus && comment.filterStatus === '2' && (
+                        <div
+                            className={
+                                commentClass.bodyDescription + ' mt-sm mr-auto'
+                            }
+                        >
+                            <Tooltip
+                                toolTipText={'Why am I seeing this message?'}
+                            >
+                                <UilInfoCircle
+                                    onClick={openMoreInfo}
+                                    className="fill-success"
+                                />
+                            </Tooltip>
+                        </div>
+                    )}
                 </div>
 
                 {/* Media */}
@@ -131,6 +157,7 @@ const Comment: FC<CommentProps> = ({
                     authorUid={commentOwner}
                     handleReply={handleReply}
                     expanded={expandedReplyForm}
+                    parentPostData={parentPostData}
                 />
 
                 {/* Reply Form */}
@@ -161,6 +188,17 @@ const Comment: FC<CommentProps> = ({
                     isMobile={isMobile}
                     commentOwner={commentOwner}
                 />
+            </Modal>
+            <Modal show={isMoreInfoOpen} onClose={closeMoreInfo}>
+                <div className={'flex-col w-60 max-w-max sm:w-96'}>
+                    <div className={commentClass.bodyDescription}>
+                        You are seeing this message because Oogway AI Bot either
+                        failed to generate useful advice for you or the content
+                        was deemed potentially sensitive.{'\n\n'}Oogway Bot is
+                        committed to continual improvement and apologizes for
+                        the inconvenience.
+                    </div>
+                </div>
             </Modal>
         </>
     )
