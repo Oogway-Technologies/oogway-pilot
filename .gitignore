@@ -39,7 +39,7 @@ yarn-error.log*
 *.tsbuildinfo
 
 # packages
-package-lock.json
+# package-lock.json
 yarn.lock
 
 # Firebase functions
