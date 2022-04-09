@@ -65,7 +65,6 @@ async function handlePost(req: ExtendedNextApiRequest, res: NextApiResponse) {
             ...completionParams.hyperparams,
         }
     )
-    console.log('Completion response: ', completionResponse)
 
     // Retrieve response
     const completionChoices = completionResponse.data.choices
@@ -77,15 +76,12 @@ async function handlePost(req: ExtendedNextApiRequest, res: NextApiResponse) {
     }
     const adviceBotMessage = completionChoices[0].text as string
 
-    console.log('Advice bot messaage: ', adviceBotMessage)
-
     // Pass coomment through content filter
     const filterPrompt = filterParams.template(adviceBotMessage)
     const filterResponse = await OpenAI.createCompletion(filterParams.engine, {
         prompt: filterPrompt,
         ...filterParams.hyperparams,
     })
-    console.log('Filter response: ', filterResponse)
 
     // Retrieve filter status code and log probs
     const filterChoices = filterResponse.data.choices
@@ -97,9 +93,6 @@ async function handlePost(req: ExtendedNextApiRequest, res: NextApiResponse) {
     const filterStatus = filterChoices[0].text as '0' | '1' | '2'
     const filterLogprobs = filterChoices[0].logprobs
         ?.top_logprobs as Array<object>
-
-    console.log('Filter status: ', filterStatus)
-    console.log('Filter logprobs: ', filterLogprobs)
 
     // Log activity to 'advice-bot-calls' collection
     const adviceBotCall: OpenAPICall = {
