@@ -10,6 +10,7 @@
         "lint:fix": "eslint --fix --ignore-path .eslintignore . --ext ts --ext tsx --ext js --ext jsx",
         "format": "prettier --write .",
         "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
+        "preinstall": "npx npm-force-resolutions",
         "prepare": "husky install",
         "fix-format": "npm run lint:fix && npm run format"
     },
@@ -35,6 +36,7 @@
         "moment": "^2.29.1",
         "next": "^12.1.0",
         "next-themes": "^0.0.15",
+        "npm-force-resolutions": "^0.0.10",
         "openai": "^2.0.5",
         "react": "^17.0.2",
         "react-content-loader": "^6.1.0",
@@ -79,5 +81,8 @@
         "tailwindcss-aria-attributes": "^1.3.0",
         "tailwindcss-font-inter": "^3.0.1",
         "typescript": "^4.5.4"
+    },
+    "resolutions": {
+        "@types/react": "17.0.30"
     }
 }
