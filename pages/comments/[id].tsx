@@ -5,7 +5,7 @@ import { FC } from 'react'
 
 import PostCard from '../../components/Feed/Post/Post'
 import Button from '../../components/Utils/Button'
-import { db } from '../../services/firebase'
+import { db } from '../../firebase'
 import { commentsPageClass } from '../../styles/feed'
 import { FirebaseComment, FirebasePost } from '../../utils/types/firebase'
 

@@ -2,7 +2,7 @@ import { UilSignOutAlt } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { auth } from '../../services/firebase'
+import { auth } from '../../firebase'
 import { logoutButtonClass } from '../../styles/header'
 
 interface LogoutButtonProps {

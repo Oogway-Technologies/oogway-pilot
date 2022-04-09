@@ -7,7 +7,7 @@ import {
 } from 'firebase/firestore'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { db } from '../../services/firebase'
+import { db } from '../../firebase'
 
 async function handleGet(res: NextApiResponse, _index: string, _order: string) {
     try {

@@ -3,11 +3,11 @@ import { UilCheckCircle, UilCircle } from '@iconscout/react-unicons'
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
 
+import { db } from '../../../firebase'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { streamPostData } from '../../../lib/postsHelper'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
-import { db } from '../../../services/firebase'
 import { postCardClass } from '../../../styles/feed'
 import { truncateLength } from '../../../utils/constants/global'
 import {

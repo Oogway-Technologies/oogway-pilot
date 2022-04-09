@@ -43,11 +43,11 @@ import {
     setTextCompareLeft,
     setTextCompareRight,
 } from '../../../features/utils/utilsSlice'
+// Database
+import { db, storage } from '../../../firebase'
 import { useFeedOptions } from '../../../hooks/useFeedOptions'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { createAdviceBotComment } from '../../../queries/adviceBot'
-// Database
-import { db, storage } from '../../../services/firebase'
 import { postFormClass } from '../../../styles/feed'
 import {
     adviceBotId,

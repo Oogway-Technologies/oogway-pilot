@@ -1,7 +1,7 @@
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 
-import { db } from '../services/firebase'
+import { db } from '../firebase'
 
 export const useHasNotifications = (userId: string) => {
     // Track status of notifications

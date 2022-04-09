@@ -1,6 +1,6 @@
 import { deleteObject, listAll, ref } from '@firebase/storage'
 
-import { storage } from '../services/firebase'
+import { storage } from '../firebase'
 
 export const deleteMedia = (path: string) => {
     const mediaRef = ref(storage, path)

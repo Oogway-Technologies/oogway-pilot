@@ -1,6 +1,6 @@
 import { doc, getDoc, onSnapshot } from 'firebase/firestore'
 
-import { db } from '../services/firebase'
+import { db } from '../firebase'
 
 /**
  *

@@ -6,13 +6,13 @@ import { deleteField, doc, updateDoc } from 'firebase/firestore'
 import Head from 'next/head'
 import React, { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 
+import API from '../../axios'
 import { setUser } from '../../features/user/userSlice'
+import { db, storage } from '../../firebase'
 import useMediaQuery from '../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import { getProfileDoc } from '../../lib/profileHelper'
 import { deleteMedia } from '../../lib/storageHelper'
-import API from '../../services/axios'
-import { db, storage } from '../../services/firebase'
 import {
     loginButtons,
     loginDivs,

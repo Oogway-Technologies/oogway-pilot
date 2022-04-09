@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 
-import { db } from '../services/firebase'
+import { db } from '../firebase'
 
 /**
  *

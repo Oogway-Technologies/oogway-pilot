@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { db } from '../../services/firebase'
+import { db } from '../../firebase'
 import { APITimeStamp } from '../../utils/types/global'
 
 async function handleGet(

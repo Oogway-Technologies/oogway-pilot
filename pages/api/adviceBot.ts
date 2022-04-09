@@ -8,9 +8,9 @@ import {
 import { JwtPayload } from 'jsonwebtoken'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import { db } from '../../firebase'
 import { checkReq, verifyJwt } from '../../lib/jwt'
-import { db } from '../../services/firebase'
-import OpenAI, { completionParams, filterParams } from '../../services/openai'
+import OpenAI, { completionParams, filterParams } from '../../openai'
 import { adviceBotId } from '../../utils/constants/global'
 import {
     FirebaseComment,
