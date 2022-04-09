@@ -10,7 +10,7 @@
         "lint:fix": "eslint --fix --ignore-path .eslintignore . --ext ts --ext tsx --ext js --ext jsx",
         "format": "prettier --write .",
         "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
-        "preinstall": "npx npm-force-resolutions",
+        "preinstall": "([ ! -f package-lock.json ] && npm install --package-lock-only --ignore-scripts --no-audit); npx npm-force-resolutions",
         "prepare": "husky install",
         "fix-format": "npm run lint:fix && npm run format"
     },
