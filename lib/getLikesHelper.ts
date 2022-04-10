@@ -94,7 +94,10 @@ export const addLike = (
                 tmp.likes[userProfile.uid] = true
 
                 // Remove user from dislikes for Oogway AI bot comments
-                if (tmp.dislikes !== null && userProfile.uid in tmp.dislikes) {
+                if (
+                    typeof tmp.dislikes !== 'undefined' &&
+                    userProfile.uid in tmp.dislikes
+                ) {
                     delete tmp.dislikes[userProfile.uid]
                 }
             }

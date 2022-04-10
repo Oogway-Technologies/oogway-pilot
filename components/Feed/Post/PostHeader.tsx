@@ -69,6 +69,23 @@ const PostHeader: FC<PostHeaderProps> = ({
         deleteMedia(`posts/${id}`)
     }
 
+    const deleteEngagementEntries = async () => {
+        // Fetch all notifications related to this post
+        const engagementQuery = query(
+            collection(db, 'engagement-activity'),
+            where('targetRoute', '==', `comments/${id}`)
+        )
+
+        // delete
+        getDocs(engagementQuery).then(async snap => {
+            snap.forEach(engagement => {
+                deleteDoc(engagement?.ref).catch(err => {
+                    console.log('Cannot delete engagement: ', err)
+                })
+            })
+        })
+    }
+
     // Deletes a post
     const deletePost = async () => {
         const activitiesQuery = query(
@@ -88,6 +105,9 @@ const PostHeader: FC<PostHeaderProps> = ({
             .catch(err => {
                 console.log('Cannot delete activities: ', err)
             })
+
+        // Delete notificaations
+        deleteEngagementEntries()
 
         // Return where the user should be routed
         // If the user deletes the parent post from
