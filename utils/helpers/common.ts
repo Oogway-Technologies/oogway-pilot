@@ -29,7 +29,7 @@ export const findDislikes = (
         // If the comment is from Oogway AI and
         // it contains a dislike map (added to feature on 2022/04/07),
         // then count number of dislikes, otherwise default to 0
-        if (snapshot.data().dislikes !== null) {
+        if (typeof snapshot.data().dislikes !== 'undefined') {
             // Get the dislikes map
             const dislikesMap = snapshot.data().dislikes
 

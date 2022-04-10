@@ -1,9 +1,11 @@
 import { FieldValue } from 'firebase/firestore'
 
 type hyperparams = {
+    engine: string
     temperature: number
     max_tokens: number
     top_p: number
+    stop?: string
     frequency_penalty?: number
     presence_penalty?: number
     logprobs?: number
@@ -16,14 +18,11 @@ export interface OpenAPICall {
     postId: string | undefined
     authorId: string
     feed: string | undefined // handle back-compat with  posts prior to feed feature
-    completionEngine: string
     completionPrompt: string
     completionHyperparams: hyperparams
     completionResponse: string | undefined
-    filterEngine: string
     filterPrompt: string
-    filterHyperparams: hyperparams
     filterResponse: string
-    filterLogprobs: object
+    filterLogprobs?: object
     timestamp: FieldValue
 }

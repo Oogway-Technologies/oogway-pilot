@@ -18,4 +18,9 @@ const axiosConfig = {
 // Create axios instance for API
 const API = axios.create(axiosConfig)
 
+// Create aaxios instance for oogway decision api
+export const OogwayDecisionAPI = axios.create({
+    baseURL: process.env.OOGWAY_DECISION_URL,
+})
+
 export default API

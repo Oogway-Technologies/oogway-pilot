@@ -69,7 +69,10 @@ export const useUserHasDisliked = (docPath: string, userId: string) => {
                     const docData = snapshot.data()
 
                     // Update user has liked state
-                    if (docData.dislikes !== null && userId in docData.dislikes)
+                    if (
+                        typeof docData.dislikes !== 'undefined' &&
+                        userId in docData.dislikes
+                    )
                         setUserHasDisliked(true)
                     else setUserHasDisliked(false)
                 }

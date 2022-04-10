@@ -1,7 +1,7 @@
 import { useMutation } from 'react-query'
 
 import API from '../axios'
-import { signJwt } from '../lib/jwt'
+import { signJwt } from '../lib/jwt/jwt'
 import { FirebasePost } from '../utils/types/firebase'
 
 /**
@@ -21,8 +21,10 @@ export const createAdviceBotComment = async (
     const token = signJwt({ botId: id })
     const headers = {
         authorization: `Bearer ${token}`,
+        'x-forwarded-for': post.uid, // track requests by user id
+        'x-forwarded-for-class': 'userId',
     }
-    return API.post('adviceBot', post, {
+    return API.post('ai/adviceBot', post, {
         headers: headers,
     })
 }
