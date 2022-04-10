@@ -11,7 +11,7 @@ import UserProfileForm from '../components/Login/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
 import { getPosts } from '../queries/posts'
-import { queryClientConfig } from '../query'
+import queryClientConfig from '../query'
 
 interface Props {
     children: ReactNode

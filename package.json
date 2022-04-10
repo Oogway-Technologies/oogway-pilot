@@ -10,6 +10,7 @@
         "lint:fix": "eslint --fix --ignore-path .eslintignore . --ext ts --ext tsx --ext js --ext jsx",
         "format": "prettier --write .",
         "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
+        "preinstall": "([ ! -f package-lock.json ] && npm install --package-lock-only --ignore-scripts --no-audit); npx npm-force-resolutions",
         "prepare": "husky install",
         "fix-format": "npm run lint:fix && npm run format"
     },
@@ -35,6 +36,8 @@
         "moment": "^2.29.1",
         "next": "^12.1.0",
         "next-themes": "^0.0.15",
+        "npm-force-resolutions": "^0.0.10",
+        "openai": "^2.0.5",
         "react": "^17.0.2",
         "react-content-loader": "^6.1.0",
         "react-dom": "^17.0.2",
@@ -55,10 +58,12 @@
         "@iconify/react": "^3.1.4",
         "@next/eslint-plugin-next": "^12.1.0",
         "@types/auth0": "^2.34.13",
-        "@types/node": "^17.0.4",
-        "@types/react": "^17.0.38",
+        "@types/jsonwebtoken": "^8.5.8",
+        "@types/node": "^17.0.23",
+        "@types/react": "^17.0.44",
         "@types/react-dom": "^17.0.13",
         "@types/react-linkify": "^1.0.1",
+        "@types/react-redux": "^7.1.23",
         "@typescript-eslint/eslint-plugin": "^5.14.0",
         "@typescript-eslint/parser": "^5.14.0",
         "autoprefixer": "^10.4.2",
@@ -75,6 +80,9 @@
         "tailwindcss": "^3.0.23",
         "tailwindcss-aria-attributes": "^1.3.0",
         "tailwindcss-font-inter": "^3.0.1",
-        "typescript": "4.5.4"
+        "typescript": "^4.5.4"
+    },
+    "resolutions": {
+        "@types/react": "17.0.30"
     }
 }
