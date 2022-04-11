@@ -351,6 +351,10 @@ const NewPostForm: FC<NewPostProps> = ({
             !isComparePost() &&
             userProfile.uid === (demoAccountIdDev || demoAccountIdProd)
         ) {
+            console.log('Calling Oogway AI Decision bot API.')
+            console.log(
+                `Current user uid: ${userProfile.uid}; demo account Prod id: ${demoAccountIdProd}`
+            )
             const payload = {
                 post: {
                     ...postData,
