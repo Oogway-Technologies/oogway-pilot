@@ -347,14 +347,15 @@ const NewPostForm: FC<NewPostProps> = ({
         const docRef = await addDoc(collection(db, 'posts'), postData)
 
         // Make advice bot api call
+        console.log(
+            `Current user uid: ${userProfile.uid}; demo account Prod id: ${demoAccountIdProd}`
+        )
         if (
             !isComparePost() &&
             userProfile.uid === (demoAccountIdDev || demoAccountIdProd)
         ) {
             console.log('Calling Oogway AI Decision bot API.')
-            console.log(
-                `Current user uid: ${userProfile.uid}; demo account Prod id: ${demoAccountIdProd}`
-            )
+
             const payload = {
                 post: {
                     ...postData,
