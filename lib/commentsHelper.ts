@@ -60,7 +60,6 @@ export const streamCommentsCollection = (
 
 /**
  *
- * @param postId parent post id
  * @param commentId comment id
  * @param snapshot a side-effect function to be called using the returned snapshot
  * @param error a function specifying how to handle error retrieving the snapshot

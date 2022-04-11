@@ -164,7 +164,9 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
                 </div>
                 {/* Comment counter */}
                 <p className={commentsApiClass.counter}>
-                    {numComments === 0
+                    {numComments === 0 && !user
+                        ? `No Answers.`
+                        : numComments === 0
                         ? `No Answers. Be the first.`
                         : numComments === 1
                         ? `${numComments} Answer`

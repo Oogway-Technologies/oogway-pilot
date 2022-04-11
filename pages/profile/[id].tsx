@@ -1,5 +1,5 @@
 // Firebase imports
-import { UilPen } from '@iconscout/react-unicons'
+import { UilArrowCircleLeft, UilPen } from '@iconscout/react-unicons'
 import firebase from 'firebase/compat'
 import {
     collection,
@@ -10,6 +10,8 @@ import {
     where,
 } from 'firebase/firestore'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import React, { FC, useState } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
@@ -22,7 +24,11 @@ import Modal from '../../components/Utils/Modal'
 import { db } from '../../firebase'
 import useMediaQuery from '../../hooks/useMediaQuery'
 import { useAppSelector } from '../../hooks/useRedux'
-import { feedApiClass, feedToolbarClass } from '../../styles/feed'
+import {
+    commentsPageClass,
+    feedApiClass,
+    feedToolbarClass,
+} from '../../styles/feed'
 import { profilePage } from '../../styles/profile'
 import { FirebasePost, FirebaseProfile } from '../../utils/types/firebase'
 
@@ -38,6 +44,7 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
     const [isOpen, setIsOpen] = useState(false)
     const isMobile = useMediaQuery('(max-width: 965px)')
     const authUserProfile = useAppSelector(state => state.userSlice.user)
+    const router = useRouter()
 
     // Get real-time connection with DB
     const [realtimePosts] = useCollection(
@@ -47,96 +54,122 @@ const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
             orderBy('timestamp', 'desc')
         )
     )
+
+    const goBack = () => {
+        router.push(`/`)
+    }
+
     return (
-        <div className={profilePage.innerDiv}>
-            <div className={profilePage.contentDiv}>
-                {/* profile card of the user*/}
-                <ProfileCard
-                    bio={bio}
-                    location={location}
-                    // name={name}
-                    lastName={lastName}
-                    profilePic={profilePic}
-                    username={username}
-                    uid={uid}
-                    joinedAt={''}
-                />
-                {/* TODO: profile engagement bar when design and logic are ready */}
-                {/*
+        <div className={commentsPageClass.outerDiv}>
+            <Head>
+                <title>{`Profile | ${username}`}</title>
+            </Head>
+
+            {/* Go Back */}
+            <div className={commentsPageClass.toolbarDiv}>
+                <div className={commentsPageClass.backButtonDiv}>
+                    <Button
+                        text="Back"
+                        keepText={false}
+                        forceNoText={false}
+                        icon={<UilArrowCircleLeft />}
+                        type="button"
+                        onClick={goBack}
+                        addStyle={commentsPageClass.goBackButton}
+                    />
+                </div>
+            </div>
+
+            <div className={profilePage.innerDiv}>
+                <div className={profilePage.contentDiv}>
+                    {/* profile card of the user*/}
+                    <ProfileCard
+                        bio={bio}
+                        location={location}
+                        // name={name}
+                        lastName={lastName}
+                        profilePic={profilePic}
+                        username={username}
+                        uid={uid}
+                        joinedAt={''}
+                    />
+                    {/* TODO: profile engagement bar when design and logic are ready */}
+                    {/*
                     {currentUserUid !== uid && <ProfileEngagementBar expanded={true}/>}
                 */}
-                <>
-                    {realtimePosts
-                        ? realtimePosts?.docs
-                              .filter(post => {
-                                  return (
-                                      post.data().isAnonymous != true ||
-                                      post.data().uid == authUserProfile.uid
-                                  )
-                              })
-                              .map(post => (
-                                  <PostCard
-                                      key={post.id}
-                                      id={post.id}
-                                      authorUid={post.data().uid}
-                                      name={post.data().name}
-                                      message={post.data().message}
-                                      description={post.data().description}
-                                      feed={post.data().feed}
-                                      isCompare={post.data().isCompare}
-                                      timestamp={post.data().timestamp}
-                                      postImage={post.data().postImage}
-                                      comments={null}
-                                      isCommentThread={false}
-                                      previewImage={
-                                          post.data().previewImage || ''
-                                      }
-                                      isAnonymous={post.data().isAnonymous}
-                                  />
-                              ))
-                        : // Render out the server-side rendered posts
-                          posts
-                              .filter(function (post: FirebasePost) {
-                                  return (
-                                      post.isAnonymous != true ||
-                                      post.uid == authUserProfile.uid
-                                  )
-                              })
-                              .map(post => (
-                                  <PostCard
-                                      key={post.id}
-                                      id={post.id || ''}
-                                      authorUid={post.uid}
-                                      name={post.name}
-                                      message={post.message}
-                                      description={post.description}
-                                      isCompare={post.isCompare}
-                                      timestamp={post.timestamp}
-                                      postImage={post.postImage}
-                                      comments={null}
-                                      isCommentThread={false}
-                                      previewImage={post.previewImage || ''}
-                                      isAnonymous={post.isAnonymous}
-                                  />
-                              ))}
-                    {/* New Post button on mobile devices */}
-                    {isMobile && (
-                        <Button
-                            text="New Post"
-                            keepText={true}
-                            icon={<UilPen />}
-                            type="button"
-                            addStyle={
-                                feedToolbarClass.newPostButton +
-                                feedApiClass.mobileNewPostButton
-                            }
-                            onClick={() => setIsOpen(true)}
-                        />
-                    )}
-                    <Modal show={isOpen} onClose={() => setIsOpen(false)}>
-                        <NewPostForm closeModal={() => setIsOpen(false)} />
-                    </Modal>
-                </>
+                    <>
+                        {realtimePosts
+                            ? realtimePosts?.docs
+                                  .filter(post => {
+                                      return (
+                                          post.data().isAnonymous != true ||
+                                          post.data().uid == authUserProfile.uid
+                                      )
+                                  })
+                                  .map(post => (
+                                      <PostCard
+                                          key={post.id}
+                                          id={post.id}
+                                          authorUid={post.data().uid}
+                                          name={post.data().name}
+                                          message={post.data().message}
+                                          description={post.data().description}
+                                          feed={post.data().feed}
+                                          isCompare={post.data().isCompare}
+                                          timestamp={post.data().timestamp}
+                                          postImage={post.data().postImage}
+                                          comments={null}
+                                          isCommentThread={false}
+                                          previewImage={
+                                              post.data().previewImage || ''
+                                          }
+                                          isAnonymous={post.data().isAnonymous}
+                                      />
+                                  ))
+                            : // Render out the server-side rendered posts
+                              posts
+                                  .filter(function (post: FirebasePost) {
+                                      return (
+                                          post.isAnonymous != true ||
+                                          post.uid == authUserProfile.uid
+                                      )
+                                  })
+                                  .map(post => (
+                                      <PostCard
+                                          key={post.id}
+                                          id={post.id || ''}
+                                          authorUid={post.uid}
+                                          name={post.name}
+                                          message={post.message}
+                                          description={post.description}
+                                          isCompare={post.isCompare}
+                                          timestamp={post.timestamp}
+                                          postImage={post.postImage}
+                                          comments={null}
+                                          isCommentThread={false}
+                                          previewImage={post.previewImage || ''}
+                                          isAnonymous={post.isAnonymous}
+                                      />
+                                  ))}
+                        {/* New Post button on mobile devices */}
+                        {isMobile && (
+                            <Button
+                                text="New Post"
+                                keepText={true}
+                                icon={<UilPen />}
+                                type="button"
+                                addStyle={
+                                    feedToolbarClass.newPostButton +
+                                    feedApiClass.mobileNewPostButton
+                                }
+                                onClick={() => setIsOpen(true)}
+                            />
+                        )}
+                        <Modal show={isOpen} onClose={() => setIsOpen(false)}>
+                            <NewPostForm closeModal={() => setIsOpen(false)} />
+                        </Modal>
+                    </>
+                </div>
             </div>
         </div>
     )
