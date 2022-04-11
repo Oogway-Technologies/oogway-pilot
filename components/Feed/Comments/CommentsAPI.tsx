@@ -98,8 +98,8 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
                     // Only show oogway AI bot comments to Demo account
                     if (
                         comment.authorUid === adviceBotId &&
-                        userProfile.uid !==
-                            (demoAccountIdDev || demoAccountIdProd)
+                        (userProfile.uid !== demoAccountIdDev ||
+                            userProfile.uid !== demoAccountIdProd)
                     )
                         return
 

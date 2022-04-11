@@ -352,12 +352,14 @@ const NewPostForm: FC<NewPostProps> = ({
         )
         console.log(
             `Boolean is true: ${
-                userProfile.uid === (demoAccountIdDev || demoAccountIdProd)
+                userProfile.uid === demoAccountIdDev ||
+                userProfile.uid === demoAccountIdProd
             }`
         )
         if (
             !isComparePost() &&
-            userProfile.uid === (demoAccountIdDev || demoAccountIdProd)
+            (userProfile.uid === demoAccountIdDev ||
+                userProfile.uid === demoAccountIdProd)
         ) {
             console.log('Calling Oogway AI Decision bot API.')
 
