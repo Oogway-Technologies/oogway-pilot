@@ -176,6 +176,7 @@ const Comment: FC<CommentProps> = ({
                 {/* Replies API */}
                 <RepliesAPI
                     commentId={commentId}
+                    commentAuthor={commentOwner}
                     parentPostData={parentPostData}
                 />
             </div>

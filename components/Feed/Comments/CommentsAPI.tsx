@@ -10,7 +10,11 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { commentFormClass, commentsApiClass } from '../../../styles/feed'
-import { adviceBotId, demoAccountId } from '../../../utils/constants/global'
+import {
+    adviceBotId,
+    demoAccountIdDev,
+    demoAccountIdProd,
+} from '../../../utils/constants/global'
 import {
     commmentConverter,
     FirebaseComment,
@@ -70,7 +74,7 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
                 // Only show oogway AI bot comments to Demo account
                 if (
                     comment.data().authorUid === adviceBotId &&
-                    userProfile.uid !== demoAccountId
+                    userProfile.uid !== (demoAccountIdDev || demoAccountIdProd)
                 )
                     return
                 return (
@@ -94,7 +98,8 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
                     // Only show oogway AI bot comments to Demo account
                     if (
                         comment.authorUid === adviceBotId &&
-                        userProfile.uid !== demoAccountId
+                        userProfile.uid !==
+                            (demoAccountIdDev || demoAccountIdProd)
                     )
                         return
 

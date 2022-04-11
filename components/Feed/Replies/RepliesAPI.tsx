@@ -11,11 +11,13 @@ import Reply from './Reply'
 
 type RepliesAPIProps = {
     commentId: string
+    commentAuthor: string
     parentPostData: staticPostData
 }
 
 const RepliesAPI: React.FC<RepliesAPIProps> = ({
     commentId,
+    commentAuthor,
     parentPostData,
 }) => {
     const router = useRouter()
@@ -39,6 +41,7 @@ const RepliesAPI: React.FC<RepliesAPIProps> = ({
                         replyOwner={reply.data().authorUid}
                         postId={router.query.id}
                         commentId={commentId}
+                        commentAuthor={commentAuthor}
                         replyId={reply.id}
                         reply={{
                             ...reply.data(),

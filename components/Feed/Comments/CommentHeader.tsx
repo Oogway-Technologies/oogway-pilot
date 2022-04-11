@@ -9,6 +9,7 @@ import {
 } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
+import { useQueryClient } from 'react-query'
 
 import { db } from '../../../firebase'
 import { useProfileData } from '../../../hooks/useProfileData'
@@ -42,6 +43,8 @@ const CommentHeader: FC<CommentHeaderProps> = ({
 
     const router = useRouter()
 
+    const queryClient = useQueryClient()
+
     // Deletes a post
     const deleteCommentEntry = async () => {
         const commentDocRef = doc(db, 'post-activity', commentId)
@@ -51,6 +54,40 @@ const CommentHeader: FC<CommentHeaderProps> = ({
 
         // Delete the comment's media, if any
         deleteMedia(`posts/${commentId}`)
+    }
+
+    const deleteEngagementEntries = async () => {
+        // getIds of all child replies
+        const childQuery = query(
+            collection(db, 'post-activity'),
+            where('parentId', '==', commentId)
+        )
+        const targetIds = []
+        const querySnapshot = await getDocs(childQuery)
+        querySnapshot.forEach(doc => {
+            targetIds.push(doc.id)
+        })
+
+        // Add comment Id to target list
+        targetIds.push(commentId)
+        const engagementQuery = query(
+            collection(db, 'engagement-activity'),
+            where('targetId', 'in', targetIds) // only works for comments with 10 or less replies
+        )
+
+        // delete engagement
+        getDocs(engagementQuery).then(async snap => {
+            snap.forEach(engagement => {
+                deleteDoc(engagement?.ref).catch(err => {
+                    console.log('Cannot delete engagement: ', err)
+                })
+                // invalidate engagee's notification list
+                queryClient.invalidateQueries([
+                    'engagementActivity',
+                    engagement.data().engageeId,
+                ])
+            })
+        })
     }
 
     // Deletes a comment
@@ -72,8 +109,19 @@ const CommentHeader: FC<CommentHeaderProps> = ({
             .catch(err => {
                 console.log('Cannot delete replies: ', err)
             })
+
+        // Delete notifications
+        deleteEngagementEntries()
+
+        // Invalidate parent post author's notificationss
+        queryClient.invalidateQueries([
+            'engagementActivity',
+            parentPostData.authorUid,
+        ])
+
         return `/comments/${postId}`
     }
+
     const handleProfileAvatarClick = async (
         e: React.MouseEvent<HTMLDivElement>
     ) => {

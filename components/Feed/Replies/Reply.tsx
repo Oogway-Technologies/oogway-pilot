@@ -13,6 +13,7 @@ type ReplyProps = {
     replyOwner: string
     postId: string | string[] | undefined
     commentId: string
+    commentAuthor: string
     replyId: string
     reply: firebase.firestore.DocumentData
     parentPostData: staticPostData
@@ -22,6 +23,7 @@ const Reply: React.FC<ReplyProps> = ({
     replyOwner,
     postId,
     commentId,
+    commentAuthor,
     replyId,
     reply,
     parentPostData,
@@ -32,6 +34,7 @@ const Reply: React.FC<ReplyProps> = ({
             <ReplyHeader
                 postId={postId as string}
                 commentId={commentId}
+                commentAuthor={commentAuthor}
                 replyId={replyId}
                 authorUid={replyOwner}
                 name={reply.author}
