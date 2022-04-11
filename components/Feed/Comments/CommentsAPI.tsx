@@ -72,6 +72,17 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
         if (commentsSnapshot) {
             return commentsSnapshot?.docs.map(comment => {
                 // Only show oogway AI bot comments to Demo account
+                console.log(
+                    `Advice Bot comment: ${
+                        comment.data().authorUid === adviceBotId
+                    }`
+                )
+                console.log(
+                    `Demo account: ${
+                        userProfile.uid !== demoAccountIdDev ||
+                        userProfile.uid !== demoAccountIdProd
+                    }`
+                )
                 if (
                     comment.data().authorUid === adviceBotId &&
                     (userProfile.uid !== demoAccountIdDev ||
@@ -96,6 +107,17 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
             // Visualize the server-side rendered comments
             return JSON.parse(comments.toString()).map(
                 (comment: FirebaseComment) => {
+                    console.log(
+                        `Advice Bot comment: ${
+                            comment.authorUid === adviceBotId
+                        }`
+                    )
+                    console.log(
+                        `Demo account: ${
+                            userProfile.uid !== demoAccountIdDev ||
+                            userProfile.uid !== demoAccountIdProd
+                        }`
+                    )
                     // Only show oogway AI bot comments to Demo account
                     if (
                         comment.authorUid === adviceBotId &&
