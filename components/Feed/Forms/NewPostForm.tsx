@@ -350,6 +350,11 @@ const NewPostForm: FC<NewPostProps> = ({
         console.log(
             `Current user uid: ${userProfile.uid}; demo account Prod id: ${demoAccountIdProd}`
         )
+        console.log(
+            `Boolean is true: ${
+                userProfile.uid === (demoAccountIdDev || demoAccountIdProd)
+            }`
+        )
         if (
             !isComparePost() &&
             userProfile.uid === (demoAccountIdDev || demoAccountIdProd)
