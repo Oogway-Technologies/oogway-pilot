@@ -96,6 +96,12 @@ const CommentsAPI: React.FC<CommentsAPIProps> = ({
             return JSON.parse(comments.toString()).map(
                 (comment: FirebaseComment) => {
                     // Only show oogway AI bot comments to Demo account
+                    console.log(
+                        `Checking boolean is false: ${
+                            userProfile.uid !== demoAccountIdDev ||
+                            userProfile.uid !== demoAccountIdProd
+                        }`
+                    )
                     if (
                         comment.authorUid === adviceBotId &&
                         (userProfile.uid !== demoAccountIdDev ||
