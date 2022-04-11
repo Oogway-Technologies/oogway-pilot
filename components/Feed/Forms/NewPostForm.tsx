@@ -51,7 +51,8 @@ import { createAdviceBotComment } from '../../../queries/adviceBot'
 import { postFormClass } from '../../../styles/feed'
 import {
     adviceBotId,
-    demoAccountId,
+    demoAccountIdDev,
+    demoAccountIdProd,
     longLimit,
     shortLimit,
     warningTime,
@@ -346,7 +347,10 @@ const NewPostForm: FC<NewPostProps> = ({
         const docRef = await addDoc(collection(db, 'posts'), postData)
 
         // Make advice bot api call
-        if (!isComparePost() && userProfile.uid === demoAccountId) {
+        if (
+            !isComparePost() &&
+            userProfile.uid === (demoAccountIdDev || demoAccountIdProd)
+        ) {
             const payload = {
                 post: {
                     ...postData,

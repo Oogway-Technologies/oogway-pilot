@@ -8,4 +8,5 @@ export const anonymousUserName = 'Anonymous' // Author's display name for anon p
 export const authorLabel = '(Author)' // Label displayed next to username in post-activities
 
 export const adviceBotId = process.env.ADVICEBOT_ID as string // Used for fetching advice bot
-export const demoAccountId = process.env.DEMO_ACCOUNT_ID as string
+export const demoAccountIdDev = process.env.DEMO_ACCOUNT_ID_DEV as string
+export const demoAccountIdProd = process.env.DEMO_ACCOUNT_ID_PROD as string
