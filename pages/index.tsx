@@ -8,8 +8,6 @@ import { dehydrate, QueryClient } from 'react-query'
 import FeedAPI from '../components/Feed/FeedAPI'
 import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
 import UserProfileForm from '../components/Forms/UserProfileForm'
-import PrivacyPolicy from '../components/Login/PrivacyPolicy'
-import TermsConditions from '../components/Login/TermsConditions'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
 import { getPosts } from '../queries/posts'
@@ -52,8 +50,6 @@ export default function Home() {
     // Call user Profile and check whether profile requires updating
     // Should only be called on user first log-in
     const [show, setShow] = useState(false)
-    const [isTerms, setIsTerms] = useState(false)
-    const [isPrivacy, setIsPrivacy] = useState(false)
 
     const closeModal = () => {
         setShow(false)
@@ -73,24 +69,33 @@ export default function Home() {
                     <SidebarWidget title="Disclaimer" className="">
                         <span className={'mx-sm mb-sm px-sm w-64 ' + bodySmall}>
                             By using Oogway, you agree to our
-                            <span
+                            <a
+                                target="_blank"
+                                href="https://www.oogway.ai/terms-of-use"
+                                rel="noopener noreferrer"
                                 className="text-primary hover:underline hover:cursor-pointer"
-                                onClick={() => setIsTerms(true)}
                             >
                                 {' '}
                                 Terms of Use,
-                            </span>{' '}
-                            <span
+                            </a>{' '}
+                            <a
+                                target="_blank"
+                                href="https://www.oogway.ai/privacy-policy"
+                                rel="noopener noreferrer"
                                 className="text-primary hover:underline hover:cursor-pointer"
-                                onClick={() => setIsPrivacy(true)}
                             >
                                 Privacy Policy
-                            </span>{' '}
+                            </a>{' '}
                             and
-                            <span className="text-primary hover:underline hover:cursor-pointer">
+                            <a
+                                target="_blank"
+                                href="https://www.oogway.ai/"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline hover:cursor-pointer"
+                            >
                                 {' '}
                                 Cookie Policy.
-                            </span>
+                            </a>
                         </span>
                     </SidebarWidget>
                 </Sidebar>
@@ -109,24 +114,6 @@ export default function Home() {
                     headerText="Setup Profile"
                     cancelButtonText="skip"
                 />
-            </Modal>
-
-            {/* terms modal */}
-            <Modal
-                show={isTerms}
-                onClose={value => setIsTerms(value)}
-                closeIcon
-            >
-                <TermsConditions />
-            </Modal>
-
-            {/* Privacy Modal */}
-            <Modal
-                show={isPrivacy}
-                onClose={value => setIsPrivacy(value)}
-                closeIcon
-            >
-                <PrivacyPolicy />
             </Modal>
         </div>
     )
