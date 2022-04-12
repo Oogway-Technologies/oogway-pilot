@@ -47,6 +47,8 @@ import {
 import { db, storage } from '../../firebase'
 import { useFeedOptions } from '../../hooks/useFeedOptions'
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
+import { createAdviceBotComment } from '../../queries/adviceBot'
+import { postFormClass } from '../../styles/feed'
 import {
     adviceBotId,
     demoAccountIdDev,
@@ -73,7 +75,6 @@ import { Collapse } from '../Utils/common/Collapse'
 import FlashErrorMessage from '../Utils/FlashErrorMessage'
 import { Tooltip } from '../Utils/Tooltip'
 import _CompareChooseTypeForm from './Compare/_CompareChooseTypeForm'
-import { postFormClass } from '../../styles/feed'
 
 type NewPostProps = {
     closeModal: () => void
