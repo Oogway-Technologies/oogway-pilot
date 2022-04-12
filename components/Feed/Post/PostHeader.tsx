@@ -134,6 +134,7 @@ const PostHeader: FC<PostHeaderProps> = ({
         e: React.MouseEvent<HTMLDivElement>
     ) => {
         e.preventDefault()
+        e.stopPropagation()
         await router.push(`/profile/${authorUid}`)
     }
     // TODO : Generalize getAvatar function to use it for comments and replies too

@@ -138,10 +138,11 @@ const PostVotingMechanism = ({
         })
     }
 
-    const voteHandler = (idx: number) => {
+    const voteHandler = (e: React.MouseEvent<any>, idx: number) => {
+        e.stopPropagation()
+
         // return early if redux failed to fetch user
         if (!userProfile.uid) return
-
         // Send vote
         voteOnImage(idx)
 
@@ -215,7 +216,7 @@ const PostVotingMechanism = ({
                                             (!user ? ' cursor-default' : '')
                                         }
                                         src={obj.previewImage}
-                                        onClick={() => voteHandler(idx)}
+                                        onClick={e => voteHandler(e, idx)}
                                         alt=""
                                     />
                                 </div>
@@ -246,7 +247,7 @@ const PostVotingMechanism = ({
                                         target="blank"
                                         href={decoratedHref}
                                         key={key}
-                                        onClick={() => voteHandler(idx)}
+                                        onClick={e => voteHandler(e, idx)}
                                     >
                                         {decoratedText}
                                     </a>
@@ -265,7 +266,7 @@ const PostVotingMechanism = ({
                                             : ' cursor-default') +
                                         'text-neutral-700 dark:text-neutralDark-150 inline-flex w-full justify-center p-sm'
                                     }
-                                    onClick={() => voteHandler(idx)}
+                                    onClick={e => voteHandler(e, idx)}
                                 >
                                     {obj.text}
                                 </span>
@@ -279,7 +280,7 @@ const PostVotingMechanism = ({
                                         postCardClass.voteButton +
                                         (!user && ' cursor-default')
                                     }
-                                    onClick={() => voteHandler(idx)}
+                                    onClick={e => voteHandler(e, idx)}
                                 >
                                     {idx == 0
                                         ? voteButtonLeft

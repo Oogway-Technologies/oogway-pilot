@@ -75,37 +75,25 @@ function PostsAPI() {
                         <Fragment key={page?.lastTimestamp?.seconds}>
                             {/* If posts collection exists */}
                             {page.posts &&
-                                page.posts.map((post: FirebasePost) => {
-                                    // Only allow demo account to see demo account posts
-                                    if (
-                                        isDemoAccountPost(post.uid) &&
-                                        !isDemoAccountUser(userProfile.uid)
-                                    )
-                                        return
-
-                                    return (
-                                        <PostCard
-                                            key={post.id}
-                                            id={post?.id || ''}
-                                            authorUid={post.uid}
-                                            name={post.name}
-                                            message={post.message}
-                                            description={post.description}
-                                            feed={post.feed || undefined}
-                                            isCompare={post.isCompare}
-                                            timestamp={post.timestamp}
-                                            postImage={post.postImage}
-                                            comments={null}
-                                            isCommentThread={false}
-                                            previewImage={
-                                                post?.previewImage || ''
-                                            }
-                                            isAnonymous={
-                                                post?.isAnonymous || false
-                                            }
-                                        />
-                                    )
-                                })}
+                                page.posts.map((post: FirebasePost) => (
+                                    <PostCard
+                                        key={post.id}
+                                        id={post?.id || ''}
+                                        authorUid={post.uid}
+                                        name={post.name}
+                                        message={post.message}
+                                        description={post.description}
+                                        feed={post.feed || undefined}
+                                        isCompare={post.isCompare}
+                                        timestamp={post.timestamp}
+                                        postImage={post.postImage}
+                                        comments={null}
+                                        isCommentThread={false}
+                                        previewImage={post?.previewImage || ''}
+                                        isAnonymous={post?.isAnonymous || false}
+                                        className={'cursor-pointer'}
+                                    />
+                                ))}
                         </Fragment>
                     ))}
 

@@ -83,7 +83,7 @@ export const feedSelectorClass = {
 export const postCardClass = {
     card:
         'flex flex-col px-md pt-md pb-sm rounded-md shadow-sm shadow-black/20 dark:shadow-black/60 ' +
-        'dark:bg-neutralDark-500',
+        'dark:bg-neutralDark-500 ',
     // Header
     header:
         'overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 ' +

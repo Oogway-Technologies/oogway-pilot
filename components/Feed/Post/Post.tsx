@@ -1,4 +1,5 @@
 import { FieldValue } from 'firebase/firestore'
+import router from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
 
@@ -29,6 +30,7 @@ interface PostProps {
     comments: null | any // Should be json object
     previewImage: string | null
     isAnonymous: boolean
+    className?: string
 }
 
 const PostCard: React.FC<PostProps> = ({
@@ -45,6 +47,7 @@ const PostCard: React.FC<PostProps> = ({
     comments,
     previewImage,
     isAnonymous,
+    className,
 }) => {
     // Track state for voting mechanism
     const [votesList, setVotesList] = useState(Array<number>())
@@ -115,7 +118,11 @@ const PostCard: React.FC<PostProps> = ({
     }
 
     return (
-        <Card id={`post-${id}`} className={postCardClass.card}>
+        <Card
+            id={`post-${id}`}
+            className={`${postCardClass.card} ${className ? className : ''}`}
+            onClick={() => router.push(`/comments/${id}`)}
+        >
             {/* Header */}
             <PostHeader
                 id={id}

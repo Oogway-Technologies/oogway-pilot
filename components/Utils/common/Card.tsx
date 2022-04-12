@@ -5,6 +5,7 @@ interface CardProps {
     id?: string
     children: ReactChild | ReactChild[] | ReactChildren | ReactChildren[] | any
     ref?: React.Ref<HTMLDivElement>
+    onClick?: () => void
 }
 
 export const Card: FC<CardProps> = ({
@@ -12,6 +13,7 @@ export const Card: FC<CardProps> = ({
     id,
     children,
     ref,
+    onClick,
 }: CardProps) => {
     return (
         <div
@@ -20,6 +22,7 @@ export const Card: FC<CardProps> = ({
                 className ? className : ''
             }`}
             ref={ref}
+            onClick={() => onClick && onClick()}
         >
             {children}
         </div>
