@@ -185,7 +185,10 @@ const PostHeader: FC<PostHeaderProps> = ({
             </div>
 
             {/* Right: More Button */}
-            <div className={postCardClass.headerRight}>
+            <div
+                className={postCardClass.headerRight}
+                onClick={event => event.stopPropagation()}
+            >
                 <PostOptionsDropdown
                     authorUid={authorUid}
                     authorProfile={authorProfile}
