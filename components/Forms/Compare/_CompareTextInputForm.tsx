@@ -4,10 +4,10 @@ import {
     setHasPreviewedCompare,
     setTextCompareLeft,
     setTextCompareRight,
-} from '../../../../features/utils/utilsSlice'
-import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux'
-import { compareFormClass } from '../../../../styles/feed'
-import { shortLimit } from '../../../../utils/constants/global'
+} from '../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { compareFormClass } from '../../../styles/feed'
+import { shortLimit } from '../../../utils/constants/global'
 import _CompareInputForm from './_CompareInputForm'
 import _ComparePreview from './_ComparePreview'
 

@@ -20,10 +20,10 @@ import {
     FirebaseComment,
 } from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
+import NewCommentForm from '../../Forms/NewCommentForm'
 import Button from '../../Utils/Button'
 import { Avatar } from '../../Utils/common/Avatar'
 import Modal from '../../Utils/Modal'
-import NewCommentForm from '../Forms/NewCommentForm'
 import Comment from './Comment'
 
 type CommentsAPIProps = {

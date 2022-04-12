@@ -16,12 +16,12 @@ import {
     setLabelCompareRight,
     setTextCompareLeft,
     setTextCompareRight,
-} from '../../../../features/utils/utilsSlice'
-import useMediaQuery from '../../../../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux'
+} from '../../../features/utils/utilsSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 // Styles and JSX
-import { compareFormClass } from '../../../../styles/feed'
-import { compareFilePickerRefs } from '../../../../utils/types/global'
+import { compareFormClass } from '../../../styles/feed'
+import { compareFilePickerRefs } from '../../../utils/types/global'
 import _CompareImageInputForm from './_CompareImageInputForm'
 import _CompareInputForm from './_CompareInputForm'
 import _CompareTextInputForm from './_CompareTextInputForm'

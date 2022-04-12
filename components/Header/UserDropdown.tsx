@@ -7,6 +7,7 @@ import React from 'react'
 import { useAppSelector } from '../../hooks/useRedux'
 import { userDropdownClass } from '../../styles/header'
 import { loginButtons } from '../../styles/login'
+import { defaultProfileImage } from '../../utils/constants/global'
 import Button from '../Utils/Button'
 import { Avatar } from '../Utils/common/Avatar'
 import DropdownMenu from '../Utils/DropdownMenu'
@@ -35,7 +36,11 @@ const UserDropdown: React.FC = () => {
     const menuButton = (
         <Avatar
             className={userDropdownClass.avatar}
-            src={userProfile?.profilePic || user?.picture || ''}
+            src={
+                userProfile?.profilePic
+                    ? userProfile?.profilePic
+                    : defaultProfileImage
+            }
         />
     )
 

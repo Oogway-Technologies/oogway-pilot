@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import { compareFormClass } from '../../../../styles/feed'
+import { compareFormClass } from '../../../styles/feed'
 
 interface _CompareInputFormProps {
     children: JSX.Element

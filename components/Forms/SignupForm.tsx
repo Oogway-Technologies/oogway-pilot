@@ -11,12 +11,12 @@ import { createUserProfile } from '../../lib/db'
 import { getRandomProfilePic, getRandomUsername } from '../../lib/user'
 import { loginButtons, loginDivs, loginInputs } from '../../styles/login'
 import preventDefaultOnEnter from '../../utils/helpers/preventDefaultOnEnter'
+import PrivacyPolicy from '../Login/PrivacyPolicy'
+import TermsConditions from '../Login/TermsConditions'
 // JSX and Styles
 import Button from '../Utils/Button'
 import FlashErrorMessage from '../Utils/FlashErrorMessage'
 import Modal from '../Utils/Modal'
-import PrivacyPolicy from './PrivacyPolicy'
-import TermsConditions from './TermsConditions'
 
 type SignUpFormProps = {
     goToLogin: () => void

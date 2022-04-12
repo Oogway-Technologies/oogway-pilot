@@ -10,3 +10,5 @@ export const authorLabel = '(Author)' // Label displayed next to username in pos
 export const adviceBotId = process.env.ADVICEBOT_ID as string // Used for fetching advice bot
 export const demoAccountIdDev = process.env.DEMO_ACCOUNT_ID_DEV as string
 export const demoAccountIdProd = process.env.DEMO_ACCOUNT_ID_PROD as string
+export const defaultProfileImage =
+    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
