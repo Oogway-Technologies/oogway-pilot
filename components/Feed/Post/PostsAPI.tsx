@@ -1,4 +1,4 @@
-import React, { Fragment, useLayoutEffect, useRef } from 'react'
+import React, { Fragment, useEffect, useRef } from 'react'
 
 import { setJumpToComment } from '../../../features/utils/utilsSlice'
 // Custom hook
@@ -48,7 +48,7 @@ function PostsAPI() {
         state => state.utilsSlice.jumpToCommentId
     )
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (jumpToCommentId) {
             setTimeout(() => {
                 document
