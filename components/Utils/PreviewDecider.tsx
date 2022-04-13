@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { defaultProfileImage } from '../../utils/constants/global'
 
 import {
     fetcher,
@@ -29,7 +30,7 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
     }, [])
 
     return isUrlPreviewImage || isYoutubeLink ? (
-        <div className={'flex justify-start p-md ml-xl'}>
+        <div className={'flex justify-start ml-xl'}>
             {isYoutubeLink && isYoutubeLink.length > 0 ? (
                 <iframe
                     src={`https://www.youtube.com/embed/${isYoutubeLink}`}
@@ -37,12 +38,17 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
                     allow="autoplay; encrypted-media"
                     allowFullScreen
                     title="video"
+                    className="m-md"
                 />
             ) : isUrlPreviewImage ? (
                 <img
                     src={isUrlPreviewImage}
-                    alt="img"
-                    className={'max-w-full h-full'}
+                    alt="no-image-found"
+                    className={'m-md max-w-full h-full'}
+                    onError={e => {
+                        e.currentTarget.style.display = 'none'
+                        e.currentTarget.src = defaultProfileImage
+                    }}
                 />
             ) : (
                 <></>
