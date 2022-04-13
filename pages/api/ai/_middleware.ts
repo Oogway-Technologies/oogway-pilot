@@ -1,21 +1,31 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-import { idRateLimit } from '../../../lib/upstash/id-rate-limit'
+import { idRateLimit } from '../../../lib/upstash/idRateLimit'
 
 export async function middleware(req: NextRequest) {
     // Can abstract to handle multiple routes and configs
-    if (req.nextUrl.pathname === '/api/adviceBot') {
+    if (req.nextUrl.pathname === '/api/ai/adviceBot') {
         const res = await idRateLimit(req)
-        if (res.status !== 200) return res
+        console.log('Rew Headers:')
+        console.log(req)
+        console.log('\nStatus Code: ', res.status)
+        // If the call fails, log the rate limiting response
+        // and redirect user to referrer without encountering and error
+        // If we intend to call API from other services, not just through
+        // new post form, may want to account for those calls as well.
+        if (res.status !== 200) {
+            // Get referer page and redirect
+            const referer = req.headers.get('referer')
 
-        console.log('Middleware initiated!')
-        console.log('Response Headers', res.headers, '\n\n')
-        res.headers.set('content-type', 'application/json')
+            // if no referrer or not coming from new post form
+            // return response
+            if (!referer || !referer.includes('/?feed')) return res
 
-        return new Response(JSON.stringify({ done: true }), {
-            status: 200,
-            headers: res.headers,
-        })
+            // Otherwise reroute the user to the feed
+            console.log(res)
+            return NextResponse.rewrite(referer)
+        }
+        return NextResponse.next()
     }
     return req
 }

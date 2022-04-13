@@ -56,7 +56,7 @@ const rateLimited: OnRateLimit = ({ id }) => {
             error: { message: `API rate limit exceeded for ${id}` },
         }),
         {
-            status: 403,
+            status: 429,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -77,6 +77,11 @@ async function rateLimit(context: RateLimitContext) {
 
     try {
         countOrRes = await count({ ...context, key })
+
+        // Test count
+        console.log('countOrRes: ', countOrRes)
+        if (!(countOrRes instanceof Response))
+            console.log('countOrRes - limit: ', limit - countOrRes)
     } catch (err) {
         console.error('Rate limit `count` failed with:', err)
         // If the count function fails we'll ignore rate limiting and

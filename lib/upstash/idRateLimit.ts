@@ -1,4 +1,4 @@
-import { CountFn, initRateLimit } from './rate-limit'
+import { CountFn, initRateLimit } from './rateLimit'
 import { upstashRest } from './upstash'
 
 export default function getForwardedFor(req: Request) {
@@ -12,7 +12,7 @@ export default function getForwardedFor(req: Request) {
     }
 
     // Set default xff for ip
-    xff = xff && xffClass === 'ip' ? xff.split(',')[0] : '127.0.0.1'
+    xff = xff && xffClass === 'ip' ? xff.split(',')[0] : xff
 
     return [xffClass, xff] as const
 }
