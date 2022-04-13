@@ -6,13 +6,13 @@ import { dehydrate, QueryClient } from 'react-query'
 
 // Components and styling
 import FeedAPI from '../components/Feed/FeedAPI'
-import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
+import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
+import { FeedSelectorMenu } from '../components/Feed/Sidebar/FeedSelector'
 import UserProfileForm from '../components/Forms/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
 import { getPosts } from '../queries/posts'
 import queryClientConfig from '../query'
-import { bodySmall } from '../styles/typography'
 
 interface Props {
     children: ReactNode
@@ -66,37 +66,8 @@ export default function Home() {
                     <SidebarWidget>
                         <FeedSelectorMenu />
                     </SidebarWidget>
-                    <SidebarWidget title="Disclaimer" className="">
-                        <span className={'mx-sm mb-sm px-sm w-64 ' + bodySmall}>
-                            By using Oogway, you agree to our
-                            <a
-                                target="_blank"
-                                href="https://www.oogway.ai/terms-of-use"
-                                rel="noopener noreferrer"
-                                className="text-primary hover:underline hover:cursor-pointer"
-                            >
-                                {' '}
-                                Terms of Use,
-                            </a>{' '}
-                            <a
-                                target="_blank"
-                                href="https://www.oogway.ai/privacy-policy"
-                                rel="noopener noreferrer"
-                                className="text-primary hover:underline hover:cursor-pointer"
-                            >
-                                Privacy Policy
-                            </a>{' '}
-                            and
-                            <a
-                                target="_blank"
-                                href="https://www.oogway.ai/"
-                                rel="noopener noreferrer"
-                                className="text-primary hover:underline hover:cursor-pointer"
-                            >
-                                {' '}
-                                Cookie Policy.
-                            </a>
-                        </span>
+                    <SidebarWidget title="Disclaimer">
+                        <FeedDisclaimer className="px-sm mx-sm mb-sm w-64" />
                     </SidebarWidget>
                 </Sidebar>
                 <MainContent>

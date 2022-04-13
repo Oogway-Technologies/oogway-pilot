@@ -59,7 +59,7 @@ const Modal: React.FC<ModalProps> = ({
                         >
                             {closeIcon && (
                                 <UilTimesCircle
-                                    className={'mb-3 ml-auto cursor-pointer'}
+                                    className={'mb-2 ml-auto cursor-pointer'}
                                     onClick={() => onClose(false)}
                                 />
                             )}

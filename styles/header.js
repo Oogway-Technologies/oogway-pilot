@@ -52,11 +52,21 @@ export const searchBarButtonClass = {
     switch: 'h-3.5 md:h-5',
 }
 
-export const toggleThemeClass = {
+export const appsButtonClass = {
+    a:
+        'hover:text-black active:text-black dark:hover:text-neutralDark-50 ' +
+        'dark:active:text-neutralDark-50',
+}
+
+export const userDropDownButtonClass = {
     a:
         'inline-flex group-hover:text-black active:text-black ' +
         'dark:group-hover:text-neutralDark-50 dark:active:text-neutralDark-50 ' +
-        'cursor-pointer',
+        'cursor-pointer items-center',
+    icon: 'mx-1',
+}
+
+export const toggleThemeClass = {
     switchSlide:
         'ml-4 items-center inline-flex border-2 ' +
         'border-transparent rounded-full cursor-pointer transition-colors ' +
@@ -68,35 +78,6 @@ export const toggleThemeClass = {
         'pointer-events-none inline-block align-text-middle ' +
         'rounded-full bg-white shadow-lg transform ring-0 ' +
         'transition ease-in-out duration-200 h-[21px] w-[21px]',
-}
-
-export const settingsButtonClass = {
-    a:
-        'inline-flex group-hover:text-black active:text-black ' +
-        'dark:group-hover:text-neutralDark-50 dark:active:text-neutralDark-50',
-    icon: 'mx-1',
-}
-
-export const appsButtonClass = {
-    a:
-        'hover:text-black active:text-black dark:hover:text-neutralDark-50 ' +
-        'dark:active:text-neutralDark-50',
-}
-
-export const logoutButtonClass = {
-    a:
-        'inline-flex group-hover:text-black active:text-black ' +
-        'dark:group-hover:text-neutralDark-50 dark:active:text-neutralDark-50 ' +
-        'cursor-pointer',
-    icon: 'mx-1',
-}
-
-export const profileButtonClass = {
-    a:
-        'inline-flex group-hover:text-black active:text-black ' +
-        'dark:group-hover:text-neutralDark-50 dark:active:text-neutralDark-50 ' +
-        'cursor-pointer items-center',
-    icon: 'mx-1',
 }
 
 export const navLinksClass = {

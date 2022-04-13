@@ -23,7 +23,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
     styles.popper = {
         position: 'absolute',
         right: '0',
-        top: '1',
+        top: '70px',
     }
 
     return (

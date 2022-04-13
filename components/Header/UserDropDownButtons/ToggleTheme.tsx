@@ -3,7 +3,10 @@ import { useTheme } from 'next-themes'
 import { FC, useEffect, useState } from 'react'
 import { Moon } from 'react-feather'
 
-import { toggleThemeClass } from '../../styles/header'
+import {
+    toggleThemeClass,
+    userDropDownButtonClass,
+} from '../../../styles/header'
 
 interface ToggleThemeProps {
     hasText: boolean
@@ -33,7 +36,7 @@ const ToggleTheme: FC<ToggleThemeProps> = ({ hasText }) => {
     const disabledColor = 'bg-secondary/30'
 
     return (
-        <a className={toggleThemeClass.a} onClick={handleChangeTheme}>
+        <a className={userDropDownButtonClass.a} onClick={handleChangeTheme}>
             {hasText && (
                 <>
                     <Moon className="mx-1" /> Night Mode
