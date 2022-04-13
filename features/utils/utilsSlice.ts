@@ -17,6 +17,7 @@ const initialState: {
         rightPreviewImage: string
     }
     notificationsState: boolean
+    jumpToCommentId: string
 } = {
     fileSizeTooLarge: false,
     feedState: 'All',
@@ -34,6 +35,7 @@ const initialState: {
         rightPreviewImage: '',
     },
     notificationsState: false,
+    jumpToCommentId: '',
 }
 
 export const utilsSlice = createSlice({
@@ -110,6 +112,9 @@ export const utilsSlice = createSlice({
         setLabelCompareRight: (state, { payload }: PayloadAction<string>) => {
             state.compareForm.labelCompareRight = payload
         },
+        setJumpToComment: (state, { payload }: PayloadAction<string>) => {
+            state.jumpToCommentId = payload
+        },
     },
 })
 
@@ -129,6 +134,7 @@ export const {
     setCompareFormExpanded,
     setNotificationsState,
     resetCompareForm,
+    setJumpToComment,
 } = utilsSlice.actions
 
 export default utilsSlice.reducer

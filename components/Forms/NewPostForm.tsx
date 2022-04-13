@@ -44,6 +44,7 @@ import {
     setTextCompareLeft,
     setTextCompareRight,
 } from '../../features/utils/utilsSlice'
+// Database
 import { db, storage } from '../../firebase'
 import { useFeedOptions } from '../../hooks/useFeedOptions'
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'

@@ -1,8 +1,9 @@
-import React, { Fragment, useRef } from 'react'
+import React, { Fragment, useEffect, useRef } from 'react'
 
+import { setJumpToComment } from '../../../features/utils/utilsSlice'
 // Custom hook
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver'
-import { useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 // Queries
 import { useInfinitePostsQuery } from '../../../queries/posts'
 import {
@@ -43,6 +44,20 @@ function PostsAPI() {
     const isDemoAccountUser = (uid: string) => {
         return uid === demoAccountIdDev || uid === demoAccountIdProd
     }
+    const jumpToCommentId = useAppSelector(
+        state => state.utilsSlice.jumpToCommentId
+    )
+
+    useEffect(() => {
+        if (jumpToCommentId) {
+            setTimeout(() => {
+                document
+                    .getElementById(jumpToCommentId)
+                    ?.scrollIntoView({ behavior: 'smooth' })
+                useAppDispatch(setJumpToComment(''))
+            }, 1500)
+        }
+    }, [])
 
     return (
         <>
