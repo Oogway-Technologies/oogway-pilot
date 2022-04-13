@@ -98,7 +98,7 @@ const PostVotingMechanism = ({
 
     // Event hooks
     // TODO: refactor to firebase v9+
-    const voteOnImage = (objIdx: number) => {
+    const voteOnImage = (e: React.MouseEvent<any>, objIdx: number) => {
         // Do not vote if user is not logged in
         if (!user || !userProfile.uid) return
         // Add a vote, for this user, to one of the images
@@ -144,7 +144,7 @@ const PostVotingMechanism = ({
         // return early if redux failed to fetch user
         if (!userProfile.uid) return
         // Send vote
-        voteOnImage(idx)
+        voteOnImage(e, idx)
 
         // Create engagement notification
         const engagement: FirebaseEngagement = {
@@ -179,8 +179,8 @@ const PostVotingMechanism = ({
                                             (!user ? ' cursor-default' : '')
                                         }
                                         src={obj.image}
-                                        onClick={() => {
-                                            voteOnImage(idx)
+                                        onClick={e => {
+                                            voteOnImage(e, idx)
                                         }}
                                         alt=""
                                     />
