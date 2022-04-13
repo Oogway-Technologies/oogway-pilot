@@ -9,14 +9,14 @@ import { useRouter } from 'next/router'
 import React, { FC, Fragment, useState } from 'react'
 import { usePopper } from 'react-popper'
 
-import { setFeedState } from '../../features/utils/utilsSlice'
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
-import { useFeedsQuery } from '../../queries/feeds'
-import { feedSelectorClass, feedToolbarClass } from '../../styles/feed'
-import { sidebarWidget } from '../../styles/utils'
-import { FeedSelectorLoader } from '../Loaders/FeedSelectorLoader'
-import Button from '../Utils/Button'
-import { Collapse } from '../Utils/common/Collapse'
+import { setFeedState } from '../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useFeedsQuery } from '../../../queries/feeds'
+import { feedSelectorClass, feedToolbarClass } from '../../../styles/feed'
+import { sidebarWidget } from '../../../styles/utils'
+import { FeedSelectorLoader } from '../../Loaders/FeedSelectorLoader'
+import Button from '../../Utils/Button'
+import { Collapse } from '../../Utils/common/Collapse'
 
 interface FeedSelectorProps {
     feedClickHandler?: () => void

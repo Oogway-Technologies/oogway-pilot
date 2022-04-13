@@ -2,10 +2,10 @@ import { UilArrowLeft } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { setFeedState } from '../../features/utils/utilsSlice'
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
-import { feedApiClass } from '../../styles/feed'
-import Button from '../Utils/Button'
+import { setFeedState } from '../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { feedApiClass } from '../../../styles/feed'
+import Button from '../../Utils/Button'
 
 const FeedTitle = () => {
     // Track feed

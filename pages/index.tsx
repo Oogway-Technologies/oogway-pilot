@@ -6,7 +6,8 @@ import { dehydrate, QueryClient } from 'react-query'
 
 // Components and styling
 import FeedAPI from '../components/Feed/FeedAPI'
-import { FeedSelectorMenu } from '../components/Feed/FeedSelector'
+import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
+import { FeedSelectorMenu } from '../components/Feed/Sidebar/FeedSelector'
 import UserProfileForm from '../components/Forms/UserProfileForm'
 import Modal from '../components/Utils/Modal'
 import SidebarWidget from '../components/Utils/SidebarWidget'
@@ -49,6 +50,7 @@ export default function Home() {
     // Call user Profile and check whether profile requires updating
     // Should only be called on user first log-in
     const [show, setShow] = useState(false)
+
     const closeModal = () => {
         setShow(false)
     }
@@ -63,6 +65,9 @@ export default function Home() {
                 <Sidebar>
                     <SidebarWidget>
                         <FeedSelectorMenu />
+                    </SidebarWidget>
+                    <SidebarWidget title="Disclaimer">
+                        <FeedDisclaimer className="px-sm mx-sm mb-sm w-64" />
                     </SidebarWidget>
                 </Sidebar>
                 <MainContent>

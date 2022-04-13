@@ -2,7 +2,7 @@ import { UilUser } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 
-import { profileButtonClass } from '../../styles/header'
+import { userDropDownButtonClass } from '../../../styles/header'
 
 interface ProfileButtonProps {
     hasText: boolean
@@ -19,8 +19,8 @@ const ProfileButton: FC<ProfileButtonProps> = ({ hasText, uid }) => {
         }
     }
     return (
-        <a className={profileButtonClass.a} onClick={handleOnClick}>
-            <UilUser className={profileButtonClass.icon} />
+        <a className={userDropDownButtonClass.a} onClick={handleOnClick}>
+            <UilUser className={userDropDownButtonClass.icon} />
             {hasText && 'My Profile'}
         </a>
     )

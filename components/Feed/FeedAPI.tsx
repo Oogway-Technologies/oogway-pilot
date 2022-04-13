@@ -10,8 +10,8 @@ import { feedApiClass, feedToolbarClass } from '../../styles/feed'
 import NewPostForm from '../Forms/NewPostForm'
 import Button from '../Utils/Button'
 import Modal from '../Utils/Modal'
-import FeedToolbar from './FeedToolbar'
 import PostsAPI from './Post/PostsAPI'
+import FeedToolbar from './Sidebar/FeedToolbar'
 
 const FeedAPI = () => {
     const [isOpen, setIsOpen] = useState(false)
