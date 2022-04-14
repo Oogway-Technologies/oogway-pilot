@@ -100,7 +100,7 @@ const PostVotingMechanism = ({
     // TODO: refactor to firebase v9+
     const voteOnImage = (objIdx: number) => {
         // Do not vote if user is not logged in
-        if (!user) return
+        if (!user || !userProfile.uid) return
         // Add a vote, for this user, to one of the images
         const docRef = db.collection('posts').doc(id)
 
@@ -139,6 +139,9 @@ const PostVotingMechanism = ({
     }
 
     const voteHandler = (idx: number) => {
+        // return early if redux failed to fetch user
+        if (!userProfile.uid) return
+
         // Send vote
         voteOnImage(idx)
 

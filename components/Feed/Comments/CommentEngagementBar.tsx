@@ -72,6 +72,9 @@ const CommentEngagementBar = ({
 
     // Handler functions
     const likeHandler = async () => {
+        // return early if redux failed to fetch user
+        if (!userProfile.uid) return
+
         // Add like
         addLike(user, userProfile, getComment(commentId))
 

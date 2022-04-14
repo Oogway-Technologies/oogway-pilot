@@ -47,6 +47,9 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({
     }
 
     const likeHandler = async () => {
+        // return early if redux failed to fetch user
+        if (!userProfile.uid) return
+
         // Add like
         addLike(user, userProfile, getPost(id))
 

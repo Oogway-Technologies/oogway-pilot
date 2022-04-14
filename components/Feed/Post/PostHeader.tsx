@@ -9,6 +9,7 @@ import {
 } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
+import { useQueryClient } from 'react-query'
 
 import { db } from '../../../firebase'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -43,6 +44,8 @@ const PostHeader: FC<PostHeaderProps> = ({
 }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
+
+    const queryClient = useQueryClient()
 
     // router from next.js to use location functions.
     const router = useRouter()
@@ -82,6 +85,12 @@ const PostHeader: FC<PostHeaderProps> = ({
                 deleteDoc(engagement?.ref).catch(err => {
                     console.log('Cannot delete engagement: ', err)
                 })
+
+                // Update engagee id's notifications
+                queryClient.invalidateQueries([
+                    'engagementActivity',
+                    engagement.data().engageeId,
+                ])
             })
         })
     }
