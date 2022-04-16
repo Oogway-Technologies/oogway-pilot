@@ -3,7 +3,9 @@ import router from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
 
+import { setJumpToComment } from '../../../features/utils/utilsSlice'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { streamPostData } from '../../../lib/postsHelper'
 import { postCardClass } from '../../../styles/feed'
 import { cardMediaStyle } from '../../../styles/utils'
@@ -121,7 +123,10 @@ const PostCard: React.FC<PostProps> = ({
         <Card
             id={`post-${id}`}
             className={`${postCardClass.card} ${className ? className : ''}`}
-            onClick={() => router.push(`/comments/${id}`)}
+            onClick={() => {
+                useAppDispatch(setJumpToComment(`post-${id}`))
+                router.push(`/comments/${id}`)
+            }}
         >
             {/* Header */}
             <PostHeader

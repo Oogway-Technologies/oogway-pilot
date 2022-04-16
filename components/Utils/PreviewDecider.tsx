@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { defaultProfileImage } from '../../utils/constants/global'
 
+import { defaultProfileImage } from '../../utils/constants/global'
 import {
     fetcher,
     isValidURL,

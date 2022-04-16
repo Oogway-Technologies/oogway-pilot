@@ -3,9 +3,10 @@ import { UilComment, UilThumbsUp } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 
+import { setJumpToComment } from '../../../features/utils/utilsSlice'
 import { usePostNumberLikes } from '../../../hooks/useNumberLikes'
 import { useOnCommmentsPage } from '../../../hooks/useOnCommentsPage'
-import { useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useUserHasLiked } from '../../../hooks/useUserHasLiked'
 import { addLike } from '../../../lib/getLikesHelper'
 import { getPost } from '../../../lib/postsHelper'
@@ -44,6 +45,7 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
         e.stopPropagation()
+        useAppDispatch(setJumpToComment(`post-${id}`))
         router.push(`/comments/${id}`)
     }
 
