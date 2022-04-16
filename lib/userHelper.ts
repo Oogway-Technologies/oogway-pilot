@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 
 import { db } from '../firebase'
+import { fetcher } from '../utils/helpers/common'
 import { FirebaseProfile, FirebaseUser } from '../utils/types/firebase'
 
 export const getOrCreateUserFromFirebase = async (
@@ -30,8 +31,14 @@ export const getOrCreateUserFromFirebase = async (
             // The mapping is not present:
             // This is the first time ever the user logs into the app.
             // Create a new user
+
+            const userAuth: { email: string } = await fetcher(
+                `/api/registerEmail?userId=${user.sub}`
+            )
+            console.log(userAuth.email)
+
             const newUser: FirebaseUser = {
-                email: user?.email || '',
+                email: userAuth.email || '',
                 lastSeen: serverTimestamp(),
                 name: user?.name || '',
                 provider: 'Auth0',
