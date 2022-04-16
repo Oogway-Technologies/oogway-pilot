@@ -39,6 +39,7 @@ import {
     setHasPreviewedCompare,
     setImageCompareLeft,
     setImageCompareRight,
+    setImageToPost,
     setLeftPreviewImage,
     setRightPreviewImage,
     setTextCompareLeft,
@@ -134,10 +135,6 @@ const NewPostForm: FC<NewPostProps> = ({
 
     // Get a reference for the input image
     const filePickerRef = useRef<HTMLInputElement>(null)
-    // The image to post and to display as preview
-    const [imageToPost, setImageToPost] = useState<
-        string | ArrayBuffer | null | undefined
-    >(null)
 
     // Track whether user has opted to post anonymously
     const [isIncognito, setIsIncognito] = useState<boolean>(false)
@@ -170,6 +167,7 @@ const NewPostForm: FC<NewPostProps> = ({
             rightPreviewImage,
             textCompareLeft,
             textCompareRight,
+            imageToPost,
         },
     } = useAppSelector(state => state.utilsSlice)
 
@@ -383,7 +381,7 @@ const NewPostForm: FC<NewPostProps> = ({
                 })
 
                 // Remove image preview
-                setImageToPost(null)
+                useAppDispatch(setImageToPost(null))
                 if (targetEvent) {
                     // Reset the event state so the user can reload
                     // the same image twice
@@ -571,7 +569,8 @@ const NewPostForm: FC<NewPostProps> = ({
         // Reader is async, so use onload to attach a function
         // to set the loaded image from the reader
         reader.onload = readerEvent => {
-            setImageToPost(readerEvent?.target?.result)
+            useAppDispatch(setImageToPost(readerEvent?.target?.result))
+
             if (targetEvent) {
                 // Reset the event state so the user can reload
                 // the same image twice

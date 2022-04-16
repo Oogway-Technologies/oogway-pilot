@@ -15,6 +15,7 @@ const initialState: {
         hasPreviewedCompare: boolean
         leftPreviewImage: string
         rightPreviewImage: string
+        imageToPost: string | ArrayBuffer | null | undefined
     }
     notificationsState: boolean
     jumpToCommentId: string
@@ -33,6 +34,7 @@ const initialState: {
         hasPreviewedCompare: false,
         leftPreviewImage: '',
         rightPreviewImage: '',
+        imageToPost: null,
     },
     notificationsState: false,
     jumpToCommentId: '',
@@ -42,6 +44,9 @@ export const utilsSlice = createSlice({
     name: 'utils',
     initialState,
     reducers: {
+        setImageToPost: (state, { payload }) => {
+            state.compareForm.imageToPost = payload
+        },
         resetCompareForm: state => {
             state.compareForm = {
                 comparePostType: 'textOnly',
@@ -55,6 +60,7 @@ export const utilsSlice = createSlice({
                 hasPreviewedCompare: false,
                 leftPreviewImage: '',
                 rightPreviewImage: '',
+                imageToPost: null,
             }
         },
         setNotificationsState: (state, { payload }: PayloadAction<boolean>) => {
@@ -135,6 +141,7 @@ export const {
     setNotificationsState,
     resetCompareForm,
     setJumpToComment,
+    setImageToPost,
 } = utilsSlice.actions
 
 export default utilsSlice.reducer
