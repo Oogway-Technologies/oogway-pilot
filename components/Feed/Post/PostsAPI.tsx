@@ -103,6 +103,7 @@ function PostsAPI() {
                                             isAnonymous={
                                                 post?.isAnonymous || false
                                             }
+                                            className="cursor-pointer"
                                         />
                                     )
                                 })}

@@ -41,15 +41,20 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({
     const router = useRouter()
 
     // Handler functions
-    const enterComments = () => {
+    const enterComments = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
+        e.stopPropagation()
         useAppDispatch(setJumpToComment(`post-${id}`))
         router.push(`/comments/${id}`)
     }
 
-    const likeHandler = async () => {
+    const likeHandler = async (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
+        e.stopPropagation()
         // return early if redux failed to fetch user
         if (!userProfile.uid) return
-
         // Add like
         addLike(user, userProfile, getPost(id))
 
@@ -112,7 +117,7 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({
                             : ' text-neutral-700 dark:text-neutralDark-150')
                     }
                     type="button"
-                    onClick={item.onClick}
+                    onClick={e => item.onClick(e)}
                     icon={item.icon}
                     keepText={true}
                     text={item.text}

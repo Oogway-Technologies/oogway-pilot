@@ -1,6 +1,6 @@
 // Auth0
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilArrowLeft, UilPen } from '@iconscout/react-unicons'
+import { UilArrowLeft } from '@iconscout/react-unicons'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
@@ -11,6 +11,7 @@ import { feedApiClass, feedToolbarClass } from '../../../styles/feed'
 import NewPostForm from '../../Forms/NewPostForm'
 import Button from '../../Utils/Button'
 import Modal from '../../Utils/Modal'
+import FeedPostbar from './FeedPostbar'
 import { FeedSelectorMobile } from './FeedSelector'
 
 const FeedToolbar = () => {
@@ -38,67 +39,58 @@ const FeedToolbar = () => {
     // TODO: Center buttons when New Post button is not displayed
     return (
         <div className={feedApiClass.feedToolbar}>
-            <div className={feedToolbarClass.div}>
-                {/* Left: Tabs */}
-                <div className={feedToolbarClass.leftDiv}>
-                    {/* TODO: uncomment buttons when its done. */}
-                    <span className={feedApiClass.feedTitle}>
-                        {feed !== 'All' && (
-                            <Button
-                                icon={<UilArrowLeft />}
-                                text={undefined}
-                                forceNoText={true}
-                                keepText={false}
-                                addStyle={feedApiClass.backbutton}
-                                type="button"
-                                onClick={() => {
-                                    useAppDispatch(setFeedState('All'))
-                                    router.push('/?feed=All', undefined, {
-                                        shallow: true,
-                                    })
-                                }}
-                            />
-                        )}
-                        {feed === 'All' ? 'Home' : `${feed}`}
-                    </span>
-                    {/* <Button text="Hot" keepText={false} icon={<UilFire/>} */}
-                    {/*    type='button'*/}
-                    {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
-                    {/*    onClick={needsHook}*/}
-                    {/* />*/}
-                    {/* <Button text="New" keepText={false} icon={<UilNewspaper/>}*/}
-                    {/*    type='button'*/}
-                    {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
-                    {/*    onClick={needsHook}*/}
-                    {/* />*/}
-                    {/* <Button text="Unanswered" keepText={false} icon={<UilQuestionCircle/>}*/}
-                    {/*    type='button'*/}
-                    {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
-                    {/*    onClick={needsHook}*/}
-                    {/* />*/}
-                </div>
+            {isMobile ? (
+                <div className={feedToolbarClass.div}>
+                    {/* Left: Tabs */}
+                    <div className={feedToolbarClass.leftDiv}>
+                        {/* TODO: uncomment buttons when its done. */}
+                        <span className={feedApiClass.feedTitle}>
+                            {feed !== 'All' && (
+                                <Button
+                                    icon={<UilArrowLeft />}
+                                    text={undefined}
+                                    forceNoText={true}
+                                    keepText={false}
+                                    addStyle={feedApiClass.backbutton}
+                                    type="button"
+                                    onClick={() => {
+                                        useAppDispatch(setFeedState('All'))
+                                        router.push('/?feed=All', undefined, {
+                                            shallow: true,
+                                        })
+                                    }}
+                                />
+                            )}
+                            {feed === 'All' ? 'Home' : `${feed}`}
+                        </span>
+                        {/* <Button text="Hot" keepText={false} icon={<UilFire/>} */}
+                        {/*    type='button'*/}
+                        {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
+                        {/*    onClick={needsHook}*/}
+                        {/* />*/}
+                        {/* <Button text="New" keepText={false} icon={<UilNewspaper/>}*/}
+                        {/*    type='button'*/}
+                        {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
+                        {/*    onClick={needsHook}*/}
+                        {/* />*/}
+                        {/* <Button text="Unanswered" keepText={false} icon={<UilQuestionCircle/>}*/}
+                        {/*    type='button'*/}
+                        {/*    addStyle={feedToolbarClass.leftTabButtons}*/}
+                        {/*    onClick={needsHook}*/}
+                        {/* />*/}
+                    </div>
 
-                {/* Right: new post button */}
-                <div className={feedToolbarClass.rightDiv}>
-                    {!isMobile ? (
-                        user && (
-                            <Button
-                                text="New Post"
-                                keepText={false}
-                                icon={<UilPen />}
-                                type="button"
-                                addStyle={feedToolbarClass.newPostButton}
-                                onClick={openModal}
-                            />
-                        )
-                    ) : (
+                    {/* Right: new post button */}
+                    <div className={feedToolbarClass.rightDiv}>
                         <FeedSelectorMobile />
-                    )}
+                    </div>
                 </div>
-                <Modal show={isOpen} onClose={closeModal}>
-                    <NewPostForm closeModal={closeModal} />
-                </Modal>
-            </div>
+            ) : (
+                user && <FeedPostbar openModal={openModal} />
+            )}
+            <Modal show={isOpen} onClose={closeModal}>
+                <NewPostForm closeModal={closeModal} />
+            </Modal>
         </div>
     )
 }

@@ -83,7 +83,7 @@ export const feedSelectorClass = {
 export const postCardClass = {
     card:
         'flex flex-col px-md pt-md pb-sm rounded-md shadow-sm shadow-black/20 dark:shadow-black/60 ' +
-        'dark:bg-neutralDark-500',
+        'dark:bg-neutralDark-500 ',
     // Header
     header:
         'overflow-visible relative flex text-sm text-neutral-700 dark:text-neutralDark-150 ' +
@@ -107,7 +107,7 @@ export const postCardClass = {
     // Media
     voteDiv: 'grid grid-cols-2 gap-3 mx-3',
     voteContainer: 'flex flex-col items-center m-3 sm:m-2',
-    imageVote: 'rounded-[8px] cursor-pointer h-inherit',
+    imageVote: 'rounded-[8px] h-inherit',
     voteButtonContainer:
         'flex flex-col items-center justify-self-end mt-auto w-full p-sm',
     textVote:

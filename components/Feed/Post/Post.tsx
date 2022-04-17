@@ -1,8 +1,11 @@
 import { FieldValue } from 'firebase/firestore'
+import router from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Linkify from 'react-linkify'
 
+import { setJumpToComment } from '../../../features/utils/utilsSlice'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { streamPostData } from '../../../lib/postsHelper'
 import { postCardClass } from '../../../styles/feed'
 import { cardMediaStyle } from '../../../styles/utils'
@@ -29,6 +32,7 @@ interface PostProps {
     comments: null | any // Should be json object
     previewImage: string | null
     isAnonymous: boolean
+    className?: string
 }
 
 const PostCard: React.FC<PostProps> = ({
@@ -45,6 +49,7 @@ const PostCard: React.FC<PostProps> = ({
     comments,
     previewImage,
     isAnonymous,
+    className,
 }) => {
     // Track state for voting mechanism
     const [votesList, setVotesList] = useState(Array<number>())
@@ -115,7 +120,14 @@ const PostCard: React.FC<PostProps> = ({
     }
 
     return (
-        <Card id={`post-${id}`} className={postCardClass.card}>
+        <Card
+            id={`post-${id}`}
+            className={`${postCardClass.card} ${className ? className : ''}`}
+            onClick={() => {
+                useAppDispatch(setJumpToComment(`post-${id}`))
+                router.push(`/comments/${id}`)
+            }}
+        >
             {/* Header */}
             <PostHeader
                 id={id}
