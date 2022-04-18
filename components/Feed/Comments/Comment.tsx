@@ -7,7 +7,11 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 import { commentClass } from '../../../styles/feed'
 import { cardMediaStyle } from '../../../styles/utils'
 import { isValidURL } from '../../../utils/helpers/common'
-import { FirebaseComment } from '../../../utils/types/firebase'
+import {
+    AIBotComment,
+    FirebaseComment,
+    isAIBotComment,
+} from '../../../utils/types/firebase'
 import { staticPostData } from '../../../utils/types/params'
 import NewReplyForm from '../../Forms/NewReplyForm'
 import { Collapse } from '../../Utils/common/Collapse'
@@ -17,12 +21,13 @@ import { Tooltip } from '../../Utils/Tooltip'
 import RepliesAPI from '../Replies/RepliesAPI'
 import CommentEngagementBar from './CommentEngagementBar'
 import CommentHeader from './CommentHeader'
+import AIBotReferences from './references/AIBotReferences'
 
 interface CommentProps {
     commentOwner: string
     postId: string
     commentId: string
-    comment: FirebaseComment
+    comment: FirebaseComment | AIBotComment
     parentPostData: staticPostData
 }
 
@@ -91,35 +96,51 @@ const Comment: FC<CommentProps> = ({
                 {/* Body */}
                 <div className={commentClass.body}>
                     {isValidURL(comment.message) ? (
-                        <Linkify
-                            componentDecorator={(
-                                decoratedHref,
-                                decoratedText,
-                                key
-                            ) => (
-                                <a
-                                    className={
-                                        'pr-sm ml-0 text-sm text-neutral-700 dark:text-neutralDark-150 hover:underline whitespace-pre-line break-words'
-                                    }
-                                    target="blank"
-                                    href={decoratedHref}
-                                    key={key}
-                                >
-                                    {decoratedText}
-                                </a>
+                        <>
+                            <Linkify
+                                componentDecorator={(
+                                    decoratedHref,
+                                    decoratedText,
+                                    key
+                                ) => (
+                                    <a
+                                        className={
+                                            'pr-sm ml-0 text-sm text-neutral-700 dark:text-neutralDark-150 hover:underline whitespace-pre-line break-words'
+                                        }
+                                        target="blank"
+                                        href={decoratedHref}
+                                        key={key}
+                                    >
+                                        {decoratedText}
+                                    </a>
+                                )}
+                            >
+                                <p className={commentClass.bodyDescription}>
+                                    {comment.message}
+                                </p>
+                            </Linkify>
+                            {/* AI Bot references */}
+                            {isAIBotComment(comment) && comment.references && (
+                                <AIBotReferences
+                                    references={comment.references}
+                                />
                             )}
-                        >
+                        </>
+                    ) : (
+                        <>
                             <p className={commentClass.bodyDescription}>
                                 {comment.message}
                             </p>
-                        </Linkify>
-                    ) : (
-                        <p className={commentClass.bodyDescription}>
-                            {comment.message}
-                        </p>
+                            {/* AI Bot references */}
+                            {isAIBotComment(comment) && comment.references && (
+                                <AIBotReferences
+                                    references={comment.references}
+                                />
+                            )}
+                        </>
                     )}
                     {/* Display information tooltip for senstive AI bot comments */}
-                    {comment.filterStatus && comment.filterStatus === '2' && (
+                    {isAIBotComment(comment) && comment.filterStatus === '2' && (
                         <div
                             className={
                                 commentClass.bodyDescription + ' mt-sm mr-auto'

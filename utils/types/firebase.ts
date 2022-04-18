@@ -5,6 +5,7 @@ import {
     SnapshotOptions,
 } from 'firebase/firestore'
 
+import { BingReference } from './bingapi'
 import { MediaObject } from './global'
 
 /**
@@ -45,10 +46,14 @@ export interface FirebaseComment {
     author: string
     authorUid: string
     likes: userMap
-    dislikes?: userMap // only for advice bot comment
-    filterStatus?: '0' | '1' | '2' // only for advice bot comment
     postImage?: string | null
     timestamp: FieldValue
+}
+
+export interface AIBotComment extends FirebaseComment {
+    dislikes: userMap
+    filterStatus: '0' | '1' | '2'
+    references: BingReference[] | null
 }
 
 export interface FirebasePost {
@@ -124,12 +129,19 @@ export interface FirebaseEngagementFragment {
 }
 
 /**
+ * Type guards
+ */
+
+export const isAIBotComment = (x: any): x is AIBotComment =>
+    'dislikes' in x && 'filterStatus' in x && 'references' in x
+
+/**
  * Type converters for Firebase Snapshots
  * See: https://firebase.google.com/docs/reference/js/v8/firebase.firestore.FirestoreDataConverter
  */
 export const commmentConverter = {
-    toFirestore(comment: FirebaseComment): DocumentData {
-        return {
+    toFirestore(comment: FirebaseComment | AIBotComment): DocumentData {
+        let data: FirebaseComment | AIBotComment = {
             id: comment.id,
             postId: comment.postId,
             parentId: comment.parentId,
@@ -141,13 +153,24 @@ export const commmentConverter = {
             postImage: comment.postImage,
             timestamp: comment.timestamp,
         }
+        if (isAIBotComment(comment)) {
+            data = {
+                ...data,
+                filterStatus: comment.filterStatus,
+                references: comment.references,
+                dislikes: comment.dislikes,
+            }
+        }
+        return data
     },
     fromFirestore(
         snapshot: QueryDocumentSnapshot,
         options: SnapshotOptions
-    ): FirebaseComment {
+    ): FirebaseComment | AIBotComment {
         const data = snapshot.data(options)
-        return {
+
+        // Create base comment
+        let comment: FirebaseComment | AIBotComment = {
             id: data.id,
             postId: data.postId,
             parentId: data.parentId,
@@ -159,6 +182,15 @@ export const commmentConverter = {
             postImage: data.postImage ? data.postImage : null,
             timestamp: data.timestamp,
         }
+        if (typeof data.references !== 'undefined') {
+            comment = {
+                ...comment,
+                references: data.references,
+                filterStatus: data.filterStatus,
+                dislikes: data.dislikes,
+            }
+        }
+        return comment
     },
 }
 

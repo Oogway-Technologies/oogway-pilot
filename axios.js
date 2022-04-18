@@ -23,4 +23,11 @@ export const OogwayDecisionAPI = axios.create({
     baseURL: process.env.OOGWAY_DECISION_URL,
 })
 
+// Axious instance for Bing Api
+export const BingSearchAPI = axios.create({
+    baseURL: process.env.RETRIEVER_BING_SEARCH_URL,
+})
+BingSearchAPI.defaults.headers.get[process.env.RETRIEVER_BING_HEADER_KEY_TAG] =
+    process.env.RETRIEVER_BING_HEADER_KEY_VALUE
+
 export default API
