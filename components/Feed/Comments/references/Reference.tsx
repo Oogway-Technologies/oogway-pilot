@@ -25,17 +25,21 @@ const Reference: FC<Props> = ({ reference }) => {
 
     return (
         <Link href={reference.url} passHref={true}>
-            <div className={ReferenceBlockStyles.body}>
-                <span className={ReferenceBlockStyles.name + bodyXSmall}>
-                    {parseRefName(reference.name)}
-                </span>
-                {parseSubreddit(reference.url) && (
-                    <span className={ReferenceBlockStyles.slug + bodyXSmall}>
-                        {'Reddit > r/'}
-                        {parseSubreddit(reference.url)}
+            <a target="_blank" rel="noopener noreferrer">
+                <div className={ReferenceBlockStyles.body}>
+                    <span className={ReferenceBlockStyles.name + bodyXSmall}>
+                        {parseRefName(reference.name)}
                     </span>
-                )}
-            </div>
+                    {parseSubreddit(reference.url) && (
+                        <span
+                            className={ReferenceBlockStyles.slug + bodyXSmall}
+                        >
+                            {'Reddit > r/'}
+                            {parseSubreddit(reference.url)}
+                        </span>
+                    )}
+                </div>
+            </a>
         </Link>
     )
 }
