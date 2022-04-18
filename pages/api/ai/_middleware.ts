@@ -6,9 +6,6 @@ export async function middleware(req: NextRequest) {
     // Can abstract to handle multiple routes and configs
     if (req.nextUrl.pathname === '/api/ai/adviceBot') {
         const res = await idRateLimit(req)
-        console.log('Rew Headers:')
-        console.log(req)
-        console.log('\nStatus Code: ', res.status)
         // If the call fails, log the rate limiting response
         // and redirect user to referrer without encountering and error
         // If we intend to call API from other services, not just through
@@ -22,7 +19,6 @@ export async function middleware(req: NextRequest) {
             if (!referer || !referer.includes('/?feed')) return res
 
             // Otherwise reroute the user to the feed
-            console.log(res)
             return NextResponse.rewrite(referer)
         }
         return NextResponse.next()

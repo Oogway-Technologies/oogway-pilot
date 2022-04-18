@@ -8,12 +8,13 @@ import {
 import { JwtPayload } from 'jsonwebtoken'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { OogwayDecisionAPI } from '../../../axios'
+import { BingSearchAPI, OogwayDecisionAPI } from '../../../axios'
 import { db } from '../../../firebase'
 import { checkReq, verifyJwt } from '../../../lib/jwt/jwt'
-import { adviceBotId } from '../../../utils/constants/global'
+import { adviceBotId, bingTopN } from '../../../utils/constants/global'
+import { BingReference } from '../../../utils/types/bingapi'
 import {
-    FirebaseComment,
+    AIBotComment,
     FirebaseEngagement,
     FirebasePost,
 } from '../../../utils/types/firebase'
@@ -52,6 +53,19 @@ async function handlePost(req: ExtendedNextApiRequest, res: NextApiResponse) {
             ...body,
             timestamp: serverTimestamp(),
         }
+
+        // Send post info to Bing API
+        const params = {
+            q: post.message + ' site:reddit.com',
+            mkt: 'en-US',
+        }
+        const bingResponse = await BingSearchAPI.get('/', { params: params })
+        const bingData = bingResponse.data
+
+        // Get array of top N results
+        const references = bingData
+            ? (bingData.webPages.value.slice(0, bingTopN) as BingReference[])
+            : null
 
         // Send post info to Oogway Decision endpoint
         const decisionData = {
@@ -100,14 +114,15 @@ async function handlePost(req: ExtendedNextApiRequest, res: NextApiResponse) {
         const adviceBotProfile = await getDoc(doc(db, 'profiles', adviceBotId))
         const sensitiveDataMessage =
             'Sorry, our AI does not have any advice for you. Our decision coaches can help you with this decision.'
-        const adviceBotComment: FirebaseComment = {
+        const adviceBotComment: AIBotComment = {
             postId: post.id,
             parentId: null,
             isComment: true,
             timestamp: serverTimestamp(),
             message:
                 filterStatus === '2' ? sensitiveDataMessage : adviceBotMessage,
-            author: adviceBotProfile?.data.name || 'Oogway AI Bot',
+            references: references,
+            author: adviceBotProfile?.data()?.name || 'Oogway AI Bot',
             authorUid: adviceBotId,
             likes: {},
             dislikes: {},
