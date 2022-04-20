@@ -12,10 +12,6 @@ import { checkFileSize } from '../../../utils/helpers/common'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 
 const FeedPostbar = ({ openModal }: { openModal: () => void }) => {
-    // Track feed
-    // Store selected feed in global state
-
-    // Track feed
     const {
         compareForm: { compareFormExpanded },
     } = useAppSelector(state => state.utilsSlice)
@@ -57,10 +53,11 @@ const FeedPostbar = ({ openModal }: { openModal: () => void }) => {
                 className={
                     'py-3 px-4 w-full text-sm bg-transparent rounded-3xl border-2 border-neutral-300 focus-within:border-primary focus:border-primary focus-visible:border-primary active:border-neutral-300 border-solid focus:outline-none'
                 }
-                onChange={event => {
-                    event.target.value = ''
+                onClick={event => {
+                    event.stopPropagation()
                     openModal()
                 }}
+                value={''}
             />
             <div className={'flex items-center ml-2'}>
                 {/* Upload Image */}

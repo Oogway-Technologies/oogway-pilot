@@ -114,11 +114,7 @@ const NewPostForm: FC<NewPostProps> = ({
     useEffect(() => {
         // Register the form inputs w/o hooks so as not to interfere w/ existing hooks
         register('question', { required: true })
-    }, [register])
-    useEffect(() => {
         register('compare', { required: true })
-    }, [register])
-    useEffect(() => {
         register('feed', { required: true })
     }, [register])
 
@@ -181,6 +177,8 @@ const NewPostForm: FC<NewPostProps> = ({
         }
     }, [])
 
+    const [isInputTitle, setIsInputTitle] = useState<boolean>(false)
+
     // I'm pretty sure this is introducing a memory leak
     // useEffect cannot include async logic
     useEffect(() => {
@@ -188,6 +186,10 @@ const NewPostForm: FC<NewPostProps> = ({
             sendPost().finally()
         }
     }, [previewImage])
+
+    useEffect(() => {
+        console.log('currentFeed - ', selectedFeed)
+    }, [selectedFeed])
 
     // Update form selection
     const selectFeedHandler = (selectedOption: staticFeedOptions | null) => {
@@ -688,6 +690,12 @@ const NewPostForm: FC<NewPostProps> = ({
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e?.target?.value) {
+            setIsInputTitle(true)
+        } else {
+            setIsInputTitle(false)
+        }
+
         // clear errors if there are any. so they can reappear.
         if (errors?.question?.type) {
             clearErrors()
@@ -822,16 +830,6 @@ const NewPostForm: FC<NewPostProps> = ({
                         style={postFormClass.formAlert}
                     />
                 )}
-                {/* </>
-                ) : (
-                    <div className={postFormClass.fixedFeed}>
-                        Posting to{' '}
-                        <span className={postFormClass.feedSpan}>
-                            {currentFeed}
-                        </span>{' '}
-                        feed.
-                    </div>
-                )} */}
             </form>
 
             {/* Upload Image OR compare*/}
@@ -921,7 +919,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         keepText={true}
                         icon={<UilNavigator />}
                         type="button"
-                        disabled={isMissingDataForPreview() ? true : false}
+                        disabled={isMissingDataForPreview()}
                         addStyle={
                             postFormClass.PostButton +
                             (isMissingDataForPreview()
@@ -940,6 +938,7 @@ const NewPostForm: FC<NewPostProps> = ({
                         type="submit"
                         addStyle={postFormClass.PostButton}
                         onClick={sendAndClose}
+                        disabled={!(selectedFeed && isInputTitle)}
                         onKeyPress={handleKeyPress}
                     />
                 )}
