@@ -55,6 +55,7 @@ const PostEngagementBar: FC<PostEngagementBarProps> = ({
         e.stopPropagation()
         // return early if redux failed to fetch user
         if (!userProfile.uid) return
+
         // Add like
         addLike(user, userProfile, getPost(id))
 
