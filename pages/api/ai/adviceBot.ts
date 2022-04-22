@@ -26,6 +26,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 
 async function handlePost(req: ExtendedNextApiRequest, res: NextApiResponse) {
     // Check authentication
+    console.log(req.headers)
     const [message, token] = checkReq(req)
     if (message) return res.status(500).json({ message })
 
