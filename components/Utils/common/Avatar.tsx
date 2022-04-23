@@ -13,7 +13,9 @@ interface AvatarProps {
     isHoverEffect?: boolean
 }
 
-export const Avatar: FC<AvatarProps> = ({
+export const Avatar: FC<
+    React.PropsWithChildren<React.PropsWithChildren<AvatarProps>>
+> = ({
     alt,
     src,
     className,

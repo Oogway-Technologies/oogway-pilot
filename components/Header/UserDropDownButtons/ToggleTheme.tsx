@@ -12,7 +12,9 @@ interface ToggleThemeProps {
     hasText: boolean
 }
 
-const ToggleTheme: FC<ToggleThemeProps> = ({ hasText }) => {
+const ToggleTheme: FC<
+    React.PropsWithChildren<React.PropsWithChildren<ToggleThemeProps>>
+> = ({ hasText }) => {
     const { theme, setTheme } = useTheme()
     const [enabled, setEnabled] = useState(false)
 

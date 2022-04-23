@@ -12,7 +12,9 @@ interface ComparePreviewProps {
     onClick: () => void
 }
 
-const _ComparePreview: FC<ComparePreviewProps> = ({ text, onClick }) => {
+const _ComparePreview: FC<
+    React.PropsWithChildren<React.PropsWithChildren<ComparePreviewProps>>
+> = ({ text, onClick }) => {
     // Parse text and fetch preview
     const [previewImage] = useFetchUrlPreview(text)
 

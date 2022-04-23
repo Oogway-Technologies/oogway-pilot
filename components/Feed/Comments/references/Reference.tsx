@@ -9,7 +9,9 @@ type Props = {
     reference: BingReference
 }
 
-const Reference: FC<Props> = ({ reference }) => {
+const Reference: FC<
+    React.PropsWithChildren<React.PropsWithChildren<Props>>
+> = ({ reference }) => {
     const parseRefName = (name: string): string => {
         // Reddit names often have the sub-reddit in the title after
         // a colon. If there, only return everything before.

@@ -10,12 +10,9 @@ export type FlashErrorMessageProps = {
     onClose?: (arg?: string | boolean | number) => void
 }
 
-const FlashErrorMessage: React.FC<FlashErrorMessageProps> = ({
-    message,
-    ms,
-    style,
-    onClose,
-}) => {
+const FlashErrorMessage: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<FlashErrorMessageProps>>
+> = ({ message, ms, style, onClose }) => {
     // Tracks how long a form warning message has been displayed
     const [warningHasElapsed, setWarningHasElapsed] = useState(false)
 

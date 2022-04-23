@@ -18,7 +18,9 @@ interface Props {
     children: ReactNode
 }
 
-const Sidebar: FC<Props> = ({ children }) => {
+const Sidebar: FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = ({
+    children,
+}) => {
     return (
         <div
             className={
@@ -30,7 +32,9 @@ const Sidebar: FC<Props> = ({ children }) => {
     )
 }
 
-const MainContent: FC<Props> = ({ children }) => {
+const MainContent: FC<
+    React.PropsWithChildren<React.PropsWithChildren<Props>>
+> = ({ children }) => {
     return (
         <div
             className={

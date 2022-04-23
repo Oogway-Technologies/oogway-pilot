@@ -14,7 +14,9 @@ interface ProfileEngagementBarProps {
     expanded?: boolean
 }
 
-const ProfileEngagementBar: FC<ProfileEngagementBarProps> = () => {
+const ProfileEngagementBar: FC<
+    React.PropsWithChildren<React.PropsWithChildren<ProfileEngagementBarProps>>
+> = () => {
     // Items
     const engagementItems: EngagementItems[] = [
         {

@@ -31,13 +31,9 @@ interface CommentProps {
     parentPostData: staticPostData
 }
 
-const Comment: FC<CommentProps> = ({
-    commentOwner,
-    postId,
-    commentId,
-    comment,
-    parentPostData,
-}) => {
+const Comment: FC<
+    React.PropsWithChildren<React.PropsWithChildren<CommentProps>>
+> = ({ commentOwner, postId, commentId, comment, parentPostData }) => {
     // Retrieve auth state
     const { user } = useUser()
 

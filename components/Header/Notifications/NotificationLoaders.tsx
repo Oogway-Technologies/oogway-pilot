@@ -4,7 +4,9 @@ import ContentLoader from 'react-content-loader'
 
 import { NotificationBlockStyles } from './NotificationStyles'
 
-export const NotificationContent: FC = props => (
+export const NotificationContent: FC<
+    React.PropsWithChildren<React.PropsWithChildren<unknown>>
+> = props => (
     <ContentLoader
         speed={2}
         width={240}
@@ -34,7 +36,9 @@ interface GenerateNotificationLoaderProps {
 }
 
 export const GenerateNotificationLoaders: FC<
-    GenerateNotificationLoaderProps
+    React.PropsWithChildren<
+        React.PropsWithChildren<GenerateNotificationLoaderProps>
+    >
 > = ({ n }) => {
     // Create array to iterate over
     const nNotifications = new Array<number>(n)

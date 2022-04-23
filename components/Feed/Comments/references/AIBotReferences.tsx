@@ -13,7 +13,9 @@ type Props = {
     references: BingReference[]
 }
 
-const AIBotReferences: FC<Props> = ({ references }) => {
+const AIBotReferences: FC<
+    React.PropsWithChildren<React.PropsWithChildren<Props>>
+> = ({ references }) => {
     const [isShowing, setIsShowing] = useState<boolean>(false)
 
     // Track mobile state

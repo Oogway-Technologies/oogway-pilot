@@ -4,7 +4,9 @@ import ContentLoader from 'react-content-loader'
 
 import { postCardClass } from '../../styles/feed'
 
-export const PostContent: FC = props => (
+export const PostContent: FC<
+    React.PropsWithChildren<React.PropsWithChildren<unknown>>
+> = props => (
     <ContentLoader
         speed={2}
         width={650}
@@ -42,9 +44,11 @@ interface GeneratePostCardLoaderProps {
     n: number // number of place holder cards to generate
 }
 
-export const GeneratePostCardLoaders: FC<GeneratePostCardLoaderProps> = ({
-    n,
-}) => {
+export const GeneratePostCardLoaders: FC<
+    React.PropsWithChildren<
+        React.PropsWithChildren<GeneratePostCardLoaderProps>
+    >
+> = ({ n }) => {
     // Create array to iterate over
     const nPosts = new Array<number>(n)
 

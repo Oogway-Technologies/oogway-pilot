@@ -8,7 +8,9 @@ import { useAppSelector } from '../../../hooks/useRedux'
 import { NotificationMenu } from './NotificationMenu'
 import { NotificationDropdownStyles } from './NotificationStyles'
 
-export const NotificationDropdown: React.FC = () => {
+export const NotificationDropdown: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<unknown>>
+> = () => {
     const [referenceElement, setReferenceElement] = useState(null)
     const [popperElement, setPopperElement] = useState(null)
     const { styles, attributes } = usePopper(referenceElement, popperElement)

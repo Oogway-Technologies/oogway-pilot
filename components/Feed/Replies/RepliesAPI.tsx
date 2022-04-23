@@ -15,11 +15,9 @@ type RepliesAPIProps = {
     parentPostData: staticPostData
 }
 
-const RepliesAPI: React.FC<RepliesAPIProps> = ({
-    commentId,
-    commentAuthor,
-    parentPostData,
-}) => {
+const RepliesAPI: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<RepliesAPIProps>>
+> = ({ commentId, commentAuthor, parentPostData }) => {
     const router = useRouter()
 
     // Get a snapshot of the replies from the DB

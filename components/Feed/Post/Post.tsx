@@ -35,7 +35,9 @@ interface PostProps {
     className?: string
 }
 
-const PostCard: React.FC<PostProps> = ({
+const PostCard: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<PostProps>>
+> = ({
     authorUid,
     id,
     name,

@@ -48,12 +48,9 @@ type NewCommentFormProps = {
     parentPostData: staticPostData
 }
 
-const NewCommentForm: React.FC<NewCommentFormProps> = ({
-    closeModal,
-    isMobile,
-    placeholder,
-    parentPostData,
-}) => {
+const NewCommentForm: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<NewCommentFormProps>>
+> = ({ closeModal, isMobile, placeholder, parentPostData }) => {
     const userProfile = useAppSelector(state => state.userSlice.user)
     const router = useRouter()
 

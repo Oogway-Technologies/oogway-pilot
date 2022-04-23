@@ -8,7 +8,9 @@ type ToggleIncognitoProps = {
     onChange: () => void
 }
 
-const ToggleIncognito: FC<ToggleIncognitoProps> = ({ onChange }) => {
+const ToggleIncognito: FC<
+    React.PropsWithChildren<React.PropsWithChildren<ToggleIncognitoProps>>
+> = ({ onChange }) => {
     // Track slider sstate
     const [enabled, setEnabled] = useState(false)
 

@@ -22,7 +22,9 @@ import ToggleTheme from './UserDropDownButtons/ToggleTheme'
 
 // User profile
 
-const UserDropdown: React.FC = () => {
+const UserDropdown: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<unknown>>
+> = () => {
     const router = useRouter()
     const { user, isLoading } = useUser()
     const userProfile = useAppSelector(state => state.userSlice.user)

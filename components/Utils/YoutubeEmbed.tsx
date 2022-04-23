@@ -7,7 +7,9 @@ interface YoutubeEmbedProps {
     addStyle?: string
 }
 
-const YoutubeEmbed: FC<YoutubeEmbedProps> = ({ text, addStyle }) => {
+const YoutubeEmbed: FC<
+    React.PropsWithChildren<React.PropsWithChildren<YoutubeEmbedProps>>
+> = ({ text, addStyle }) => {
     const Embed = () => (
         <div className={'m-2' + addStyle}>
             <iframe

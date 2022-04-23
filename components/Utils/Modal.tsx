@@ -9,12 +9,9 @@ type ModalProps = {
     closeIcon?: boolean
 }
 
-const Modal: React.FC<ModalProps> = ({
-    children: content,
-    show,
-    onClose,
-    closeIcon,
-}) => {
+const Modal: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<ModalProps>>
+> = ({ children: content, show, onClose, closeIcon }) => {
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog

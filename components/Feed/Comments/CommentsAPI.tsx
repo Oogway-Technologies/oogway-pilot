@@ -31,10 +31,9 @@ type CommentsAPIProps = {
     parentPostData: staticPostData
 }
 
-const CommentsAPI: React.FC<CommentsAPIProps> = ({
-    comments,
-    parentPostData,
-}) => {
+const CommentsAPI: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<CommentsAPIProps>>
+> = ({ comments, parentPostData }) => {
     // Retrieve user profile
     const userProfile = useAppSelector(state => state.userSlice.user)
     const { user } = useUser()

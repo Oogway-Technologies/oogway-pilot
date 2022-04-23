@@ -84,11 +84,9 @@ type NewPostProps = {
     descPlaceholder?: string // Placeholder text for description input in form
 }
 
-const NewPostForm: FC<NewPostProps> = ({
-    closeModal,
-    questPlaceholder,
-    descPlaceholder,
-}) => {
+const NewPostForm: FC<
+    React.PropsWithChildren<React.PropsWithChildren<NewPostProps>>
+> = ({ closeModal, questPlaceholder, descPlaceholder }) => {
     // Track current user profile data
     const userProfile = useAppSelector(state => state.userSlice.user)
 

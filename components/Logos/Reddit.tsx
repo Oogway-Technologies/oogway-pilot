@@ -6,7 +6,10 @@ interface Props {
     height: number
 }
 
-const Reddit: FC<Props> = ({ width, height }) => (
+const Reddit: FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = ({
+    width,
+    height,
+}) => (
     <Image
         src="/reddit.svg"
         alt="Reddit logo"

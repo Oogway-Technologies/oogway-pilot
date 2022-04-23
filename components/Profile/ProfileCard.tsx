@@ -23,7 +23,9 @@ interface ProfileCardProps {
     joinedAt?: string
 }
 
-export const ProfileCard: FC<ProfileCardProps> = props => {
+export const ProfileCard: FC<
+    React.PropsWithChildren<React.PropsWithChildren<ProfileCardProps>>
+> = props => {
     const {
         bio,
         location,

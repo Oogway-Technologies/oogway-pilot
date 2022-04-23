@@ -9,7 +9,9 @@ type AuthenticationAPIProps = {
     closeModal: () => void
 }
 
-const AuthenticationAPI: FC<AuthenticationAPIProps> = ({ closeModal }) => {
+const AuthenticationAPI: FC<
+    React.PropsWithChildren<React.PropsWithChildren<AuthenticationAPIProps>>
+> = ({ closeModal }) => {
     const [step, setStep] = useState('login')
 
     // Step switching functions

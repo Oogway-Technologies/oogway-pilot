@@ -9,12 +9,9 @@ type DropdownMenuProps = {
     menuItems: JSX.Element[]
 }
 
-const DropdownMenu: FC<DropdownMenuProps> = ({
-    menuButtonClass,
-    menuItemsClass,
-    menuButton,
-    menuItems,
-}) => {
+const DropdownMenu: FC<
+    React.PropsWithChildren<React.PropsWithChildren<DropdownMenuProps>>
+> = ({ menuButtonClass, menuItemsClass, menuButton, menuItems }) => {
     const [referenceElement, setReferenceElement] = useState(null)
     const [popperElement, setPopperElement] = useState(null)
     const { styles, attributes } = usePopper(referenceElement, popperElement)

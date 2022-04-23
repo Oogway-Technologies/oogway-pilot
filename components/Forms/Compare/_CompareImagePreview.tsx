@@ -10,11 +10,9 @@ type CompareImagePreviewProps = {
     onClick: () => void
 }
 
-const _CompareImagePreview: FC<CompareImagePreviewProps> = ({
-    image,
-    label,
-    onClick,
-}) => {
+const _CompareImagePreview: FC<
+    React.PropsWithChildren<React.PropsWithChildren<CompareImagePreviewProps>>
+> = ({ image, label, onClick }) => {
     // Parse text and fetch preview
     const [previewImage] = useFetchUrlPreview(label as string)
 

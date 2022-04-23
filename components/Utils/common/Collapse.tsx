@@ -8,11 +8,9 @@ interface CollapseProps {
     children: JSX.Element
 }
 
-export const Collapse: FC<CollapseProps> = ({
-    className,
-    show,
-    children,
-}: CollapseProps) => {
+export const Collapse: FC<
+    React.PropsWithChildren<React.PropsWithChildren<CollapseProps>>
+> = ({ className, show, children }: CollapseProps) => {
     return show ? (
         <div
             className={`${show ? 'h-auto' : 'h-0'} ${CollapseStyle} ${

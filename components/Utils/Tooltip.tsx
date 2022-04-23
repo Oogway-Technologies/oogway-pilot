@@ -5,10 +5,9 @@ interface TooltipProps {
     toolTipText: string
 }
 
-export const Tooltip: FC<TooltipProps> = ({
-    children,
-    toolTipText,
-}: TooltipProps) => {
+export const Tooltip: FC<
+    React.PropsWithChildren<React.PropsWithChildren<TooltipProps>>
+> = ({ children, toolTipText }: TooltipProps) => {
     return (
         <div className={'group flex relative flex-col items-center'}>
             {children}

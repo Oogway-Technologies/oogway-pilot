@@ -32,7 +32,9 @@ type ReplyHeaderProps = {
     parentPostData: staticPostData
 }
 
-const ReplyHeader: React.FC<ReplyHeaderProps> = ({
+const ReplyHeader: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<ReplyHeaderProps>>
+> = ({
     postId,
     replyId,
     commentAuthor,

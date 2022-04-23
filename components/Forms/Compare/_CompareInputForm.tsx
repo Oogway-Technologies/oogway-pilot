@@ -7,7 +7,9 @@ interface _CompareInputFormProps {
     title?: string
 }
 
-const _CompareInputForm: FC<_CompareInputFormProps> = ({ children, title }) => {
+const _CompareInputForm: FC<
+    React.PropsWithChildren<React.PropsWithChildren<_CompareInputFormProps>>
+> = ({ children, title }) => {
     return (
         <div className={compareFormClass.tab}>
             {title && (

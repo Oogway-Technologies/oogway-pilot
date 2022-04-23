@@ -32,7 +32,9 @@ interface NotificationBlockProps {
     ) => void
 }
 
-export const NotificationBlock: FC<NotificationBlockProps> = ({
+export const NotificationBlock: FC<
+    React.PropsWithChildren<React.PropsWithChildren<NotificationBlockProps>>
+> = ({
     className,
     engagementId,
     action,

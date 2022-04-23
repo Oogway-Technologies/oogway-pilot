@@ -12,9 +12,9 @@ interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     type?: 'submit' | 'reset' | 'button'
 }
 
-const Button: FC<ToolbarButtonProps> = (
-    props: ToolbarButtonProps & { children?: ReactNode | undefined }
-) => {
+const Button: FC<
+    React.PropsWithChildren<React.PropsWithChildren<ToolbarButtonProps>>
+> = (props: ToolbarButtonProps & { children?: ReactNode | undefined }) => {
     const {
         icon,
         disabled,

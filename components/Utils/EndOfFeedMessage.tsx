@@ -7,7 +7,9 @@ type EndOfFeedProps = {
     bottomMessage?: string
 }
 
-const EndOfFeedMessage: FC<EndOfFeedProps> = ({
+const EndOfFeedMessage: FC<
+    React.PropsWithChildren<React.PropsWithChildren<EndOfFeedProps>>
+> = ({
     topMessage = "You've read it all...",
     bottomMessage = 'Now share your wisdom!',
 }) => {
