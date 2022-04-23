@@ -9,7 +9,9 @@ interface BadgeButtonProps {
     buttonName: string
     onClick: () => void
 }
-export const BadgeButton: FC<BadgeButtonProps> = ({
+export const BadgeButton: FC<
+    React.PropsWithChildren<React.PropsWithChildren<BadgeButtonProps>>
+> = ({
     className = '',
     numOfNotifications,
     buttonName,

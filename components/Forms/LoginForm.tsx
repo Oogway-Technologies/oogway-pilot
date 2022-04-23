@@ -16,11 +16,9 @@ type LoginFormProps = {
     closeModal: () => void
 }
 
-const LoginForm: FC<LoginFormProps> = ({
-    goToSignUp,
-    goToResetPW,
-    closeModal,
-}) => {
+const LoginForm: FC<
+    React.PropsWithChildren<React.PropsWithChildren<LoginFormProps>>
+> = ({ goToSignUp, goToResetPW, closeModal }) => {
     // Router
     const router = useRouter()
 

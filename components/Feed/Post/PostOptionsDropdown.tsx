@@ -22,7 +22,9 @@ type PostOptionsDropdownProps = {
     authorProfile: FirebaseProfile | undefined
 }
 
-const PostOptionsDropdown: React.FC<PostOptionsDropdownProps> = ({
+const PostOptionsDropdown: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<PostOptionsDropdownProps>>
+> = ({
     authorUid,
     // authorProfile,
     deletePost,

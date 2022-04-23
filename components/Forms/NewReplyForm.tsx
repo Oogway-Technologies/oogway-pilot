@@ -29,13 +29,9 @@ type NewReplyFormProps = {
     commentOwner: string
 }
 
-const NewReplyForm: React.FC<NewReplyFormProps> = ({
-    commentId,
-    closeModal,
-    isMobile,
-    placeholder,
-    commentOwner,
-}) => {
+const NewReplyForm: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<NewReplyFormProps>>
+> = ({ commentId, closeModal, isMobile, placeholder, commentOwner }) => {
     const userProfile = useAppSelector(state => state.userSlice.user)
     const router = useRouter()
 

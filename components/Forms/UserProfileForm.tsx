@@ -38,7 +38,9 @@ type UserProfileFormProps = {
     closeModal: () => void
 }
 
-const UserProfileForm: FC<UserProfileFormProps> = ({
+const UserProfileForm: FC<
+    React.PropsWithChildren<React.PropsWithChildren<UserProfileFormProps>>
+> = ({
     closeModal,
     headerText = 'Edit Profile',
     cancelButtonText = 'Cancel',

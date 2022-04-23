@@ -9,7 +9,9 @@ interface SettingsButtonProps {
     onClick: MouseEventHandler<HTMLAnchorElement>
 }
 
-const SettingsButton: FC<SettingsButtonProps> = ({ hasText, onClick }) => {
+const SettingsButton: FC<
+    React.PropsWithChildren<React.PropsWithChildren<SettingsButtonProps>>
+> = ({ hasText, onClick }) => {
     return (
         <Link href="#" passHref>
             <a onClick={onClick} className={userDropDownButtonClass.a}>

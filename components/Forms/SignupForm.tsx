@@ -24,7 +24,9 @@ type SignUpFormProps = {
     closeModal: () => void
 }
 
-const SignUpForm: FC<SignUpFormProps> = ({ goToLogin, closeModal }) => {
+const SignUpForm: FC<
+    React.PropsWithChildren<React.PropsWithChildren<SignUpFormProps>>
+> = ({ goToLogin, closeModal }) => {
     // Router
     const router = useRouter()
 

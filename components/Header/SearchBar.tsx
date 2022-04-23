@@ -7,7 +7,9 @@ interface SearchBarProps {
     placeholder: string
 }
 
-const SearchBar: FC<SearchBarProps> = ({ placeholder }) => {
+const SearchBar: FC<
+    React.PropsWithChildren<React.PropsWithChildren<SearchBarProps>>
+> = ({ placeholder }) => {
     return (
         <form className={searchBarClass.form}>
             <div className={searchBarClass.formBody}>

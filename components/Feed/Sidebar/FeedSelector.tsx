@@ -22,7 +22,9 @@ interface FeedSelectorProps {
     feedClickHandler?: () => void
 }
 
-export const FeedSelector: FC<FeedSelectorProps> = ({ feedClickHandler }) => {
+export const FeedSelector: FC<
+    React.PropsWithChildren<React.PropsWithChildren<FeedSelectorProps>>
+> = ({ feedClickHandler }) => {
     // Track feed categories
     const { data: feedCategories, status } = useFeedsQuery()
 
@@ -78,7 +80,9 @@ export const FeedSelector: FC<FeedSelectorProps> = ({ feedClickHandler }) => {
     )
 }
 
-export const FeedSelectorMobile: FC = () => {
+export const FeedSelectorMobile: FC<
+    React.PropsWithChildren<React.PropsWithChildren<unknown>>
+> = () => {
     const [referenceElement, setReferenceElement] = useState(null)
     const [popperElement, setPopperElement] = useState(null)
     const { styles, attributes } = usePopper(referenceElement, popperElement)
@@ -190,7 +194,9 @@ export const FeedSelectorMobile: FC = () => {
     )
 }
 
-export const FeedSelectorMenu: FC = () => {
+export const FeedSelectorMenu: FC<
+    React.PropsWithChildren<React.PropsWithChildren<unknown>>
+> = () => {
     // Track collapse
     const [expanded, setExpanded] = useState<boolean>(false)
 

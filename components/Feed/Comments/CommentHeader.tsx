@@ -31,13 +31,9 @@ type CommentHeaderProps = {
     parentPostData: staticPostData
 }
 
-const CommentHeader: FC<CommentHeaderProps> = ({
-    postId,
-    commentId,
-    authorUid,
-    timestamp,
-    parentPostData,
-}) => {
+const CommentHeader: FC<
+    React.PropsWithChildren<React.PropsWithChildren<CommentHeaderProps>>
+> = ({ postId, commentId, authorUid, timestamp, parentPostData }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
 

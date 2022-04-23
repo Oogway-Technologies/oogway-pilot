@@ -14,10 +14,9 @@ interface CommentPageProps {
     comments: FirebaseComment[] | []
 }
 
-const CommentPage: FC<CommentPageProps> = ({
-    post,
-    comments,
-}: CommentPageProps) => {
+const CommentPage: FC<
+    React.PropsWithChildren<React.PropsWithChildren<CommentPageProps>>
+> = ({ post, comments }: CommentPageProps) => {
     // Use the router to go back on the stack
     const router = useRouter()
 

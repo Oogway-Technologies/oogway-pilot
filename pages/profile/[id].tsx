@@ -39,7 +39,9 @@ interface ProfileProps {
     posts: FirebasePost[]
 }
 
-const Profile: FC<ProfileProps> = ({ userProfile, posts }) => {
+const Profile: FC<
+    React.PropsWithChildren<React.PropsWithChildren<ProfileProps>>
+> = ({ userProfile, posts }) => {
     const { bio, profilePic, uid, username, lastName, location } = userProfile
     const [isOpen, setIsOpen] = useState(false)
     const isMobile = useMediaQuery('(max-width: 965px)')

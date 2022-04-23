@@ -22,11 +22,9 @@ type PostEngagementBarProps = {
     numComments: number
 }
 
-const PostEngagementBar: FC<PostEngagementBarProps> = ({
-    id,
-    authorUid,
-    numComments,
-}) => {
+const PostEngagementBar: FC<
+    React.PropsWithChildren<React.PropsWithChildren<PostEngagementBarProps>>
+> = ({ id, authorUid, numComments }) => {
     const { user } = useUser()
     const userProfile = useAppSelector(state => state.userSlice.user)
 

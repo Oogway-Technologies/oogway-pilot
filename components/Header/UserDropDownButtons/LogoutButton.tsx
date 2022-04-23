@@ -9,7 +9,9 @@ interface LogoutButtonProps {
     hasText: boolean
 }
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({ hasText }) => {
+const LogoutButton: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<LogoutButtonProps>>
+> = ({ hasText }) => {
     // Router
     const router = useRouter()
 

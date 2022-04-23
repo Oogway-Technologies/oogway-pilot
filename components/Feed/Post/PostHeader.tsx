@@ -34,14 +34,9 @@ type PostHeaderProps = {
     isAnonymous: boolean
 }
 
-const PostHeader: FC<PostHeaderProps> = ({
-    id,
-    authorUid,
-    numComments,
-    feed,
-    timestamp,
-    isAnonymous,
-}) => {
+const PostHeader: FC<
+    React.PropsWithChildren<React.PropsWithChildren<PostHeaderProps>>
+> = ({ id, authorUid, numComments, feed, timestamp, isAnonymous }) => {
     // Listen to real time author profile data
     const [authorProfile] = useProfileData(authorUid)
 

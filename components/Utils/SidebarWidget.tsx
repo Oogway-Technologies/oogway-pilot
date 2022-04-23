@@ -8,7 +8,9 @@ type Props = {
     className?: string
 }
 
-const SidebarWidget: FC<Props> = ({ children, title, className }) => {
+const SidebarWidget: FC<
+    React.PropsWithChildren<React.PropsWithChildren<Props>>
+> = ({ children, title, className }) => {
     return (
         <div
             className={`${sidebarWidget.container} ${

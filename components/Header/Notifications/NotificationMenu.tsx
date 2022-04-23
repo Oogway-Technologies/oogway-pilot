@@ -26,7 +26,9 @@ interface NotificationMenuProps {
     ) => void
 }
 
-export const NotificationMenu: FC<NotificationMenuProps> = ({ close }) => {
+export const NotificationMenu: FC<
+    React.PropsWithChildren<React.PropsWithChildren<NotificationMenuProps>>
+> = ({ close }) => {
     const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Instantiate infinite notifications query

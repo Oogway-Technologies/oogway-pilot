@@ -8,13 +8,9 @@ interface CardProps {
     onClick?: () => void
 }
 
-export const Card: FC<CardProps> = ({
-    className,
-    id,
-    children,
-    ref,
-    onClick,
-}: CardProps) => {
+export const Card: FC<
+    React.PropsWithChildren<React.PropsWithChildren<CardProps>>
+> = ({ className, id, children, ref, onClick }: CardProps) => {
     return (
         <div
             id={id}

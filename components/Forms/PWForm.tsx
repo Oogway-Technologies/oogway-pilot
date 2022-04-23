@@ -16,7 +16,9 @@ type PWFormProps = {
     closeModal: () => void
 }
 
-const PWForm: FC<PWFormProps> = ({ goToLogin, closeModal }) => {
+const PWForm: FC<
+    React.PropsWithChildren<React.PropsWithChildren<PWFormProps>>
+> = ({ goToLogin, closeModal }) => {
     const recoveryEmailRef = useRef<HTMLInputElement>(null)
     const [showEmailSent, setShowEmailSent] = useState(false)
 

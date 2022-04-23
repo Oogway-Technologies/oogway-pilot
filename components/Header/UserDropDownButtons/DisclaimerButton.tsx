@@ -8,10 +8,9 @@ interface DisclaimerButtonProps {
     setIsOpen: (b: boolean) => void
 }
 
-const DisclaimerButton: React.FC<DisclaimerButtonProps> = ({
-    hasText,
-    setIsOpen,
-}) => {
+const DisclaimerButton: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<DisclaimerButtonProps>>
+> = ({ hasText, setIsOpen }) => {
     return (
         <a
             className={userDropDownButtonClass.a}

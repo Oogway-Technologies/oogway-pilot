@@ -19,7 +19,9 @@ type ReplyProps = {
     parentPostData: staticPostData
 }
 
-const Reply: React.FC<ReplyProps> = ({
+const Reply: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<ReplyProps>>
+> = ({
     replyOwner,
     postId,
     commentId,

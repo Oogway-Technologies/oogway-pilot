@@ -9,7 +9,9 @@ interface ProfileButtonProps {
     uid: string
 }
 
-const ProfileButton: FC<ProfileButtonProps> = ({ hasText, uid }) => {
+const ProfileButton: FC<
+    React.PropsWithChildren<React.PropsWithChildren<ProfileButtonProps>>
+> = ({ hasText, uid }) => {
     // Router
     const router = useRouter()
 

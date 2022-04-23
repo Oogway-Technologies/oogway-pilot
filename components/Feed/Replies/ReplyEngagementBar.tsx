@@ -23,12 +23,9 @@ type ReplyEngagementBarProps = {
     authorUid: string
 }
 
-const ReplyEngagementBar: React.FC<ReplyEngagementBarProps> = ({
-    postId,
-    commentId,
-    replyId,
-    authorUid,
-}) => {
+const ReplyEngagementBar: React.FC<
+    React.PropsWithChildren<React.PropsWithChildren<ReplyEngagementBarProps>>
+> = ({ postId, commentId, replyId, authorUid }) => {
     const { user } = useUser()
     const userProfile = useAppSelector(state => state.userSlice.user)
 
