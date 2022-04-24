@@ -24,7 +24,6 @@ export const createAdviceBotComment = async (
         'x-forwarded-for': post.uid, // track requests by user id
         'x-forwarded-for-class': 'userId',
     }
-    console.log('Headers: ', headers)
     return API.post('ai/adviceBot', post, {
         headers: headers,
     })
