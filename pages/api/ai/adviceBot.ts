@@ -28,7 +28,7 @@ async function handlePost(req: ExtendedNextApiRequest, res: NextApiResponse) {
     // Check authentication
     const [message, token] = checkReq(req)
     if (message) return res.status(500).json({ message })
-
+    console.log(req.headers)
     // verify token
     if (token) {
         verifyJwt(token, (err, decoded) => {
