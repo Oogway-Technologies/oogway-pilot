@@ -59,3 +59,24 @@ img[alt]:after {
 .h-inherit {
     height: inherit;
 }
+
+.custom-slider {
+    background: #5a34be;
+    border: none;
+    border-radius: 8px;
+    height: 1px;
+    width: 100%;
+    outline: none;
+    transition: background 450ms ease-in;
+    -webkit-appearance: none;
+}
+input[type='range']::-webkit-slider-thumb {
+    width: 16px;
+    -webkit-appearance: none;
+    height: 16px;
+    background: #7269ff;
+    border: 1px solid #7269ff;
+    box-sizing: border-box;
+    border-radius: 50%;
+    z-index: 10 !important;
+}

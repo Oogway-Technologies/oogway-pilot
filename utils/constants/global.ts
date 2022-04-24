@@ -15,3 +15,15 @@ export const defaultProfileImage =
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
 
 export const bingTopN = 5 // number of results to display from bing API in Oogway Bot comments
+export const decisionTitle = [
+    '',
+    'What decision do you need help with?',
+    'What are your options?',
+    'What do you want to consider about your decision?',
+    'Rate how important each consideration is',
+    'Your best option is',
+]
+export const decisionInfoParagraph = [
+    'Oogway helps you when making a decision. All you have to do is put in your decision, and let Oogway help you come up with the best answer.',
+    'Oogway reads through different web sources , and combines all the information together to give you the best answer.',
+]

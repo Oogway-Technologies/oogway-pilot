@@ -22,3 +22,6 @@ export const CollapseStyle = 'ease-in-out overflow-hidden'
 
 export const cardMediaStyle =
     'block object-cover w-full max-w-full h-auto align-middle bg-center bg-no-repeat bg-cover'
+
+export const inputStyle =
+    'py-3 px-4 w-full text-sm bg-transparent rounded-lg border-2 border-neutral-300 focus-within:border-primary focus:border-primary focus-visible:border-primary active:border-neutral-300 border-solid focus:outline-none'

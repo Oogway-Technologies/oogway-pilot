@@ -15,10 +15,10 @@ const Header = () => {
     const feed = useAppSelector(state => state.utilsSlice.feedState)
     let links = [
         // TODO: Add as pages created
-        // {
-        //     href: ['/#'], // change to /Search when search page created
-        //     text: 'Search',
-        // },
+        {
+            href: ['/decisionengineay'], // change to /Search when search page created
+            text: 'Decision Engineay',
+        },
         {
             href: ['/', `/?feed=${feed}`],
             text: 'Feed',
