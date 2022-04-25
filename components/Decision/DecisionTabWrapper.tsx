@@ -17,7 +17,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             question: '',
             context: '',
             option: [{ name: '' }],
-            cost: [[{ value: '' }]],
+            criteria: [[{ name: '', weight: 1, rating: [5] }]],
         },
     })
 
@@ -32,6 +32,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                 <form
                     onSubmit={methods.handleSubmit((state: any) => {
                         console.log(state)
+                        // Pass state to react query mutator for API endpoint
                     })}
                     className="flex overflow-auto flex-col justify-center items-center mt-5 space-y-xl h-full"
                 >

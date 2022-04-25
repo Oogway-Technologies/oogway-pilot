@@ -41,6 +41,7 @@ const DecisionEngineay: FC = () => {
                             setSelectedTab={setCurrentTab}
                         />
                     </div>
+                    {/* This needs to move into the formm so we can link the options with each of their ratings */}
                     <div className={'flex flex-col col-span-3 pt-5 mr-5'}>
                         {currentTab === 4 && (
                             <div className="flex items-center mb-3 w-full">

@@ -20,7 +20,7 @@ export const OptionTab: FC = () => {
                         className={inputStyle}
                         type="text"
                         placeholder={`Enter your Option ${index + 1}`}
-                        {...register(`option.${index}.name`, {
+                        {...register(`option.${index}.name` as const, {
                             required: {
                                 value: true,
                                 message: 'You must enter the required Option.',

@@ -12,18 +12,19 @@ export const CriteriaTab: FC = () => {
     const { register, control } = useFormContext()
     const { fields, append, remove } = useFieldArray({
         control,
-        name: 'cost',
+        name: 'criteria',
     })
     return (
         <>
             {fields.map((item, index) => (
-                <>
-                    <div key={item.id} className={'flex items-center w-full'}>
+                <React.Fragment key={item.id}>
+                    <div className={'flex items-center w-full'}>
                         <input
+                            key={item.id}
                             className={inputStyle}
                             type="text"
                             placeholder={`Cost of living`}
-                            {...register(`option.${index}.name`, {
+                            {...register(`criteria.${index}.name` as const, {
                                 required: {
                                     value: true,
                                     message:
@@ -39,7 +40,9 @@ export const CriteriaTab: FC = () => {
                             <button
                                 className="p-1 ml-3 align-middle bg-primary rounded-full"
                                 type="button"
-                                onClick={() => append({ name: '' })}
+                                onClick={() =>
+                                    append({ name: '', weight: 1, rating: [5] })
+                                }
                             >
                                 <UilPlus className={'fill-white'} />
                             </button>
@@ -60,8 +63,8 @@ export const CriteriaTab: FC = () => {
                             And how important is this to you?
                         </span>
                     )}
-                    <OptionSlider showValues={true} />
-                </>
+                    <OptionSlider min={1} max={4} step={1} showValues={true} />
+                </React.Fragment>
             ))}
         </>
     )
