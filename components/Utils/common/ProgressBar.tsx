@@ -19,14 +19,14 @@ export const ProgressBar: FC<ProgressBarProps> = ({
                 className ? className : ''
             }`}
         >
-            <span className={`${bodySmall} mb-2 text-neutral-700`}>
+            <span
+                className={`${bodySmall} mb-2 text-neutral-700 dark:text-neutralDark-150`}
+            >
                 {currentStep} of {totalSteps}
             </span>
-            <div
-                className={`w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full`}
-            >
+            <div className={`w-full h-2 bg-gray-200  rounded-full`}>
                 <div
-                    className="h-2 bg-primaryActive rounded-full transition-all"
+                    className="h-2 bg-primary dark:bg-primaryDark rounded-full transition-all"
                     style={{
                         width: `${
                             ((currentStep - 1) / (totalSteps - 1)) * 100

@@ -15,7 +15,7 @@ async function upstash({
         },
     })
 
-    const data = res.headers.get('Content-Type')!.includes('application/json')
+    const data = res.headers.get('Content-Type')?.includes('application/json')
         ? await res.json()
         : await res.text()
 

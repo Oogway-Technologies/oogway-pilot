@@ -27,14 +27,16 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                 className ? className : ''
             }`}
         >
-            <h3 className="text-2xl font-bold text-neutral-700">{title}</h3>
+            <h3 className="text-2xl font-bold text-neutral-700 dark:text-neutralDark-150">
+                {title}
+            </h3>
             <FormProvider {...methods}>
                 <form
                     onSubmit={methods.handleSubmit((state: any) => {
                         console.log(state)
                         // Pass state to react query mutator for API endpoint
                     })}
-                    className="flex overflow-auto flex-col justify-center items-center mt-5 space-y-xl h-full"
+                    className="flex overflow-auto flex-col justify-center items-center mt-5 space-y-8 h-full"
                 >
                     {children}
                 </form>

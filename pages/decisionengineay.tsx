@@ -1,6 +1,4 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
-import { ParsedUrlQuery } from 'querystring'
 import React, { FC, useState } from 'react'
 
 import { DecisionBarHandler } from '../components/Decision/DecisionBarHandler'
@@ -29,9 +27,10 @@ const DecisionEngineay: FC = () => {
             <div className={decisionContainer}>
                 <div className={bigContainer}>
                     <div
-                        className={'col-span-1 pt-6'}
+                        className={
+                            'col-span-1 pt-6 bg-primary/10 dark:bg-primaryDark/10'
+                        }
                         style={{
-                            background: '#EFEAFF',
                             borderTopLeftRadius: '16px',
                             borderBottomLeftRadius: '16px',
                         }}
@@ -56,8 +55,8 @@ const DecisionEngineay: FC = () => {
                                                 }
                                                 className={`${bodyHeavy} py-3 w-full flex items-center justify-center transition-all border-b-2 border-transparent ${
                                                     selectedTab === index
-                                                        ? 'text-primary border-primary'
-                                                        : 'font-normal text-neutral-700'
+                                                        ? 'text-primary border-primary dark:text-primaryDark dark:border-primaryDark'
+                                                        : 'font-normal text-neutral-700 dark:text-neutralDark-150'
                                                 } cursor-pointer`}
                                             >
                                                 Santa Monica
@@ -100,14 +99,3 @@ const DecisionEngineay: FC = () => {
 }
 
 export default DecisionEngineay
-
-export const getServerSideProps: GetServerSideProps = async (
-    context: GetServerSidePropsContext<
-        ParsedUrlQuery,
-        string | false | object | undefined
-    >
-) => {
-    return {
-        props: {},
-    }
-}

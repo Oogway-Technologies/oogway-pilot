@@ -15,14 +15,18 @@ export const DecisionInfo: FC<DecisionInfoProps> = ({
 }: DecisionInfoProps) => {
     return (
         <div
-            className={`flex flex-col bg-white rounded-2xl shadow-md p-3 ${
+            className={`flex flex-col bg-white rounded-2xl shadow-md p-3 dark:bg-neutralDark-500 dark:shadow-black/60   ${
                 className ? className : ''
             }`}
         >
-            <span className={`${bodyHeavy} mb-3 mt-2 text-neutral-700`}>
+            <span
+                className={`${bodyHeavy} mb-3 mt-2 text-neutral-700 dark:text-neutralDark-150`}
+            >
                 {title}
             </span>
-            <span className={`${bodySmall} mb-5 text-neutral-700`}>
+            <span
+                className={`${bodySmall} mb-5 text-neutral-700 dark:text-neutralDark-150`}
+            >
                 {paragraph}
             </span>
         </div>

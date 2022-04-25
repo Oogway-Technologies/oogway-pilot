@@ -38,7 +38,7 @@ export const CriteriaTab: FC = () => {
                         />
                         {index === 0 ? (
                             <button
-                                className="p-1 ml-3 align-middle bg-primary rounded-full"
+                                className="p-1 ml-3 align-middle bg-primary dark:bg-primaryDark rounded-full"
                                 type="button"
                                 onClick={() =>
                                     append({ name: '', weight: 1, rating: [5] })
@@ -52,13 +52,17 @@ export const CriteriaTab: FC = () => {
                                 type="button"
                                 onClick={() => remove(index)}
                             >
-                                <UilTrash className={'fill-neutral-700'} />
+                                <UilTrash
+                                    className={
+                                        'fill-neutral-700 dark:fill-neutralDark-150'
+                                    }
+                                />
                             </button>
                         )}
                     </div>
                     {index === 0 && (
                         <span
-                            className={`flex justify-start items-center mr-auto text-neutral-700 pt-4 ${bodyHeavy}`}
+                            className={`flex justify-start items-center mr-auto text-neutral-700 dark:text-neutralDark-150 pt-4 ${bodyHeavy}`}
                         >
                             And how important is this to you?
                         </span>
