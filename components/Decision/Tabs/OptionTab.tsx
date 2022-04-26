@@ -1,6 +1,5 @@
 import { UilPlus, UilTrash } from '@iconscout/react-unicons'
-import React from 'react'
-import { FC } from 'react'
+import React, { FC } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import { inputStyle } from '../../../styles/utils'
@@ -10,17 +9,18 @@ export const OptionTab: FC = () => {
     const { register, control } = useFormContext()
     const { fields, append, remove } = useFieldArray({
         control,
-        name: 'option',
+        name: 'options',
     })
     return (
         <>
             {fields.map((item, index) => (
                 <div key={item.id} className={'flex items-center w-full'}>
                     <input
+                        key={item.id}
                         className={inputStyle}
                         type="text"
                         placeholder={`Enter your Option ${index + 1}`}
-                        {...register(`option.${index}.name` as const, {
+                        {...register(`options.${index}.name` as const, {
                             required: {
                                 value: true,
                                 message: 'You must enter the required Option.',
@@ -35,7 +35,7 @@ export const OptionTab: FC = () => {
                         <button
                             className="p-1 ml-3 align-middle bg-primary rounded-full"
                             type="button"
-                            onClick={() => append({ name: '' })}
+                            onClick={() => append({ name: '', score: 0 })}
                         >
                             <UilPlus className={'fill-white'} />
                         </button>

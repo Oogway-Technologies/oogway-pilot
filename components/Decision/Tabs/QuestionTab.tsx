@@ -15,7 +15,7 @@ export const QuestionTab: FC = () => {
                 className={inputStyle}
                 type="text"
                 placeholder="Where should I move to?"
-                {...register('question', {
+                {...register('question' as const, {
                     required: {
                         value: true,
                         message: 'You must enter the required question.',

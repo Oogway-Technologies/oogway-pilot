@@ -24,7 +24,6 @@ import React, {
     useRef,
     useState,
 } from 'react'
-// Form management
 import { useForm } from 'react-hook-form'
 // Queries
 import { useQueryClient } from 'react-query'

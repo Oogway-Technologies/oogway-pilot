@@ -9,11 +9,12 @@ import { shortLimit } from '../../../utils/constants/global'
 import { OptionSlider } from '../OptionSlider'
 
 export const CriteriaTab: FC = () => {
-    const { register, control } = useFormContext()
+    const { register, control, watch } = useFormContext()
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'criteria',
     })
+    const watchOptions = watch('options')
     return (
         <>
             {fields.map((item, index) => (
@@ -40,9 +41,15 @@ export const CriteriaTab: FC = () => {
                             <button
                                 className="p-1 ml-3 align-middle bg-primary rounded-full"
                                 type="button"
-                                onClick={() =>
-                                    append({ name: '', weight: 1, rating: [5] })
-                                }
+                                onClick={() => {
+                                    append({
+                                        name: '',
+                                        weight: 1,
+                                        rating: Array(watchOptions.length).fill(
+                                            5
+                                        ),
+                                    })
+                                }}
                             >
                                 <UilPlus className={'fill-white'} />
                             </button>
@@ -63,7 +70,14 @@ export const CriteriaTab: FC = () => {
                             And how important is this to you?
                         </span>
                     )}
-                    <OptionSlider min={1} max={4} step={1} showValues={true} />
+                    <OptionSlider
+                        id={item.id}
+                        registerName={`criteria.${index}.weight` as const}
+                        min={1}
+                        max={4}
+                        step={1}
+                        showValues={true}
+                    />
                 </React.Fragment>
             ))}
         </>

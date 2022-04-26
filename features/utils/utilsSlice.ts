@@ -19,6 +19,8 @@ const initialState: {
     }
     notificationsState: boolean
     jumpToCommentId: string
+    decisionEngineOptionTab: number
+    decisionEngineBestOption: string | undefined
 } = {
     fileSizeTooLarge: false,
     feedState: 'All',
@@ -38,6 +40,8 @@ const initialState: {
     },
     notificationsState: false,
     jumpToCommentId: '',
+    decisionEngineOptionTab: 0,
+    decisionEngineBestOption: undefined,
 }
 
 export const utilsSlice = createSlice({
@@ -121,6 +125,18 @@ export const utilsSlice = createSlice({
         setJumpToComment: (state, { payload }: PayloadAction<string>) => {
             state.jumpToCommentId = payload
         },
+        setDecisionEngineOptionTab: (
+            state,
+            { payload }: PayloadAction<number>
+        ) => {
+            state.decisionEngineOptionTab = payload
+        },
+        setDecisionEngineBestOption: (
+            state,
+            { payload }: PayloadAction<string>
+        ) => {
+            state.decisionEngineBestOption = payload
+        },
     },
 })
 
@@ -142,6 +158,8 @@ export const {
     resetCompareForm,
     setJumpToComment,
     setImageToPost,
+    setDecisionEngineOptionTab,
+    setDecisionEngineBestOption,
 } = utilsSlice.actions
 
 export default utilsSlice.reducer

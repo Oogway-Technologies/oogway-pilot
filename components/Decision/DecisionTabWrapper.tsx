@@ -1,44 +1,39 @@
 import { FC } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+
+import { useAppSelector } from '../../hooks/useRedux'
 
 interface DecisionTabWrapperProps {
     className?: string
     title: string
+    currentTab: number
     children: JSX.Element
 }
 
 export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     className,
     title,
+    currentTab,
     children,
 }: DecisionTabWrapperProps) => {
-    const methods = useForm({
-        defaultValues: {
-            question: '',
-            context: '',
-            option: [{ name: '' }],
-            criteria: [[{ name: '', weight: 1, rating: [5] }]],
-        },
-    })
-
+    const bestOption = useAppSelector(
+        state => state.utilsSlice.decisionEngineBestOption
+    )
     return (
         <div
-            className={`flex flex-col pt-5 w-full ${
+            className={`flex flex-col pt-5 space-y-xl items-center w-full ${
                 className ? className : ''
             }`}
         >
-            <h3 className="text-2xl font-bold text-neutral-700">{title}</h3>
-            <FormProvider {...methods}>
-                <form
-                    onSubmit={methods.handleSubmit((state: any) => {
-                        console.log(state)
-                        // Pass state to react query mutator for API endpoint
-                    })}
-                    className="flex overflow-auto flex-col justify-center items-center mt-5 space-y-xl h-full"
-                >
-                    {children}
-                </form>
-            </FormProvider>
+            <h3 className="text-2xl font-bold text-neutral-700">
+                {title}
+                {currentTab === 5 && bestOption && (
+                    <span className="text-primary dark:text-primaryDark">
+                        {' '}
+                        {bestOption}
+                    </span>
+                )}
+            </h3>
+            {children}
         </div>
     )
 }

@@ -20,7 +20,7 @@ export const decisionTitle = [
     'What decision do you need help with?',
     'What are your options?',
     'What do you want to consider about your decision?',
-    'Rate how important each consideration is',
+    'How does this option score on each criteria?',
     'Your best option is',
 ]
 export const decisionInfoParagraph = [
