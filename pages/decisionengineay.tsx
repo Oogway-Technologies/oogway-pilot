@@ -49,9 +49,10 @@ const DecisionEngineay: FC = () => {
             <div className={decisionContainer}>
                 <div className={bigContainer}>
                     <div
-                        className={'col-span-1 pt-6'}
+                        className={
+                            'col-span-1 pt-6 bg-primary/10 dark:bg-primaryDark/10'
+                        }
                         style={{
-                            background: '#EFEAFF',
                             borderTopLeftRadius: '16px',
                             borderBottomLeftRadius: '16px',
                         }}

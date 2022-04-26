@@ -50,7 +50,7 @@ export const ResultTab: FC<ResultTabProps> = ({
     return (
         <>
             <span
-                className={`${bodyHeavy} text-neutral-700 mt-5 flex justify-start items-center mr-auto`}
+                className={`${bodyHeavy} text-neutral-700 mt-5 flex justify-start items-center mr-auto dark:text-neutralDark-150`}
             >
                 Scores
             </span>

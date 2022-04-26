@@ -36,7 +36,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     }
                 }}
             >
-                <UilArrowLeft className="fill-neutral-700" />
+                <UilArrowLeft className="fill-neutral-700  dark:fill-neutralDark-150" />
             </button>
             <div className="w-3/6">
                 <ProgressBar
@@ -54,7 +54,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     }
                 }}
             >
-                <UilArrowRight className="fill-neutral-700" />
+                <UilArrowRight className="fill-neutral-700 dark:fill-neutralDark-150" />
             </button>
         </div>
     )
