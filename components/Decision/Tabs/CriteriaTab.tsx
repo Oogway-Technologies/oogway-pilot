@@ -24,7 +24,7 @@ export const CriteriaTab: FC = () => {
                             key={item.id}
                             className={inputStyle}
                             type="text"
-                            placeholder={`Cost of living`}
+                            placeholder={`Criterion ${index + 1}`}
                             {...register(`criteria.${index}.name` as const, {
                                 required: {
                                     value: true,

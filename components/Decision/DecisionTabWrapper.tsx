@@ -20,11 +20,11 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     )
     return (
         <div
-            className={`flex flex-col pt-5 space-y-xl items-center w-full ${
+            className={`flex flex-col pt-5 space-y-xl items-center w-full  ${
                 className ? className : ''
             }`}
         >
-            <h3 className="text-2xl font-bold text-neutral-700">
+            <h3 className="text-2xl font-bold text-neutral-700 dark:text-neutralDark-150">
                 {title}
                 {currentTab === 5 && bestOption && (
                     <span className="text-primary dark:text-primaryDark">

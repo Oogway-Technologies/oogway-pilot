@@ -1,3 +1,4 @@
+/* eslint-disable-next-line tailwindcss/no-custom-classname */
 import Head from 'next/head'
 import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -18,7 +19,7 @@ import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionInfoParagraph, decisionTitle } from '../utils/constants/global'
 import { FirebaseDecisionActivity } from '../utils/types/firebase'
 
-const DecisionEngineay: FC = () => {
+const DecisionEngine: FC = () => {
     const userProfile = useAppSelector(state => state.userSlice.user)
     const decisionMutation = useCreateDecisionActivity()
     const [currentTab, setCurrentTab] = useState(1)
@@ -67,9 +68,9 @@ const DecisionEngineay: FC = () => {
                         <FormProvider {...methods}>
                             <form
                                 onSubmit={methods.handleSubmit(onSubmit)}
-                                className="flex overflow-auto flex-col justify-between items-center space-y-xl h-full"
+                                className="flex flex-col justify-between items-center space-y-xl h-full"
                             >
-                                <div className="w-full">
+                                <div className="overflow-auto py-2 w-full h-[60vh] scrollbar-hide">
                                     {currentTab === 4 && (
                                         <OptionRatingTabWrapper />
                                     )}
@@ -121,4 +122,4 @@ const DecisionEngineay: FC = () => {
     )
 }
 
-export default DecisionEngineay
+export default DecisionEngine

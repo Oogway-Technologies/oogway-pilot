@@ -34,14 +34,20 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                         borderTopRightRadius: '8px',
                         borderBottomRightRadius: '8px',
                     }}
-                    className={`flex items-center py-3 px-3 text-base leading-6 text-white cursor-pointer transition-all ${
-                        selectedTab === item.tab
-                            ? 'font-bold w-4/6'
-                            : 'font-normal w-3/6'
+                    className={`flex items-center py-3 px-3 cursor-pointer  transition-all ${
+                        selectedTab === item.tab ? 'w-4/5' : 'w-3/5'
                     }`}
                     onClick={() => setSelectedTab(item.tab)}
                 >
-                    {item.title}
+                    <span
+                        className={`text-base text-white transition-all truncate ${
+                            selectedTab === item.tab
+                                ? 'font-bold'
+                                : 'font-normal'
+                        }`}
+                    >
+                        {item.title}
+                    </span>
                 </div>
             ))}
         </div>

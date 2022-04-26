@@ -16,8 +16,8 @@ const Header = () => {
     let links = [
         // TODO: Add as pages created
         {
-            href: ['/decisionengineay'], // change to /Search when search page created
-            text: 'Decision Engineay',
+            href: ['/decisionengine'],
+            text: 'Decision Engine',
         },
         {
             href: ['/', `/?feed=${feed}`],
