@@ -24,7 +24,7 @@ export const cardMediaStyle =
     'block object-cover w-full max-w-full h-auto align-middle bg-center bg-no-repeat bg-cover'
 
 export const inputStyle =
-    'py-3 px-4 w-full text-sm bg-transparent rounded-lg border-2 border-neutral-300 focus-within:border-primary focus:border-primary focus-visible:border-primary active:border-neutral-300 border-solid focus:outline-none   dark:focus-within:border-primaryDark dark:focus:border-primaryDark dark:focus-visible:border-primaryDark'
+    'py-3 px-4 w-full text-sm bg-transparent rounded-lg border-2 border-neutral-300 focus-within:border-primary focus:border-primary focus-visible:border-primary active:border-neutral-300 border-solid focus:outline-none dark:focus-within:border-primaryDark dark:focus:border-primaryDark dark:focus-visible:border-primaryDark'
 
 export const liStyle =
     'flex relative justify-center pt-4 text-sm font-normal leading-4 text-center text-neutral-700 dark:text-neutralDark-150'

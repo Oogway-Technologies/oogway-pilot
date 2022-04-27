@@ -1,47 +1,80 @@
 import { UilPlus, UilTrash } from '@iconscout/react-unicons'
 import React, { FC } from 'react'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
+import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 
 export const OptionTab: FC = () => {
-    const { register, control } = useFormContext()
+    const {
+        register,
+        control,
+        getValues,
+        formState: { errors },
+    } = useFormContext()
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'options',
     })
+    useWatch({
+        control,
+        name: 'options',
+    })
+    const checkFilledFields = () => {
+        const optionsArray = getValues(`options`)
+        let check = false
+        optionsArray.forEach((option: { name: string }) => {
+            if (!option.name) {
+                check = true
+            }
+        })
+        return check
+    }
     return (
         <>
             {fields.map((item, index) => (
-                <div key={item.id} className={'flex items-center w-full'}>
-                    <input
-                        key={item.id}
-                        className={inputStyle}
-                        type="text"
-                        placeholder={`Enter your Option ${index + 1}`}
-                        {...register(`options.${index}.name` as const, {
-                            required: {
-                                value: true,
-                                message: 'You must enter the required Option.',
-                            },
-                            maxLength: {
-                                value: shortLimit,
-                                message: `Option length should be less than ${shortLimit}`,
-                            },
-                        })}
-                    />
+                <div key={item.id} className={'flex items-start w-full'}>
+                    <ErrorWraperField
+                        errorField={
+                            errors?.options &&
+                            errors?.options[index]?.name?.message
+                                ? errors?.options[index]?.name?.message
+                                : ''
+                        }
+                    >
+                        <input
+                            key={item.id}
+                            className={inputStyle}
+                            type="text"
+                            placeholder={`Enter your Option ${index + 1}`}
+                            {...register(`options.${index}.name` as const, {
+                                required: {
+                                    value: true,
+                                    message:
+                                        'You must enter the required Option.',
+                                },
+                                maxLength: {
+                                    value: shortLimit,
+                                    message: `Option length should be less than ${shortLimit}`,
+                                },
+                            })}
+                        />
+                    </ErrorWraperField>
                     {index === 0 ? (
                         <button
-                            className="p-1 ml-3 align-middle bg-primary rounded-full"
+                            className="p-1 my-2 ml-3 align-middle bg-primary disabled:bg-primary/40 rounded-full"
                             type="button"
-                            onClick={() => append({ name: '', score: 0 })}
+                            disabled={checkFilledFields()}
+                            onClick={() => {
+                                if (fields[index]) append({ name: '' })
+                            }}
                         >
                             <UilPlus className={'fill-white'} />
                         </button>
                     ) : (
                         <button
-                            className="p-1 ml-3"
+                            className="p-1 my-2 ml-3"
                             type="button"
                             onClick={() => remove(index)}
                         >

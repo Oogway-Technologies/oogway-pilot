@@ -1,7 +1,9 @@
 import { UilArrowLeft, UilArrowRight } from '@iconscout/react-unicons'
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 import { squareButton } from '../../styles/decision'
+import { warningTime } from '../../utils/constants/global'
 import { ProgressBar } from '../Utils/common/ProgressBar'
 import { DecisionSideBarOptions } from './DecisionSideBar'
 
@@ -16,10 +18,44 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     selectedTab,
     setSelectedTab,
 }: DecisionBarHandlerProps) => {
-    const [buttonType, setButtonType] = useState<'button' | 'submit'>('button')
-    useEffect(() => {
-        setButtonType(selectedTab === 4 ? 'submit' : 'button')
-    }, [selectedTab])
+    const {
+        trigger,
+        clearErrors,
+        formState: { errors },
+    } = useFormContext()
+
+    const validationHandler = async (tab: number) => {
+        console.log(errors)
+
+        if (tab === 1) {
+            await trigger(['question', 'context'])
+            if (errors?.['question']?.message || errors?.['context']?.message) {
+                setTimeout(
+                    () => clearErrors(['question', 'context']),
+                    warningTime
+                )
+                return false
+            }
+        }
+        if (tab === 2) {
+            await trigger(['options'])
+            if (errors?.options && errors?.options.length) {
+                setTimeout(() => clearErrors(['options']), warningTime)
+                return false
+            }
+        }
+        if (tab === 3) {
+            await trigger(['criteria'])
+            if (errors?.criteria && errors?.criteria.length) {
+                setTimeout(() => clearErrors(['criteria']), warningTime)
+                return false
+            }
+        }
+        if (tab === 4) {
+            // TODO: need to identify fields
+        }
+        return true
+    }
 
     return (
         <div
@@ -47,9 +83,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             </div>
             <button
                 className={`${squareButton} ml-auto`}
-                type={buttonType}
-                onClick={() => {
-                    if (selectedTab !== DecisionSideBarOptions.length) {
+                type="button"
+                onClick={async () => {
+                    const isValid = await validationHandler(selectedTab)
+                    if (
+                        selectedTab !== DecisionSideBarOptions.length &&
+                        isValid
+                    ) {
                         setSelectedTab(selectedTab + 1)
                     }
                 }}

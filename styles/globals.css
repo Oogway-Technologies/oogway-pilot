@@ -64,7 +64,7 @@ img[alt]:after {
     background: #5a34be;
     border: none;
     border-radius: 8px;
-    height: 1px;
+    height: 2px;
     width: 100%;
     outline: none;
     transition: background 450ms ease-in;

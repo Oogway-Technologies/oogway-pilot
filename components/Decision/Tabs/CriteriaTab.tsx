@@ -1,53 +1,85 @@
 import { UilPlus, UilTrash } from '@iconscout/react-unicons'
 import React from 'react'
 import { FC } from 'react'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import { bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
+import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 import { OptionSlider } from '../OptionSlider'
 
 export const CriteriaTab: FC = () => {
-    const { register, control, watch } = useFormContext()
+    const {
+        register,
+        control,
+        getValues,
+        formState: { errors },
+    } = useFormContext()
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'criteria',
     })
-    const watchOptions = watch('options')
+    useWatch({
+        control,
+        name: 'criteria',
+    })
+    const checkFilledFields = () => {
+        const criteriaArray = getValues(`criteria`)
+        let check = false
+        criteriaArray.forEach((option: { name: string }) => {
+            if (!option.name) {
+                check = true
+            }
+        })
+        return check
+    }
     return (
         <>
             {fields.map((item, index) => (
                 <React.Fragment key={item.id}>
-                    <div className={'flex items-center w-full'}>
-                        <input
-                            key={item.id}
-                            className={inputStyle}
-                            type="text"
-                            placeholder={`Criterion ${index + 1}`}
-                            {...register(`criteria.${index}.name` as const, {
-                                required: {
-                                    value: true,
-                                    message:
-                                        'You must enter the required Cost.',
-                                },
-                                maxLength: {
-                                    value: shortLimit,
-                                    message: `Cost length should be less than ${shortLimit}`,
-                                },
-                            })}
-                        />
+                    <div className={'flex items-start w-full'}>
+                        <ErrorWraperField
+                            errorField={
+                                errors?.criteria &&
+                                errors?.criteria[index]?.name?.message
+                                    ? errors?.criteria[index]?.name?.message
+                                    : ''
+                            }
+                        >
+                            <input
+                                key={item.id}
+                                className={inputStyle}
+                                type="text"
+                                placeholder={`Criterion ${index + 1}`}
+                                {...register(
+                                    `criteria.${index}.name` as const,
+                                    {
+                                        required: {
+                                            value: true,
+                                            message:
+                                                'You must enter the required criteria.',
+                                        },
+                                        maxLength: {
+                                            value: shortLimit,
+                                            message: `Criteria length should be less than ${shortLimit}`,
+                                        },
+                                    }
+                                )}
+                            />
+                        </ErrorWraperField>
                         {index === 0 ? (
                             <button
-                                className="p-1 ml-3 align-middle bg-primary dark:bg-primaryDark rounded-full"
+                                className="p-1 my-2 ml-3 align-middle bg-primary disabled:bg-primary/40 dark:bg-primaryDark rounded-full"
                                 type="button"
+                                disabled={checkFilledFields()}
                                 onClick={() => {
                                     append({
                                         name: '',
                                         weight: 1,
-                                        rating: Array(watchOptions.length).fill(
-                                            5
-                                        ),
+                                        rating: Array(
+                                            getValues('options').length
+                                        ).fill(5),
                                     })
                                 }}
                             >
@@ -55,7 +87,7 @@ export const CriteriaTab: FC = () => {
                             </button>
                         ) : (
                             <button
-                                className="p-1 ml-3"
+                                className="p-1 my-2 ml-3"
                                 type="button"
                                 onClick={() => remove(index)}
                             >

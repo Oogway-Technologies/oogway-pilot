@@ -28,7 +28,7 @@ const OptionRatingTabWrapper: FC = () => {
                         className={`${bodyHeavy} py-3 w-full flex items-center justify-center transition-all border-b-2 border-transparent ${
                             selectedTab === index
                                 ? 'text-primary border-primary'
-                                : 'font-normal text-neutral-700'
+                                : 'font-normal text-neutral-700 dark:text-neutral-300'
                         } cursor-pointer`}
                     >
                         {watchOptions[index].name}
