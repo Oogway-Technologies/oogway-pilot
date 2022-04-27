@@ -61,7 +61,7 @@ export const OptionTab: FC = () => {
                             })}
                         />
                     </ErrorWraperField>
-                    {index === 0 ? (
+                    {index === fields.length - 1 ? (
                         <button
                             className="p-1 my-2 ml-3 align-middle bg-primary disabled:bg-primary/40 rounded-full"
                             type="button"

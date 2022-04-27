@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { liStyle } from '../../styles/utils'
@@ -10,6 +10,7 @@ interface OptionSliderProps {
     step?: number
     id: string
     registerName: string
+    tooltip?: boolean
 }
 
 export const OptionSlider: FC<OptionSliderProps> = ({
@@ -19,14 +20,20 @@ export const OptionSlider: FC<OptionSliderProps> = ({
     min = 1,
     max = 6,
     step = 1,
+    tooltip = false,
 }: OptionSliderProps) => {
     const { register } = useFormContext()
+    const [left, setLeft] = useState(1)
+
     return (
-        <div className="flex z-10 flex-col p-2 space-y-2 w-full">
+        <div className={`flex relative flex-col px-3 space-y-2 w-full`}>
             <input
                 key={id}
                 type="range"
-                className={'px-xl cursor-pointer custom-slider'}
+                style={{
+                    width: tooltip ? '95%' : '100%',
+                }}
+                className={'cursor-pointer custom-slider'}
                 min={min}
                 max={max}
                 step={step}
@@ -35,28 +42,48 @@ export const OptionSlider: FC<OptionSliderProps> = ({
                     min: min,
                     max: max,
                 })}
+                onChange={({ target: { value } }) => {
+                    setLeft(Number(value))
+                }}
             />
+
+            {tooltip && (
+                <div
+                    className="absolute top-[-55px] ml-1"
+                    style={{
+                        left: `${left * 10 - 10}%`,
+                        marginLeft: `${4 + left}px`,
+                    }}
+                >
+                    <svg width="31" height="35" viewBox="0 0 31 35" fill="none">
+                        <path
+                            d="M31 13.1591C31 19.1492 21.5547 29.8135 17.4133 34.2135C16.4203 35.2622 14.5797 35.2622 13.5867 34.2135C9.37266 29.8135 0 19.1492 0 13.1591C0 5.89142 6.93948 0 15.5 0C24.0573 0 31 5.89142 31 13.1591Z"
+                            fill="#7269FF"
+                        />
+                    </svg>
+                    <span
+                        style={{ left: '50%', transform: 'translate(-50%, 0)' }}
+                        className="absolute top-[5%] text-base font-normal text-white"
+                    >
+                        {left}
+                    </span>
+                </div>
+            )}
             {showValues && (
-                <ul className="flex z-[-1] justify-between px-xl w-full h-10">
+                <ul className="flex justify-between w-full h-10">
                     <li className={liStyle}>
-                        <div className="absolute top-[-30px] left-[7px] h-10 border " />
-
-                        <span className="absolute">Not at all important</span>
+                        <span className="absolute ml-xl whitespace-nowrap">
+                            Not at all
+                        </span>
                     </li>
                     <li className={liStyle}>
-                        <div className="absolute top-[-30px] left-[2px] h-10 border " />
-
-                        <span className="absolute">Somewhat Important</span>
+                        <span className="absolute">Somewhat</span>
                     </li>
                     <li className={liStyle}>
-                        <div className="absolute top-[-30px] left-[-4px] h-10 border " />
-
-                        <span className="absolute">Fairly Important</span>
+                        <span className="absolute">Fairly</span>
                     </li>
                     <li className={liStyle}>
-                        <div className="absolute top-[-30px] left-[-9px] h-10 border " />
-
-                        <span className="absolute">Super Important</span>
+                        <span className="absolute mr-xl">Super</span>
                     </li>
                 </ul>
             )}

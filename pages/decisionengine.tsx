@@ -4,7 +4,6 @@ import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { DecisionBarHandler } from '../components/Decision/DecisionBarHandler'
-import { DecisionInfo } from '../components/Decision/DecisionInfo'
 import { DecisionSideBar } from '../components/Decision/DecisionSideBar'
 import { DecisionTabWrapper } from '../components/Decision/DecisionTabWrapper'
 import OptionRatingTabWrapper from '../components/Decision/OptionRatingTabWrapper'
@@ -16,7 +15,7 @@ import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import { useAppSelector } from '../hooks/useRedux'
 import { useCreateDecisionActivity } from '../queries/decisionActivity'
 import { bigContainer, decisionContainer } from '../styles/decision'
-import { decisionInfoParagraph, decisionTitle } from '../utils/constants/global'
+import { decisionTitle } from '../utils/constants/global'
 import { FirebaseDecisionActivity } from '../utils/types/firebase'
 
 const DecisionEngine: FC = () => {
@@ -69,6 +68,7 @@ const DecisionEngine: FC = () => {
                             <form
                                 onSubmit={methods.handleSubmit(onSubmit)}
                                 className="flex flex-col justify-between items-center space-y-xl h-full"
+                                autoComplete="off"
                             >
                                 <div className="overflow-auto py-2 w-full h-[60vh] scrollbar-hide">
                                     {currentTab === 4 && (
@@ -106,17 +106,7 @@ const DecisionEngine: FC = () => {
                         </FormProvider>
                     </div>
                 </div>
-                <div className={'col-span-1'}>
-                    <DecisionInfo
-                        className="ml-3"
-                        title={currentTab === 1 ? 'Decisions' : 'Explanation'}
-                        paragraph={
-                            decisionInfoParagraph[
-                                currentTab === 1 || currentTab === 2 ? 0 : 1
-                            ]
-                        }
-                    />
-                </div>
+                <div className={'col-span-1'}>{/* TODO: Add AI card  */}</div>
             </div>
         </div>
     )

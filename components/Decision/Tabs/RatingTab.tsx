@@ -9,7 +9,7 @@ export const RatingTab: FC = () => {
     const optionIndex = useAppSelector(
         state => state.utilsSlice.decisionEngineOptionTab
     )
-    const { control, setValue, getValues } = useFormContext()
+    const { control } = useFormContext()
     const { fields } = useFieldArray({
         control,
         name: 'criteria',
@@ -24,18 +24,11 @@ export const RatingTab: FC = () => {
                         <div className="flex flex-col mt-8 w-full">
                             <div className="flex items-center mb-4">
                                 <span
-                                    className={`${bodyHeavy} text-neutral-700 dark:text-neutral-300 flex justify-start items-center mr-auto`}
+                                    className={`${bodyHeavy} text-neutral-700 dark:text-neutral-300 flex justify-start items-center mr-auto mb-xl pb-3`}
                                 >
                                     {watchCriteria[index].name}
                                 </span>
                                 {/* Link input to criteria rating value */}
-                                <input
-                                    key={item.id}
-                                    value={getValues(
-                                        `criteria.${index}.rating.${optionIndex}`
-                                    )}
-                                    className="flex justify-end p-1 ml-auto w-11 h-7 text-sm text-center bg-transparent rounded border-[1px] focus-within:border-primary focus:border-primary focus-visible:border-primary active:border-neutral-300 border-solid focus:outline-none"
-                                />
                             </div>
                             <OptionSlider
                                 id={item.id}
@@ -45,23 +38,17 @@ export const RatingTab: FC = () => {
                                 min={1}
                                 max={10}
                                 step={1}
+                                tooltip
                             />
                         </div>
                     ) : (
                         <div className="flex flex-col w-full">
                             <div className="flex items-center mb-4">
                                 <span
-                                    className={`${bodyHeavy} text-neutral-700 dark:text-neutral-300 flex justify-start items-center mr-auto`}
+                                    className={`${bodyHeavy} text-neutral-700 dark:text-neutral-300 flex justify-start items-center mr-auto mb-xl pb-3`}
                                 >
                                     {watchCriteria[index].name}
                                 </span>
-                                <input
-                                    key={item.id}
-                                    value={getValues(
-                                        `criteria.${index}.rating.${optionIndex}`
-                                    )}
-                                    className="flex justify-end p-1 ml-auto w-11 h-7 text-sm text-center bg-transparent rounded border-[1px] focus-within:border-primary focus:border-primary focus-visible:border-primary active:border-neutral-300 border-solid focus:outline-none"
-                                />
                             </div>
                             <OptionSlider
                                 id={item.id}
@@ -71,6 +58,7 @@ export const RatingTab: FC = () => {
                                 min={1}
                                 max={10}
                                 step={1}
+                                tooltip
                             />
                         </div>
                     )}
