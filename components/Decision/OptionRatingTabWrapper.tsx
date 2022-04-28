@@ -19,7 +19,7 @@ const OptionRatingTabWrapper: FC = () => {
     return (
         <div className="flex items-center mb-3 w-full">
             {fields.map((item, index) => {
-                return (
+                return watchOptions[index].name ? (
                     <span
                         key={item.id}
                         onClick={() =>
@@ -33,7 +33,7 @@ const OptionRatingTabWrapper: FC = () => {
                     >
                         {watchOptions[index].name}
                     </span>
-                )
+                ) : null
             })}
         </div>
     )

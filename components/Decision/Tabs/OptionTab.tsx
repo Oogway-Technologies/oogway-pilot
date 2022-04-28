@@ -50,7 +50,10 @@ export const OptionTab: FC = () => {
                             placeholder={`Enter your Option ${index + 1}`}
                             {...register(`options.${index}.name` as const, {
                                 required: {
-                                    value: true,
+                                    value:
+                                        index === fields.length - 1 && index > 1
+                                            ? false
+                                            : true,
                                     message:
                                         'You must enter the required Option.',
                                 },
@@ -62,17 +65,21 @@ export const OptionTab: FC = () => {
                         />
                     </ErrorWraperField>
                     {index === fields.length - 1 ? (
-                        <button
-                            className="p-1 my-2 ml-3 align-middle bg-primary disabled:bg-primary/40 rounded-full"
-                            type="button"
-                            disabled={checkFilledFields()}
-                            onClick={() => {
-                                if (fields[index]) append({ name: '' })
-                            }}
-                        >
-                            <UilPlus className={'fill-white'} />
-                        </button>
-                    ) : (
+                        index < 4 ? (
+                            <button
+                                className="p-1 my-2 ml-3 align-middle bg-primary disabled:bg-primary/40 rounded-full"
+                                type="button"
+                                disabled={checkFilledFields()}
+                                onClick={() => {
+                                    if (fields[index]) append({ name: '' })
+                                }}
+                            >
+                                <UilPlus className={'fill-white'} />
+                            </button>
+                        ) : (
+                            <span className="p-1 my-2 ml-3 w-8 h-8" />
+                        )
+                    ) : index > 1 ? (
                         <button
                             className="p-1 my-2 ml-3"
                             type="button"
@@ -80,6 +87,8 @@ export const OptionTab: FC = () => {
                         >
                             <UilTrash className={'fill-neutral-700'} />
                         </button>
+                    ) : (
+                        <span className="p-1 my-2 ml-3 w-8 h-8" />
                     )}
                 </div>
             ))}

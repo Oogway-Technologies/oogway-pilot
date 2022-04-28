@@ -26,8 +26,15 @@ const DecisionEngine: FC = () => {
         defaultValues: {
             question: '',
             context: '',
-            options: [{ name: '' }],
-            criteria: [{ name: '', weight: 1, rating: [5] }],
+            options: [{ name: '' }, { name: '' }],
+            criteria: [{ name: '', weight: 1 }],
+            ratings: [
+                {
+                    option: '',
+                    score: '',
+                    rating: [{ criteria: '', value: 0, weight: 1 }],
+                },
+            ],
         },
     })
 
@@ -45,31 +52,33 @@ const DecisionEngine: FC = () => {
             <Head>
                 <title>Oogway | Social - Wisdom of the crowd</title>
             </Head>
-
-            <div className={decisionContainer}>
-                <div className={bigContainer}>
-                    <div
-                        className={
-                            'col-span-1 pt-6 bg-primary/10 dark:bg-primaryDark/10'
-                        }
-                        style={{
-                            borderTopLeftRadius: '16px',
-                            borderBottomLeftRadius: '16px',
-                        }}
-                    >
-                        <DecisionSideBar
-                            selectedTab={currentTab}
-                            setSelectedTab={setCurrentTab}
-                        />
-                    </div>
-                    {/* This needs to move into the formm so we can link the options with each of their ratings */}
-                    <div className={'flex flex-col col-span-3 pt-5 mr-5 mb-6'}>
-                        <FormProvider {...methods}>
-                            <form
-                                onSubmit={methods.handleSubmit(onSubmit)}
-                                className="flex flex-col justify-between items-center space-y-xl h-full"
-                                autoComplete="off"
-                            >
+            <FormProvider {...methods}>
+                <form
+                    onSubmit={methods.handleSubmit(onSubmit)}
+                    className={decisionContainer}
+                    autoComplete="off"
+                >
+                    <div className={bigContainer}>
+                        <div
+                            className={
+                                'col-span-1 pt-6 bg-primary/10 dark:bg-primaryDark/10'
+                            }
+                            style={{
+                                borderTopLeftRadius: '16px',
+                                borderBottomLeftRadius: '16px',
+                            }}
+                        >
+                            <DecisionSideBar
+                                selectedTab={currentTab}
+                                setSelectedTab={setCurrentTab}
+                            />
+                        </div>
+                        <div
+                            className={
+                                'flex flex-col col-span-3 pt-5 mr-5 mb-6'
+                            }
+                        >
+                            <div className="flex flex-col justify-between items-center space-y-xl h-full">
                                 <div className="overflow-auto py-2 w-full h-[60vh] scrollbar-hide">
                                     {currentTab === 4 && (
                                         <OptionRatingTabWrapper />
@@ -102,12 +111,14 @@ const DecisionEngine: FC = () => {
                                     selectedTab={currentTab}
                                     setSelectedTab={setCurrentTab}
                                 />
-                            </form>
-                        </FormProvider>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className={'col-span-1'}>{/* TODO: Add AI card  */}</div>
-            </div>
+                    <div className={'col-span-1'}>
+                        {/* TODO: Add AI card  */}
+                    </div>
+                </form>
+            </FormProvider>
         </div>
     )
 }

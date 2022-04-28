@@ -22,10 +22,12 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         trigger,
         clearErrors,
         formState: { errors },
+        getValues,
     } = useFormContext()
 
     const validationHandler = async (tab: number) => {
-        console.log(errors)
+        console.log('errors: ', errors)
+        console.log('Values: ', getValues())
 
         if (tab === 1) {
             await trigger(['question', 'context'])
@@ -50,9 +52,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 setTimeout(() => clearErrors(['criteria']), warningTime)
                 return false
             }
-        }
-        if (tab === 4) {
-            // TODO: need to identify fields
         }
         return true
     }

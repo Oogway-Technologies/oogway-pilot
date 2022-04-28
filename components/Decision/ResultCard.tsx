@@ -4,15 +4,15 @@ import { FieldValues, UseFormSetValue } from 'react-hook-form'
 interface ResultCardProps {
     optionIndex: number
     option: { name: string; score: number }
-    criteriaArray: Array<{ name: string; weight: number; rating: number[] }>
     setValue: UseFormSetValue<FieldValues>
+    ratingArray: Array<{ criteria: string; weight: number; value: number }>
 }
 
 export const ResultCard: FC<ResultCardProps> = ({
     optionIndex,
     option,
-    criteriaArray,
     setValue,
+    ratingArray,
 }: ResultCardProps) => {
     // Update scores on mount
     useEffect(() => {
@@ -22,10 +22,10 @@ export const ResultCard: FC<ResultCardProps> = ({
     const calcScore = (): number => {
         let sumWeights = 0
         let sumWeightedScore = 0
-        for (const criteria of criteriaArray) {
-            sumWeights += criteria.weight
-            sumWeightedScore += criteria.weight * criteria.rating[optionIndex]
-        }
+        ratingArray.forEach((item: { weight: number; value: number }) => {
+            sumWeights += item.weight
+            sumWeightedScore += item.weight * item.value
+        })
         return parseFloat((sumWeightedScore / sumWeights).toFixed(1))
     }
 

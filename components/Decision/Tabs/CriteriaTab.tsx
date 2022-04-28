@@ -56,7 +56,11 @@ export const CriteriaTab: FC = () => {
                                     `criteria.${index}.name` as const,
                                     {
                                         required: {
-                                            value: true,
+                                            value:
+                                                index === fields.length - 1 &&
+                                                index > 0
+                                                    ? false
+                                                    : true,
                                             message:
                                                 'You must enter the required criteria.',
                                         },
@@ -77,9 +81,6 @@ export const CriteriaTab: FC = () => {
                                     append({
                                         name: '',
                                         weight: 1,
-                                        rating: Array(
-                                            getValues('options').length
-                                        ).fill(5),
                                     })
                                 }}
                             >
@@ -107,7 +108,6 @@ export const CriteriaTab: FC = () => {
                         </span>
                     )}
                     <OptionSlider
-                        id={item.id}
                         registerName={`criteria.${index}.weight` as const}
                         min={1}
                         max={4}

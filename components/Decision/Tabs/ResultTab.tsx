@@ -2,10 +2,10 @@ import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import { setDecisionEngineBestOption } from '../../../features/utils/utilsSlice'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
-import { decisionCriteria, decisionOption } from '../../../utils/types/firebase'
+import { decisionOption } from '../../../utils/types/firebase'
 import { ResultCard } from '../ResultCard'
 
 interface ResultTabProps {
@@ -15,14 +15,15 @@ interface ResultTabProps {
 export const ResultTab: FC<ResultTabProps> = ({
     setCurrentTab,
 }: ResultTabProps) => {
-    const { control, setValue, reset } = useFormContext()
+    const { control, setValue, reset, getValues } = useFormContext()
+
+    const optionIndex = useAppSelector(
+        state => state.utilsSlice.decisionEngineOptionTab
+    )
+
     const options: Array<decisionOption> = useWatch({
         control,
         name: 'options',
-    })
-    const criteria: Array<decisionCriteria> = useWatch({
-        control,
-        name: 'criteria',
     })
 
     // Determine best option from scores on mount.
@@ -37,7 +38,7 @@ export const ResultTab: FC<ResultTabProps> = ({
             }
         }
         useAppDispatch(setDecisionEngineBestOption(currentBestName))
-    }, [options, criteria])
+    }, [options])
 
     // Handler functions
     const handleReset = () => {
@@ -55,15 +56,19 @@ export const ResultTab: FC<ResultTabProps> = ({
                 Scores
             </span>
             <div className="flex flex-wrap gap-3 justify-center items-center">
-                {options.map((option, index) => (
-                    <ResultCard
-                        key={index}
-                        optionIndex={index}
-                        option={option}
-                        criteriaArray={criteria}
-                        setValue={setValue}
-                    />
-                ))}
+                {options.map((option, index) =>
+                    option.name ? (
+                        <ResultCard
+                            key={index}
+                            optionIndex={index}
+                            option={option}
+                            ratingArray={
+                                getValues('ratings')[optionIndex].rating
+                            }
+                            setValue={setValue}
+                        />
+                    ) : null
+                )}
             </div>
             <div className="flex items-center pt-5 space-x-6">
                 <button
@@ -72,7 +77,10 @@ export const ResultTab: FC<ResultTabProps> = ({
                 >
                     New Decision
                 </button>
-                <button className={feedToolbarClass.newPostButton}>
+                <button
+                    className={feedToolbarClass.newPostButton}
+                    onClick={() => console.log(getValues())}
+                >
                     Get Feedback
                 </button>
             </div>

@@ -1,4 +1,7 @@
 import { FC } from 'react'
+// import { useFormContext } from 'react-hook-form'
+
+// import { warningTime } from '../../utils/constants/global'
 
 interface DecisionSideBarProps {
     className?: string
@@ -19,6 +22,37 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     selectedTab,
     setSelectedTab,
 }: DecisionSideBarProps) => {
+    // const {
+    //     trigger,
+    //     clearErrors,
+    //     formState: { errors },
+    //     getValues,
+    // } = useFormContext()
+
+    // const validationHandler = async (tab: number) => {
+    //     await trigger()
+    //     console.log('errors: ', errors)
+    //     console.log('Values: ', getValues())
+
+    //     if (
+    //         errors &&
+    //         Object.keys(errors).length === 0 &&
+    //         Object.getPrototypeOf(errors) === Object.prototype
+    //     ) {
+    //         return true
+    //     } else {
+    //         setTimeout(() => clearErrors(), warningTime)
+    //         return false
+    //     }
+    // }
+
+    // const onSelectItem = async (tab: number) => {
+    //     const isValid = await validationHandler(tab)
+    //     if (isValid) {
+    //         setSelectedTab(tab)
+    //     }
+    // }
+
     return (
         <div
             className={`flex flex-col space-y-2 w-3/4 h-full ${
@@ -34,10 +68,10 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                         borderTopRightRadius: '8px',
                         borderBottomRightRadius: '8px',
                     }}
-                    className={`flex items-center py-3 px-3 transition-all ${
+                    className={`flex items-center py-3 px-3 transition-all cursor-pointer ${
                         selectedTab === item.tab ? 'w-4/5' : 'w-3/5'
                     }`}
-                    // onClick={() => setSelectedTab(item.tab)}
+                    // onClick={() => onSelectItem(item.tab)}
                 >
                     <span
                         className={`text-base text-white transition-all truncate ${

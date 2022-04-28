@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
@@ -7,7 +7,12 @@ import { longLimit, shortLimit } from '../../../utils/constants/global'
 import { ErrorWraper } from '../../Utils/ErrorWraper'
 
 export const DecisionTab: FC = () => {
-    const { register } = useFormContext()
+    const { register, trigger, reset } = useFormContext()
+
+    useEffect(() => {
+        // to fix error not working on first step.
+        trigger().then(() => reset())
+    }, [])
 
     return (
         <>
