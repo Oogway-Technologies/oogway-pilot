@@ -108,6 +108,7 @@ export const CriteriaTab: FC = () => {
                         </span>
                     )}
                     <OptionSlider
+                        id={item.id + index}
                         registerName={`criteria.${index}.weight` as const}
                         min={1}
                         max={4}

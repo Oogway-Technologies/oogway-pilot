@@ -54,6 +54,7 @@ export const RatingTab: FC = () => {
                                     </span>
                                 </div>
                                 <OptionSlider
+                                    id={item.id + index}
                                     registerName={
                                         `ratings.${optionIndex}.rating.${index}.value` as const
                                     }
