@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import { setDecisionEngineBestOption } from '../../../features/utils/utilsSlice'
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
 import { decisionOption } from '../../../utils/types/firebase'
@@ -17,10 +17,6 @@ export const ResultTab: FC<ResultTabProps> = ({
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
 
-    const optionIndex = useAppSelector(
-        state => state.utilsSlice.decisionEngineOptionTab
-    )
-
     const options: Array<decisionOption> = useWatch({
         control,
         name: 'options',
@@ -29,16 +25,43 @@ export const ResultTab: FC<ResultTabProps> = ({
     // Determine best option from scores on mount.
     // Edge case: ties not accounted for
     useEffect(() => {
+        useAppDispatch(setDecisionEngineBestOption(calcBestOption()))
+    }, [options])
+
+    const calcBestOption = () => {
         let currentBestScore = 0
-        let currentBestName = ''
+        let currentBestOptions: string[] = []
         for (const option of options) {
             if (option.score > currentBestScore) {
-                currentBestName = option.name
+                // If there's only one or zero current best option(s),
+                // replace with new best
+                if (currentBestOptions.length < 2) {
+                    currentBestOptions[0] = option.name
+                } else {
+                    // If there's a current tie, but current option
+                    // dominates both, replace the array
+                    currentBestOptions = [option.name]
+                }
+
+                // Update new new best score
                 currentBestScore = option.score
             }
+
+            // If there's a tie, push to stack
+            if (option.score === currentBestScore) {
+                currentBestOptions.push(option.name)
+            }
         }
-        useAppDispatch(setDecisionEngineBestOption(currentBestName))
-    }, [options])
+
+        // In case of ties, randomly choose best option
+        if (currentBestOptions.length > 1) {
+            return currentBestOptions[
+                (Math.random() * currentBestOptions.length) | 0
+            ]
+        } else {
+            return currentBestOptions[0]
+        }
+    }
 
     // Handler functions
     const handleReset = () => {
@@ -62,9 +85,8 @@ export const ResultTab: FC<ResultTabProps> = ({
                             key={index}
                             optionIndex={index}
                             option={option}
-                            ratingArray={
-                                getValues('ratings')[optionIndex].rating
-                            }
+                            criteriaArray={getValues('criteria')}
+                            ratingsArray={getValues(`ratings.${index}.rating`)}
                             setValue={setValue}
                         />
                     ) : null

@@ -5,27 +5,34 @@ interface ResultCardProps {
     optionIndex: number
     option: { name: string; score: number }
     setValue: UseFormSetValue<FieldValues>
-    ratingArray: Array<{ criteria: string; weight: number; value: number }>
+    criteriaArray: Array<{ name: string; weight: number }>
+    ratingsArray: Array<{ criteria: string; weight: number; value: number }>
 }
 
 export const ResultCard: FC<ResultCardProps> = ({
     optionIndex,
     option,
     setValue,
-    ratingArray,
+    criteriaArray,
+    ratingsArray,
 }: ResultCardProps) => {
     // Update scores on mount
     useEffect(() => {
         setValue(`options.${optionIndex}.score`, calcScore())
-    }, [])
+    }, [optionIndex])
 
     const calcScore = (): number => {
         let sumWeights = 0
         let sumWeightedScore = 0
-        ratingArray.forEach((item: { weight: number; value: number }) => {
-            sumWeights += item.weight
-            sumWeightedScore += item.weight * item.value
-        })
+        // Calculate denominator
+        for (const criteria of criteriaArray) {
+            sumWeights += criteria.weight
+        }
+
+        // Calculate numerator
+        for (const rating of ratingsArray) {
+            sumWeightedScore += rating.value * rating.weight
+        }
         return parseFloat((sumWeightedScore / sumWeights).toFixed(1))
     }
 
