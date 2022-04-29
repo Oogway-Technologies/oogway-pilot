@@ -88,15 +88,13 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                 <div
                     key={item.tab}
                     style={{
-                        background:
-                            selectedTab === item.tab ? '#7269FF' : '#8E87FF',
                         borderTopRightRadius: '8px',
                         borderBottomRightRadius: '8px',
                     }}
                     className={`flex items-center py-3 px-3 transition-all  ${
                         selectedTab === item.tab
-                            ? 'w-4/5'
-                            : 'w-3/5 cursor-pointer'
+                            ? 'w-4/5 bg-primary/90 dark:bg-primaryDark/90'
+                            : 'w-3/5 bg-primary/60 dark:bg-primaryDark/60'
                     }`}
                     onClick={() => {
                         if (item.tab !== selectedTab) {

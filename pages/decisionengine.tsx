@@ -27,7 +27,7 @@ const DecisionEngine: FC = () => {
             question: '',
             context: '',
             options: [{ name: '' }, { name: '' }],
-            criteria: [{ name: '', weight: 1 }],
+            criteria: [{ name: '', weight: 2 }],
             ratings: [
                 {
                     option: '',

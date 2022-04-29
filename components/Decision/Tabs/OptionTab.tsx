@@ -77,7 +77,13 @@ export const OptionTab: FC = () => {
                                 <UilPlus className={'fill-white'} />
                             </button>
                         ) : (
-                            <span className="p-1 my-2 ml-3 w-8 h-8" />
+                            <button
+                                className="p-1 my-2 ml-3"
+                                type="button"
+                                onClick={() => remove(index)}
+                            >
+                                <UilTrash className={'fill-neutral-700'} />
+                            </button>
                         )
                     ) : index > 1 ? (
                         <button

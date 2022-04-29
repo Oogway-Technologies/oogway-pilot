@@ -80,7 +80,7 @@ export const CriteriaTab: FC = () => {
                                 onClick={() => {
                                     append({
                                         name: '',
-                                        weight: 1,
+                                        weight: 2,
                                     })
                                 }}
                             >
