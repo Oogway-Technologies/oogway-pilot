@@ -7,11 +7,11 @@ import { longLimit, shortLimit } from '../../../utils/constants/global'
 import { ErrorWraper } from '../../Utils/ErrorWraper'
 
 export const DecisionTab: FC = () => {
-    const { register, trigger, reset } = useFormContext()
+    const { register, trigger, clearErrors } = useFormContext()
 
     useEffect(() => {
         // to fix error not working on first step.
-        trigger().then(() => reset())
+        trigger('question').then(() => clearErrors('question'))
     }, [])
 
     return (
