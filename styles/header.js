@@ -81,7 +81,7 @@ export const toggleThemeClass = {
 }
 
 export const navLinksClass = {
-    li: 'flex pt-2 pb-[6px] text-base hover:font-bold mx-3',
+    li: 'flex pt-2 pb-[6px] text-base hover:font-bold',
 }
 
 export const userDropdownClass = {

@@ -33,3 +33,9 @@ export type compareFilePickerRefs = {
     left: React.RefObject<HTMLInputElement>
     right: React.RefObject<HTMLInputElement>
 }
+
+export interface TruncateTextProps {
+    input: string
+    maxLength: number
+    bufferLength: number
+}

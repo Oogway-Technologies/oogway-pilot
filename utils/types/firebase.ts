@@ -101,6 +101,27 @@ export interface FirebaseFeed {
     createdBy: string
 }
 
+export type decisionCriteria = {
+    name: string
+    rating: number[]
+    weight: number
+}
+
+export type decisionOption = {
+    name: string
+    score: number
+}
+
+export interface FirebaseDecisionActivity {
+    id?: string
+    userId: string
+    question: string
+    context: string
+    criteria: decisionCriteria[]
+    options: decisionOption[]
+    timestamp?: FieldValue
+}
+
 export type engagementAction = 'like' | 'comment' | 'reply' | 'vote'
 
 export type engagementTarget = 'Poll' | 'Comment' | 'Reply' | 'Post'

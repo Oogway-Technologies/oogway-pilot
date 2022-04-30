@@ -2,6 +2,8 @@
 
 import { DocumentSnapshot } from 'firebase/firestore'
 
+import { TruncateTextProps } from '../types/global'
+
 // count number of like in snapshot
 export const findLikes = (snapshot: any, setNumLikes: (n: number) => void) => {
     if (snapshot.exists()) {
@@ -131,11 +133,6 @@ export const checkOrientation = (src: string) => {
     }
 }
 
-interface TruncateTextProps {
-    input: string
-    maxLength: number
-    bufferLength: number
-}
 export const truncateText = ({
     input,
     maxLength,

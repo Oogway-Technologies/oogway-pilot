@@ -132,7 +132,7 @@ const Profile: FC<
                               posts
                                   .filter(function (post: FirebasePost) {
                                       return (
-                                          post.isAnonymous != true ||
+                                          !post.isAnonymous ||
                                           post.uid == authUserProfile.uid
                                       )
                                   })
