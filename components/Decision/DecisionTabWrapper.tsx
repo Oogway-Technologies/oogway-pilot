@@ -39,9 +39,15 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                         {bestOption}
                     </span>
                 )}
-                {currentTab === 4 &&
-                    `How does ${getValues('options')[optionIndex].name} score
-                    on each criteria?`}
+                {currentTab === 4 && (
+                    <span className="text-neutral-700 dark:text-neutralDark-150">
+                        How does{' '}
+                        <span className="text-primary dark:text-primaryDark">
+                            {getValues('options')[optionIndex].name}
+                        </span>{' '}
+                        score on each criteria?
+                    </span>
+                )}
             </h3>
             {children}
         </div>

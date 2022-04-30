@@ -40,7 +40,7 @@ export const OptionSlider: FC<OptionSliderProps> = ({
                 key={id}
                 type="range"
                 style={{
-                    width: '100%',
+                    width: tooltip ? '95%' : '100%',
                 }}
                 min={min}
                 max={max}
@@ -59,7 +59,7 @@ export const OptionSlider: FC<OptionSliderProps> = ({
                     htmlFor="range"
                     style={{
                         left: `${left * 10 - 10}%`,
-                        marginLeft: `${5 * left + left}px`,
+                        marginLeft: `${4 + left}px`,
                     }}
                 >
                     <svg width="31" height="35" viewBox="0 0 31 35" fill="none">
@@ -83,7 +83,7 @@ export const OptionSlider: FC<OptionSliderProps> = ({
                     </li>
 
                     <li className={liStyle}>
-                        <span className="absolute mr-4">10</span>
+                        <span className="absolute mr-xl pr-xxl">10</span>
                     </li>
                 </ul>
             )}
