@@ -1,18 +1,24 @@
 import { UilPlus, UilTrash } from '@iconscout/react-unicons'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
+import { setDecisionRatingUpdate } from '../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
 import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 
 export const OptionTab: FC = () => {
+    const decisionRatingUpdate = useAppSelector(
+        state => state.utilsSlice.decisionRatingUpdate
+    )
     const {
         register,
         control,
         getValues,
         formState: { errors },
     } = useFormContext()
+
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'options',
@@ -21,6 +27,13 @@ export const OptionTab: FC = () => {
         control,
         name: 'options',
     })
+
+    useEffect(() => {
+        if (!decisionRatingUpdate) {
+            useAppDispatch(setDecisionRatingUpdate(true))
+        }
+    }, [])
+
     const checkFilledFields = () => {
         const optionsArray = getValues(`options`)
         let check = false

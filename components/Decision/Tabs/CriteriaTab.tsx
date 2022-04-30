@@ -1,8 +1,10 @@
 import { UilPlus, UilTrash } from '@iconscout/react-unicons'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FC } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
+import { setDecisionRatingUpdate } from '../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
@@ -10,6 +12,9 @@ import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 import { OptionSlider } from '../OptionSlider'
 
 export const CriteriaTab: FC = () => {
+    const decisionRatingUpdate = useAppSelector(
+        state => state.utilsSlice.decisionRatingUpdate
+    )
     const {
         register,
         control,
@@ -24,6 +29,13 @@ export const CriteriaTab: FC = () => {
         control,
         name: 'criteria',
     })
+
+    useEffect(() => {
+        if (!decisionRatingUpdate) {
+            useAppDispatch(setDecisionRatingUpdate(true))
+        }
+    }, [])
+
     const checkFilledFields = () => {
         const criteriaArray = getValues(`criteria`)
         let check = false

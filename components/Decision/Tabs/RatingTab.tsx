@@ -1,7 +1,8 @@
 import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { useAppSelector } from '../../../hooks/useRedux'
+import { setDecisionRatingUpdate } from '../../../features/utils/utilsSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
 import { OptionSlider } from '../OptionSlider'
 
@@ -9,28 +10,34 @@ export const RatingTab: FC = () => {
     const optionIndex = useAppSelector(
         state => state.utilsSlice.decisionEngineOptionTab
     )
+    const decisionRatingUpdate = useAppSelector(
+        state => state.utilsSlice.decisionRatingUpdate
+    )
     const { getValues, setValue } = useFormContext()
 
     useEffect(() => {
-        const optiosnList = getValues('options')
-        const criteriaList = getValues('criteria')
-        const mapRatingObject: any[] = []
-        const reShapeCriteriaList: any[] = []
+        if (decisionRatingUpdate) {
+            const optiosnList = getValues('options')
+            const criteriaList = getValues('criteria')
+            const mapRatingObject: any[] = []
+            const reShapeCriteriaList: any[] = []
 
-        criteriaList.forEach((item: { name: string; weight: number }) => {
-            reShapeCriteriaList.push({
-                criteria: item.name,
-                value: 1,
-                weight: item.weight,
+            criteriaList.forEach((item: { name: string; weight: number }) => {
+                reShapeCriteriaList.push({
+                    criteria: item.name,
+                    value: 1,
+                    weight: item.weight,
+                })
             })
-        })
-        optiosnList.forEach((item: { name: string }) => {
-            mapRatingObject.push({
-                option: item.name,
-                rating: reShapeCriteriaList,
+            optiosnList.forEach((item: { name: string }) => {
+                mapRatingObject.push({
+                    option: item.name,
+                    rating: reShapeCriteriaList,
+                })
             })
-        })
-        setValue('ratings', mapRatingObject)
+            setValue('ratings', mapRatingObject)
+            useAppDispatch(setDecisionRatingUpdate(false))
+        }
     }, [])
 
     return (

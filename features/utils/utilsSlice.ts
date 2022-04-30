@@ -21,6 +21,7 @@ const initialState: {
     jumpToCommentId: string
     decisionEngineOptionTab: number
     decisionEngineBestOption: string | undefined
+    decisionRatingUpdate: boolean
 } = {
     fileSizeTooLarge: false,
     feedState: 'All',
@@ -42,6 +43,7 @@ const initialState: {
     jumpToCommentId: '',
     decisionEngineOptionTab: 0,
     decisionEngineBestOption: undefined,
+    decisionRatingUpdate: true,
 }
 
 export const utilsSlice = createSlice({
@@ -137,10 +139,14 @@ export const utilsSlice = createSlice({
         ) => {
             state.decisionEngineBestOption = payload
         },
+        setDecisionRatingUpdate: (state, { payload }) => {
+            state.decisionRatingUpdate = payload
+        },
     },
 })
 
 export const {
+    setDecisionRatingUpdate,
     setLeftPreviewImage,
     setRightPreviewImage,
     setHasPreviewedCompare,
