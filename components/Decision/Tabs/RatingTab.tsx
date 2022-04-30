@@ -52,7 +52,7 @@ export const RatingTab: FC = () => {
                 ) =>
                     item.criteria ? (
                         <React.Fragment key={item.id + index}>
-                            <div className="flex flex-col mt-8 w-full">
+                            <div className="flex flex-col pl-5 mt-8 w-full">
                                 <div className="flex items-center mb-4">
                                     <span
                                         className={`${bodyHeavy} text-neutral-700 dark:text-neutral-300 flex justify-start items-center mr-auto mb-xl pb-3`}

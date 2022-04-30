@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 import { useAppSelector } from '../../hooks/useRedux'
 
@@ -15,9 +16,15 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     currentTab,
     children,
 }: DecisionTabWrapperProps) => {
+    const { getValues } = useFormContext()
+
     const bestOption = useAppSelector(
         state => state.utilsSlice.decisionEngineBestOption
     )
+    const optionIndex = useAppSelector(
+        state => state.utilsSlice.decisionEngineOptionTab
+    )
+
     return (
         <div
             className={`flex flex-col pt-5 space-y-xl items-center w-full  ${
@@ -32,6 +39,9 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                         {bestOption}
                     </span>
                 )}
+                {currentTab === 4 &&
+                    `How does ${getValues('options')[optionIndex].name} score
+                    on each criteria?`}
             </h3>
             {children}
         </div>

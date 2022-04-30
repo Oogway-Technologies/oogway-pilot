@@ -79,7 +79,7 @@ const DecisionEngine: FC = () => {
                             }
                         >
                             <div className="flex flex-col justify-between items-center space-y-xl h-full">
-                                <div className="overflow-auto py-2 w-full h-[60vh] scrollbar-hide">
+                                <div className="overflow-auto relative py-2 w-full h-[60vh] scrollbar-hide">
                                     {currentTab === 4 && (
                                         <OptionRatingTabWrapper />
                                     )}

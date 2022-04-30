@@ -27,16 +27,20 @@ export const OptionSlider: FC<OptionSliderProps> = ({
 
     useEffect(() => {
         setLeft(getValues(registerName))
-        console.log('Bar value --- ', getValues(registerName))
     }, [registerName])
 
+    const handleChange = (value: string) => {
+        setLeft(Number(value))
+        setValue(registerName, value)
+    }
+
     return (
-        <div className={`flex relative flex-col px-3 space-y-2 w-full`}>
+        <div className={`flex relative flex-col px-3 w-full`}>
             <input
                 key={id}
                 type="range"
                 style={{
-                    width: tooltip ? '95%' : '100%',
+                    width: '100%',
                 }}
                 min={min}
                 max={max}
@@ -47,10 +51,7 @@ export const OptionSlider: FC<OptionSliderProps> = ({
                     min: min,
                     max: max,
                 })}
-                onChange={({ target: { value } }) => {
-                    setLeft(Number(value))
-                    setValue(registerName, value)
-                }}
+                onChange={({ target: { value } }) => handleChange(value)}
             />
 
             {tooltip && (
@@ -58,7 +59,7 @@ export const OptionSlider: FC<OptionSliderProps> = ({
                     htmlFor="range"
                     style={{
                         left: `${left * 10 - 10}%`,
-                        marginLeft: `${4 + left}px`,
+                        marginLeft: `${5 * left + left}px`,
                     }}
                 >
                     <svg width="31" height="35" viewBox="0 0 31 35" fill="none">
@@ -75,20 +76,51 @@ export const OptionSlider: FC<OptionSliderProps> = ({
                     </span>
                 </label>
             )}
-            {showValues && (
+            {tooltip && (
                 <ul className="flex justify-between w-full h-10">
                     <li className={liStyle}>
+                        <span className="absolute ml-4">1</span>
+                    </li>
+
+                    <li className={liStyle}>
+                        <span className="absolute mr-4">10</span>
+                    </li>
+                </ul>
+            )}
+            {showValues && (
+                <ul className="flex justify-between w-full h-10">
+                    <li
+                        className={liStyle}
+                        onClick={() => {
+                            handleChange('1')
+                        }}
+                    >
                         <span className="absolute ml-xl whitespace-nowrap">
                             Not at all
                         </span>
                     </li>
-                    <li className={liStyle}>
+                    <li
+                        className={liStyle}
+                        onClick={() => {
+                            handleChange('2')
+                        }}
+                    >
                         <span className="absolute">Somewhat</span>
                     </li>
-                    <li className={liStyle}>
+                    <li
+                        className={liStyle}
+                        onClick={() => {
+                            handleChange('3')
+                        }}
+                    >
                         <span className="absolute">Fairly</span>
                     </li>
-                    <li className={liStyle}>
+                    <li
+                        className={liStyle}
+                        onClick={() => {
+                            handleChange('4')
+                        }}
+                    >
                         <span className="absolute mr-xl">Super</span>
                     </li>
                 </ul>

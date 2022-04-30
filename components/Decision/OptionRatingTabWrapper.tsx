@@ -17,7 +17,7 @@ const OptionRatingTabWrapper: FC = () => {
     const watchOptions = watch('options')
 
     return (
-        <div className="flex items-center mb-3 w-full">
+        <div className="flex sticky top-[-8px] z-40 items-center mb-3 w-full h-12 bg-white dark:bg-neutralDark-500">
             {fields.map((item, index) => {
                 return watchOptions[index].name ? (
                     <span
