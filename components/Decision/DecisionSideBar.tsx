@@ -1,7 +1,7 @@
-import { FC } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { FC, useEffect, useState } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 
-import { warningTime } from '../../utils/constants/global'
+import { Criteria, Options } from '../../utils/types/global'
 
 interface DecisionSideBarProps {
     className?: string
@@ -22,61 +22,62 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     selectedTab,
     setSelectedTab,
 }: DecisionSideBarProps) => {
-    const {
-        trigger,
-        clearErrors,
-        formState: { errors },
-    } = useFormContext()
+    const { getValues } = useFormContext()
+    const [pointerArray, setPointerArray] = useState([
+        false,
+        false,
+        false,
+        false,
+        false,
+    ])
 
-    const validationHandler = async (tab: number) => {
-        if (tab === 1) {
-            await trigger(['question', 'context'])
-            if (errors?.['question']?.message || errors?.['context']?.message) {
-                setTimeout(
-                    () => clearErrors(['question', 'context']),
-                    warningTime
-                )
-                return false
-            }
+    const watchDecision = useWatch({ name: 'question' })
+    const watchOption = useWatch({ name: 'options' })
+    const watchCriteria = useWatch({ name: 'criteria' })
+
+    const validateDecision = () => {
+        const question: string = getValues('question')
+        if (question) {
+            return true
         }
-        if (tab === 2) {
-            await trigger(['options'])
-            if (errors?.options && errors?.options.length) {
-                setTimeout(() => clearErrors(['options']), warningTime)
-                return false
-            }
-        }
-        if (tab === 3) {
-            await trigger(['criteria'])
-            if (errors?.criteria && errors?.criteria.length) {
-                setTimeout(() => clearErrors(['criteria']), warningTime)
-                return false
-            }
-        }
-        return true
+        return false
     }
 
-    const validateArray = async (tab: number) => {
-        const isValid: boolean[] = [true, true, true, true, true]
-        for (let i = 1; i < tab; i++) {
-            const res = await validationHandler(i)
-            isValid[i - 1] = res
-        }
-        return isValid
-    }
-
-    const onSelectItem = async (tab: number) => {
-        const isValid: boolean[] = await validateArray(tab)
-        let ArrayIsValid = true
-        isValid.map(item => {
-            if (item === false) {
-                ArrayIsValid = false
+    const validateOption = () => {
+        const options = getValues('options')
+        let check = false
+        options.forEach((item: Options) => {
+            if (item.name) {
+                check = true
             }
         })
-        if (ArrayIsValid) {
-            setSelectedTab(tab)
-        }
+
+        return check
     }
+
+    const validateCriteria = () => {
+        const criteria = getValues('criteria')
+        let check = false
+        criteria.forEach((item: Criteria) => {
+            if (item.name) {
+                check = true
+            }
+        })
+        return check
+    }
+    useEffect(() => {
+        if (validateDecision() && validateOption() && validateCriteria()) {
+            setPointerArray([true, true, true, true, true])
+        } else {
+            setPointerArray([
+                validateDecision(),
+                validateOption(),
+                validateCriteria(),
+                false,
+                false,
+            ])
+        }
+    }, [watchDecision, watchOption, watchCriteria])
 
     return (
         <div
@@ -95,10 +96,17 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                         selectedTab === item.tab
                             ? 'w-4/5 bg-primary/90 dark:bg-primaryDark/90'
                             : 'w-3/5 bg-primary/60 dark:bg-primaryDark/60'
+                    } ${
+                        pointerArray[item.tab - 1]
+                            ? 'cursor-pointer'
+                            : 'cursor-default'
                     }`}
                     onClick={() => {
-                        if (item.tab !== selectedTab) {
-                            onSelectItem(item.tab)
+                        if (
+                            item.tab !== selectedTab &&
+                            pointerArray[item.tab - 1]
+                        ) {
+                            setSelectedTab(item.tab)
                         }
                     }}
                 >
