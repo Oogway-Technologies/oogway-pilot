@@ -24,7 +24,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         formState: { errors },
         getValues,
     } = useFormContext()
-
     const validationHandler = async (tab: number) => {
         console.log('errors: ', errors)
         console.log('Values: ', getValues())

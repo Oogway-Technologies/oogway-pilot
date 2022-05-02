@@ -39,3 +39,24 @@ export interface TruncateTextProps {
     maxLength: number
     bufferLength: number
 }
+
+export interface AISuggestions {
+    options: string
+    context_criteria: string
+    common_criteria: string
+    content: string
+}
+
+export interface DecisionForm {
+    question: string
+    context: string
+    options: [{ name: string; isAI: boolean }, { name: string; isAI: boolean }]
+    criteria: [{ name: string; weight: number; isAI: boolean }]
+    ratings: [
+        {
+            option: string
+            score: string
+            rating: [{ criteria: string; value: number; weight: number }]
+        }
+    ]
+}

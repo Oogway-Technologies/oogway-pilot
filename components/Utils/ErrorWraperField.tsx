@@ -10,7 +10,7 @@ export const ErrorWraperField: FC<ErrorWraperFieldProps> = ({
     children,
 }: ErrorWraperFieldProps) => {
     return (
-        <div className="w-full h-auto">
+        <div className="relative w-full h-auto">
             {children}
             {errorField && (
                 <div className="flex items-center mt-2">

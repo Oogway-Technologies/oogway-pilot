@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
-import { setDecisionEngineBestOption } from '../../../features/utils/utilsSlice'
+import { setDecisionEngineBestOption } from '../../../features/decision/decisionSlice'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'

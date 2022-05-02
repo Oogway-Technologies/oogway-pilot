@@ -28,3 +28,6 @@ export const inputStyle =
 
 export const liStyle =
     'flex relative justify-center pt-4 font-normal text-sm leading-4 tracking-normal text-center text-neutral-700 dark:text-neutralDark-150 cursor-pointer hover:font-bold'
+
+export const AiBox =
+    'absolute top-[8px] right-[8px] p-2 w-fit text-xs not-italic font-normal leading-4 text-white bg-[#FF7A03] rounded'

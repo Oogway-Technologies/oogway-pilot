@@ -2,15 +2,20 @@ import { UilPlus, UilTrash } from '@iconscout/react-unicons'
 import React, { FC, useEffect } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
-import { setDecisionRatingUpdate } from '../../../features/utils/utilsSlice'
+import {
+    populateSuggestions,
+    setDecisionRatingUpdate,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { inputStyle } from '../../../styles/utils'
+import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
+import { fetcher } from '../../../utils/helpers/common'
+import { AISuggestions } from '../../../utils/types/global'
 import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 
 export const OptionTab: FC = () => {
     const decisionRatingUpdate = useAppSelector(
-        state => state.utilsSlice.decisionRatingUpdate
+        state => state.decisionSlice.decisionRatingUpdate
     )
     const {
         register,
@@ -27,11 +32,20 @@ export const OptionTab: FC = () => {
         control,
         name: 'options',
     })
+    const loadSuggestions = async () => {
+        const question = getValues('question').replaceAll(' ', '%20')
+        const context = getValues('context').replaceAll(' ', '%20')
+        const data: AISuggestions = await fetcher(
+            `/api/getAISuggestions?question=${question}&context=${context}`
+        )
+        useAppDispatch(populateSuggestions(data))
+    }
 
     useEffect(() => {
         if (!decisionRatingUpdate) {
             useAppDispatch(setDecisionRatingUpdate(true))
         }
+        loadSuggestions()
     }, [])
 
     const checkFilledFields = () => {
@@ -56,26 +70,32 @@ export const OptionTab: FC = () => {
                                 : ''
                         }
                     >
-                        <input
-                            key={item.id}
-                            className={inputStyle}
-                            type="text"
-                            placeholder={`Enter your Option ${index + 1}`}
-                            {...register(`options.${index}.name` as const, {
-                                required: {
-                                    value:
-                                        index === fields.length - 1 && index > 1
-                                            ? false
-                                            : true,
-                                    message:
-                                        'You must enter the required Option.',
-                                },
-                                maxLength: {
-                                    value: shortLimit,
-                                    message: `Option length should be less than ${shortLimit}`,
-                                },
-                            })}
-                        />
+                        <>
+                            <input
+                                key={item.id}
+                                className={inputStyle}
+                                type="text"
+                                placeholder={`Enter your Option ${index + 1}`}
+                                {...register(`options.${index}.name` as const, {
+                                    required: {
+                                        value:
+                                            index === fields.length - 1 &&
+                                            index > 1
+                                                ? false
+                                                : true,
+                                        message:
+                                            'You must enter the required Option.',
+                                    },
+                                    maxLength: {
+                                        value: shortLimit,
+                                        message: `Option length should be less than ${shortLimit}`,
+                                    },
+                                })}
+                            />
+                            {(item as unknown as { isAI: boolean }).isAI && (
+                                <div className={AiBox}>AI Suggestion</div>
+                            )}
+                        </>
                     </ErrorWraperField>
                     {index === fields.length - 1 ? (
                         index < 4 ? (
@@ -84,7 +104,8 @@ export const OptionTab: FC = () => {
                                 type="button"
                                 disabled={checkFilledFields()}
                                 onClick={() => {
-                                    if (fields[index]) append({ name: '' })
+                                    if (fields[index])
+                                        append({ name: '', isAI: false })
                                 }}
                             >
                                 <UilPlus className={'fill-white'} />

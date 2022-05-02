@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { bodyHeavy, bodySmall } from '../../styles/typography'
+import { bodyHeavy, bodySmall } from '../../../styles/typography'
 
 interface DecisionInfoProps {
     className?: string

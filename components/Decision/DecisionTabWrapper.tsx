@@ -19,10 +19,10 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     const { getValues } = useFormContext()
 
     const bestOption = useAppSelector(
-        state => state.utilsSlice.decisionEngineBestOption
+        state => state.decisionSlice.decisionEngineBestOption
     )
     const optionIndex = useAppSelector(
-        state => state.utilsSlice.decisionEngineOptionTab
+        state => state.decisionSlice.decisionEngineOptionTab
     )
 
     return (
