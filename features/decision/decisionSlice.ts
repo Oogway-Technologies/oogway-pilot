@@ -17,6 +17,52 @@ export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        addSelectedCriteria: (
+            state,
+            {
+                payload,
+            }: PayloadAction<{ name: string; weight: number; isAI: boolean }>
+        ) => {
+            state.suggestions.criteriaList = [
+                ...state.suggestions.criteriaList,
+                payload,
+            ]
+        },
+        removeSelectedCriteria: (
+            state,
+            {
+                payload,
+            }: PayloadAction<{ name: string; weight?: number; isAI: boolean }>
+        ) => {
+            const filteredArray = state.suggestions.criteriaList.filter(
+                item => {
+                    if (item.name !== payload.name) {
+                        return item
+                    }
+                }
+            )
+            state.suggestions.criteriaList = filteredArray
+        },
+        addSelectedOption: (
+            state,
+            { payload }: PayloadAction<{ name: string; isAI: boolean }>
+        ) => {
+            state.suggestions.optionsList = [
+                ...state.suggestions.optionsList,
+                payload,
+            ]
+        },
+        removeSelectedOption: (
+            state,
+            { payload }: PayloadAction<{ name: string; isAI: boolean }>
+        ) => {
+            const filteredArray = state.suggestions.optionsList.filter(item => {
+                if (item.name !== payload.name) {
+                    return item
+                }
+            })
+            state.suggestions.optionsList = filteredArray
+        },
         populateSuggestions: (
             state,
             { payload }: PayloadAction<AISuggestions>
@@ -67,6 +113,10 @@ export const {
     setDecisionEngineBestOption,
     setDecisionRatingUpdate,
     populateSuggestions,
+    addSelectedOption,
+    removeSelectedOption,
+    addSelectedCriteria,
+    removeSelectedCriteria,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

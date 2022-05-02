@@ -2,7 +2,8 @@ import { UilInfoCircle, UilSpinner } from '@iconscout/react-unicons'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { useAppSelector } from '../../../hooks/useRedux'
+import { removeSelectedCriteria } from '../../../features/decision/decisionSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { SuggestionItem } from './SuggestionItem'
 
 export const CriteriaSuggestions = () => {
@@ -17,6 +18,7 @@ export const CriteriaSuggestions = () => {
         isAI: boolean
     }) => {
         const optionArray = getValues('criteria')
+        useAppDispatch(removeSelectedCriteria(item))
         setValue('criteria', [...optionArray, item])
     }
 

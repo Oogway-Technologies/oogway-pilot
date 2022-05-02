@@ -3,7 +3,10 @@ import React, { useEffect } from 'react'
 import { FC } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
-import { setDecisionRatingUpdate } from '../../../features/decision/decisionSlice'
+import {
+    addSelectedCriteria,
+    setDecisionRatingUpdate,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
 import { AiBox, inputStyle } from '../../../styles/utils'
@@ -110,7 +113,23 @@ export const CriteriaTab: FC = () => {
                             <button
                                 className="p-1 my-2 ml-3"
                                 type="button"
-                                onClick={() => remove(index)}
+                                onClick={() => {
+                                    remove(index)
+                                    if (
+                                        (item as unknown as { isAI: boolean })
+                                            .isAI
+                                    ) {
+                                        useAppDispatch(
+                                            addSelectedCriteria(
+                                                item as unknown as {
+                                                    name: string
+                                                    weight: number
+                                                    isAI: boolean
+                                                }
+                                            )
+                                        )
+                                    }
+                                }}
                             >
                                 <UilTrash
                                     className={

@@ -41,10 +41,7 @@ export const ResultCard: FC<ResultCardProps> = ({
     return (
         <div className={resultCard.container}>
             <span className={resultCard.optionName}>{option.name}</span>
-            <div
-                className={resultCard.innerDiv}
-                style={{ background: '#EFEAFF' }}
-            >
+            <div className={resultCard.innerDiv}>
                 <span className={resultCard.optionScore}>{option.score}</span>
             </div>
         </div>

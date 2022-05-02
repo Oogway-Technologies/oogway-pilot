@@ -3,6 +3,7 @@ import React, { FC, useEffect } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import {
+    addSelectedOption,
     populateSuggestions,
     setDecisionRatingUpdate,
 } from '../../../features/decision/decisionSlice'
@@ -104,8 +105,9 @@ export const OptionTab: FC = () => {
                                 type="button"
                                 disabled={checkFilledFields()}
                                 onClick={() => {
-                                    if (fields[index])
+                                    if (fields[index]) {
                                         append({ name: '', isAI: false })
+                                    }
                                 }}
                             >
                                 <UilPlus className={'fill-white'} />
@@ -123,7 +125,21 @@ export const OptionTab: FC = () => {
                         <button
                             className="p-1 my-2 ml-3"
                             type="button"
-                            onClick={() => remove(index)}
+                            onClick={() => {
+                                remove(index)
+                                if (
+                                    (item as unknown as { isAI: boolean }).isAI
+                                ) {
+                                    useAppDispatch(
+                                        addSelectedOption(
+                                            item as unknown as {
+                                                name: string
+                                                isAI: boolean
+                                            }
+                                        )
+                                    )
+                                }
+                            }}
                         >
                             <UilTrash className={'fill-neutral-700'} />
                         </button>

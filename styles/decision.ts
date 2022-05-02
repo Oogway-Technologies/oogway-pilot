@@ -8,11 +8,12 @@ export const squareButton =
 
 export const resultCard = {
     container:
-        'flex flex-col justify-center items-center p-6 m-1 w-56 bg-white rounded-2xl shadow-md ',
+        'flex flex-col justify-center items-center p-6 m-1 w-56 bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60',
     optionName:
         'mb-2 text-2xl font-normal leading-6 text-neutral-700 dark:text-neutralDark-150 ',
-    innerDiv: 'flex justify-center items-center w-20 h-20 rounded-full ',
-    optionScore: 'text-3xl font-bold text-primary',
+    innerDiv:
+        'flex justify-center items-center w-20 h-20 rounded-full bg-primary/10 dark:bg-primaryDark/10',
+    optionScore: 'text-3xl font-bold text-primary dark:text-primaryDark',
 }
 
 export const optionRatingTab = {

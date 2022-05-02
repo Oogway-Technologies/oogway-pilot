@@ -2,7 +2,8 @@ import { UilInfoCircle, UilSpinner } from '@iconscout/react-unicons'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { useAppSelector } from '../../../hooks/useRedux'
+import { removeSelectedOption } from '../../../features/decision/decisionSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { SuggestionItem } from './SuggestionItem'
 
 export const OptionSuggestions = () => {
@@ -18,6 +19,7 @@ export const OptionSuggestions = () => {
     }) => {
         const optionArray = getValues('options')
         if (optionArray.length < 5) {
+            useAppDispatch(removeSelectedOption(item))
             setValue('options', [...optionArray, item])
         }
     }
