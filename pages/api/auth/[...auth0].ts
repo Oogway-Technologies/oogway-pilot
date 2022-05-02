@@ -1,7 +1,6 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
 import { NextApiRequest, NextApiResponse } from 'next'
-import  Router   from 'next/router'
 import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 
 const setFirebaseCustomToken = async (token: string) => {
