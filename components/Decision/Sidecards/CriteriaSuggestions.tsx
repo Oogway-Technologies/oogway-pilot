@@ -35,7 +35,7 @@ export const CriteriaSuggestions = () => {
                 />
             </div>
             <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
-                Click To Auto-fill
+                Click on the listed criterias to Auto-fill
             </span>
 
             <div

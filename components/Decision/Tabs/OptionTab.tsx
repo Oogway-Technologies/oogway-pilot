@@ -4,14 +4,12 @@ import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import {
     addSelectedOption,
-    populateSuggestions,
     setDecisionRatingUpdate,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
-import { fetcher } from '../../../utils/helpers/common'
-import { AISuggestions } from '../../../utils/types/global'
+import { Options } from '../../../utils/types/global'
 import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 
 export const OptionTab: FC = () => {
@@ -33,20 +31,11 @@ export const OptionTab: FC = () => {
         control,
         name: 'options',
     })
-    const loadSuggestions = async () => {
-        const question = getValues('question').replaceAll(' ', '%20')
-        const context = getValues('context').replaceAll(' ', '%20')
-        const data: AISuggestions = await fetcher(
-            `/api/getAISuggestions?question=${question}&context=${context}`
-        )
-        useAppDispatch(populateSuggestions(data))
-    }
 
     useEffect(() => {
         if (!decisionRatingUpdate) {
             useAppDispatch(setDecisionRatingUpdate(true))
         }
-        loadSuggestions()
     }, [])
 
     const checkFilledFields = () => {
@@ -76,6 +65,7 @@ export const OptionTab: FC = () => {
                                 key={item.id}
                                 className={inputStyle}
                                 type="text"
+                                disabled={(item as unknown as Options).isAI}
                                 placeholder={`Enter your Option ${index + 1}`}
                                 {...register(`options.${index}.name` as const, {
                                     required: {
@@ -93,12 +83,46 @@ export const OptionTab: FC = () => {
                                     },
                                 })}
                             />
-                            {(item as unknown as { isAI: boolean }).isAI && (
+                            {(item as unknown as Options).isAI && (
                                 <div className={AiBox}>AI Suggestion</div>
                             )}
                         </>
                     </ErrorWraperField>
-                    {index === fields.length - 1 ? (
+
+                    {(item as unknown as Options).isAI ||
+                    ((item as unknown as Options).isAI &&
+                        index === fields.length - 1) ? (
+                        <button
+                            className="p-1 my-2 ml-3"
+                            type="button"
+                            onClick={() => {
+                                const optionsArray = getValues(`options`)
+                                remove(index)
+                                if (
+                                    (item as unknown as { isAI: boolean }).isAI
+                                ) {
+                                    useAppDispatch(
+                                        addSelectedOption(
+                                            item as unknown as {
+                                                name: string
+                                                isAI: boolean
+                                            }
+                                        )
+                                    )
+                                }
+                                if (
+                                    optionsArray.length === 2 ||
+                                    optionsArray.length === 1
+                                ) {
+                                    if (fields[index]) {
+                                        append({ name: '', isAI: false })
+                                    }
+                                }
+                            }}
+                        >
+                            <UilTrash className={'fill-neutral-700'} />
+                        </button>
+                    ) : index === fields.length - 1 ? (
                         index < 4 ? (
                             <button
                                 className="p-1 my-2 ml-3 align-middle bg-primary disabled:bg-primary/40 rounded-full"

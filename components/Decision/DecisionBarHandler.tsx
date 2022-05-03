@@ -2,8 +2,12 @@ import { UilArrowLeft, UilArrowRight } from '@iconscout/react-unicons'
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import { populateSuggestions } from '../../features/decision/decisionSlice'
+import { useAppDispatch } from '../../hooks/useRedux'
 import { squareButton } from '../../styles/decision'
 import { warningTime } from '../../utils/constants/global'
+import { fetcher } from '../../utils/helpers/common'
+import { AISuggestions } from '../../utils/types/global'
 import { ProgressBar } from '../Utils/common/ProgressBar'
 import { DecisionSideBarOptions } from './DecisionSideBar'
 
@@ -24,7 +28,18 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         formState: { errors },
         getValues,
     } = useFormContext()
+
+    const loadSuggestions = async () => {
+        const question = getValues('question').replaceAll(' ', '%20')
+        const context = getValues('context').replaceAll(' ', '%20')
+        const data: AISuggestions = await fetcher(
+            `/api/getAISuggestions?question=${question}&context=${context}`
+        )
+        useAppDispatch(populateSuggestions(data))
+    }
+
     const validationHandler = async (tab: number) => {
+        loadSuggestions()
         console.log('errors: ', errors)
         console.log('Values: ', getValues())
 

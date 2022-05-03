@@ -20,7 +20,15 @@ export const OptionSuggestions = () => {
         const optionArray = getValues('options')
         if (optionArray.length < 5) {
             useAppDispatch(removeSelectedOption(item))
-            setValue('options', [...optionArray, item])
+            if (optionArray[0].name && !optionArray[1].name) {
+                optionArray[1] = item
+                setValue('options', [...optionArray, { name: '', isAI: false }])
+            } else if (!optionArray[0].name) {
+                optionArray[0] = item
+                setValue('options', [...optionArray])
+            } else {
+                setValue('options', [item, ...optionArray])
+            }
         }
     }
 
@@ -37,7 +45,7 @@ export const OptionSuggestions = () => {
                 />
             </div>
             <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
-                Click To Auto-fill
+                Click on the listed options to Auto-fill
             </span>
 
             <div

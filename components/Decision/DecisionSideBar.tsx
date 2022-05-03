@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
+import useMediaQuery from '../../hooks/useMediaQuery'
 import { Criteria, Options } from '../../utils/types/global'
 
 interface DecisionSideBarProps {
@@ -34,6 +35,7 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     const watchDecision = useWatch({ name: 'question' })
     const watchOption = useWatch({ name: 'options' })
     const watchCriteria = useWatch({ name: 'criteria' })
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     const validateDecision = () => {
         const question: string = getValues('question')
@@ -81,21 +83,31 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
 
     return (
         <div
-            className={`flex flex-col space-y-2 w-3/4 h-full ${
-                className ? className : ''
-            }`}
+            className={`flex ${
+                isMobile
+                    ? 'space-x-2 mb-2 overflow-scroll w-[90vw] scrollbar-hide'
+                    : 'flex-col space-y-2 w-3/4 h-full'
+            } ${className ? className : ''}`}
         >
             {DecisionSideBarOptions.map(item => (
                 <div
                     key={item.tab}
                     style={{
-                        borderTopRightRadius: '8px',
-                        borderBottomRightRadius: '8px',
+                        borderTopRightRadius: isMobile ? undefined : '8px',
+                        borderBottomRightRadius: isMobile ? undefined : '8px',
                     }}
-                    className={`flex items-center py-3 px-3 transition-all  ${
+                    className={`flex items-center ${
+                        isMobile
+                            ? 'px-2 py-0 rounded-2xl justify-center'
+                            : 'p-3'
+                    } transition-all  ${
                         selectedTab === item.tab
-                            ? 'w-4/5 bg-primary/90 dark:bg-primaryDark/90'
-                            : 'w-3/5 bg-primary/60 dark:bg-primaryDark/60'
+                            ? `${
+                                  isMobile ? 'w-full' : 'w-4/5'
+                              } bg-primary/90 dark:bg-primaryDark/90`
+                            : `${
+                                  isMobile ? 'w-full' : 'w-3/5'
+                              } bg-primary/60 dark:bg-primaryDark/60`
                     } ${
                         pointerArray[item.tab - 1]
                             ? 'cursor-pointer'
