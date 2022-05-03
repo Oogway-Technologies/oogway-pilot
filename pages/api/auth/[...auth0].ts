@@ -78,9 +78,7 @@ export default handleAuth({
                 afterCallback,
             })
         } catch (err) {
-            res.setHeader('location', '/')
-            .status(302)
-            .end();
+            res.setHeader('location', '/').status(302).end()
         }
     },
 })
