@@ -767,6 +767,7 @@ const NewPostForm: FC<
                 </div>
                 {/* Feed Selector */}
                 <Select
+                    classNamePrefix={'select'}
                     options={feedOptions}
                     onChange={selectFeedHandler}
                     defaultValue={
