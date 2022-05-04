@@ -1,9 +1,18 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { UilArrowLeft, UilArrowRight } from '@iconscout/react-unicons'
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import {
+    populateSuggestions,
+    setDecisionRatingUpdate,
+    updateFormCopy,
+} from '../../features/decision/decisionSlice'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import { squareButton } from '../../styles/decision'
 import { warningTime } from '../../utils/constants/global'
+import { deepCopy, fetcher, objectsEqual } from '../../utils/helpers/common'
+import { AISuggestions } from '../../utils/types/global'
 import { ProgressBar } from '../Utils/common/ProgressBar'
 import { DecisionSideBarOptions } from './DecisionSideBar'
 
@@ -24,6 +33,20 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         formState: { errors },
         getValues,
     } = useFormContext()
+    const { user } = useUser()
+    const decisionRatingUpdate = useAppSelector(
+        state => state.decisionSlice.decisionRatingUpdate
+    )
+    const formCopy = useAppSelector(state => state.decisionSlice.formCopy)
+
+    const loadSuggestions = async () => {
+        const question = getValues('question').replaceAll(' ', '%20')
+        const context = getValues('context').replaceAll(' ', '%20')
+        const data: AISuggestions = await fetcher(
+            `/api/getAISuggestions?question=${question}&context=${context}`
+        )
+        useAppDispatch(populateSuggestions(data))
+    }
 
     const validationHandler = async (tab: number) => {
         console.log('errors: ', errors)
@@ -38,12 +61,42 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 )
                 return false
             }
+            if (
+                formCopy.question !== getValues('question') ||
+                formCopy.context !== getValues('context')
+            ) {
+                if (user) {
+                    loadSuggestions()
+                }
+                useAppDispatch(
+                    updateFormCopy(
+                        deepCopy({
+                            ...formCopy,
+                            question: getValues('question'),
+                            context: getValues('context'),
+                        })
+                    )
+                )
+            }
         }
         if (tab === 2) {
             await trigger(['options'])
             if (errors?.options && errors?.options.length) {
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false
+            }
+            if (!objectsEqual(formCopy.options, getValues('options'))) {
+                if (!decisionRatingUpdate) {
+                    useAppDispatch(setDecisionRatingUpdate(true))
+                }
+                useAppDispatch(
+                    updateFormCopy(
+                        deepCopy({
+                            ...formCopy,
+                            options: [...getValues('options')],
+                        })
+                    )
+                )
             }
         }
         if (tab === 3) {
@@ -52,8 +105,28 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 setTimeout(() => clearErrors(['criteria']), warningTime)
                 return false
             }
+            if (!objectsEqual(formCopy.criteria, getValues('criteria'))) {
+                if (!decisionRatingUpdate) {
+                    useAppDispatch(setDecisionRatingUpdate(true))
+                }
+                useAppDispatch(
+                    updateFormCopy(
+                        deepCopy({
+                            ...formCopy,
+                            criteria: [...getValues('criteria')],
+                        })
+                    )
+                )
+            }
         }
         return true
+    }
+
+    const handleForward = async () => {
+        const isValid = await validationHandler(selectedTab)
+        if (selectedTab !== DecisionSideBarOptions.length && isValid) {
+            setSelectedTab(selectedTab + 1)
+        }
     }
 
     return (
@@ -83,15 +156,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             <button
                 className={`${squareButton} ml-auto`}
                 type="button"
-                onClick={async () => {
-                    const isValid = await validationHandler(selectedTab)
-                    if (
-                        selectedTab !== DecisionSideBarOptions.length &&
-                        isValid
-                    ) {
-                        setSelectedTab(selectedTab + 1)
-                    }
-                }}
+                onClick={handleForward}
             >
                 <UilArrowRight className="fill-neutral-700 dark:fill-neutralDark-150" />
             </button>

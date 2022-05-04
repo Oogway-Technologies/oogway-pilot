@@ -83,7 +83,7 @@ export const OptionSlider: FC<OptionSliderProps> = ({
                     </li>
 
                     <li className={liStyle}>
-                        <span className="absolute mr-xl pr-xxl">10</span>
+                        <span className="absolute pr-xxl md:mr-xl">10</span>
                     </li>
                 </ul>
             )}

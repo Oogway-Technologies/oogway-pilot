@@ -1,28 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-const initialState: {
-    fileSizeTooLarge: boolean
-    feedState: string
-    compareForm: {
-        comparePostType: string
-        compareFormExpanded: boolean
-        textCompareLeft: string
-        textCompareRight: string
-        labelCompareLeft: string
-        labelCompareRight: string
-        imageCompareLeft: string | ArrayBuffer | null | undefined
-        imageCompareRight: string | ArrayBuffer | null | undefined
-        hasPreviewedCompare: boolean
-        leftPreviewImage: string
-        rightPreviewImage: string
-        imageToPost: string | ArrayBuffer | null | undefined
-    }
-    notificationsState: boolean
-    jumpToCommentId: string
-    decisionEngineOptionTab: number
-    decisionEngineBestOption: string | undefined
-    decisionRatingUpdate: boolean
-} = {
+import { UtilsSliceStates } from '../interfaces'
+
+const initialState: UtilsSliceStates = {
     fileSizeTooLarge: false,
     feedState: 'All',
     compareForm: {
@@ -41,9 +21,6 @@ const initialState: {
     },
     notificationsState: false,
     jumpToCommentId: '',
-    decisionEngineOptionTab: 0,
-    decisionEngineBestOption: undefined,
-    decisionRatingUpdate: true,
 }
 
 export const utilsSlice = createSlice({
@@ -127,26 +104,10 @@ export const utilsSlice = createSlice({
         setJumpToComment: (state, { payload }: PayloadAction<string>) => {
             state.jumpToCommentId = payload
         },
-        setDecisionEngineOptionTab: (
-            state,
-            { payload }: PayloadAction<number>
-        ) => {
-            state.decisionEngineOptionTab = payload
-        },
-        setDecisionEngineBestOption: (
-            state,
-            { payload }: PayloadAction<string>
-        ) => {
-            state.decisionEngineBestOption = payload
-        },
-        setDecisionRatingUpdate: (state, { payload }) => {
-            state.decisionRatingUpdate = payload
-        },
     },
 })
 
 export const {
-    setDecisionRatingUpdate,
     setLeftPreviewImage,
     setRightPreviewImage,
     setHasPreviewedCompare,
@@ -164,8 +125,6 @@ export const {
     resetCompareForm,
     setJumpToComment,
     setImageToPost,
-    setDecisionEngineOptionTab,
-    setDecisionEngineBestOption,
 } = utilsSlice.actions
 
 export default utilsSlice.reducer

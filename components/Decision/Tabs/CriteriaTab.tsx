@@ -3,17 +3,20 @@ import React, { useEffect } from 'react'
 import { FC } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
-import { setDecisionRatingUpdate } from '../../../features/utils/utilsSlice'
+import {
+    addSelectedCriteria,
+    setDecisionRatingUpdate,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
-import { inputStyle } from '../../../styles/utils'
+import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
 import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 import { OptionSlider } from '../OptionSlider'
 
 export const CriteriaTab: FC = () => {
     const decisionRatingUpdate = useAppSelector(
-        state => state.utilsSlice.decisionRatingUpdate
+        state => state.decisionSlice.decisionRatingUpdate
     )
     const {
         register,
@@ -59,30 +62,37 @@ export const CriteriaTab: FC = () => {
                                     : ''
                             }
                         >
-                            <input
-                                key={item.id}
-                                className={inputStyle}
-                                type="text"
-                                placeholder={`Criterion ${index + 1}`}
-                                {...register(
-                                    `criteria.${index}.name` as const,
-                                    {
-                                        required: {
-                                            value:
-                                                index === fields.length - 1 &&
-                                                index > 0
-                                                    ? false
-                                                    : true,
-                                            message:
-                                                'You must enter the required criteria.',
-                                        },
-                                        maxLength: {
-                                            value: shortLimit,
-                                            message: `Criteria length should be less than ${shortLimit}`,
-                                        },
-                                    }
+                            <>
+                                <input
+                                    key={item.id}
+                                    className={inputStyle}
+                                    type="text"
+                                    placeholder={`Criterion ${index + 1}`}
+                                    {...register(
+                                        `criteria.${index}.name` as const,
+                                        {
+                                            required: {
+                                                value:
+                                                    index ===
+                                                        fields.length - 1 &&
+                                                    index > 0
+                                                        ? false
+                                                        : true,
+                                                message:
+                                                    'You must enter the required criteria.',
+                                            },
+                                            maxLength: {
+                                                value: shortLimit,
+                                                message: `Criteria length should be less than ${shortLimit}`,
+                                            },
+                                        }
+                                    )}
+                                />
+                                {(item as unknown as { isAI: boolean })
+                                    .isAI && (
+                                    <div className={AiBox}>AI Suggestion</div>
                                 )}
-                            />
+                            </>
                         </ErrorWraperField>
                         {index === fields.length - 1 ? (
                             <button
@@ -93,6 +103,7 @@ export const CriteriaTab: FC = () => {
                                     append({
                                         name: '',
                                         weight: 2,
+                                        isAI: false,
                                     })
                                 }}
                             >
@@ -102,7 +113,23 @@ export const CriteriaTab: FC = () => {
                             <button
                                 className="p-1 my-2 ml-3"
                                 type="button"
-                                onClick={() => remove(index)}
+                                onClick={() => {
+                                    remove(index)
+                                    if (
+                                        (item as unknown as { isAI: boolean })
+                                            .isAI
+                                    ) {
+                                        useAppDispatch(
+                                            addSelectedCriteria(
+                                                item as unknown as {
+                                                    name: string
+                                                    weight: number
+                                                    isAI: boolean
+                                                }
+                                            )
+                                        )
+                                    }
+                                }}
                             >
                                 <UilTrash
                                     className={

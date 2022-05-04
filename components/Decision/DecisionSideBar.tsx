@@ -1,7 +1,8 @@
-import { FC } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { FC, useEffect, useState } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 
-import { warningTime } from '../../utils/constants/global'
+import useMediaQuery from '../../hooks/useMediaQuery'
+import { Criteria, Options } from '../../utils/types/global'
 
 interface DecisionSideBarProps {
     className?: string
@@ -22,88 +23,107 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     selectedTab,
     setSelectedTab,
 }: DecisionSideBarProps) => {
-    const {
-        trigger,
-        clearErrors,
-        formState: { errors },
-    } = useFormContext()
+    const { getValues } = useFormContext()
+    const [pointerArray, setPointerArray] = useState([
+        false,
+        false,
+        false,
+        false,
+        false,
+    ])
 
-    const validationHandler = async (tab: number) => {
-        if (tab === 1) {
-            await trigger(['question', 'context'])
-            if (errors?.['question']?.message || errors?.['context']?.message) {
-                setTimeout(
-                    () => clearErrors(['question', 'context']),
-                    warningTime
-                )
-                return false
-            }
+    const watchDecision = useWatch({ name: 'question' })
+    const watchOption = useWatch({ name: 'options' })
+    const watchCriteria = useWatch({ name: 'criteria' })
+    const isMobile = useMediaQuery('(max-width: 965px)')
+
+    const validateDecision = () => {
+        const question: string = getValues('question')
+        if (question) {
+            return true
         }
-        if (tab === 2) {
-            await trigger(['options'])
-            if (errors?.options && errors?.options.length) {
-                setTimeout(() => clearErrors(['options']), warningTime)
-                return false
-            }
-        }
-        if (tab === 3) {
-            await trigger(['criteria'])
-            if (errors?.criteria && errors?.criteria.length) {
-                setTimeout(() => clearErrors(['criteria']), warningTime)
-                return false
-            }
-        }
-        return true
+        return false
     }
 
-    const validateArray = async (tab: number) => {
-        const isValid: boolean[] = [true, true, true, true, true]
-        for (let i = 1; i < tab; i++) {
-            const res = await validationHandler(i)
-            isValid[i - 1] = res
-        }
-        return isValid
-    }
-
-    const onSelectItem = async (tab: number) => {
-        const isValid: boolean[] = await validateArray(tab)
-        let ArrayIsValid = true
-        isValid.map(item => {
-            if (item === false) {
-                ArrayIsValid = false
+    const validateOption = () => {
+        const options = getValues('options')
+        let check = false
+        options.forEach((item: Options) => {
+            if (item.name) {
+                check = true
             }
         })
-        if (ArrayIsValid) {
-            setSelectedTab(tab)
-        }
+
+        return check
     }
+
+    const validateCriteria = () => {
+        const criteria = getValues('criteria')
+        let check = false
+        criteria.forEach((item: Criteria) => {
+            if (item.name) {
+                check = true
+            }
+        })
+        return check
+    }
+    useEffect(() => {
+        if (validateDecision() && validateOption() && validateCriteria()) {
+            setPointerArray([true, true, true, true, true])
+        } else {
+            setPointerArray([
+                validateDecision(),
+                validateOption(),
+                validateCriteria(),
+                false,
+                false,
+            ])
+        }
+    }, [watchDecision, watchOption, watchCriteria])
 
     return (
         <div
-            className={`flex flex-col space-y-2 w-3/4 h-full ${
-                className ? className : ''
-            }`}
+            className={`flex ${
+                isMobile
+                    ? 'space-x-2 mb-2 overflow-scroll w-[90vw] scrollbar-hide'
+                    : 'flex-col space-y-2 w-3/4 h-full'
+            } ${className ? className : ''}`}
         >
             {DecisionSideBarOptions.map(item => (
                 <div
                     key={item.tab}
                     style={{
-                        borderTopRightRadius: '8px',
-                        borderBottomRightRadius: '8px',
+                        borderTopRightRadius: isMobile ? undefined : '8px',
+                        borderBottomRightRadius: isMobile ? undefined : '8px',
                     }}
-                    className={`flex items-center py-3 px-3 transition-all  ${
+                    className={`flex items-center ${
+                        isMobile ? 'p-2 rounded-2xl justify-center h-9' : 'p-3'
+                    } transition-all  ${
                         selectedTab === item.tab
-                            ? 'w-4/5 bg-primary/90 dark:bg-primaryDark/90'
-                            : 'w-3/5 bg-primary/60 dark:bg-primaryDark/60'
+                            ? `${
+                                  isMobile ? 'w-full' : 'w-4/5'
+                              } bg-primary/90 dark:bg-primaryDark/90`
+                            : `${
+                                  isMobile ? 'w-full' : 'w-3/5'
+                              } bg-primary/60 dark:bg-primaryDark/60`
+                    } ${
+                        pointerArray[item.tab - 1]
+                            ? 'cursor-pointer'
+                            : 'cursor-default'
                     }`}
                     onClick={() => {
-                        if (item.tab !== selectedTab) {
-                            onSelectItem(item.tab)
+                        if (
+                            item.tab !== selectedTab &&
+                            pointerArray[item.tab - 1]
+                        ) {
+                            setSelectedTab(item.tab)
                         }
                     }}
                 >
                     <span
-                        className={`text-base text-white transition-all truncate ${
+                        className={`${
+                            isMobile ? 'text-sm' : 'text-base'
+                        } text-white transition-all truncate ${
                             selectedTab === item.tab
                                 ? 'font-bold'
                                 : 'font-normal'

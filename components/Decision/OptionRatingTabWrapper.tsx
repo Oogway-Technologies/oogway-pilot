@@ -1,13 +1,15 @@
 import React, { FC } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
-import { setDecisionEngineOptionTab } from '../../features/utils/utilsSlice'
+import { setDecisionEngineOptionTab } from '../../features/decision/decisionSlice'
+import useMediaQuery from '../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
+import { optionRatingTab } from '../../styles/decision'
 import { bodyHeavy } from '../../styles/typography'
 
 const OptionRatingTabWrapper: FC = () => {
     const selectedTab = useAppSelector(
-        state => state.utilsSlice.decisionEngineOptionTab
+        state => state.decisionSlice.decisionEngineOptionTab
     )
     const { control, watch } = useFormContext()
     const { fields } = useFieldArray({
@@ -15,9 +17,10 @@ const OptionRatingTabWrapper: FC = () => {
         name: 'options',
     })
     const watchOptions = watch('options')
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     return (
-        <div className="flex sticky top-[-8px] z-40 items-center mb-3 w-full h-12 bg-white dark:bg-neutralDark-500">
+        <div className={optionRatingTab.container}>
             {fields.map((item, index) => {
                 return watchOptions[index].name ? (
                     <span
@@ -25,11 +28,13 @@ const OptionRatingTabWrapper: FC = () => {
                         onClick={() =>
                             useAppDispatch(setDecisionEngineOptionTab(index))
                         }
-                        className={`${bodyHeavy} py-3 w-full flex items-center justify-center transition-all border-b-2 border-transparent ${
+                        className={`${bodyHeavy} ${
+                            optionRatingTab.itemContainer
+                        } ${
                             selectedTab === index
                                 ? 'text-primary border-primary'
                                 : 'font-normal text-neutral-700 dark:text-neutral-300'
-                        } cursor-pointer`}
+                        } ${isMobile ? ' py-1' : ' py-3'}`}
                     >
                         {watchOptions[index].name}
                     </span>

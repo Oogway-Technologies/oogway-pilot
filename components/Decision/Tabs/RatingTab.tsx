@@ -1,17 +1,17 @@
 import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { setDecisionRatingUpdate } from '../../../features/utils/utilsSlice'
+import { setDecisionRatingUpdate } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
 import { OptionSlider } from '../OptionSlider'
 
 export const RatingTab: FC = () => {
     const optionIndex = useAppSelector(
-        state => state.utilsSlice.decisionEngineOptionTab
+        state => state.decisionSlice.decisionEngineOptionTab
     )
     const decisionRatingUpdate = useAppSelector(
-        state => state.utilsSlice.decisionRatingUpdate
+        state => state.decisionSlice.decisionRatingUpdate
     )
     const { getValues, setValue } = useFormContext()
 

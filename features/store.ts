@@ -1,10 +1,11 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 
+import decisionSlice from './decision/decisionSlice'
 import userSlice from './user/userSlice'
 import utilsSlice from './utils/utilsSlice'
 
 const store = configureStore({
-    reducer: { userSlice, utilsSlice },
+    reducer: { userSlice, utilsSlice, decisionSlice },
 })
 
 export type AppState = ReturnType<typeof store.getState>

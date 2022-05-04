@@ -1,6 +1,8 @@
 import React, { FC, useEffect } from 'react'
 import { FieldValues, UseFormSetValue } from 'react-hook-form'
 
+import { resultCard } from '../../styles/decision'
+
 interface ResultCardProps {
     optionIndex: number
     option: { name: string; score: number }
@@ -37,17 +39,10 @@ export const ResultCard: FC<ResultCardProps> = ({
     }
 
     return (
-        <div className="flex flex-col justify-center items-center p-6 m-1 w-56 bg-white rounded-2xl shadow-md">
-            <span className="mb-2 text-2xl font-normal leading-6 text-neutral-700">
-                {option.name}
-            </span>
-            <div
-                className="flex justify-center items-center w-20 h-20 rounded-full"
-                style={{ background: '#EFEAFF' }}
-            >
-                <span className="text-3xl font-bold text-primary">
-                    {option.score}
-                </span>
+        <div className={resultCard.container}>
+            <span className={resultCard.optionName}>{option.name}</span>
+            <div className={resultCard.innerDiv}>
+                <span className={resultCard.optionScore}>{option.score}</span>
             </div>
         </div>
     )
