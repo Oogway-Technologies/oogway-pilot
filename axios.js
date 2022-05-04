@@ -14,20 +14,6 @@ import axios from 'axios'
 const axiosConfig = {
     baseURL: '/api/',
 }
-
-// Create axios instance for API
 const API = axios.create(axiosConfig)
-
-// Create aaxios instance for oogway decision api
-export const OogwayDecisionAPI = axios.create({
-    baseURL: process.env.OOGWAY_DECISION_URL,
-})
-
-// Axious instance for Bing Api
-export const BingSearchAPI = axios.create({
-    baseURL: process.env.RETRIEVER_BING_SEARCH_URL,
-})
-BingSearchAPI.defaults.headers.get[process.env.RETRIEVER_BING_HEADER_KEY_TAG] =
-    process.env.RETRIEVER_BING_HEADER_KEY_VALUE
 
 export default API

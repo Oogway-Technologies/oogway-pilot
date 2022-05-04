@@ -1,6 +1,7 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
 import { NextApiRequest, NextApiResponse } from 'next'
+
 import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 
 const setFirebaseCustomToken = async (token: string) => {
@@ -78,9 +79,7 @@ export default handleAuth({
                 afterCallback,
             })
         } catch (err) {
-            res.setHeader('location', '/')
-            .status(302)
-            .end();
+            res.setHeader('location', '/').status(302).end()
         }
     },
 })

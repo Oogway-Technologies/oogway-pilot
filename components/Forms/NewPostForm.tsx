@@ -51,10 +51,9 @@ import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import { createAdviceBotComment } from '../../queries/adviceBot'
 import { postFormClass } from '../../styles/feed'
 import {
-    adviceBotId,
-    demoAccountIdDev,
-    demoAccountIdProd,
+    demoAccountVars,
     longLimit,
+    oogwayVars,
     shortLimit,
     warningTime,
 } from '../../utils/constants/global'
@@ -346,15 +345,15 @@ const NewPostForm: FC<
         // Make advice bot api call
         if (
             !isComparePost() &&
-            (userProfile.uid === demoAccountIdDev ||
-                userProfile.uid === demoAccountIdProd)
+            (userProfile.uid === demoAccountVars.dev_id ||
+                userProfile.uid === demoAccountVars.prod_id)
         ) {
             const payload = {
                 post: {
                     ...postData,
                     id: docRef.id,
                 },
-                id: adviceBotId,
+                id: oogwayVars.advicebot_id,
             }
             await createAdviceBotComment(payload)
         }
@@ -709,7 +708,7 @@ const NewPostForm: FC<
     }
 
     return (
-        <div  className={postFormClass.modalDiv}>
+        <div className={postFormClass.modalDiv}>
             <div className={postFormClass.dialogTitle}>
                 <div>{`What's your question?`}</div>
                 <ToggleIncognito
@@ -779,16 +778,16 @@ const NewPostForm: FC<
                     menuPosition={'fixed'}
                     menuPortalTarget={document.body}
                     styles={{
-                        menuPortal: (provided) => ({
+                        menuPortal: provided => ({
                             ...provided,
-                            zIndex:10
+                            zIndex: 10,
                         }),
                         placeholder: (provided, state) => ({
                             ...provided,
                             marginLeft: '16px',
                             fontWeight: 'normal',
                             fontSize: '14px',
-                            fontStyle: 'normal'
+                            fontStyle: 'normal',
                         }),
                         input: (provided, state) => ({
                             ...provided,

@@ -6,10 +6,7 @@ import useIntersectionObserver from '../../../hooks/useIntersectionObserver'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 // Queries
 import { useInfinitePostsQuery } from '../../../queries/posts'
-import {
-    demoAccountIdDev,
-    demoAccountIdProd,
-} from '../../../utils/constants/global'
+import { demoAccountVars } from '../../../utils/constants/global'
 import { FirebasePost } from '../../../utils/types/firebase'
 import {
     GeneratePostCardLoaders,
@@ -39,10 +36,10 @@ function PostsAPI() {
 
     // Only allow demo account to see demo account posts
     const isDemoAccountPost = (uid: string) => {
-        return uid === demoAccountIdDev || uid === demoAccountIdProd
+        return uid === demoAccountVars.dev_id || uid === demoAccountVars.prod_id
     }
     const isDemoAccountUser = (uid: string) => {
-        return uid === demoAccountIdDev || uid === demoAccountIdProd
+        return uid === demoAccountVars.dev_id || uid === demoAccountVars.prod_id
     }
     const jumpToCommentId = useAppSelector(
         state => state.utilsSlice.jumpToCommentId

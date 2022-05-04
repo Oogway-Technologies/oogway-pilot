@@ -5,11 +5,8 @@ module.exports = {
         domains: ['firebasestorage.googleapis.com', 'avatars.dicebear.com'],
     },
     env: {
-        JWT_SECRET: process.env.JWT_SECRET,
-        ADVICEBOT_ID: process.env.ADVICEBOT_ID,
-        DEMO_ACCOUNT_ID_DEV: process.env.DEMO_ACCOUNT_ID_DEV,
-        DEMO_ACCOUNT_ID_PROD: process.env.DEMO_ACCOUNT_ID_PROD,
-        OOGWAY_DECISION_TOKEN: process.env.OOGWAY_DECISION_TOKEN,
+        SERVICE_ENCRYPTION_IV: process.env.SERVICE_ENCRYPTION_IV,
+        SERVICE_ENCRYPTION_KEY: process.env.SERVICE_ENCRYPTION_KEY,
     },
     async redirects() {
         return [

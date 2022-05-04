@@ -23,7 +23,7 @@ import { getComment } from '../../../lib/commentsHelper'
 import { addDislike, addLike } from '../../../lib/getLikesHelper'
 import { useCreateEngagemmentActivity } from '../../../queries/engagementActivity'
 import { commentEngagementBarClass } from '../../../styles/feed'
-import { adviceBotId } from '../../../utils/constants/global'
+import { oogwayVars } from '../../../utils/constants/global'
 import { FirebaseEngagement } from '../../../utils/types/firebase'
 import { EngagementItems } from '../../../utils/types/global'
 import { staticPostData } from '../../../utils/types/params'
@@ -53,7 +53,7 @@ const CommentEngagementBar = ({
     const isMobile = useMediaQuery('(max-width: 768px)')
 
     // Track advice bot comment
-    const isAdviceBotComment = () => authorUid === adviceBotId
+    const isAdviceBotComment = () => authorUid === oogwayVars.advicebot_id
 
     // Track likes and replies
     const [userHasLiked] = useUserHasLiked(
