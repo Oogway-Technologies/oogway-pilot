@@ -116,7 +116,6 @@ const NewPostForm: FC<
     }, [register])
 
     const [loading, setLoading] = useState(false)
-
     // Get a reference to the input text
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -710,7 +709,7 @@ const NewPostForm: FC<
     }
 
     return (
-        <div className={postFormClass.modalDiv}>
+        <div  className={postFormClass.modalDiv}>
             <div className={postFormClass.dialogTitle}>
                 <div>{`What's your question?`}</div>
                 <ToggleIncognito
@@ -778,13 +777,18 @@ const NewPostForm: FC<
                     isClearable={true}
                     maxMenuHeight={135}
                     menuPosition={'fixed'}
+                    menuPortalTarget={document.body}
                     styles={{
+                        menuPortal: (provided) => ({
+                            ...provided,
+                            zIndex:10
+                        }),
                         placeholder: (provided, state) => ({
                             ...provided,
                             marginLeft: '16px',
                             fontWeight: 'normal',
                             fontSize: '14px',
-                            fontStyle: 'normal',
+                            fontStyle: 'normal'
                         }),
                         input: (provided, state) => ({
                             ...provided,
