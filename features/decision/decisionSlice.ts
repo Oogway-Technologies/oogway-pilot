@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { AISuggestions } from '../../utils/types/global'
-import { DecisionSliceStates } from '../interfaces'
+import { DecisionSliceStates, FormCopy } from '../interfaces'
 
 const initialState: DecisionSliceStates = {
     decisionEngineOptionTab: 0,
@@ -11,12 +11,21 @@ const initialState: DecisionSliceStates = {
         optionsList: [],
         criteriaList: [],
     },
+    formCopy: {
+        question: '',
+        context: '',
+        options: [],
+        criteria: [],
+    },
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        updateFormCopy: (state, { payload }: PayloadAction<FormCopy>) => {
+            state.formCopy = payload
+        },
         addSelectedCriteria: (
             state,
             {
@@ -67,21 +76,15 @@ export const decisionSlice = createSlice({
             state,
             { payload }: PayloadAction<AISuggestions>
         ) => {
-            state.suggestions.optionsList = payload.options
-                .split(', ')
-                .map(item => {
-                    return { name: item, isAI: true }
-                })
-            const commonCriteria = payload.common_criteria
-                .split(', ')
-                .map(item => {
-                    return { name: item, weight: 1, isAI: true }
-                })
-            const contextCriteria = payload.context_criteria
-                .split(', ')
-                .map(item => {
-                    return { name: item, weight: 3, isAI: true }
-                })
+            state.suggestions.optionsList = payload.options.map(item => {
+                return { name: item, isAI: true }
+            })
+            const commonCriteria = payload.common_criteria.map(item => {
+                return { name: item, weight: 1, isAI: true }
+            })
+            const contextCriteria = payload.context_criteria.map(item => {
+                return { name: item, weight: 3, isAI: true }
+            })
             state.suggestions.criteriaList = [
                 ...commonCriteria,
                 ...contextCriteria,
@@ -117,6 +120,7 @@ export const {
     removeSelectedOption,
     addSelectedCriteria,
     removeSelectedCriteria,
+    updateFormCopy,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

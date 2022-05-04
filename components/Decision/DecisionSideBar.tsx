@@ -97,9 +97,7 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                         borderBottomRightRadius: isMobile ? undefined : '8px',
                     }}
                     className={`flex items-center ${
-                        isMobile
-                            ? 'px-2 py-0 rounded-2xl justify-center'
-                            : 'p-3'
+                        isMobile ? 'p-2 rounded-2xl justify-center h-9' : 'p-3'
                     } transition-all  ${
                         selectedTab === item.tab
                             ? `${
@@ -123,7 +121,9 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                     }}
                 >
                     <span
-                        className={`text-base text-white transition-all truncate ${
+                        className={`${
+                            isMobile ? 'text-sm' : 'text-base'
+                        } text-white transition-all truncate ${
                             selectedTab === item.tab
                                 ? 'font-bold'
                                 : 'font-normal'

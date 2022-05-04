@@ -2,24 +2,19 @@ import { UilPlus, UilTrash } from '@iconscout/react-unicons'
 import React, { FC, useEffect } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
-import {
-    addSelectedOption,
-    setDecisionRatingUpdate,
-} from '../../../features/decision/decisionSlice'
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { addSelectedOption } from '../../../features/decision/decisionSlice'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
 import { Options } from '../../../utils/types/global'
 import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 
 export const OptionTab: FC = () => {
-    const decisionRatingUpdate = useAppSelector(
-        state => state.decisionSlice.decisionRatingUpdate
-    )
     const {
         register,
         control,
         getValues,
+        setValue,
         formState: { errors },
     } = useFormContext()
 
@@ -27,19 +22,21 @@ export const OptionTab: FC = () => {
         control,
         name: 'options',
     })
-    useWatch({
+
+    const optionsArray = getValues(`options`)
+
+    const w = useWatch({
         control,
         name: 'options',
     })
 
     useEffect(() => {
-        if (!decisionRatingUpdate) {
-            useAppDispatch(setDecisionRatingUpdate(true))
-        }
-    }, [])
+        console.log('w - ', w)
+        console.log('optionsArray - ', optionsArray)
+        console.log(fields)
+    }, [optionsArray, w])
 
     const checkFilledFields = () => {
-        const optionsArray = getValues(`options`)
         let check = false
         optionsArray.forEach((option: { name: string }) => {
             if (!option.name) {
@@ -96,7 +93,6 @@ export const OptionTab: FC = () => {
                             className="p-1 my-2 ml-3"
                             type="button"
                             onClick={() => {
-                                const optionsArray = getValues(`options`)
                                 remove(index)
                                 if (
                                     (item as unknown as { isAI: boolean }).isAI
@@ -140,7 +136,13 @@ export const OptionTab: FC = () => {
                             <button
                                 className="p-1 my-2 ml-3"
                                 type="button"
-                                onClick={() => remove(index)}
+                                onClick={() => {
+                                    if (index === 4) {
+                                        setValue(`options.${index}.name`, '')
+                                    } else {
+                                        remove(index)
+                                    }
+                                }}
                             >
                                 <UilTrash className={'fill-neutral-700'} />
                             </button>
@@ -151,6 +153,9 @@ export const OptionTab: FC = () => {
                             type="button"
                             onClick={() => {
                                 remove(index)
+                                if (index === 0 || index === 1) {
+                                    append({ name: '', isAI: false })
+                                }
                                 if (
                                     (item as unknown as { isAI: boolean }).isAI
                                 ) {
@@ -162,6 +167,24 @@ export const OptionTab: FC = () => {
                                             }
                                         )
                                     )
+                                }
+                            }}
+                        >
+                            <UilTrash className={'fill-neutral-700'} />
+                        </button>
+                    ) : optionsArray[index].name ? (
+                        <button
+                            className="p-1 my-2 ml-3"
+                            type="button"
+                            onClick={() => {
+                                if (
+                                    optionsArray.length === 1 ||
+                                    optionsArray.length === 2
+                                ) {
+                                    remove(index)
+                                    append({ name: '', isAI: false })
+                                } else {
+                                    remove(index)
                                 }
                             }}
                         >

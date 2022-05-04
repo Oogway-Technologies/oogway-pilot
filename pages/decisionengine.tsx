@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import Head from 'next/head'
 import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -8,6 +9,7 @@ import { DecisionTabWrapper } from '../components/Decision/DecisionTabWrapper'
 import OptionRatingTabWrapper from '../components/Decision/OptionRatingTabWrapper'
 import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
 import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
+import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
 import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
 import { OptionTab } from '../components/Decision/Tabs/OptionTab'
@@ -27,11 +29,11 @@ const DecisionEngine: FC = () => {
     const [currentTab, setCurrentTab] = useState(1)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
-
+    const { user, isLoading } = useUser()
     const methods = useForm<DecisionForm>({
         defaultValues: {
-            question: '',
-            context: '',
+            question: 'where should I move?',
+            context: 'I like hot weather',
             options: [
                 { name: '', isAI: false },
                 { name: '', isAI: false },
@@ -133,6 +135,16 @@ const DecisionEngine: FC = () => {
                                         </>
                                     </DecisionTabWrapper>
                                 </div>
+                                {isMobile && (
+                                    <div className={'w-full'}>
+                                        {currentTab === 2 && (
+                                            <OptionSuggestions />
+                                        )}
+                                        {currentTab === 3 && (
+                                            <CriteriaSuggestions />
+                                        )}
+                                    </div>
+                                )}
                                 <DecisionBarHandler
                                     className="justify-self-end mt-auto w-full"
                                     selectedTab={currentTab}
@@ -143,8 +155,16 @@ const DecisionEngine: FC = () => {
                     </div>
                     {!isMobile && (
                         <div className={'col-span-1'}>
-                            {currentTab === 2 && <OptionSuggestions />}
-                            {currentTab === 3 && <CriteriaSuggestions />}
+                            {!isLoading && !user ? (
+                                <SignInCard />
+                            ) : (
+                                <>
+                                    {currentTab === 2 && <OptionSuggestions />}
+                                    {currentTab === 3 && (
+                                        <CriteriaSuggestions />
+                                    )}
+                                </>
+                            )}
                         </div>
                     )}
                 </form>

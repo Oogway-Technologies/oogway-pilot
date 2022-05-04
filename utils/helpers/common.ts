@@ -140,3 +140,22 @@ export const truncateText = ({
 }: TruncateTextProps) => {
     return input.substring(0, maxLength - bufferLength)
 }
+
+const compareObjects = (obj1: any, obj2: any): boolean => {
+    return JSON.stringify(obj1) == JSON.stringify(obj2) ? true : false
+}
+
+export const objectsEqual = (o1: any[], o2: any[]): boolean => {
+    if (o1.length !== o2.length) {
+        return false
+    }
+    let check = true
+    for (let i = 0; i < o1.length; i++) {
+        if (!compareObjects(o1[i], o2[i])) {
+            check = false
+        }
+    }
+    return check
+}
+
+export const deepCopy = (item: any): any => JSON.parse(JSON.stringify(item))

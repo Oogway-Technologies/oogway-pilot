@@ -1,3 +1,5 @@
+import { Criteria, Options } from '../utils/types/global'
+
 export interface UtilsSliceStates {
     fileSizeTooLarge: boolean
     feedState: string
@@ -20,8 +22,14 @@ export interface UtilsSliceStates {
 }
 
 export interface Suggestions {
-    optionsList: { name: string; isAI: boolean }[]
-    criteriaList: { name: string; weight: number; isAI: boolean }[]
+    optionsList: Options[]
+    criteriaList: Criteria[]
+}
+export interface FormCopy {
+    question: ''
+    context: ''
+    options: Options[]
+    criteria: Criteria[]
 }
 
 export interface DecisionSliceStates {
@@ -29,4 +37,5 @@ export interface DecisionSliceStates {
     decisionEngineBestOption: string | undefined
     decisionRatingUpdate: boolean
     suggestions: Suggestions
+    formCopy: FormCopy
 }

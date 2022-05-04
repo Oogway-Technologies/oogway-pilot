@@ -41,10 +41,10 @@ export interface TruncateTextProps {
 }
 
 export interface AISuggestions {
-    options: string
-    context_criteria: string
-    common_criteria: string
-    content: string
+    options: string[]
+    context_criteria: string[]
+    common_criteria: string[]
+    content: string[]
 }
 
 export interface DecisionForm {

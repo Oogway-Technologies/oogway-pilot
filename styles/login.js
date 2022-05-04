@@ -1,21 +1,21 @@
 export const loginButtons = {
     loginButtonStyle:
-        'rounded-[20px] p-sm w-2/4 mx-2 justify-center px-1.5 py-3 md:px-md ' +
+        'rounded-full p-sm w-2/4 mx-2 justify-center px-1.5 py-3 md:px-md ' +
         'md:space-x-2 border-solid border-transparent text-white dark:text-white ' +
         'bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive ' +
         'dark:hover:bg-primaryActive dark:active:bg-primaryActive font-bold',
     loginButtonWFullStyle:
-        'rounded-[20px] p-sm mx-2 justify-center px-1.5 py-3 md:px-md ' +
+        'rounded-full p-sm mx-2 justify-center px-1.5 py-3 md:px-md ' +
         'md:space-x-2 border-solid border-transparent text-white dark:text-white ' +
         'bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive ' +
         'dark:hover:bg-primaryActive dark:active:bg-primaryActive font-bold',
     cancelButtonStyle:
-        'rounded-[20px] w-2/4 mx-2 px-1.5 py-3 justify-center align-middle content-center ' +
+        'rounded-full w-2/4 mx-2 px-1.5 py-3 justify-center align-middle content-center ' +
         'p-sm md:px-md md:space-x-2 border-solid border-transparent text-neutral-700 dark:text-white ' +
         'bg-neutral-150 dark:bg-neutralDark-300 hover:bg-neutral-300 dark:hover:bg-neutralDark-150 ' +
         'font-bold',
     closeButtonStyle:
-        'rounded-[20px] w-full mx-2 px-1.5 py-3 justify-center align-middle content-center ' +
+        'rounded-full w-full mx-2 px-1.5 py-3 justify-center align-middle content-center ' +
         'p-sm md:px-md md:space-x-2 border-solid border-transparent text-neutral-700 dark:text-neutralDark-150 ' +
         'bg-stone-300 text-slate-700 pr-3.5 hover:font-bold active:font-bold dark:hover:font-bold ' +
         'dark:active:font-bold hover:text-black hover:bg-neutral-50 dark:hover:bg-neutralDark-300 ' +

@@ -1,9 +1,11 @@
-import { UilInfoCircle, UilSpinner } from '@iconscout/react-unicons'
+import { UilInfoCircle } from '@iconscout/react-unicons'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { removeSelectedOption } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { deepCopy } from '../../../utils/helpers/common'
 import { SuggestionItem } from './SuggestionItem'
 
 export const OptionSuggestions = () => {
@@ -11,6 +13,7 @@ export const OptionSuggestions = () => {
         state => state.decisionSlice.suggestions.optionsList
     )
     const { getValues, setValue } = useFormContext()
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     const handleItemAdd = (item: {
         name: string
@@ -22,39 +25,53 @@ export const OptionSuggestions = () => {
             useAppDispatch(removeSelectedOption(item))
             if (optionArray[0].name && !optionArray[1].name) {
                 optionArray[1] = item
-                setValue('options', [...optionArray, { name: '', isAI: false }])
+                setValue(
+                    'options',
+                    deepCopy([...optionArray, { name: '', isAI: false }])
+                )
             } else if (!optionArray[0].name) {
                 optionArray[0] = item
-                setValue('options', [...optionArray])
+                setValue('options', deepCopy([...optionArray]))
             } else {
-                setValue('options', [item, ...optionArray])
+                setValue('options', deepCopy([item, ...optionArray]))
             }
         }
     }
 
     return (
-        <div className="flex flex-col py-4 px-3 my-4 bg-white dark:bg-neutralDark-500 rounded-2xl shadow-md dark:shadow-black/60">
-            <div className="flex items-center mb-3">
-                <span className="text-2xl font-bold leading-6 text-primary dark:text-primaryDark">
+        <div
+            className={
+                'flex flex-col bg-white dark:bg-neutralDark-500 md:py-4 md:px-3 md:mb-4 md:rounded-2xl md:shadow-md md:dark:shadow-black/60'
+            }
+        >
+            <div className="flex items-center">
+                <span
+                    className={
+                        'text-base font-bold leading-6 text-primary dark:text-primaryDark md:mb-3 md:text-2xl'
+                    }
+                >
                     AI Suggestions
                 </span>
-                <UilInfoCircle
-                    className={
-                        'justify-self-end ml-auto fill-neutral-700 dark:fill-neutralDark-150'
-                    }
-                />
+                {!isMobile && (
+                    <UilInfoCircle
+                        className={
+                            'justify-self-end ml-auto fill-neutral-700 dark:fill-neutralDark-150'
+                        }
+                    />
+                )}
             </div>
-            <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
-                Click on the listed options to Auto-fill
-            </span>
-
+            {!isMobile && (
+                <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
+                    Click on the listed items to auto-fill.
+                </span>
+            )}
             <div
-                className={`flex overflow-auto flex-col space-y-2 w-full scrollbar-hide max-h-[320px]`}
+                className={`flex md:flex-col overflow-auto items-center space-x-2 w-full max-h-[320px]  md:space-y-2 scrollbar-hide`}
             >
                 {!optionsList.length && (
-                    <div className="flex justify-center items-center m-4">
-                        <UilSpinner className={'m-auto animate-spin'} />
-                    </div>
+                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                        Empty list
+                    </span>
                 )}
                 {optionsList.map((item, index) => {
                     return (
