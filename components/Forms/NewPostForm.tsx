@@ -788,8 +788,7 @@ const NewPostForm: FC<
                             marginLeft: '16px',
                             fontWeight: 'normal',
                             fontSize: '14px',
-                            fontStyle: 'normal',
-                            ZIndex:9
+                            fontStyle: 'normal'
                         }),
                         input: (provided, state) => ({
                             ...provided,
