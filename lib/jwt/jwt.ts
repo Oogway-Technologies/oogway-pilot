@@ -1,11 +1,13 @@
 import jwt, { Jwt, JwtPayload } from 'jsonwebtoken'
 import { NextApiRequest } from 'next'
 
-import { oogwayVars } from '../../utils/constants/global'
+// Read in secret key
+export const JWT_SECRET_KEY: string = process.env.JWT_SECRET as string
 
 declare module 'jsonwebtoken' {
     export interface JwtPayload {
-        botId: string
+        botId?: string
+        decryptionKey?: string
     }
 }
 
@@ -17,7 +19,7 @@ export const signJwt = (
     // sign and encode payload using HS256 (symmetric)
     if (options?.algorithm && options?.algorithm !== 'HS256')
         throw new Error('Algorithm must be HS256')
-    return jwt.sign(payload, oogwayVars.jwt_secret, options)
+    return jwt.sign(payload, JWT_SECRET_KEY, options)
 }
 
 // jwt verify wrapper
@@ -31,7 +33,7 @@ export const verifyJwt = async (
 ) => {
     if (options?.algorithms && !options?.algorithms?.includes('HS256'))
         throw new Error('Algorithms must include HS256')
-    return jwt.verify(token, oogwayVars.jwt_secret, options, callback)
+    return jwt.verify(token, JWT_SECRET_KEY, options, callback)
 }
 
 // Check request heders for authorization
