@@ -58,6 +58,7 @@ const FeedPostbar = ({ openModal }: { openModal: () => void }) => {
                     openModal()
                 }}
                 value={''}
+                readOnly
             />
             <div className={'flex items-center ml-2'}>
                 {/* Upload Image */}

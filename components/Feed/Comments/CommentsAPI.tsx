@@ -10,11 +10,7 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 import { usePostNumberComments } from '../../../hooks/useNumberComments'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { commentFormClass, commentsApiClass } from '../../../styles/feed'
-import {
-    adviceBotId,
-    demoAccountIdDev,
-    demoAccountIdProd,
-} from '../../../utils/constants/global'
+import { demoAccountVars, oogwayVars } from '../../../utils/constants/global'
 import {
     commmentConverter,
     FirebaseComment,
@@ -72,9 +68,9 @@ const CommentsAPI: React.FC<
             return commentsSnapshot?.docs.map(comment => {
                 // Only show oogway AI bot comments to Demo account
                 if (
-                    comment.data().authorUid === adviceBotId &&
-                    userProfile.uid !== demoAccountIdDev &&
-                    userProfile.uid !== demoAccountIdProd
+                    comment.data().authorUid === oogwayVars.advicebot_id &&
+                    userProfile.uid !== demoAccountVars.dev_id &&
+                    userProfile.uid !== demoAccountVars.prod_id
                 )
                     return
                 return (
@@ -97,9 +93,9 @@ const CommentsAPI: React.FC<
                 (comment: FirebaseComment) => {
                     // Only show oogway AI bot comments to Demo account
                     if (
-                        comment.authorUid === adviceBotId &&
-                        userProfile.uid !== demoAccountIdDev &&
-                        userProfile.uid !== demoAccountIdProd
+                        comment.authorUid === oogwayVars.advicebot_id &&
+                        userProfile.uid !== demoAccountVars.dev_id &&
+                        userProfile.uid !== demoAccountVars.prod_id
                     )
                         return
 
