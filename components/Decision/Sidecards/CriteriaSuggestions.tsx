@@ -5,8 +5,9 @@ import { useFormContext } from 'react-hook-form'
 import { removeSelectedCriteria } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { bodyHeavy } from '../../../styles/typography'
 import { deepCopy } from '../../../utils/helpers/common'
-import { SuggestionItem } from './SuggestionItem'
+import { SuggestionItem } from '../common/SuggestionItem'
 
 export const CriteriaSuggestions = () => {
     const criteriaList = useAppSelector(
@@ -47,18 +48,27 @@ export const CriteriaSuggestions = () => {
                     />
                 )}
             </div>
-            {!isMobile && (
-                <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
-                    Click on the listed items to auto-fill
-                </span>
-            )}
+            {criteriaList.length
+                ? !isMobile && (
+                      <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
+                          Click on the listed items to auto-fill.
+                      </span>
+                  )
+                : null}
             <div
-                className={`flex overflow-auto items-center space-x-2 w-full max-h-[320px] md:flex-col md:space-y-2 scrollbar-hide`}
+                className={`flex w-full max-h-[320px] overflow-auto ${
+                    isMobile ? 'items-center space-x-2' : 'flex-col space-y-2'
+                }`}
             >
                 {!criteriaList.length && (
-                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
-                        Empty list
-                    </span>
+                    <>
+                        <span className={`${bodyHeavy} text-center mx-auto`}>
+                            Oogway AI cannot help with this decision.
+                        </span>
+                        <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                            {`It’s a work in progress and it’s learning to serve better suggestions with each decision you make.`}
+                        </span>
+                    </>
                 )}
                 {criteriaList.map((item, index) => {
                     return (

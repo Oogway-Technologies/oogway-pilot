@@ -3,7 +3,7 @@ export const bigContainer =
     'grid grid-cols-4 gap-5 bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60 overflow-auto h-[77vh]'
 
 export const squareButton =
-    'flex justify-center items-center p-3 border-2 border-neutral-300 focus:border-primary active:border-primary'
+    'flex justify-center items-center p-3 border-2 transition-all'
 
 export const resultCard = {
     container:

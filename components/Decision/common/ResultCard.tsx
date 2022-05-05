@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react'
 import { FieldValues, UseFormSetValue } from 'react-hook-form'
 
-import { resultCard } from '../../styles/decision'
+import { resultCard } from '../../../styles/decision'
 
 interface ResultCardProps {
     optionIndex: number

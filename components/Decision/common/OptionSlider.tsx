@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { liStyle } from '../../styles/utils'
+import { liStyle } from '../../../styles/utils'
 
 interface OptionSliderProps {
     showValues?: boolean

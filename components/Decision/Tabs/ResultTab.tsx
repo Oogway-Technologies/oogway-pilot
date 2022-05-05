@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../../hooks/useRedux'
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
 import { decisionOption } from '../../../utils/types/firebase'
-import { ResultCard } from '../ResultCard'
+import { ResultCard } from '../common/ResultCard'
 
 interface ResultTabProps {
     setCurrentTab: React.Dispatch<React.SetStateAction<number>>

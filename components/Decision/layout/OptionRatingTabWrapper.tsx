@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
-import { setDecisionEngineOptionTab } from '../../features/decision/decisionSlice'
-import useMediaQuery from '../../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
-import { optionRatingTab } from '../../styles/decision'
-import { bodyHeavy } from '../../styles/typography'
+import { setDecisionEngineOptionTab } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { optionRatingTab } from '../../../styles/decision'
+import { bodyHeavy } from '../../../styles/typography'
 
 const OptionRatingTabWrapper: FC = () => {
     const selectedTab = useAppSelector(

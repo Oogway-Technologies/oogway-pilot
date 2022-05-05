@@ -26,7 +26,7 @@ export const SignInCard: FC<SignInCardProps> = ({
             <span
                 className={`${bodyHeavy} mb-3 mt-2 text-neutral-700 dark:text-neutralDark-150`}
             >
-                Curious to see what the AI suggests based on your question?
+                To use AI features you must sign in.
             </span>
             <span
                 className={`${bodySmall} mb-5 text-neutral-700 dark:text-neutralDark-150`}

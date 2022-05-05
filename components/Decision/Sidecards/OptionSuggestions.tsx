@@ -1,16 +1,21 @@
 import { UilInfoCircle } from '@iconscout/react-unicons'
+import { UilSpinner } from '@iconscout/react-unicons'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { removeSelectedOption } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { bodyHeavy } from '../../../styles/typography'
 import { deepCopy } from '../../../utils/helpers/common'
-import { SuggestionItem } from './SuggestionItem'
+import { SuggestionItem } from '../common/SuggestionItem'
 
 export const OptionSuggestions = () => {
     const optionsList = useAppSelector(
         state => state.decisionSlice.suggestions.optionsList
+    )
+    const loadingAiSuggestions = useAppSelector(
+        state => state.decisionSlice.loadingAiSuggestions
     )
     const { getValues, setValue } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -60,18 +65,30 @@ export const OptionSuggestions = () => {
                     />
                 )}
             </div>
-            {!isMobile && (
-                <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
-                    Click on the listed items to auto-fill.
-                </span>
-            )}
+            {optionsList.length && !loadingAiSuggestions
+                ? !isMobile && (
+                      <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
+                          Click on the listed items to auto-fill.
+                      </span>
+                  )
+                : null}
             <div
-                className={`flex md:flex-col overflow-auto items-center space-x-2 w-full max-h-[320px]  md:space-y-2 scrollbar-hide`}
+                className={`flex w-full max-h-[320px] overflow-auto ${
+                    isMobile ? 'items-center space-x-2' : 'flex-col space-y-2'
+                }`}
             >
-                {!optionsList.length && (
-                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
-                        Empty list
-                    </span>
+                {loadingAiSuggestions && (
+                    <UilSpinner className={'my-3 mx-auto animate-spin'} />
+                )}
+                {!optionsList.length && !loadingAiSuggestions && (
+                    <>
+                        <span className={`${bodyHeavy} text-center mx-auto`}>
+                            Oogway AI cannot help with this decision.
+                        </span>
+                        <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                            {`It’s a work in progress and it’s learning to serve better suggestions with each decision you make.`}
+                        </span>
+                    </>
                 )}
                 {optionsList.map((item, index) => {
                     return (

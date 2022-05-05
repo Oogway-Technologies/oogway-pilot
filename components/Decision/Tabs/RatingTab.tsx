@@ -3,8 +3,7 @@ import { useFormContext } from 'react-hook-form'
 
 import { setDecisionRatingUpdate } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { bodyHeavy } from '../../../styles/typography'
-import { OptionSlider } from '../OptionSlider'
+import { RatingSlider } from '../common/RatingSlider'
 
 export const RatingTab: FC = () => {
     const optionIndex = useAppSelector(
@@ -51,16 +50,9 @@ export const RatingTab: FC = () => {
                     index: number
                 ) =>
                     item.criteria ? (
-                        <React.Fragment key={item.id + index}>
+                        <React.Fragment key={item.id + index + item.criteria}>
                             <div className="flex flex-col pl-5 mt-8 w-full">
-                                <div className="flex items-center mb-4">
-                                    <span
-                                        className={`${bodyHeavy} text-neutral-700 dark:text-neutral-300 flex justify-start items-center mr-auto mb-xl pb-3`}
-                                    >
-                                        {item.criteria}
-                                    </span>
-                                </div>
-                                <OptionSlider
+                                <RatingSlider
                                     id={item.id + index}
                                     registerName={
                                         `ratings.${optionIndex}.rating.${index}.value` as const
@@ -68,7 +60,7 @@ export const RatingTab: FC = () => {
                                     min={1}
                                     max={10}
                                     step={1}
-                                    tooltip
+                                    title={item.criteria}
                                 />
                             </div>
                         </React.Fragment>

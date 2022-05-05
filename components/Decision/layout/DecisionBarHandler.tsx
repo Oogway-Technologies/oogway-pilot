@@ -1,19 +1,21 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilArrowLeft, UilArrowRight } from '@iconscout/react-unicons'
-import { FC } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { FC, useEffect, useState } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
     populateSuggestions,
+    resetSuggestions,
     setDecisionRatingUpdate,
+    setLoadingAiSuggestions,
     updateFormCopy,
-} from '../../features/decision/decisionSlice'
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
-import { squareButton } from '../../styles/decision'
-import { warningTime } from '../../utils/constants/global'
-import { deepCopy, fetcher, objectsEqual } from '../../utils/helpers/common'
-import { AISuggestions } from '../../utils/types/global'
-import { ProgressBar } from '../Utils/common/ProgressBar'
+} from '../../../features/decision/decisionSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { squareButton } from '../../../styles/decision'
+import { warningTime } from '../../../utils/constants/global'
+import { deepCopy, fetcher, objectsEqual } from '../../../utils/helpers/common'
+import { AISuggestions, Criteria, Options } from '../../../utils/types/global'
+import { ProgressBar } from '../../Utils/common/ProgressBar'
 import { DecisionSideBarOptions } from './DecisionSideBar'
 
 interface DecisionBarHandlerProps {
@@ -32,20 +34,33 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         clearErrors,
         formState: { errors },
         getValues,
+        control,
     } = useFormContext()
     const { user } = useUser()
     const decisionRatingUpdate = useAppSelector(
         state => state.decisionSlice.decisionRatingUpdate
     )
     const formCopy = useAppSelector(state => state.decisionSlice.formCopy)
+    const watchDecision = useWatch({ name: 'question', control })
+    const watchOption = useWatch({ name: 'options', control })
+    const watchCriteria = useWatch({ name: 'criteria', control })
+    const [pointerArray, setPointerArray] = useState([
+        false,
+        false,
+        false,
+        false,
+        false,
+    ])
 
     const loadSuggestions = async () => {
+        useAppDispatch(setLoadingAiSuggestions(true))
         const question = getValues('question').replaceAll(' ', '%20')
         const context = getValues('context').replaceAll(' ', '%20')
         const data: AISuggestions = await fetcher(
             `/api/getAISuggestions?question=${question}&context=${context}`
         )
         useAppDispatch(populateSuggestions(data))
+        useAppDispatch(setLoadingAiSuggestions(false))
     }
 
     const validationHandler = async (tab: number) => {
@@ -65,6 +80,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 formCopy.question !== getValues('question') ||
                 formCopy.context !== getValues('context')
             ) {
+                useAppDispatch(resetSuggestions())
                 if (user) {
                     loadSuggestions()
                 }
@@ -129,6 +145,51 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
     }
 
+    const validateDecision = () => {
+        const question: string = getValues('question')
+        if (question) {
+            return true
+        }
+        return false
+    }
+
+    const validateOption = () => {
+        const options = getValues('options')
+        let check = 0
+        options.forEach((item: Options) => {
+            if (item.name) {
+                check = check + 1
+            }
+        })
+
+        return check >= 2 ? true : false
+    }
+
+    const validateCriteria = () => {
+        const criteria = getValues('criteria')
+        let check = false
+        criteria.forEach((item: Criteria) => {
+            if (item.name) {
+                check = true
+            }
+        })
+        return check
+    }
+
+    useEffect(() => {
+        if (validateDecision() && validateOption() && validateCriteria()) {
+            setPointerArray([true, true, true, true, true])
+        } else {
+            setPointerArray([
+                validateDecision(),
+                validateOption(),
+                validateCriteria(),
+                false,
+                false,
+            ])
+        }
+    }, [watchDecision, watchOption, watchCriteria])
+
     return (
         <div
             className={`flex items-center justify-between ${
@@ -136,7 +197,11 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             }`}
         >
             <button
-                className={`${squareButton} mr-auto`}
+                className={`${squareButton} mr-auto ${
+                    selectedTab === 1
+                        ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
+                        : 'border-primary focus:border-primary active:border-primary'
+                }`}
                 type="button"
                 onClick={() => {
                     if (selectedTab !== 1) {
@@ -146,7 +211,11 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             >
                 <UilArrowLeft className="fill-neutral-700  dark:fill-neutralDark-150" />
             </button>
-            <div className="w-3/6">
+            <div
+                className={`w-3/6 ${
+                    pointerArray[selectedTab - 1] ? 'ml-3' : ''
+                }`}
+            >
                 <ProgressBar
                     currentStep={selectedTab}
                     totalSteps={DecisionSideBarOptions.length}
@@ -154,11 +223,22 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 />
             </div>
             <button
-                className={`${squareButton} ml-auto`}
+                className={`${squareButton} ml-auto ${
+                    pointerArray[selectedTab - 1]
+                        ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
+                        : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
+                }`}
                 type="button"
                 onClick={handleForward}
             >
-                <UilArrowRight className="fill-neutral-700 dark:fill-neutralDark-150" />
+                {pointerArray[selectedTab - 1] && 'Continue'}
+                <UilArrowRight
+                    className={`${
+                        pointerArray[selectedTab - 1]
+                            ? 'fill-primary dark:fill-primaryDark'
+                            : 'fill-neutral-700 dark:fill-neutralDark-150'
+                    }`}
+                />
             </button>
         </div>
     )

@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
-import useMediaQuery from '../../hooks/useMediaQuery'
-import { Criteria, Options } from '../../utils/types/global'
+import useMediaQuery from '../../../hooks/useMediaQuery'
+import { Criteria, Options } from '../../../utils/types/global'
 
 interface DecisionSideBarProps {
     className?: string
@@ -23,7 +23,7 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     selectedTab,
     setSelectedTab,
 }: DecisionSideBarProps) => {
-    const { getValues } = useFormContext()
+    const { getValues, control } = useFormContext()
     const [pointerArray, setPointerArray] = useState([
         false,
         false,
@@ -32,9 +32,9 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         false,
     ])
 
-    const watchDecision = useWatch({ name: 'question' })
-    const watchOption = useWatch({ name: 'options' })
-    const watchCriteria = useWatch({ name: 'criteria' })
+    const watchDecision = useWatch({ name: 'question', control })
+    const watchOption = useWatch({ name: 'options', control })
+    const watchCriteria = useWatch({ name: 'criteria', control })
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     const validateDecision = () => {
@@ -67,6 +67,7 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         })
         return check
     }
+
     useEffect(() => {
         if (validateDecision() && validateOption() && validateCriteria()) {
             setPointerArray([true, true, true, true, true])

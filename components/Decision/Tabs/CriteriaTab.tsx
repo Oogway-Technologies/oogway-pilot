@@ -12,7 +12,7 @@ import { bodyHeavy } from '../../../styles/typography'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
 import { ErrorWraperField } from '../../Utils/ErrorWraperField'
-import { OptionSlider } from '../OptionSlider'
+import { OptionSlider } from '../common/OptionSlider'
 
 export const CriteriaTab: FC = () => {
     const decisionRatingUpdate = useAppSelector(

@@ -3,10 +3,10 @@ import Head from 'next/head'
 import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { DecisionBarHandler } from '../components/Decision/DecisionBarHandler'
-import { DecisionSideBar } from '../components/Decision/DecisionSideBar'
-import { DecisionTabWrapper } from '../components/Decision/DecisionTabWrapper'
-import OptionRatingTabWrapper from '../components/Decision/OptionRatingTabWrapper'
+import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHandler'
+import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
+import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWrapper'
+import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
 import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
 import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
 import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
@@ -155,7 +155,9 @@ const DecisionEngine: FC = () => {
                     </div>
                     {!isMobile && (
                         <div className={'col-span-1'}>
-                            {!isLoading && !user ? (
+                            {!isLoading &&
+                            !user &&
+                            (currentTab === 2 || currentTab === 3) ? (
                                 <SignInCard />
                             ) : (
                                 <>
