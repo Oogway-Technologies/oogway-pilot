@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 
-import API from '../axios'
+import API from '../lib/axios/axios'
 import { FirebaseFeed } from '../utils/types/firebase'
 
 type getFeedsPayload = {

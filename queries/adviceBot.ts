@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query'
 
-import API from '../axios'
+import API from '../lib/axios/axios'
 import { signJwt } from '../lib/jwt/jwt'
 import { FirebasePost } from '../utils/types/firebase'
 

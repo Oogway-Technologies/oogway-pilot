@@ -1,4 +1,3 @@
-import axios from 'axios'
 import {
     addDoc,
     collection,
@@ -10,8 +9,12 @@ import { JwtPayload } from 'jsonwebtoken'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { db } from '../../../firebase'
+import {
+    BingSearchAPI,
+    OogwayDecisionAPI,
+} from '../../../lib/axios/externalHandlers'
 import { checkReq, verifyJwt } from '../../../lib/jwt/jwt'
-import { bingTopN, bingVars, oogwayVars } from '../../../utils/constants/global'
+import { bingTopN, oogwayVars } from '../../../utils/constants/global'
 import { BingReference } from '../../../utils/types/bingapi'
 import {
     AIBotComment,
@@ -19,18 +22,6 @@ import {
     FirebasePost,
 } from '../../../utils/types/firebase'
 import { OpenAPICall } from '../../../utils/types/openapi'
-
-/**
- * Helper API handlers
- */
-export const OogwayDecisionAPI = axios.create({
-    baseURL: oogwayVars.oogway_decision_url,
-})
-const BingSearchAPI = axios.create({
-    baseURL: bingVars.retriever_bing_search_url,
-})
-BingSearchAPI.defaults.headers.get[bingVars.retriever_bing_header_key_tag] =
-    bingVars.retriever_bing_header_key_value
 
 /**
  * Method handlers
