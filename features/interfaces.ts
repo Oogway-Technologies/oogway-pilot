@@ -36,6 +36,10 @@ export interface DecisionSliceStates {
     decisionEngineOptionTab: number
     decisionEngineBestOption: string | undefined
     decisionRatingUpdate: boolean
+    loadingAiSuggestions: boolean
+    isSuggestionsEmpty: boolean
+    ratingTabChecker: boolean[]
+    previousIndex: number
     suggestions: Suggestions
     formCopy: FormCopy
 }

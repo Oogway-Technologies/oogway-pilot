@@ -1,12 +1,15 @@
 import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
-import { setDecisionEngineBestOption } from '../../../features/decision/decisionSlice'
+import {
+    setDecisionEngineBestOption,
+    setPreviousIndex,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
 import { decisionOption } from '../../../utils/types/firebase'
-import { ResultCard } from '../ResultCard'
+import { ResultCard } from '../common/ResultCard'
 
 interface ResultTabProps {
     setCurrentTab: React.Dispatch<React.SetStateAction<number>>
@@ -26,6 +29,9 @@ export const ResultTab: FC<ResultTabProps> = ({
     // Edge case: ties not accounted for
     useEffect(() => {
         useAppDispatch(setDecisionEngineBestOption(calcBestOption()))
+        return () => {
+            useAppDispatch(setPreviousIndex(5))
+        }
     }, [options])
 
     const calcBestOption = () => {
@@ -99,12 +105,12 @@ export const ResultTab: FC<ResultTabProps> = ({
                 >
                     New Decision
                 </button>
-                <button
+                {/* <button
                     className={feedToolbarClass.newPostButton}
                     onClick={() => console.log(getValues())}
                 >
                     Get Feedback
-                </button>
+                </button> */}
             </div>
         </>
     )

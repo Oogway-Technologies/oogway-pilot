@@ -1,8 +1,11 @@
 import { UilPlus, UilTrash } from '@iconscout/react-unicons'
 import React, { FC, useEffect } from 'react'
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { useFieldArray, useFormContext } from 'react-hook-form'
 
-import { addSelectedOption } from '../../../features/decision/decisionSlice'
+import {
+    addSelectedOption,
+    setPreviousIndex,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
@@ -24,18 +27,6 @@ export const OptionTab: FC = () => {
     })
 
     const optionsArray = getValues(`options`)
-
-    const w = useWatch({
-        control,
-        name: 'options',
-    })
-
-    useEffect(() => {
-        console.log('w - ', w)
-        console.log('optionsArray - ', optionsArray)
-        console.log(fields)
-    }, [optionsArray, w])
-
     const checkFilledFields = () => {
         let check = false
         optionsArray.forEach((option: { name: string }) => {
@@ -45,6 +36,13 @@ export const OptionTab: FC = () => {
         })
         return check
     }
+
+    useEffect(() => {
+        return () => {
+            useAppDispatch(setPreviousIndex(2))
+        }
+    }, [])
+
     return (
         <>
             {fields.map((item, index) => (
@@ -89,35 +87,64 @@ export const OptionTab: FC = () => {
                     {(item as unknown as Options).isAI ||
                     ((item as unknown as Options).isAI &&
                         index === fields.length - 1) ? (
-                        <button
-                            className="p-1 my-2 ml-3"
-                            type="button"
-                            onClick={() => {
-                                remove(index)
-                                if (
-                                    (item as unknown as { isAI: boolean }).isAI
-                                ) {
-                                    useAppDispatch(
-                                        addSelectedOption(
-                                            item as unknown as {
-                                                name: string
-                                                isAI: boolean
-                                            }
+                        index === 4 ? (
+                            <button
+                                className="p-1 my-2 ml-3"
+                                type="button"
+                                onClick={() => {
+                                    if (
+                                        (item as unknown as { isAI: boolean })
+                                            .isAI
+                                    ) {
+                                        useAppDispatch(
+                                            addSelectedOption(
+                                                item as unknown as {
+                                                    name: string
+                                                    isAI: boolean
+                                                }
+                                            )
                                         )
-                                    )
-                                }
-                                if (
-                                    optionsArray.length === 2 ||
-                                    optionsArray.length === 1
-                                ) {
+                                    }
+                                    remove(index)
                                     if (fields[index]) {
                                         append({ name: '', isAI: false })
                                     }
-                                }
-                            }}
-                        >
-                            <UilTrash className={'fill-neutral-700'} />
-                        </button>
+                                }}
+                            >
+                                <UilTrash className={'fill-neutral-700'} />
+                            </button>
+                        ) : (
+                            <button
+                                className="p-1 my-2 ml-3"
+                                type="button"
+                                onClick={() => {
+                                    remove(index)
+                                    if (
+                                        (item as unknown as { isAI: boolean })
+                                            .isAI
+                                    ) {
+                                        useAppDispatch(
+                                            addSelectedOption(
+                                                item as unknown as {
+                                                    name: string
+                                                    isAI: boolean
+                                                }
+                                            )
+                                        )
+                                    }
+                                    if (
+                                        optionsArray.length === 2 ||
+                                        optionsArray.length === 1
+                                    ) {
+                                        if (fields[index]) {
+                                            append({ name: '', isAI: false })
+                                        }
+                                    }
+                                }}
+                            >
+                                <UilTrash className={'fill-neutral-700'} />
+                            </button>
+                        )
                     ) : index === fields.length - 1 ? (
                         index < 4 ? (
                             <button
