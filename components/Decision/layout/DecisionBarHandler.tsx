@@ -278,6 +278,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     selectedTab !== 4
                         ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
                         : pointerArray[selectedTab - 1] &&
+                          selectedTab === 4 &&
                           ratingTabChecker.every(v => v === true)
                         ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
                         : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
@@ -291,6 +292,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 selectedTab !== 4 ? (
                     <span className="text-sm md:text-base">Continue</span>
                 ) : pointerArray[selectedTab - 1] &&
+                  selectedTab === 4 &&
                   ratingTabChecker.every(v => v === true) ? (
                     <span className="text-sm md:text-base">Continue</span>
                 ) : null}
@@ -301,6 +303,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         selectedTab !== 4
                             ? 'fill-primary dark:fill-primaryDark'
                             : pointerArray[selectedTab - 1] &&
+                              selectedTab === 4 &&
                               ratingTabChecker.every(v => v === true)
                             ? 'fill-primary dark:fill-primaryDark'
                             : 'fill-neutral-700 dark:fill-neutralDark-150'
