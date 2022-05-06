@@ -1,4 +1,4 @@
-import { useUser } from '@auth0/nextjs-auth0'
+// import { useUser } from '@auth0/nextjs-auth0'
 import Head from 'next/head'
 import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -9,7 +9,7 @@ import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWra
 import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
 import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
 import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
-import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
+// import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
 import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
 import { OptionTab } from '../components/Decision/Tabs/OptionTab'
@@ -29,7 +29,7 @@ const DecisionEngine: FC = () => {
     const [currentTab, setCurrentTab] = useState(1)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const { user, isLoading } = useUser()
+    // const { user, isLoading } = useUser()
     const methods = useForm<DecisionForm>({
         defaultValues: {
             question: '',
@@ -155,7 +155,7 @@ const DecisionEngine: FC = () => {
                     </div>
                     {!isMobile && (
                         <div className={'col-span-1'}>
-                            {!isLoading &&
+                            {/* {!isLoading &&
                             !user &&
                             (currentTab === 2 || currentTab === 3) ? (
                                 <SignInCard />
@@ -166,7 +166,9 @@ const DecisionEngine: FC = () => {
                                         <CriteriaSuggestions />
                                     )}
                                 </>
-                            )}
+                            )} */}
+                            {currentTab === 2 && <OptionSuggestions />}
+                            {currentTab === 3 && <CriteriaSuggestions />}
                         </div>
                     )}
                 </form>

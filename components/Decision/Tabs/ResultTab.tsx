@@ -105,12 +105,12 @@ export const ResultTab: FC<ResultTabProps> = ({
                 >
                     New Decision
                 </button>
-                <button
+                {/* <button
                     className={feedToolbarClass.newPostButton}
                     onClick={() => console.log(getValues())}
                 >
                     Get Feedback
-                </button>
+                </button> */}
             </div>
         </>
     )
