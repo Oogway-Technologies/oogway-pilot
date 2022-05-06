@@ -37,7 +37,7 @@ export const RatingSlider: FC<RatingSliderProps> = ({
     return (
         <div
             className={
-                'flex relative flex-col p-5 space-y-2 w-full bg-white dark:bg-neutralDark-500 rounded-2xl shadow-md dark:shadow-black/60'
+                'flex relative flex-col p-5 space-y-2 w-full bg-white dark:bg-neutralDark-500 rounded-2xl shadow-inner drop-shadow-md'
             }
         >
             <div className="flex items-center">
@@ -56,19 +56,29 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                     }
                 >
                     <span
-                        className={`${bodySmall} text-neutral-700/50 bg-neutral-150/30 px-1 py-1.5`}
+                        className={`${bodySmall} text-neutral-700/50 bg-neutral-150/30 dark:text-neutral-150 px-1 py-1.5`}
                     >
                         Rating
                     </span>
-                    <span
-                        className={`${bodySmall} py-1.5 pr-2 pl-4 ${
+                    <input
+                        min={1}
+                        max={10}
+                        type="number"
+                        className={`${bodySmall} my-1.5 mx-2 w-4 outline-none appearance-none ${
                             highlight
                                 ? 'text-primary dark:text-primaryDark'
                                 : 'text-neutral-700 dark:text-neutral-150'
                         }`}
-                    >
-                        {getValues(registerName)}
-                    </span>
+                        value={left}
+                        {...register(registerName, {
+                            valueAsNumber: true,
+                            min: min,
+                            max: max,
+                        })}
+                        onChange={({ target: { value } }) =>
+                            handleChange(value)
+                        }
+                    />
                 </div>
             </div>
             <div className="flex items-center space-x-2">

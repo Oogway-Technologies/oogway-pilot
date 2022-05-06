@@ -35,6 +35,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         formState: { errors },
         getValues,
         control,
+        resetField,
     } = useFormContext()
     const { user } = useUser()
     const decisionRatingUpdate = useAppSelector(
@@ -80,6 +81,8 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 formCopy.question !== getValues('question') ||
                 formCopy.context !== getValues('context')
             ) {
+                resetField('options')
+                resetField('criteria')
                 useAppDispatch(resetSuggestions())
                 if (user) {
                     loadSuggestions()
@@ -224,17 +227,20 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             </div>
             <button
                 className={`${squareButton} ml-auto ${
-                    pointerArray[selectedTab - 1]
+                    pointerArray[selectedTab - 1] && selectedTab !== 5
                         ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
                         : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
                 }`}
                 type="button"
+                disabled={selectedTab === 5}
                 onClick={handleForward}
             >
-                {pointerArray[selectedTab - 1] && 'Continue'}
+                {pointerArray[selectedTab - 1] &&
+                    selectedTab !== 5 &&
+                    'Continue'}
                 <UilArrowRight
                     className={`${
-                        pointerArray[selectedTab - 1]
+                        pointerArray[selectedTab - 1] && selectedTab !== 5
                             ? 'fill-primary dark:fill-primaryDark'
                             : 'fill-neutral-700 dark:fill-neutralDark-150'
                     }`}

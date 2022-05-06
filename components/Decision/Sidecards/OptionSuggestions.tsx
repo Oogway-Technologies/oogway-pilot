@@ -82,7 +82,9 @@ export const OptionSuggestions = () => {
                 )}
                 {!optionsList.length && !loadingAiSuggestions && (
                     <>
-                        <span className={`${bodyHeavy} text-center mx-auto`}>
+                        <span
+                            className={`${bodyHeavy} text-center mx-auto mt-4`}
+                        >
                             Oogway AI cannot help with this decision.
                         </span>
                         <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
