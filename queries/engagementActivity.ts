@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from 'react-query'
 
-import API from '../axios'
+import API from '../lib/axios/axios'
 import {
     FirebaseEngagement,
     FirebaseEngagementFragment,

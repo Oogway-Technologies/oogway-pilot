@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query'
 
-import API from '../axios'
+import API from '../lib/axios/axios'
 import { FirebaseDecisionActivity } from '../utils/types/firebase'
 
 /**
