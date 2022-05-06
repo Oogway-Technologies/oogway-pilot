@@ -72,7 +72,7 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                         min={1}
                         max={10}
                         type="number"
-                        className={`${bodySmall} my-1.5 mx-2 w-4 outline-none appearance-none ${
+                        className={`${bodySmall} my-1.5 mx-2 w-4 outline-none appearance-none bg-transparent ${
                             highlight
                                 ? 'text-primary dark:text-primaryDark'
                                 : 'text-neutral-700 dark:text-neutral-150'

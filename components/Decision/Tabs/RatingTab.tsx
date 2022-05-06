@@ -47,31 +47,34 @@ export const RatingTab: FC = () => {
 
     return (
         <>
-            {getValues('ratings')[optionIndex].rating.map(
-                (
-                    item: {
-                        id: string
-                        criteria: string
-                    },
-                    index: number
-                ) =>
-                    item.criteria ? (
-                        <React.Fragment key={item.id + index + item.criteria}>
-                            <div className="flex flex-col pl-5 mt-8 w-full">
-                                <RatingSlider
-                                    id={item.id + index}
-                                    registerName={
-                                        `ratings.${optionIndex}.rating.${index}.value` as const
-                                    }
-                                    min={1}
-                                    max={10}
-                                    step={1}
-                                    title={item.criteria}
-                                />
-                            </div>
-                        </React.Fragment>
-                    ) : null
-            )}
+            {getValues('ratings')[optionIndex] &&
+                getValues('ratings')[optionIndex]?.rating.map(
+                    (
+                        item: {
+                            id: string
+                            criteria: string
+                        },
+                        index: number
+                    ) =>
+                        item.criteria ? (
+                            <React.Fragment
+                                key={item.id + index + item.criteria}
+                            >
+                                <div className="flex flex-col pl-5 mt-8 w-full">
+                                    <RatingSlider
+                                        id={item.id + index}
+                                        registerName={
+                                            `ratings.${optionIndex}.rating.${index}.value` as const
+                                        }
+                                        min={1}
+                                        max={10}
+                                        step={1}
+                                        title={item.criteria}
+                                    />
+                                </div>
+                            </React.Fragment>
+                        ) : null
+                )}
         </>
     )
 }
