@@ -43,6 +43,12 @@ export const OptionSuggestions = () => {
             } else {
                 setValue('options', deepCopy([item, ...optionArray]))
             }
+        } else {
+            if (!optionArray[4].name) {
+                useAppDispatch(removeSelectedOption(item))
+                optionArray[4] = item
+                setValue('options', deepCopy([...optionArray]))
+            }
         }
     }
 

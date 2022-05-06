@@ -87,35 +87,64 @@ export const OptionTab: FC = () => {
                     {(item as unknown as Options).isAI ||
                     ((item as unknown as Options).isAI &&
                         index === fields.length - 1) ? (
-                        <button
-                            className="p-1 my-2 ml-3"
-                            type="button"
-                            onClick={() => {
-                                remove(index)
-                                if (
-                                    (item as unknown as { isAI: boolean }).isAI
-                                ) {
-                                    useAppDispatch(
-                                        addSelectedOption(
-                                            item as unknown as {
-                                                name: string
-                                                isAI: boolean
-                                            }
+                        index === 4 ? (
+                            <button
+                                className="p-1 my-2 ml-3"
+                                type="button"
+                                onClick={() => {
+                                    if (
+                                        (item as unknown as { isAI: boolean })
+                                            .isAI
+                                    ) {
+                                        useAppDispatch(
+                                            addSelectedOption(
+                                                item as unknown as {
+                                                    name: string
+                                                    isAI: boolean
+                                                }
+                                            )
                                         )
-                                    )
-                                }
-                                if (
-                                    optionsArray.length === 2 ||
-                                    optionsArray.length === 1
-                                ) {
+                                    }
+                                    remove(index)
                                     if (fields[index]) {
                                         append({ name: '', isAI: false })
                                     }
-                                }
-                            }}
-                        >
-                            <UilTrash className={'fill-neutral-700'} />
-                        </button>
+                                }}
+                            >
+                                <UilTrash className={'fill-neutral-700'} />
+                            </button>
+                        ) : (
+                            <button
+                                className="p-1 my-2 ml-3"
+                                type="button"
+                                onClick={() => {
+                                    remove(index)
+                                    if (
+                                        (item as unknown as { isAI: boolean })
+                                            .isAI
+                                    ) {
+                                        useAppDispatch(
+                                            addSelectedOption(
+                                                item as unknown as {
+                                                    name: string
+                                                    isAI: boolean
+                                                }
+                                            )
+                                        )
+                                    }
+                                    if (
+                                        optionsArray.length === 2 ||
+                                        optionsArray.length === 1
+                                    ) {
+                                        if (fields[index]) {
+                                            append({ name: '', isAI: false })
+                                        }
+                                    }
+                                }}
+                            >
+                                <UilTrash className={'fill-neutral-700'} />
+                            </button>
+                        )
                     ) : index === fields.length - 1 ? (
                         index < 4 ? (
                             <button
