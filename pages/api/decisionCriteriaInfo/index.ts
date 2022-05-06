@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import {
     collection,
     getDocs,
@@ -7,18 +6,16 @@ import {
     OrderByDirection,
     query,
     startAfter,
-    where,
 } from 'firebase/firestore'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-import { db } from '../../firebase'
-import { APITimeStamp } from '../../utils/types/global'
+import { db } from '../../../firebase'
+import { APITimeStamp } from '../../../utils/types/global'
 
 async function handleGet(
     res: NextApiResponse,
     _index: string,
     _order: string,
-    _feed: string | string[],
     afterTimestamp: Date,
     limitSize: number
 ) {
@@ -29,30 +26,31 @@ async function handleGet(
             startAfter(afterTimestamp),
             limit(limitSize),
         ]
-        if (_feed !== 'All') {
-            constraints.push(where('feed', '==', _feed))
-        }
 
-        // Get posts from firebase
-        const q = query(collection(db, 'posts'), ...constraints)
-        const postsSnapshot = await getDocs(q)
-        const posts = postsSnapshot.docs.map(post => ({
-            id: post.id,
-            ...post.data(),
-        }))
+        // Get decisionCriteria from firebase
+        const q = query(collection(db, 'decisionCriteriaaInfo'), ...constraints)
+        const decisionCriteriaInfoSnapshot = await getDocs(q)
+        const decisionCriteriaInfo = decisionCriteriaInfoSnapshot.docs.map(
+            item => ({
+                id: item.id,
+                ...item.data(),
+            })
+        )
 
-        // Check to ensure posts found
-        if (posts.length === 0) {
+        // Check to ensure decisionCriteria found
+        if (decisionCriteriaInfo.length === 0) {
             res.status(200).end(
                 'No Results Found. Please check the query parameters.'
             )
         }
 
-        const lastTime = posts[posts.length - 1] as APITimeStamp
-        const firstTime = posts[0] as APITimeStamp
+        const lastTime = decisionCriteriaInfo[
+            decisionCriteriaInfo.length - 1
+        ] as APITimeStamp
+        const firstTime = decisionCriteriaInfo[0] as APITimeStamp
         // Return payload
         const payload = {
-            posts: posts,
+            decisionCriteriaInfo: decisionCriteriaInfo,
             lastTimestamp: lastTime?.timestamp || {
                 seconds: 0,
                 nanoseconds: 0,
@@ -61,7 +59,7 @@ async function handleGet(
                 seconds: 0,
                 nanoseconds: 0,
             },
-            hasNextPage: posts.length === limitSize, // If full limit reached there may be another page, edge case is modulo 0
+            hasNextPage: decisionCriteriaInfo.length === limitSize, // If full limit reached there may be another page, edge case is modulo 0
         }
         res.status(200).json(payload)
     } catch (err) {
@@ -69,32 +67,20 @@ async function handleGet(
     }
 }
 
-/**
- *
- * @param req request
- * @param res response
- *
- * The request query accepts the following params:
- * _index: the _index to sort the data on, defaults to timestamp
- * _order: accepts 'asc' for ascending or 'desc' for descending
- * _after: The current timestamp in seconds for the query cursor to start _after
- * _size: the number of posts to return, defaults to 10
- */
-
-export default async function postsHandler(
+export default async function decisionCriteriaInfoHandler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
     let {
-        query: { _index, _order, _after, _size, _feed },
+        query: { _index, _order, _after, _size },
         method,
     } = req
 
     // Check query params and set defaults
     _index = _index ? (_index as string) : 'timestamp'
-    if (!(_index === 'timestamp' || _index === 'uid')) {
+    if (!(_index === 'timestamp')) {
         res.status(400).end(
-            `_index ${_index} Not Allowed. Must be either 'timestamp' or 'uid'.`
+            `_index ${_index} Not Allowed. Must be 'timestamp'.`
         )
     }
 
@@ -114,13 +100,6 @@ export default async function postsHandler(
                 `_after ${_after} Not Allowed. Must be a parseable integer to convert to timestamp, e.g 1645079590.`
             )
         }
-
-        // _After has been provided and can be parsed into
-        // an int assume it has been supplied as a timestamp
-        // in seconds (per the explanation) and convert it
-        // to a timestamp.
-        // Why must we convert to a Date? Firebase requires thte supplied value
-        // to be a javascript Date object otherwise the query constraint fails
         afterTimestamp = new Date(parseInt(_after as string) * 1000)
     }
 
@@ -137,19 +116,11 @@ export default async function postsHandler(
         limitSize =
             parseInt(_size as string) > 100 ? 100 : parseInt(_size as string)
     }
-    _feed = _feed ? _feed : 'All'
 
     // Perform request
     switch (method) {
         case 'GET':
-            await handleGet(
-                res,
-                _index,
-                _order,
-                _feed,
-                afterTimestamp,
-                limitSize
-            )
+            await handleGet(res, _index, _order, afterTimestamp, limitSize)
             break
         default:
             res.setHeader('Allow', ['GET'])

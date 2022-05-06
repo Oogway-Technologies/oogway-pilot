@@ -122,6 +122,21 @@ export interface FirebaseDecisionActivity {
     timestamp?: FieldValue
 }
 
+export interface FirebaseDecisionContext {
+    version?: string // Version of decision criteria info AI API
+    decision: string
+    option: string
+    criterion: string
+    timestamp?: FieldValue
+}
+
+export interface FirebaseDecisionCriteriaInfo {
+    id?: string
+    fact: string
+    url_list: string[]
+    timestamp?: FieldValue
+}
+
 export type engagementAction = 'like' | 'comment' | 'reply' | 'vote'
 
 export type engagementTarget = 'Poll' | 'Comment' | 'Reply' | 'Post'

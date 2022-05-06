@@ -26,6 +26,7 @@ export const demoAccountVars = decryptAES(service.demo_account)
 /**
  * API Calls
  */
+export const oogwayDecisionFTVersion = 'v1'
 export const bingTopN = 5 // number of results to display from bing API in Oogway Bot comments
 export const decisionTitle = [
     '',
