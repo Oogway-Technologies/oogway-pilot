@@ -30,8 +30,16 @@ export const RatingSlider: FC<RatingSliderProps> = ({
     }, [registerName])
 
     const handleChange = (value: string) => {
-        setLeft(Number(value))
-        setValue(registerName, value)
+        if (Number(value) < 1) {
+            setLeft(Number(1))
+            setValue(registerName, 1)
+        } else if (Number(value) > 10) {
+            setLeft(Number(10))
+            setValue(registerName, 10)
+        } else {
+            setLeft(Number(value))
+            setValue(registerName, value)
+        }
     }
 
     return (
@@ -114,28 +122,6 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                     Excellent
                 </span>
             </div>
-            {/* {tooltip && (
-                <label
-                    htmlFor="range"
-                    style={{
-                        left: `${left * 10 - 10}%`,
-                        marginLeft: `${4 + left}px`,
-                    }}
-                >
-                    <svg width="31" height="35" viewBox="0 0 31 35" fill="none">
-                        <path
-                            d="M31 13.1591C31 19.1492 21.5547 29.8135 17.4133 34.2135C16.4203 35.2622 14.5797 35.2622 13.5867 34.2135C9.37266 29.8135 0 19.1492 0 13.1591C0 5.89142 6.93948 0 15.5 0C24.0573 0 31 5.89142 31 13.1591Z"
-                            fill="#7269FF"
-                        />
-                    </svg>
-                    <span
-                        style={{ left: '50%', transform: 'translate(-50%, 0)' }}
-                        className="absolute top-2 text-base font-normal text-white"
-                    >
-                        {left}
-                    </span>
-                </label>
-            )} */}
         </div>
     )
 }

@@ -9,6 +9,7 @@ import {
     setDecisionRatingUpdate,
     setIsSuggestionsEmpty,
     setLoadingAiSuggestions,
+    setRatingTabChecker,
     updateFormCopy,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -45,6 +46,10 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     const isSuggestionsEmpty = useAppSelector(
         state => state.decisionSlice.isSuggestionsEmpty
     )
+    const ratingTabChecker = useAppSelector(
+        state => state.decisionSlice.ratingTabChecker
+    )
+    const [showError, setShowError] = useState(false)
     const formCopy = useAppSelector(state => state.decisionSlice.formCopy)
     const watchDecision = useWatch({ name: 'question', control })
     const watchOption = useWatch({ name: 'options', control })
@@ -79,9 +84,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     }
 
     const validationHandler = async (tab: number) => {
-        console.log('errors: ', errors)
-        console.log('Values: ', getValues())
-
         if (tab === 1) {
             await trigger(['question', 'context'])
             if (errors?.['question']?.message || errors?.['context']?.message) {
@@ -119,13 +121,20 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (!objectsEqual(formCopy.options, getValues('options'))) {
-                console.log(
-                    '..................................',
-                    !objectsEqual(formCopy.options, getValues('options')),
-                    formCopy.options,
-                    getValues('options')
+                const optionFilter = getValues('options').filter(
+                    (item: Options) => {
+                        if (item.name) {
+                            return item
+                        }
+                    }
                 )
-
+                const checkArray: boolean[] = new Array(optionFilter.length)
+                    .fill(false)
+                    .map(item => {
+                        return item
+                    })
+                checkArray[0] = true
+                useAppDispatch(setRatingTabChecker(checkArray))
                 if (!decisionRatingUpdate) {
                     useAppDispatch(setDecisionRatingUpdate(true))
                 }
@@ -146,12 +155,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (!objectsEqual(formCopy.criteria, getValues('criteria'))) {
-                console.log(
-                    '..................................',
-                    !objectsEqual(formCopy.options, getValues('criteria')),
-                    formCopy.criteria,
-                    getValues('criteria')
-                )
                 if (!decisionRatingUpdate) {
                     useAppDispatch(setDecisionRatingUpdate(true))
                 }
@@ -163,6 +166,16 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         })
                     )
                 )
+            }
+        }
+        if (tab === 4) {
+            const checker = ratingTabChecker.every(v => v === true)
+            if (!checker) {
+                setShowError(true)
+                setTimeout(() => {
+                    setShowError(false)
+                }, warningTime)
+                return false
             }
         }
         return true
@@ -222,7 +235,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
 
     return (
         <div
-            className={`flex items-center justify-between ${
+            className={`flex items-center justify-between relative ${
                 className ? className : ''
             }`}
         >
@@ -246,6 +259,11 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     pointerArray[selectedTab - 1] ? 'ml-3' : ''
                 }`}
             >
+                {showError && (
+                    <span className="absolute right-[3%] bottom-[100%] w-full text-center text-error">
+                        The user should score each option.
+                    </span>
+                )}
                 <ProgressBar
                     currentStep={selectedTab}
                     totalSteps={DecisionSideBarOptions.length}
@@ -262,9 +280,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 disabled={selectedTab === 5}
                 onClick={handleForward}
             >
-                {pointerArray[selectedTab - 1] &&
-                    selectedTab !== 5 &&
-                    'Continue'}
+                {pointerArray[selectedTab - 1] && selectedTab !== 5 && (
+                    <span className="text-sm md:text-base">Continue</span>
+                )}
                 <UilArrowRight
                     className={`${
                         pointerArray[selectedTab - 1] && selectedTab !== 5

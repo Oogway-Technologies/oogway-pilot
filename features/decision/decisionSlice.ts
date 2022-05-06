@@ -10,6 +10,7 @@ const initialState: DecisionSliceStates = {
     loadingAiSuggestions: false,
     isSuggestionsEmpty: false,
     previousIndex: 1,
+    ratingTabChecker: [],
     suggestions: {
         optionsList: [],
         criteriaList: [],
@@ -26,6 +27,9 @@ export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setRatingTabChecker: (state, { payload }: PayloadAction<boolean[]>) => {
+            state.ratingTabChecker = payload
+        },
         setPreviousIndex: (state, { payload }: PayloadAction<number>) => {
             state.previousIndex = payload
         },
@@ -144,6 +148,7 @@ export const {
     resetSuggestions,
     setIsSuggestionsEmpty,
     setPreviousIndex,
+    setRatingTabChecker,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

@@ -38,6 +38,7 @@ export interface DecisionSliceStates {
     decisionRatingUpdate: boolean
     loadingAiSuggestions: boolean
     isSuggestionsEmpty: boolean
+    ratingTabChecker: boolean[]
     previousIndex: number
     suggestions: Suggestions
     formCopy: FormCopy
