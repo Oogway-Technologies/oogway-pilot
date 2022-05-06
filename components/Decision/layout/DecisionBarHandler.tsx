@@ -7,6 +7,7 @@ import {
     populateSuggestions,
     resetSuggestions,
     setDecisionRatingUpdate,
+    setIsSuggestionsEmpty,
     setLoadingAiSuggestions,
     updateFormCopy,
 } from '../../../features/decision/decisionSlice'
@@ -41,6 +42,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     const decisionRatingUpdate = useAppSelector(
         state => state.decisionSlice.decisionRatingUpdate
     )
+    const isSuggestionsEmpty = useAppSelector(
+        state => state.decisionSlice.isSuggestionsEmpty
+    )
     const formCopy = useAppSelector(state => state.decisionSlice.formCopy)
     const watchDecision = useWatch({ name: 'question', control })
     const watchOption = useWatch({ name: 'options', control })
@@ -54,6 +58,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     ])
 
     const loadSuggestions = async () => {
+        if (isSuggestionsEmpty) {
+            useAppDispatch(setIsSuggestionsEmpty(false))
+        }
         useAppDispatch(setLoadingAiSuggestions(true))
         const question = getValues('question').replaceAll(' ', '%20')
         const context = getValues('context').replaceAll(' ', '%20')
@@ -62,6 +69,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         )
         useAppDispatch(populateSuggestions(data))
         useAppDispatch(setLoadingAiSuggestions(false))
+        if (
+            !data.options.length &&
+            !data.context_criteria.length &&
+            !data.common_criteria.length
+        ) {
+            useAppDispatch(setIsSuggestionsEmpty(true))
+        }
     }
 
     const validationHandler = async (tab: number) => {
@@ -105,6 +119,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (!objectsEqual(formCopy.options, getValues('options'))) {
+                console.log(
+                    '..................................',
+                    !objectsEqual(formCopy.options, getValues('options')),
+                    formCopy.options,
+                    getValues('options')
+                )
+
                 if (!decisionRatingUpdate) {
                     useAppDispatch(setDecisionRatingUpdate(true))
                 }
@@ -125,6 +146,12 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (!objectsEqual(formCopy.criteria, getValues('criteria'))) {
+                console.log(
+                    '..................................',
+                    !objectsEqual(formCopy.options, getValues('criteria')),
+                    formCopy.criteria,
+                    getValues('criteria')
+                )
                 if (!decisionRatingUpdate) {
                     useAppDispatch(setDecisionRatingUpdate(true))
                 }

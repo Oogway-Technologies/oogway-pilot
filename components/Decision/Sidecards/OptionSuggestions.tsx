@@ -17,6 +17,9 @@ export const OptionSuggestions = () => {
     const loadingAiSuggestions = useAppSelector(
         state => state.decisionSlice.loadingAiSuggestions
     )
+    const isSuggestionsEmpty = useAppSelector(
+        state => state.decisionSlice.isSuggestionsEmpty
+    )
     const { getValues, setValue } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
 
@@ -81,6 +84,11 @@ export const OptionSuggestions = () => {
                     <UilSpinner className={'my-3 mx-auto animate-spin'} />
                 )}
                 {!optionsList.length && !loadingAiSuggestions && (
+                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                        No more suggestions.
+                    </span>
+                )}
+                {isSuggestionsEmpty && (
                     <>
                         <span
                             className={`${bodyHeavy} text-center mx-auto mt-4`}

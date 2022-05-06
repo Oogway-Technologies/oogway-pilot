@@ -8,6 +8,8 @@ const initialState: DecisionSliceStates = {
     decisionEngineBestOption: undefined,
     decisionRatingUpdate: true,
     loadingAiSuggestions: false,
+    isSuggestionsEmpty: false,
+    previousIndex: 1,
     suggestions: {
         optionsList: [],
         criteriaList: [],
@@ -24,6 +26,12 @@ export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setPreviousIndex: (state, { payload }: PayloadAction<number>) => {
+            state.previousIndex = payload
+        },
+        setIsSuggestionsEmpty: (state, { payload }: PayloadAction<boolean>) => {
+            state.isSuggestionsEmpty = payload
+        },
         resetSuggestions: state => {
             state.suggestions.criteriaList = []
             state.suggestions.optionsList = []
@@ -134,6 +142,8 @@ export const {
     updateFormCopy,
     setLoadingAiSuggestions,
     resetSuggestions,
+    setIsSuggestionsEmpty,
+    setPreviousIndex,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

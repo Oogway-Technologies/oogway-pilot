@@ -13,6 +13,12 @@ export const CriteriaSuggestions = () => {
     const criteriaList = useAppSelector(
         state => state.decisionSlice.suggestions.criteriaList
     )
+    const loadingAiSuggestions = useAppSelector(
+        state => state.decisionSlice.loadingAiSuggestions
+    )
+    const isSuggestionsEmpty = useAppSelector(
+        state => state.decisionSlice.isSuggestionsEmpty
+    )
     const { getValues, setValue } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
 
@@ -60,9 +66,16 @@ export const CriteriaSuggestions = () => {
                     isMobile ? 'items-center space-x-2' : 'flex-col space-y-2'
                 }`}
             >
-                {!criteriaList.length && (
+                {!criteriaList.length && !loadingAiSuggestions && (
+                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                        No more suggestions.
+                    </span>
+                )}
+                {isSuggestionsEmpty && (
                     <>
-                        <span className={`${bodyHeavy} text-center mx-auto`}>
+                        <span
+                            className={`${bodyHeavy} text-center mx-auto mt-4`}
+                        >
                             Oogway AI cannot help with this decision.
                         </span>
                         <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">

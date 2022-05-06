@@ -1,8 +1,11 @@
 import { UilPlus, UilTrash } from '@iconscout/react-unicons'
 import React, { FC, useEffect } from 'react'
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { useFieldArray, useFormContext } from 'react-hook-form'
 
-import { addSelectedOption } from '../../../features/decision/decisionSlice'
+import {
+    addSelectedOption,
+    setPreviousIndex,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
@@ -24,18 +27,6 @@ export const OptionTab: FC = () => {
     })
 
     const optionsArray = getValues(`options`)
-
-    const w = useWatch({
-        control,
-        name: 'options',
-    })
-
-    useEffect(() => {
-        console.log('w - ', w)
-        console.log('optionsArray - ', optionsArray)
-        console.log(fields)
-    }, [optionsArray, w])
-
     const checkFilledFields = () => {
         let check = false
         optionsArray.forEach((option: { name: string }) => {
@@ -45,6 +36,13 @@ export const OptionTab: FC = () => {
         })
         return check
     }
+
+    useEffect(() => {
+        return () => {
+            useAppDispatch(setPreviousIndex(2))
+        }
+    }, [])
+
     return (
         <>
             {fields.map((item, index) => (

@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
+import { useAppSelector } from '../../../hooks/useRedux'
 import { Criteria, Options } from '../../../utils/types/global'
 
 interface DecisionSideBarProps {
@@ -24,6 +25,9 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     setSelectedTab,
 }: DecisionSideBarProps) => {
     const { getValues, control } = useFormContext()
+    const previousIndex = useAppSelector(
+        state => state.decisionSlice.previousIndex
+    )
     const [pointerArray, setPointerArray] = useState([
         false,
         false,
@@ -72,13 +76,15 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         if (validateDecision() && validateOption() && validateCriteria()) {
             setPointerArray([true, true, true, true, true])
         } else {
-            setPointerArray([
+            const newArray = [
                 validateDecision(),
                 validateOption(),
                 validateCriteria(),
                 false,
                 false,
-            ])
+            ]
+            newArray[previousIndex - 1] = true
+            setPointerArray(newArray)
         }
     }, [watchDecision, watchOption, watchCriteria])
 

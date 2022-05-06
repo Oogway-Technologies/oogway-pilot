@@ -1,7 +1,10 @@
 import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
-import { setDecisionEngineBestOption } from '../../../features/decision/decisionSlice'
+import {
+    setDecisionEngineBestOption,
+    setPreviousIndex,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
@@ -26,6 +29,9 @@ export const ResultTab: FC<ResultTabProps> = ({
     // Edge case: ties not accounted for
     useEffect(() => {
         useAppDispatch(setDecisionEngineBestOption(calcBestOption()))
+        return () => {
+            useAppDispatch(setPreviousIndex(5))
+        }
     }, [options])
 
     const calcBestOption = () => {

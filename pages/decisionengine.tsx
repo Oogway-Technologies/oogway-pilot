@@ -32,8 +32,8 @@ const DecisionEngine: FC = () => {
     const { user, isLoading } = useUser()
     const methods = useForm<DecisionForm>({
         defaultValues: {
-            question: 'where should I move?',
-            context: 'I like hot weather',
+            question: '',
+            context: '',
             options: [
                 { name: '', isAI: false },
                 { name: '', isAI: false },

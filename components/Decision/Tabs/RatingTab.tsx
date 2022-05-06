@@ -1,7 +1,10 @@
 import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { setDecisionRatingUpdate } from '../../../features/decision/decisionSlice'
+import {
+    setDecisionRatingUpdate,
+    setPreviousIndex,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { RatingSlider } from '../common/RatingSlider'
 
@@ -36,6 +39,9 @@ export const RatingTab: FC = () => {
             })
             setValue('ratings', mapRatingObject)
             useAppDispatch(setDecisionRatingUpdate(false))
+        }
+        return () => {
+            useAppDispatch(setPreviousIndex(4))
         }
     }, [])
 

@@ -5,9 +5,9 @@ import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import {
     addSelectedCriteria,
-    setDecisionRatingUpdate,
+    setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
@@ -15,9 +15,6 @@ import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 import { OptionSlider } from '../common/OptionSlider'
 
 export const CriteriaTab: FC = () => {
-    const decisionRatingUpdate = useAppSelector(
-        state => state.decisionSlice.decisionRatingUpdate
-    )
     const {
         register,
         control,
@@ -32,13 +29,6 @@ export const CriteriaTab: FC = () => {
         control,
         name: 'criteria',
     })
-
-    useEffect(() => {
-        if (!decisionRatingUpdate) {
-            useAppDispatch(setDecisionRatingUpdate(true))
-        }
-    }, [])
-
     const checkFilledFields = () => {
         const criteriaArray = getValues(`criteria`)
         let check = false
@@ -49,6 +39,11 @@ export const CriteriaTab: FC = () => {
         })
         return check
     }
+    useEffect(() => {
+        return () => {
+            useAppDispatch(setPreviousIndex(3))
+        }
+    }, [])
     return (
         <>
             {fields.map((item, index) => (
