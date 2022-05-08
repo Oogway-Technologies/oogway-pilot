@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
+    setDecisionCriteriaQueryKey,
     setDecisionEngineOptionTab,
     setRatingTabChecker,
 } from '../../../features/decision/decisionSlice'
@@ -29,6 +30,9 @@ const OptionRatingTabWrapper: FC = () => {
         const checkArray = [...ratingTabChecker]
         checkArray[index] = true
         useAppDispatch(setRatingTabChecker(checkArray))
+
+        // Reset decisionInfo query key
+        useAppDispatch(setDecisionCriteriaQueryKey(undefined))
     }
     return (
         <div className={optionRatingTab.container}>

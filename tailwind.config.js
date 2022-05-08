@@ -38,6 +38,7 @@ module.exports = {
                 black: '#000000',
                 white: '#FFFFFF',
                 primaryActive: '#5A34BE',
+                primaryInactive: '#855EED',
                 // Light
                 primary: '#7041EE',
                 tertiary: '#E2D9FC',

@@ -1,7 +1,10 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import { setDecisionCriteriaQueryKey } from '../../../features/decision/decisionSlice'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { bodyHeavy, bodySmall } from '../../../styles/typography'
+import AskAIButton from './AskAIButton'
 
 interface RatingSliderProps {
     title: string
@@ -54,9 +57,14 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                         highlight
                             ? 'text-primary dark:text-primaryDark'
                             : 'text-neutral-700 dark:text-neutral-150'
-                    }`}
+                    } inline-flex items-center gap-x-md`}
                 >
-                    {title}
+                    {title}{' '}
+                    <AskAIButton
+                        onClick={() =>
+                            useAppDispatch(setDecisionCriteriaQueryKey(title))
+                        }
+                    />
                 </span>
                 <div
                     className={

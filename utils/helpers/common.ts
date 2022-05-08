@@ -159,3 +159,13 @@ export const objectsEqual = (o1: any[], o2: any[]): boolean => {
 }
 
 export const deepCopy = (item: any): any => JSON.parse(JSON.stringify(item))
+
+export function titleCase(str: string) {
+    return str
+        .toLowerCase()
+        .split(' ')
+        .map(function (word) {
+            return word.charAt(0).toUpperCase() + word.slice(1)
+        })
+        .join(' ')
+}
