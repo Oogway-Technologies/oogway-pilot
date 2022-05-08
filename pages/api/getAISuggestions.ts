@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import { oogwayVars } from '../../utils/constants/global'
+
 export default async function handleGet(
     req: NextApiRequest,
     res: NextApiResponse
@@ -11,11 +13,11 @@ export default async function handleGet(
         const headers = {
             'Content-Type': 'application/json',
         }
-        const url = 'http://3.22.185.47:8001/oogway_dt'
+        const url = `${oogwayVars.oogway_decision_url}oogway_dt`
         const body = {
             question,
             context,
-            token: '!!8GhQRj;t{1BS%',
+            token: oogwayVars.oogway_decision_token,
         }
         const result = await axios.post(url, JSON.stringify(body), {
             url: url,

@@ -16,7 +16,7 @@ export const OptionTab: FC = () => {
     const {
         register,
         control,
-        getValues,
+        watch,
         setValue,
         formState: { errors },
     } = useFormContext()
@@ -26,7 +26,7 @@ export const OptionTab: FC = () => {
         name: 'options',
     })
 
-    const optionsArray = getValues(`options`)
+    const optionsArray = watch(`options`)
     const checkFilledFields = () => {
         let check = false
         optionsArray.forEach((option: { name: string }) => {
