@@ -42,4 +42,5 @@ export interface DecisionSliceStates {
     previousIndex: number
     suggestions: Suggestions
     formCopy: FormCopy
+    decisionCriteriaQueryKey: string | undefined
 }

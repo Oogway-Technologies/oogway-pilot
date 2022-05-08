@@ -28,7 +28,10 @@ async function handleGet(
         ]
 
         // Get decisionCriteria from firebase
-        const q = query(collection(db, 'decisionCriteriaaInfo'), ...constraints)
+        const q = query(
+            collection(db, 'decision-criteria-info'),
+            ...constraints
+        )
         const decisionCriteriaInfoSnapshot = await getDocs(q)
         const decisionCriteriaInfo = decisionCriteriaInfoSnapshot.docs.map(
             item => ({
@@ -67,7 +70,7 @@ async function handleGet(
     }
 }
 
-export default async function decisionCriteriaInfoHandler(
+export default async function cacheDecisionCriteriaInfoHandler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {

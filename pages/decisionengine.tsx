@@ -7,6 +7,7 @@ import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHan
 import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
 import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWrapper'
 import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
+import { CriteriaInfo } from '../components/Decision/Sidecards/CriteriaInfo'
 import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
 import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
 // import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
@@ -25,6 +26,9 @@ import { DecisionForm } from '../utils/types/global'
 
 const DecisionEngine: FC = () => {
     const userProfile = useAppSelector(state => state.userSlice.user)
+    const decisionCriteriaQueryKey = useAppSelector(
+        state => state.decisionSlice.decisionCriteriaQueryKey
+    )
     const decisionMutation = useCreateDecisionActivity()
     const [currentTab, setCurrentTab] = useState(1)
 
@@ -143,6 +147,10 @@ const DecisionEngine: FC = () => {
                                         {currentTab === 3 && (
                                             <CriteriaSuggestions />
                                         )}
+                                        {currentTab === 4 &&
+                                            decisionCriteriaQueryKey && (
+                                                <CriteriaInfo />
+                                            )}
                                     </div>
                                 )}
                                 <DecisionBarHandler
@@ -169,6 +177,9 @@ const DecisionEngine: FC = () => {
                             )} */}
                             {currentTab === 2 && <OptionSuggestions />}
                             {currentTab === 3 && <CriteriaSuggestions />}
+                            {currentTab === 4 && decisionCriteriaQueryKey && (
+                                <CriteriaInfo />
+                            )}
                         </div>
                     )}
                 </form>

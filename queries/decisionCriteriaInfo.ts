@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import API from '../lib/axios/axios'
-import { OogwayDecisionAPI } from '../lib/axios/externalHandlers'
 import {
     FirebaseDecisionContext,
     FirebaseDecisionCriteriaInfo,
@@ -13,19 +12,25 @@ import {
 export type getDecisionCriteriaInfoParams = {
     _version: 'v1' // currently only available version, add more later
     _option: string
-    _criterion: string
+    _criterion: string | undefined
+    _decision?: string
+}
+
+type getDecisionCriteriaInfoPayload = {
+    results: FirebaseDecisionCriteriaInfo | null
+    err: string | null
 }
 
 // API fetch wrapper
 export const getDecisionCriteriaInfo = async (
     params: getDecisionCriteriaInfoParams
-): Promise<FirebaseDecisionCriteriaInfo> => {
+): Promise<getDecisionCriteriaInfoPayload> => {
     // Creaate id from params
     const { _option, _version, _criterion } = params
-    const id = `${_option}-${_version}-${_criterion}`
+    const id = `${_version}-${_option}-${_criterion}`
 
     // Call api
-    const response = await API.get(`decisionCriteriaInfo/${id}`).catch(
+    const response = await API.get(`cacheDecisionCriteriaInfo/${id}`).catch(
         error => {
             console.log(error.toJSON())
             return { data: 'There was an error.' }
@@ -40,55 +45,96 @@ export const useDecisionCriteriaInfoQuery = (
 ) =>
     useQuery(
         [
-            'decisionCriteriaInfo',
+            'cacheDecisionCriteriaInfo',
             params._version,
             params._option,
             params._criterion,
         ],
-        () => getDecisionCriteriaInfo(params)
+        () => getDecisionCriteriaInfo(params),
+        {
+            cacheTime: 1000 * 60 * 15, // 15 minutes
+            staleTime: 1000 * 60 * 30, // 30 minutes
+        }
     )
+
+/**
+ * PUT hooks
+ */
+interface putDecisionCriteriaInfoParams extends getDecisionCriteriaInfoParams {
+    decisionCriteriaInfo: FirebaseDecisionCriteriaInfo
+}
+
+export const cacheDecisionCriteriaInfo = async (
+    params: putDecisionCriteriaInfoParams
+) => {
+    // Creaate id from params
+    const { _option, _version, _criterion, decisionCriteriaInfo } = params
+    const id = `${_version}-${_option}-${_criterion}`
+
+    return API.put(
+        `cacheDecisionCriteriaInfo/${id}`,
+        decisionCriteriaInfo
+    ).catch(error => {
+        console.log(error.toJSON())
+        return { data: 'There was an error.' }
+    })
+}
+
+export const usePutDecisionCriteriaInfo = () => {
+    return useMutation((params: putDecisionCriteriaInfoParams) =>
+        cacheDecisionCriteriaInfo(params)
+    )
+}
 
 /**
  * POST hooks
  */
 
-type DecisionCriteriaInfoPayload = {
-    version: string
+export type DecisionCriteriaInfoPayload = {
+    version: 'v1'
     token: string
     decisionContext: FirebaseDecisionContext
 }
 
 export const createDecisionCriteriaInfo = async (
-    decisionCriteriaInfoPayload: DecisionCriteriaInfoPayload
+    params: getDecisionCriteriaInfoParams
 ) => {
-    // Unpack payload
-    const { version, token, decisionContext } = decisionCriteriaInfoPayload
-    const payload = {
-        ...decisionContext,
-        token,
-    }
-    return OogwayDecisionAPI.post(`oogway_ft/${version}`, payload)
+    return API.get('ai/decisionCriteriaInfo', { params: params }).catch(
+        error => {
+            console.log(error.toJSON())
+            return { data: 'There was an error' }
+        }
+    )
 }
 
 export const useCreateDecisionCriteriaInfo = () => {
     const queryClient = useQueryClient()
+    const cache = usePutDecisionCriteriaInfo()
 
     return useMutation(
-        (decisionCriteriaInfoPayload: DecisionCriteriaInfoPayload) =>
-            createDecisionCriteriaInfo(decisionCriteriaInfoPayload),
+        (params: getDecisionCriteriaInfoParams) =>
+            createDecisionCriteriaInfo(params),
         {
-            onSuccess: (newInfo, decisionCriteriaInfoPayload) => {
-                const { version, decisionContext } = decisionCriteriaInfoPayload
+            onSuccess: (newInfo, params) => {
+                const { _version, _option, _criterion } = params
+                console.log(newInfo)
                 // Cache result in Firebase
+                const cacheParams = {
+                    _version,
+                    _option,
+                    _criterion,
+                    decisionCriteriaInfo: newInfo.data,
+                }
+                cache.mutate(cacheParams)
 
                 // Cache query with unique version-option-criterion key
                 // Directly update query with info returned from POST result
                 queryClient.setQueryData(
                     [
-                        'decisionCriteriaInfo',
-                        version,
-                        decisionContext.option,
-                        decisionContext.criterion,
+                        'cacheDecisionCriteriaInfo',
+                        _version,
+                        _option,
+                        _criterion,
                     ],
                     newInfo
                 )

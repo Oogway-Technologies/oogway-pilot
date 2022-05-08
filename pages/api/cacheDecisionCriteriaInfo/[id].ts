@@ -12,7 +12,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         const { id } = req.query
 
         // Fetch single document
-        const docRef = doc(db, 'decisionCriteriaInfo', id as string)
+        const docRef = doc(db, 'decision-criteria-info', id as string)
         const docSnapshot = await getDoc(docRef)
 
         if (docSnapshot.exists()) {
@@ -21,9 +21,12 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
                 ...docSnapshot.data(),
             }
             // Return document
-            return res.status(200).json(payload as FirebaseDecisionCriteriaInfo)
+            return res.status(200).json({
+                result: payload as FirebaseDecisionCriteriaInfo,
+                err: null,
+            })
         }
-        return res.status(200).json({ err: 'No results found.' })
+        return res.status(200).json({ result: null, err: 'No results found.' })
     } catch (err) {
         return res.status(403).json({ err: 'Error!' })
     }
@@ -42,15 +45,15 @@ async function handlePut(req: ExtendedNextApiRequest, res: NextApiResponse) {
         } = req
 
         // Update body with timestamp
-        const payload = {
+        const payload: FirebaseDecisionCriteriaInfo = {
             ...body,
             timestamp: serverTimestamp(),
         }
 
-        const docRef = doc(db, 'decisionCriteriaInfo', id as string)
+        const docRef = doc(db, 'decision-criteria-info', id as string)
         const docSnap = await getDoc(docRef)
         // Overwrite or create resourcce
-        await setDoc(docRef, payload as FirebaseDecisionCriteriaInfo)
+        await setDoc(docRef, payload)
 
         // Return HTTP code conditional on original resource status
         if (docSnap.exists()) {
@@ -63,7 +66,7 @@ async function handlePut(req: ExtendedNextApiRequest, res: NextApiResponse) {
     }
 }
 
-export default async function decisionCriteriaInfoIdHandler(
+export default async function cacheDecisionCriteriaInfoIdHandler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {

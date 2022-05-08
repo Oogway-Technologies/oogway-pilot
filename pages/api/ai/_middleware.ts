@@ -21,7 +21,6 @@ export async function middleware(req: NextRequest) {
             // Otherwise reroute the user to the feed
             return NextResponse.rewrite(referer)
         }
-        return NextResponse.next()
     }
-    return req
+    return NextResponse.next()
 }
