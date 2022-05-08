@@ -16,7 +16,7 @@ const AskAIButton: FC<AskAIButtonProps> = ({ onClick }) => (
             'hover:bg-primaryActive dark:hover:bg-primaryActive ' +
             'text-white rounded-md p-1 gap-x-1'
         }
-        keepText={true}
+        keepText={false}
         forceNoText={false}
         onClick={onClick}
     />

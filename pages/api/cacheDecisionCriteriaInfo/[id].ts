@@ -22,7 +22,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
             }
             // Return document
             return res.status(200).json({
-                result: payload as FirebaseDecisionCriteriaInfo,
+                results: payload as FirebaseDecisionCriteriaInfo,
                 err: null,
             })
         }

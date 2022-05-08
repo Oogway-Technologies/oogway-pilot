@@ -117,7 +117,7 @@ export const useCreateDecisionCriteriaInfo = () => {
         {
             onSuccess: (newInfo, params) => {
                 const { _version, _option, _criterion } = params
-                console.log(newInfo)
+
                 // Cache result in Firebase
                 const cacheParams = {
                     _version,
@@ -136,7 +136,7 @@ export const useCreateDecisionCriteriaInfo = () => {
                         _option,
                         _criterion,
                     ],
-                    newInfo
+                    newInfo.data
                 )
             },
         }
