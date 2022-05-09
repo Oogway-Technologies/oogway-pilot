@@ -7,6 +7,7 @@ import {
 
 import { BingReference } from './bingapi'
 import { MediaObject } from './global'
+import { GoogleSearchHyperlink } from './googleapi'
 
 /**
  * Firebase collection field types
@@ -133,7 +134,9 @@ export interface FirebaseDecisionContext {
 export interface FirebaseDecisionCriteriaInfo {
     id?: string
     fact: string
-    url_list: string[]
+    url_list: GoogleSearchHyperlink[]
+    query: string
+
     timestamp?: FieldValue
 }
 

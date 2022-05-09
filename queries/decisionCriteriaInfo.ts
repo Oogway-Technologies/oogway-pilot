@@ -41,22 +41,24 @@ export const getDecisionCriteriaInfo = async (
 }
 
 export const useDecisionCriteriaInfoQuery = (
-    params: getDecisionCriteriaInfoParams
-) =>
-    useQuery(
-        [
-            'cacheDecisionCriteriaInfo',
-            params._version,
-            params._option,
-            params._criterion,
-        ],
+    version: 'v1',
+    option: string,
+    criterion: string
+) => {
+    const params: getDecisionCriteriaInfoParams = {
+        _version: version,
+        _option: option,
+        _criterion: criterion,
+    }
+    return useQuery(
+        ['cacheDecisionCriteriaInfo', version, option, criterion],
         () => getDecisionCriteriaInfo(params),
         {
             cacheTime: 1000 * 60 * 15, // 15 minutes
             staleTime: 1000 * 60 * 30, // 30 minutes
         }
     )
-
+}
 /**
  * PUT hooks
  */

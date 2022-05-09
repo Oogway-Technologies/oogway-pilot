@@ -30,7 +30,7 @@ const AISidebar: FC<AISidebarProps> = ({ title, subtitle, children }) => {
                 {subtitle && (
                     <span
                         className={
-                            'text-base leading-6 text-neutral-300 dark:text-neutralDark-50 md:text-md'
+                            'text-base leading-6 text-neutral-300 dark:text-neutralDark-50 md:text-base'
                         }
                     >
                         {subtitle}

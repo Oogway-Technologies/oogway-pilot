@@ -16,17 +16,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         const docSnapshot = await getDoc(docRef)
 
         if (docSnapshot.exists()) {
-            const payload = {
-                id: docSnapshot.id,
-                ...docSnapshot.data(),
-            }
-            // Return document
-            return res.status(200).json({
-                results: payload as FirebaseDecisionCriteriaInfo,
-                err: null,
-            })
+            return res.status(200).json(docSnapshot.data())
         }
-        return res.status(200).json({ result: null, err: 'No results found.' })
+        return res.status(200).json({ results: null, err: 'No results found.' })
     } catch (err) {
         return res.status(403).json({ err: 'Error!' })
     }
