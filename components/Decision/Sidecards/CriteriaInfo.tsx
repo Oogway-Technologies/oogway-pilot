@@ -36,10 +36,17 @@ const CriteriaFact: FC<CriteriaFactProps> = ({ criterion, fact }) => (
 interface CriteriaLinksProps {
     links: GoogleSearchHyperlink[]
     topN: number
+    query: string
 }
 
-const CriteriaLinks: FC<CriteriaLinksProps> = ({ links, topN }) => (
+const CriteriaLinks: FC<CriteriaLinksProps> = ({ links, topN, query }) => (
     <div className="flex flex-col p-2">
+        <span className="text-sm text-primary dark:text-primaryDark">
+            Question
+        </span>
+        <span className="mb-2 ml-2 text-xs text-neutral-700 dark:text-neutralDark-50">
+            {query}
+        </span>
         <span className="text-sm text-primary dark:text-primaryDark">
             Links
         </span>
@@ -47,7 +54,7 @@ const CriteriaLinks: FC<CriteriaLinksProps> = ({ links, topN }) => (
             {links.slice(0, topN).map((elem, idx) => (
                 <Link key={idx} href={elem.url} passHref={true}>
                     <a
-                        className="truncate"
+                        className="underline truncate"
                         key={idx}
                         target={'_blank'}
                         rel="noopener noreferrer"
@@ -146,6 +153,7 @@ export const CriteriaInfo: FC = () => {
                                     <CriteriaLinks
                                         links={data?.results?.url_list}
                                         topN={5}
+                                        query={data?.results?.query}
                                     />
                                 )}
                             </>

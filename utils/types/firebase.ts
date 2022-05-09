@@ -135,6 +135,8 @@ export interface FirebaseDecisionCriteriaInfo {
     id?: string
     fact: string
     url_list: GoogleSearchHyperlink[]
+    query: string
+
     timestamp?: FieldValue
 }
 
