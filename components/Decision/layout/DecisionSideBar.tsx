@@ -92,7 +92,7 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         <div
             className={`flex ${
                 isMobile
-                    ? 'space-x-2 mb-2 overflow-scroll w-[90vw] scrollbar-hide'
+                    ? 'space-x-2 mb-2 overflow-scroll w-[90vw] scrollbar-hide h-9'
                     : 'flex-col space-y-2 w-3/4 h-full'
             } ${className ? className : ''}`}
         >
