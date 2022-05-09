@@ -262,7 +262,8 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             >
                 {showError && (
                     <span className="absolute right-[3%] bottom-[100%] w-full text-center text-error">
-                        The user should score each option.
+                        Please rate each option, check the tabs at the top for
+                        other options.
                     </span>
                 )}
                 <ProgressBar
