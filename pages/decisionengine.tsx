@@ -1,4 +1,5 @@
 // import { useUser } from '@auth0/nextjs-auth0'
+import { NextApiRequest } from 'next'
 import Head from 'next/head'
 import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -24,7 +25,13 @@ import { decisionTitle } from '../utils/constants/global'
 import { FirebaseDecisionActivity } from '../utils/types/firebase'
 import { DecisionForm } from '../utils/types/global'
 
-const DecisionEngine: FC = () => {
+interface DecisionEngineProps {
+    deviceIp: string
+}
+
+const DecisionEngine: FC<DecisionEngineProps> = ({
+    deviceIp,
+}: DecisionEngineProps) => {
     const userProfile = useAppSelector(state => state.userSlice.user)
     const decisionCriteriaQueryKey = useAppSelector(
         state => state.decisionSlice.decisionCriteriaQueryKey
@@ -131,6 +138,7 @@ const DecisionEngine: FC = () => {
                                             {currentTab === 4 && <RatingTab />}
                                             {currentTab === 5 && (
                                                 <ResultTab
+                                                    deviceIp={deviceIp}
                                                     setCurrentTab={
                                                         setCurrentTab
                                                     }
@@ -189,3 +197,13 @@ const DecisionEngine: FC = () => {
 }
 
 export default DecisionEngine
+
+export async function getServerSideProps(req: NextApiRequest) {
+    const IP = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : ''
+
+    return {
+        props: {
+            deviceIp: IP,
+        },
+    }
+}

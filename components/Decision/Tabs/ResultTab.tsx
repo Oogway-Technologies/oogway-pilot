@@ -1,3 +1,4 @@
+import { serverTimestamp } from 'firebase/firestore'
 import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
@@ -5,35 +6,74 @@ import {
     setDecisionEngineBestOption,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
-import { decisionOption } from '../../../utils/types/firebase'
+import {
+    decisionCriteria,
+    decisionOption,
+    FirebaseDecisionActivity,
+} from '../../../utils/types/firebase'
 import { ResultCard } from '../common/ResultCard'
 
 interface ResultTabProps {
     setCurrentTab: React.Dispatch<React.SetStateAction<number>>
+    deviceIp: string
 }
 
 export const ResultTab: FC<ResultTabProps> = ({
     setCurrentTab,
+    deviceIp,
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
-
+    const user = useAppSelector(state => state.userSlice.user)
     const options: Array<decisionOption> = useWatch({
         control,
         name: 'options',
     })
+    const saveDecision = useCreateDecisionActivity()
 
     // Determine best option from scores on mount.
     // Edge case: ties not accounted for
     useEffect(() => {
         useAppDispatch(setDecisionEngineBestOption(calcBestOption()))
+        saveResult()
         return () => {
             useAppDispatch(setPreviousIndex(5))
         }
     }, [options])
 
+    const saveResult = () => {
+        const decision = getValues()
+        // to remove empty option if any.
+        const filteredOptions = decision.options.filter(
+            (item: decisionOption) => {
+                if (item.name) {
+                    return item
+                }
+            }
+        )
+        // to remove empty criteria if any.
+        const filteredCriteria = decision.criteria.filter(
+            (item: decisionCriteria) => {
+                if (item.name) {
+                    return item
+                }
+            }
+        )
+        // Result object for firebase.
+        const result: FirebaseDecisionActivity = {
+            userId: user.uid ? user.uid : deviceIp,
+            question: decision.question,
+            context: decision.context,
+            criteria: filteredCriteria,
+            options: filteredOptions,
+            timestamp: serverTimestamp(),
+        }
+        // saving result to firebase.
+        saveDecision.mutate(result)
+    }
     const calcBestOption = () => {
         let currentBestScore = 0
         let currentBestOptions: string[] = []
