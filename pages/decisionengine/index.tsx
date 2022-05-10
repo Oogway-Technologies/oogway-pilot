@@ -1,29 +1,27 @@
-// import { useUser } from '@auth0/nextjs-auth0'
-import { NextApiRequest } from 'next'
+import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHandler'
-import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
-import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWrapper'
-import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
-import { CriteriaInfo } from '../components/Decision/Sidecards/CriteriaInfo'
-import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
-import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
-// import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
-import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
-import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
-import { OptionTab } from '../components/Decision/Tabs/OptionTab'
-import { RatingTab } from '../components/Decision/Tabs/RatingTab'
-import { ResultTab } from '../components/Decision/Tabs/ResultTab'
-import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppSelector } from '../hooks/useRedux'
-import { useCreateDecisionActivity } from '../queries/decisionActivity'
-import { bigContainer, decisionContainer } from '../styles/decision'
-import { decisionTitle } from '../utils/constants/global'
-import { FirebaseDecisionActivity } from '../utils/types/firebase'
-import { DecisionForm } from '../utils/types/global'
+import { DecisionBarHandler } from '../../components/Decision/layout/DecisionBarHandler'
+import { DecisionSideBar } from '../../components/Decision/layout/DecisionSideBar'
+import { DecisionTabWrapper } from '../../components/Decision/layout/DecisionTabWrapper'
+import OptionRatingTabWrapper from '../../components/Decision/layout/OptionRatingTabWrapper'
+import { CriteriaInfo } from '../../components/Decision/Sidecards/CriteriaInfo'
+import { CriteriaSuggestions } from '../../components/Decision/Sidecards/CriteriaSuggestions'
+import { OptionSuggestions } from '../../components/Decision/Sidecards/OptionSuggestions'
+import { CriteriaTab } from '../../components/Decision/Tabs/CriteriaTab'
+import { DecisionTab } from '../../components/Decision/Tabs/DecisionTab'
+import { OptionTab } from '../../components/Decision/Tabs/OptionTab'
+import { RatingTab } from '../../components/Decision/Tabs/RatingTab'
+import { ResultTab } from '../../components/Decision/Tabs/ResultTab'
+import useMediaQuery from '../../hooks/useMediaQuery'
+import { useAppSelector } from '../../hooks/useRedux'
+import { useCreateDecisionActivity } from '../../queries/decisionActivity'
+import { bigContainer, decisionContainer } from '../../styles/decision'
+import { decisionTitle } from '../../utils/constants/global'
+import { FirebaseDecisionActivity } from '../../utils/types/firebase'
+import { DecisionForm } from '../../utils/types/global'
 
 interface DecisionEngineProps {
     deviceIp: string
@@ -198,12 +196,12 @@ const DecisionEngine: FC<DecisionEngineProps> = ({
 
 export default DecisionEngine
 
-export async function getServerSideProps(req: NextApiRequest) {
-    const IP = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : ''
-
+export const getServerSideProps: GetServerSideProps = async ({
+    req: { cookies },
+}) => {
     return {
         props: {
-            deviceIp: IP,
+            deviceIp: cookies.user_ip,
         },
     }
 }
