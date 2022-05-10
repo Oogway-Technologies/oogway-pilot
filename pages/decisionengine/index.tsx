@@ -1,4 +1,4 @@
-import { GetServerSideProps } from 'next'
+import Cookies from 'js-cookie'
 import Head from 'next/head'
 import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -23,13 +23,7 @@ import { decisionTitle } from '../../utils/constants/global'
 import { FirebaseDecisionActivity } from '../../utils/types/firebase'
 import { DecisionForm } from '../../utils/types/global'
 
-interface DecisionEngineProps {
-    deviceIp: string
-}
-
-const DecisionEngine: FC<DecisionEngineProps> = ({
-    deviceIp,
-}: DecisionEngineProps) => {
+const DecisionEngine: FC = () => {
     const userProfile = useAppSelector(state => state.userSlice.user)
     const decisionCriteriaQueryKey = useAppSelector(
         state => state.decisionSlice.decisionCriteriaQueryKey
@@ -38,6 +32,8 @@ const DecisionEngine: FC<DecisionEngineProps> = ({
     const [currentTab, setCurrentTab] = useState(1)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const deviceIp = Cookies.get('userIp')
+
     // const { user, isLoading } = useUser()
     const methods = useForm<DecisionForm>({
         defaultValues: {
@@ -136,7 +132,7 @@ const DecisionEngine: FC<DecisionEngineProps> = ({
                                             {currentTab === 4 && <RatingTab />}
                                             {currentTab === 5 && (
                                                 <ResultTab
-                                                    deviceIp={deviceIp}
+                                                    deviceIp={deviceIp || ''}
                                                     setCurrentTab={
                                                         setCurrentTab
                                                     }
@@ -195,13 +191,3 @@ const DecisionEngine: FC<DecisionEngineProps> = ({
 }
 
 export default DecisionEngine
-
-export const getServerSideProps: GetServerSideProps = async ({
-    req: { cookies },
-}) => {
-    return {
-        props: {
-            deviceIp: cookies.userIp,
-        },
-    }
-}
