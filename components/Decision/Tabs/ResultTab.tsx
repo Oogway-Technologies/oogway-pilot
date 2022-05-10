@@ -38,7 +38,9 @@ export const ResultTab: FC<ResultTabProps> = ({
     // Edge case: ties not accounted for
     useEffect(() => {
         useAppDispatch(setDecisionEngineBestOption(calcBestOption()))
-        saveResult()
+        if (getValues('question')) {
+            saveResult()
+        }
         return () => {
             useAppDispatch(setPreviousIndex(5))
         }
