@@ -6,7 +6,7 @@ import getIP from '../../utils/helpers/getIP'
 export function middleware(req: NextRequest) {
     const response = NextResponse.next()
     // Set custom header
-    response.headers.set('userIp', getIP(req))
+    response.cookie('userIp', getIP(req))
     // Return response
     return response
 }

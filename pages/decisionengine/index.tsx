@@ -201,7 +201,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
     return {
         props: {
-            deviceIp: cookies.user_ip,
+            deviceIp: cookies.userIp,
         },
     }
 }
