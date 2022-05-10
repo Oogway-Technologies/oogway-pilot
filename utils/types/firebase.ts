@@ -104,12 +104,13 @@ export interface FirebaseFeed {
 
 export type decisionCriteria = {
     name: string
-    rating: number[]
     weight: number
+    isAI: boolean
 }
 
 export type decisionOption = {
     name: string
+    isAI: boolean
     score: number
 }
 
