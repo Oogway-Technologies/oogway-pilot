@@ -75,79 +75,36 @@ export const RatingTab: FC = () => {
                 })
             })
             const existingRating: Ratings[] = getValues('ratings')
-            console.log(existingRating, mapRatingObject)
-
             if (existingRating.length) {
                 mapRatingObject.forEach((item, indx) => {
                     const isFound = findInOption(existingRating, item.option)
                     if (isFound) {
-                        console.log('old---found ->', isFound)
-                        console.log('new---found ->', item.option)
+                        const newRating: Rating[] = []
                         item.rating.forEach((ctr, idx) => {
                             const isFoundCriteria = findInCriteria(
                                 existingRating[isFound.index].rating,
                                 ctr.criteria
                             )
                             if (isFoundCriteria) {
-                                console.log('old---', isFoundCriteria)
-                                console.log(
-                                    'new---',
-                                    mapRatingObject[indx].rating[idx]
+                                newRating.push(
+                                    deepCopy({
+                                        criteria:
+                                            mapRatingObject[indx].rating[idx]
+                                                .criteria,
+                                        value: isFoundCriteria.value,
+                                        weight: mapRatingObject[indx].rating[
+                                            idx
+                                        ].weight,
+                                    })
                                 )
-
-                                mapRatingObject[indx].rating[idx] = deepCopy({
-                                    criteria:
-                                        mapRatingObject[indx].rating[idx]
-                                            .criteria,
-                                    value: isFoundCriteria.value,
-                                    weight: mapRatingObject[indx].rating[idx]
-                                        .weight,
-                                })
-
-                                console.log(
-                                    'my new data== ',
-                                    mapRatingObject[indx].rating[idx]
-                                )
+                            } else {
+                                newRating.push(ctr)
                             }
                         })
+                        mapRatingObject[indx].rating = [...newRating]
                     }
                 })
-                console.log(existingRating, mapRatingObject)
-
-                // const outerIndex =
-                //     existingRating.length >= mapRatingObject.length
-                //         ? existingRating.length
-                //         : mapRatingObject.length
-                // const innerIndex =
-                //     existingRating[0].rating.length >=
-                //     mapRatingObject[0].rating.length
-                //         ? existingRating[0].rating.length
-                //         : mapRatingObject[0].rating.length
-
-                // console.log(outerIndex, innerIndex)
-
-                // for (let i = 0; i < outerIndex; i++) {
-                //     if (
-                //         existingRating[i] &&
-                //         mapRatingObject[i] &&
-                //         existingRating[i].option === mapRatingObject[i].option
-                //     ) {
-                //         for (let j = 0; j < innerIndex; j++) {
-                //             if (
-                //                 existingRating[i].rating[j] &&
-                //                 mapRatingObject[i].rating[j] &&
-                //                 existingRating[i].rating[j].criteria ===
-                //                     mapRatingObject[i].rating[j].criteria
-                //             ) {
-                //                 mapRatingObject[i].rating[j] = deepCopy(
-                //                     existingRating[i].rating[j]
-                //                 )
-                //             }
-                //         }
-                //     }
-                // }
             }
-
             setValue('ratings', mapRatingObject)
             useAppDispatch(setDecisionRatingUpdate(false))
         }
