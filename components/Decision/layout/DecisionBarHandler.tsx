@@ -6,10 +6,10 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import {
     populateSuggestions,
     resetSuggestions,
+    setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
     setIsSuggestionsEmpty,
     setLoadingAiSuggestions,
-    setRatingTabChecker,
     updateFormCopy,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -46,10 +46,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     const isSuggestionsEmpty = useAppSelector(
         state => state.decisionSlice.isSuggestionsEmpty
     )
-    const ratingTabChecker = useAppSelector(
-        state => state.decisionSlice.ratingTabChecker
+    const selectedOptionTab = useAppSelector(
+        state => state.decisionSlice.decisionEngineOptionTab
     )
-    const [showError, setShowError] = useState(false)
     const formCopy = useAppSelector(state => state.decisionSlice.formCopy)
     const watchDecision = useWatch({ name: 'question', control })
     const watchOption = useWatch({ name: 'options', control })
@@ -135,7 +134,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         return item
                     })
                 checkArray[0] = true
-                useAppDispatch(setRatingTabChecker(checkArray))
                 if (!decisionRatingUpdate) {
                     useAppDispatch(setDecisionRatingUpdate(true))
                 }
@@ -170,12 +168,17 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             }
         }
         if (tab === 4) {
-            const checker = ratingTabChecker.every(v => v === true)
-            if (!checker) {
-                setShowError(true)
-                setTimeout(() => {
-                    setShowError(false)
-                }, warningTime)
+            const optionFilter = getValues('options').filter(
+                (item: Options) => {
+                    if (item.name) {
+                        return item
+                    }
+                }
+            )
+            if (selectedOptionTab < optionFilter.length - 1) {
+                useAppDispatch(
+                    setDecisionEngineOptionTab(selectedOptionTab + 1)
+                )
                 return false
             }
         }
@@ -260,12 +263,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     pointerArray[selectedTab - 1] ? 'ml-3' : ''
                 }`}
             >
-                {showError && (
-                    <span className="absolute right-[3%] bottom-[100%] w-full text-center text-error">
-                        Please rate each option, check the tabs at the top for
-                        other options.
-                    </span>
-                )}
                 <ProgressBar
                     currentStep={selectedTab}
                     totalSteps={DecisionSideBarOptions.length}
@@ -274,13 +271,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             </div>
             <button
                 className={`${squareButton} ml-auto ${
-                    pointerArray[selectedTab - 1] &&
-                    selectedTab !== 5 &&
-                    selectedTab !== 4
-                        ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
-                        : pointerArray[selectedTab - 1] &&
-                          selectedTab === 4 &&
-                          ratingTabChecker.every(v => v === true)
+                    pointerArray[selectedTab - 1] && selectedTab !== 5
                         ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
                         : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
                 }`}
@@ -288,24 +279,12 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 disabled={selectedTab === 5}
                 onClick={handleForward}
             >
-                {pointerArray[selectedTab - 1] &&
-                selectedTab !== 5 &&
-                selectedTab !== 4 ? (
-                    <span className="text-sm md:text-base">Continue</span>
-                ) : pointerArray[selectedTab - 1] &&
-                  selectedTab === 4 &&
-                  ratingTabChecker.every(v => v === true) ? (
+                {pointerArray[selectedTab - 1] && selectedTab !== 5 ? (
                     <span className="text-sm md:text-base">Continue</span>
                 ) : null}
                 <UilArrowRight
                     className={`${
-                        pointerArray[selectedTab - 1] &&
-                        selectedTab !== 5 &&
-                        selectedTab !== 4
-                            ? 'fill-primary dark:fill-primaryDark'
-                            : pointerArray[selectedTab - 1] &&
-                              selectedTab === 4 &&
-                              ratingTabChecker.every(v => v === true)
+                        pointerArray[selectedTab - 1] && selectedTab !== 5
                             ? 'fill-primary dark:fill-primaryDark'
                             : 'fill-neutral-700 dark:fill-neutralDark-150'
                     }`}
