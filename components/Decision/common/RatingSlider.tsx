@@ -26,21 +26,24 @@ export const RatingSlider: FC<RatingSliderProps> = ({
     highlight = false,
 }: RatingSliderProps) => {
     const { register, getValues, setValue } = useFormContext()
-    const [left, setLeft] = useState(1)
+    const [left, setLeft] = useState('')
 
     useEffect(() => {
         setLeft(getValues(registerName))
     }, [registerName])
 
     const handleChange = (value: string) => {
-        if (Number(value) < 1) {
-            setLeft(Number(1))
-            setValue(registerName, 1)
-        } else if (Number(value) > 10) {
-            setLeft(Number(10))
-            setValue(registerName, 10)
+        if (value === '') {
+            setLeft('')
+            setValue(registerName, '')
+        } else if (Number(value) < min) {
+            setLeft(String(min))
+            setValue(registerName, min)
+        } else if (Number(value) > max) {
+            setLeft(String(max))
+            setValue(registerName, max)
         } else {
-            setLeft(Number(value))
+            setLeft(value)
             setValue(registerName, value)
         }
     }
@@ -77,9 +80,6 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                         Rating
                     </span>
                     <input
-                        min={1}
-                        max={10}
-                        type="number"
                         className={`${bodySmall} my-1.5 mx-2 w-4 outline-none appearance-none bg-transparent ${
                             highlight
                                 ? 'text-primary dark:text-primaryDark'
@@ -87,9 +87,9 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                         }`}
                         value={left}
                         {...register(registerName, {
-                            valueAsNumber: true,
                             min: min,
                             max: max,
+                            required: true,
                         })}
                         onChange={({ target: { value } }) =>
                             handleChange(value)
