@@ -24,7 +24,7 @@ export const SignInCard: FC<SignInCardProps> = ({
             }`}
         >
             <span
-                className={`${bodyHeavy} mb-1 mt-2 text-neutral-700 dark:text-neutralDark-150`}
+                className={`${bodyHeavy} mb-1 mt-2 text-neutral-700 dark:text-neutralDark-150 text-center`}
             >
                 Curious to see what the AI suggests based on your question?
             </span>
