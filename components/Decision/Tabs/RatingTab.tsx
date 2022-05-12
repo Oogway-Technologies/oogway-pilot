@@ -7,18 +7,8 @@ import {
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { deepCopy } from '../../../utils/helpers/common'
+import { Rating, Ratings } from '../../../utils/types/global'
 import { RatingSlider } from '../common/RatingSlider'
-
-export interface Rating {
-    criteria: string
-    value: number
-    weight: number
-}
-
-export interface Ratings {
-    option: string
-    rating: Rating[]
-}
 
 export const RatingTab: FC = () => {
     const optionIndex = useAppSelector(

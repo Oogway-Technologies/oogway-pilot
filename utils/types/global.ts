@@ -70,3 +70,14 @@ export interface Criteria {
     weight: number
     isAI: boolean
 }
+
+export interface Rating {
+    criteria: string
+    value: number
+    weight: number
+}
+
+export interface Ratings {
+    option: string
+    rating: Rating[]
+}
