@@ -19,7 +19,7 @@ export const RatingTab: FC = () => {
 
     useEffect(() => {
         if (decisionRatingUpdate) {
-            const optiosnList = getValues('options')
+            const optionsList = getValues('options')
             const criteriaList = getValues('criteria')
             const mapRatingObject: any[] = []
             const reShapeCriteriaList: any[] = []
@@ -31,7 +31,7 @@ export const RatingTab: FC = () => {
                     weight: item.weight,
                 })
             })
-            optiosnList.forEach((item: { name: string }) => {
+            optionsList.forEach((item: { name: string }) => {
                 mapRatingObject.push({
                     option: item.name,
                     rating: reShapeCriteriaList,

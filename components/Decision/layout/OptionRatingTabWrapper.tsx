@@ -9,6 +9,7 @@ import {
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { optionRatingTab } from '../../../styles/decision'
+import { bodyHeavy } from '../../../styles/typography'
 
 const OptionRatingTabWrapper: FC = () => {
     const selectedTab = useAppSelector(
@@ -35,25 +36,30 @@ const OptionRatingTabWrapper: FC = () => {
         useAppDispatch(setDecisionCriteriaQueryKey(undefined))
     }
     return (
-        <div className={optionRatingTab.container}>
-            {fields.map((item, index) => {
-                return watchOptions[index].name ? (
-                    <span
-                        key={item.id}
-                        onClick={() => handleClick(index)}
-                        className={`text-base md:text-lg not-italic font-bold tracking-normal ${
-                            optionRatingTab.itemContainer
-                        } ${
-                            selectedTab === index
-                                ? 'text-primary border-primary dark:text-primaryDark dark:border-primaryDark border-b-2'
-                                : 'font-normal text-neutral-700 dark:text-neutral-300 border-b-2 border-transparent'
-                        } ${isMobile ? ' py-1' : ' py-3'}`}
-                    >
-                        {watchOptions[index].name}
-                    </span>
-                ) : null
-            })}
-        </div>
+        <>
+            <span
+                className={`${bodyHeavy} text-neutral-800 dark:text-neutralDark-150`}
+            >
+                Options
+            </span>
+            <div className={optionRatingTab.container}>
+                {fields.map((item, index) => {
+                    return watchOptions[index].name ? (
+                        <span
+                            key={item.id}
+                            onClick={() => handleClick(index)}
+                            className={`${optionRatingTab.itemContainer} ${
+                                selectedTab === index
+                                    ? 'bg-primary dark:bg-primaryDark text-white rounded-lg'
+                                    : 'text-primary dark:text-primaryDark'
+                            } ${isMobile ? 'px-2 py-1' : 'px-3 py-2'}`}
+                        >
+                            {watchOptions[index].name}
+                        </span>
+                    ) : null
+                })}
+            </div>
+        </>
     )
 }
 
