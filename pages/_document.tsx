@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/next-script-for-ga */
 import Document, {
     DocumentContext,
     DocumentInitialProps,
@@ -6,8 +7,6 @@ import Document, {
     Main,
     NextScript,
 } from 'next/document'
-// eslint-disable-next-line @next/next/no-script-in-document
-import Script from 'next/script'
 
 class MyDocument extends Document {
     static async getInitialProps(
@@ -34,18 +33,18 @@ class MyDocument extends Document {
                             })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
                         }}
                     />
-                    <Script
+                    <script
+                        async
                         src="https://www.googletagmanager.com/gtag/js?id=G-NGML1G074L"
-                        strategy="beforeInteractive"
                     />
-                    <Script id="google-analytics" strategy="beforeInteractive">
+                    <script id="google-analytics">
                         {`
                             window.dataLayer = window.dataLayer || [];
                             function gtag(){window.dataLayer.push(arguments);}
                             gtag('js', new Date());
                             gtag('config', 'G-NGML1G074L');
                         `}
-                    </Script>
+                    </script>
                 </Head>
                 <body className="bg-neutral-25 dark:bg-neutralDark-600">
                     <Main />
