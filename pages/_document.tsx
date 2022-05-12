@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/next-script-for-ga */
 import Document, {
     DocumentContext,
     DocumentInitialProps,
@@ -23,19 +24,32 @@ class MyDocument extends Document {
                     <script
                         dangerouslySetInnerHTML={{
                             __html: `(function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:2959971,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
+                            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                            h._hjSettings={hjid:2959971,hjsv:6};
+                            a=o.getElementsByTagName('head')[0];
+                            r=o.createElement('script');r.async=1;
+                            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                            a.appendChild(r);
+                            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
                         }}
                     />
+                    <script
+                        async
+                        src="https://www.googletagmanager.com/gtag/js?id=G-NGML1G074L"
+                    />
+                    <script id="google-analytics">
+                        {`
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){window.dataLayer.push(arguments);}
+                            gtag('js', new Date());
+                            gtag('config', 'G-NGML1G074L');
+                        `}
+                    </script>
                 </Head>
                 <body className="bg-neutral-25 dark:bg-neutralDark-600">
                     <Main />
                     <NextScript />
+
                     <div id="modal" />
                 </body>
             </Html>
