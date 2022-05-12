@@ -45,7 +45,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                     <span className="text-neutral-700 dark:text-neutralDark-150">
                         How does{' '}
                         <span className="text-primary dark:text-primaryDark">
-                            {getValues('options')[optionIndex].name}
+                            {getValues('options')[optionIndex]?.name}
                         </span>{' '}
                         score on each criteria?
                     </span>

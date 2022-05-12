@@ -121,6 +121,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (!objectsEqual(formCopy.options, getValues('options'))) {
+                useAppDispatch(setDecisionEngineOptionTab(0))
                 const optionFilter = getValues('options').filter(
                     (item: Options) => {
                         if (item.name) {
@@ -154,6 +155,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (!objectsEqual(formCopy.criteria, getValues('criteria'))) {
+                useAppDispatch(setDecisionEngineOptionTab(0))
                 if (!decisionRatingUpdate) {
                     useAppDispatch(setDecisionRatingUpdate(true))
                 }
@@ -223,6 +225,14 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         return check
     }
 
+    const handleBackwards = () => {
+        if (selectedTab === 4 && selectedOptionTab !== 0) {
+            useAppDispatch(setDecisionEngineOptionTab(selectedOptionTab - 1))
+        } else if (selectedTab !== 1) {
+            setSelectedTab(selectedTab - 1)
+        }
+    }
+
     useEffect(() => {
         if (validateDecision() && validateOption() && validateCriteria()) {
             setPointerArray([true, true, true, true, true])
@@ -250,11 +260,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         : 'border-primary focus:border-primary active:border-primary'
                 }`}
                 type="button"
-                onClick={() => {
-                    if (selectedTab !== 1) {
-                        setSelectedTab(selectedTab - 1)
-                    }
-                }}
+                onClick={handleBackwards}
             >
                 <UilArrowLeft className="fill-neutral-700  dark:fill-neutralDark-150" />
             </button>
