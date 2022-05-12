@@ -1,4 +1,4 @@
-// import { useUser } from '@auth0/nextjs-auth0'
+import { useUser } from '@auth0/nextjs-auth0'
 import { UilArrowLeft, UilArrowRight } from '@iconscout/react-unicons'
 import { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
@@ -39,7 +39,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         control,
         resetField,
     } = useFormContext()
-    // const { user } = useUser()
+    const { user } = useUser()
     const decisionRatingUpdate = useAppSelector(
         state => state.decisionSlice.decisionRatingUpdate
     )
@@ -99,9 +99,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 resetField('options')
                 resetField('criteria')
                 useAppDispatch(resetSuggestions())
-                // if (user) {
-                //     loadSuggestions()
-                // }
+                if (user) {
+                    loadSuggestions()
+                }
                 loadSuggestions()
                 useAppDispatch(
                     updateFormCopy(

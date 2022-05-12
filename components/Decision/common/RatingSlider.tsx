@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import React, { FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
@@ -27,6 +28,7 @@ export const RatingSlider: FC<RatingSliderProps> = ({
 }: RatingSliderProps) => {
     const { register, getValues, setValue } = useFormContext()
     const [left, setLeft] = useState(1)
+    const { user } = useUser()
 
     useEffect(() => {
         setLeft(getValues(registerName))
@@ -60,11 +62,15 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                     } inline-flex items-center gap-x-md`}
                 >
                     {title}{' '}
-                    <AskAIButton
-                        onClick={() =>
-                            useAppDispatch(setDecisionCriteriaQueryKey(title))
-                        }
-                    />
+                    {user && (
+                        <AskAIButton
+                            onClick={() =>
+                                useAppDispatch(
+                                    setDecisionCriteriaQueryKey(title)
+                                )
+                            }
+                        />
+                    )}
                 </span>
                 <div
                     className={
