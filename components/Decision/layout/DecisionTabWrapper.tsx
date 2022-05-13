@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppSelector } from '../../../hooks/useRedux'
 
 interface DecisionTabWrapperProps {
