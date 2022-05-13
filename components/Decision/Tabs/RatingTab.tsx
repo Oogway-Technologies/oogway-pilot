@@ -60,7 +60,7 @@ export const RatingTab: FC = () => {
                             <React.Fragment
                                 key={item.id + index + item.criteria}
                             >
-                                <div className="flex flex-col pl-5 mt-8 w-full">
+                                <div className="flex flex-col mt-8 w-full">
                                     <RatingSlider
                                         id={item.id + index}
                                         registerName={

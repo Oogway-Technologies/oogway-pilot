@@ -1,6 +1,5 @@
 import { UilPlus, UilTrash } from '@iconscout/react-unicons'
 import React, { useEffect } from 'react'
-import { FC } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import {
@@ -8,13 +7,14 @@ import {
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch } from '../../../hooks/useRedux'
-import { bodyHeavy } from '../../../styles/typography'
+import { bodySmall } from '../../../styles/typography'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
+import { Criteria } from '../../../utils/types/global'
 import { ErrorWraperField } from '../../Utils/ErrorWraperField'
-import { OptionSlider } from '../common/OptionSlider'
+import { CriteriaSelectTabs } from '../common/CriteriaSelectTabs'
 
-export const CriteriaTab: FC = () => {
+export const CriteriaTab = () => {
     const {
         register,
         control,
@@ -25,10 +25,12 @@ export const CriteriaTab: FC = () => {
         control,
         name: 'criteria',
     })
+
     useWatch({
         control,
         name: 'criteria',
     })
+
     const checkFilledFields = () => {
         const criteriaArray = getValues(`criteria`)
         let check = false
@@ -39,16 +41,28 @@ export const CriteriaTab: FC = () => {
         })
         return check
     }
+
+    const handleDelete = (index: number, item: unknown) => {
+        remove(index)
+        if ((item as unknown as { isAI: boolean }).isAI) {
+            useAppDispatch(addSelectedCriteria(item as unknown as Criteria))
+        }
+    }
+
     useEffect(() => {
         return () => {
             useAppDispatch(setPreviousIndex(3))
         }
     }, [])
+
     return (
         <>
             {fields.map((item, index) => (
-                <React.Fragment key={item.id}>
-                    <div className={'flex items-start w-full'}>
+                <div
+                    className="flex flex-col py-7 px-6 space-y-4 w-full bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow"
+                    key={item.id}
+                >
+                    <div className={'flex items-start'}>
                         <ErrorWraperField
                             errorField={
                                 errors?.criteria &&
@@ -60,9 +74,16 @@ export const CriteriaTab: FC = () => {
                             <>
                                 <input
                                     key={item.id}
-                                    className={inputStyle}
+                                    className={`${inputStyle} ${
+                                        (item as unknown as Criteria).isAI
+                                            ? 'pr-28'
+                                            : ''
+                                    }`}
                                     type="text"
                                     placeholder={`Criterion ${index + 1}`}
+                                    disabled={
+                                        (item as unknown as Criteria).isAI
+                                    }
                                     {...register(
                                         `criteria.${index}.name` as const,
                                         {
@@ -108,23 +129,7 @@ export const CriteriaTab: FC = () => {
                             <button
                                 className="p-1 my-2 ml-3"
                                 type="button"
-                                onClick={() => {
-                                    remove(index)
-                                    if (
-                                        (item as unknown as { isAI: boolean })
-                                            .isAI
-                                    ) {
-                                        useAppDispatch(
-                                            addSelectedCriteria(
-                                                item as unknown as {
-                                                    name: string
-                                                    weight: number
-                                                    isAI: boolean
-                                                }
-                                            )
-                                        )
-                                    }
-                                }}
+                                onClick={() => handleDelete(index, item)}
                             >
                                 <UilTrash
                                     className={
@@ -136,20 +141,15 @@ export const CriteriaTab: FC = () => {
                     </div>
                     {index === 0 && (
                         <span
-                            className={`flex justify-start items-center mr-auto text-neutral-700 dark:text-neutralDark-150 pt-4 ${bodyHeavy}`}
+                            className={`flex justify-start items-center mr-auto text-neutral-700 dark:text-neutralDark-150 ${bodySmall}`}
                         >
                             And how important is this to you?
                         </span>
                     )}
-                    <OptionSlider
-                        id={item.id + index}
+                    <CriteriaSelectTabs
                         registerName={`criteria.${index}.weight` as const}
-                        min={1}
-                        max={4}
-                        step={1}
-                        showValues={true}
                     />
-                </React.Fragment>
+                </div>
             ))}
         </>
     )

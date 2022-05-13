@@ -10,6 +10,45 @@
     .scrollbar-rounded::-webkit-scrollbar-thumb {
         border-radius: 24px;
     }
+    .custom-box-shadow {
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.14);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar:vertical {
+        width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar:horizontal {
+        height: 52px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background-color: #e6e6e6;
+        margin: 4px 0;
+    }
+
+    .custom-scrollbar-dark::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+
+    .custom-scrollbar-dark::-webkit-scrollbar:vertical {
+        width: 8px;
+    }
+
+    .custom-scrollbar-dark::-webkit-scrollbar:horizontal {
+        height: 52px;
+    }
+
+    .custom-scrollbar-dark::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background-color: #3a3b3c;
+        margin: 4px 0;
+    }
 }
 
 @layer components {

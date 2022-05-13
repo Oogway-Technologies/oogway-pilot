@@ -58,7 +58,11 @@ export const OptionTab: FC = () => {
                         <>
                             <input
                                 key={item.id}
-                                className={inputStyle}
+                                className={`${inputStyle} ${
+                                    (item as unknown as Options).isAI
+                                        ? 'pr-28'
+                                        : ''
+                                }`}
                                 type="text"
                                 disabled={(item as unknown as Options).isAI}
                                 placeholder={`Enter your Option ${index + 1}`}

@@ -110,9 +110,11 @@ const DecisionEngine: FC = () => {
                                     : 'col-span-3 mr-5 pt-5 mb-6'
                             }`}
                         >
-                            <div className="flex flex-col justify-between items-center space-y-xl h-full">
+                            <div className="flex flex-col justify-between items-center space-y-lg h-full">
                                 <div
-                                    className={`overflow-auto relative py-2 w-full h-[60vh] scrollbar-hide`}
+                                    className={
+                                        'overflow-y-scroll relative w-full h-[55vh] custom-scrollbar dark:custom-scrollbar-dark'
+                                    }
                                 >
                                     {currentTab === 4 && (
                                         <OptionRatingTabWrapper />
@@ -156,7 +158,7 @@ const DecisionEngine: FC = () => {
                                     </div>
                                 )}
                                 <DecisionBarHandler
-                                    className="justify-self-end mt-auto w-full"
+                                    className="justify-self-end w-full"
                                     selectedTab={currentTab}
                                     setSelectedTab={setCurrentTab}
                                 />

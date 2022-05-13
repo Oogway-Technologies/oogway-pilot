@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppSelector } from '../../../hooks/useRedux'
 
 interface DecisionTabWrapperProps {
@@ -25,15 +24,14 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     const optionIndex = useAppSelector(
         state => state.decisionSlice.decisionEngineOptionTab
     )
-    const isMobile = useMediaQuery('(max-width: 965px)')
 
     return (
         <div
-            className={`flex flex-col ${
-                isMobile ? 'pt-3 space-y-lg' : 'pt-5 space-y-xl'
-            } items-center w-full  ${className ? className : ''}`}
+            className={`flex flex-col space-y-lg py-2 items-center w-full px-1  ${
+                className ? className : ''
+            }`}
         >
-            <h3 className="text-2xl font-bold text-neutral-700 dark:text-neutralDark-150">
+            <h3 className="text-lg font-bold text-neutral-700 dark:text-neutralDark-150 md:text-2xl">
                 {title}
                 {currentTab === 5 && bestOption && (
                     <span className="text-primary dark:text-primaryDark">
