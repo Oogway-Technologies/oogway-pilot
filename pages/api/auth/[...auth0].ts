@@ -80,12 +80,14 @@ export default handleAuth({
             })
         } catch (err) {
             res.redirect(
-                `${process.env.AUTH0_ISSUER_BASE_URL}/v2/logout?${new URLSearchParams({
-                  client_id:process.env.AUTH0_CLIENT_ID  as string,
+                `${
+                    process.env.AUTH0_ISSUER_BASE_URL
+                }/v2/logout?${new URLSearchParams({
+                    client_id: process.env.AUTH0_CLIENT_ID as string,
                 })}`
-              )
-            .status(302)
-            .end();
+            )
+                .status(302)
+                .end()
         }
     },
 })

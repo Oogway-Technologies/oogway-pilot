@@ -31,7 +31,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                 className ? className : ''
             }`}
         >
-            <h3 className="text-2xl font-bold text-neutral-700 dark:text-neutralDark-150">
+            <h3 className="text-lg font-bold text-neutral-700 dark:text-neutralDark-150 md:text-2xl">
                 {title}
                 {currentTab === 5 && bestOption && (
                     <span className="text-primary dark:text-primaryDark">

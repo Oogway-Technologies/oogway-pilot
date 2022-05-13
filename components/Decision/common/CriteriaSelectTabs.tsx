@@ -49,10 +49,10 @@ export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
                     key={`criteria-select-tabs-${item.name}`}
                     className={`${bodyHeavy} ${
                         isMobile ? 'w-full' : ''
-                    } flex items-center justify-center py-2 px-8 text-center cursor-pointer bg-white dark:bg-neutralDark-300 rounded-lg  ${
+                    } flex items-center justify-center py-2 px-8 text-center cursor-pointer  rounded-lg  ${
                         selected?.name === item.name
                             ? 'text-white bg-primary dark:bg-primaryDark'
-                            : 'text-neutral-700 dark:text-neutral-300 '
+                            : 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutralDark-300'
                     }`}
                     onClick={() => handleClick(item)}
                 >

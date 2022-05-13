@@ -74,9 +74,16 @@ export const CriteriaTab = () => {
                             <>
                                 <input
                                     key={item.id}
-                                    className={inputStyle}
+                                    className={`${inputStyle} ${
+                                        (item as unknown as Criteria).isAI
+                                            ? 'pr-28'
+                                            : ''
+                                    }`}
                                     type="text"
                                     placeholder={`Criterion ${index + 1}`}
+                                    disabled={
+                                        (item as unknown as Criteria).isAI
+                                    }
                                     {...register(
                                         `criteria.${index}.name` as const,
                                         {
