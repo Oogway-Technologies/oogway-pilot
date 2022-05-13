@@ -48,7 +48,7 @@ export const RatingSlider: FC<RatingSliderProps> = ({
     return (
         <div
             className={
-                'flex relative flex-col p-5 space-y-2 w-full bg-white dark:bg-neutralDark-300 rounded-2xl shadow-inner drop-shadow-md'
+                'flex relative flex-col p-5 space-y-2 w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow'
             }
         >
             <div className="flex items-center">

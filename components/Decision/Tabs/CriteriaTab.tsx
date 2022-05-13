@@ -59,7 +59,7 @@ export const CriteriaTab = () => {
         <>
             {fields.map((item, index) => (
                 <div
-                    className="flex flex-col py-7 px-6 space-y-4 w-full bg-white dark:bg-neutralDark-300 rounded-2xl drop-shadow-md"
+                    className="flex flex-col py-7 px-6 space-y-4 w-full bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow"
                     key={item.id}
                 >
                     <div className={'flex items-start'}>
