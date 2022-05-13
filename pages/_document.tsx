@@ -33,18 +33,6 @@ class MyDocument extends Document {
                             })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
                         }}
                     />
-                    <script
-                        async
-                        src="https://www.googletagmanager.com/gtag/js?id=G-NGML1G074L"
-                    />
-                    <script id="google-analytics">
-                        {`
-                            window.dataLayer = window.dataLayer || [];
-                            function gtag(){window.dataLayer.push(arguments);}
-                            gtag('js', new Date());
-                            gtag('config', 'G-NGML1G074L');
-                        `}
-                    </script>
                 </Head>
                 <body className="bg-neutral-25 dark:bg-neutralDark-600">
                     <Main />
