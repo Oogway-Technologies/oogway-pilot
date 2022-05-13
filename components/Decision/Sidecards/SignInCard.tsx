@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 
-import { loginButtons } from '../../../styles/login'
-import { bodyHeavy, bodySmall } from '../../../styles/typography'
+import { bodyHeavy } from '../../../styles/typography'
 import Button from '../../Utils/Button'
 
 interface SignInCardProps {
@@ -19,23 +18,27 @@ export const SignInCard: FC<SignInCardProps> = ({
     }
     return (
         <div
-            className={`flex flex-col bg-white rounded-2xl shadow-md p-3 dark:bg-neutralDark-500 dark:shadow-black/60 items-center  ${
+            className={`flex flex-col bg-white rounded-2xl p-3 dark:bg-neutralDark-500 mt-2 custom-box-shadow dark:custom-box-shadow-dark  ${
                 className ? className : ''
             }`}
         >
             <span
-                className={`${bodyHeavy} mb-1 mt-2 text-neutral-700 dark:text-neutralDark-150 text-center`}
+                className={
+                    'text-base font-bold leading-6 text-primary dark:text-primaryDark md:text-2xl'
+                }
             >
-                Curious to see what the AI suggests based on your question?
+                AI suggestions
             </span>
+
             <span
-                className={`${bodySmall} mb-4 text-neutral-700 dark:text-neutralDark-150`}
+                className={`${bodyHeavy} my-2 text-neutral-700 dark:text-neutralDark-150 font-normal`}
             >
-                Sign in to find out
+                <b>Curious?</b> Sign in to find out.
             </span>
+
             <Button
                 onClick={signIn}
-                addStyle={`${loginButtons.loginButtonWFullStyle} w-40`}
+                addStyle={`rounded-full justify-center py-2 md:py-3 text-white bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive dark:active:bg-primaryActive font-bold w-64 mx-auto`}
                 text="Sign In"
                 keepText={true}
                 icon={null}

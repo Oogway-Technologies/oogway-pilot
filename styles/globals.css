@@ -7,11 +7,17 @@
         width: 4px;
         border-radius: 24px;
     }
+
     .scrollbar-rounded::-webkit-scrollbar-thumb {
         border-radius: 24px;
     }
+
     .custom-box-shadow {
         box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.14);
+    }
+
+    .custom-box-shadow-dark {
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.6);
     }
 
     .custom-scrollbar::-webkit-scrollbar {

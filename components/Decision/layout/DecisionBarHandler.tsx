@@ -102,7 +102,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 if (user) {
                     loadSuggestions()
                 }
-                loadSuggestions()
                 useAppDispatch(
                     updateFormCopy(
                         deepCopy({

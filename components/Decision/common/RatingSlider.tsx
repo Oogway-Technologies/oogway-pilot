@@ -50,7 +50,7 @@ export const RatingSlider: FC<RatingSliderProps> = ({
     return (
         <div
             className={
-                'flex relative flex-col p-5 space-y-2 w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow'
+                'flex relative flex-col p-5 space-y-2 w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark'
             }
         >
             <div className="flex items-center">

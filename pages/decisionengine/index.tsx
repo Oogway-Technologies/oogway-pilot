@@ -141,16 +141,26 @@ const DecisionEngine: FC = () => {
                                 </div>
                                 {isMobile && (
                                     <div className={'w-full'}>
-                                        {currentTab === 2 && (
-                                            <OptionSuggestions />
+                                        {!isLoading &&
+                                        !user &&
+                                        (currentTab === 2 ||
+                                            currentTab === 3 ||
+                                            currentTab === 4) ? (
+                                            <SignInCard />
+                                        ) : (
+                                            <>
+                                                {currentTab === 2 && (
+                                                    <OptionSuggestions />
+                                                )}
+                                                {currentTab === 3 && (
+                                                    <CriteriaSuggestions />
+                                                )}
+                                                {currentTab === 4 &&
+                                                    decisionCriteriaQueryKey && (
+                                                        <CriteriaInfo />
+                                                    )}
+                                            </>
                                         )}
-                                        {currentTab === 3 && (
-                                            <CriteriaSuggestions />
-                                        )}
-                                        {currentTab === 4 &&
-                                            decisionCriteriaQueryKey && (
-                                                <CriteriaInfo />
-                                            )}
                                     </div>
                                 )}
                                 <DecisionBarHandler

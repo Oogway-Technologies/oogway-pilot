@@ -5,7 +5,7 @@ export const loginButtons = {
         'bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive ' +
         'dark:hover:bg-primaryActive dark:active:bg-primaryActive font-bold',
     loginButtonWFullStyle:
-        'rounded-full p-sm mx-2 justify-center px-1.5 py-3 md:px-md ' +
+        'rounded-full mx-2 justify-center px-1.5 py-3 md:px-md ' +
         'md:space-x-2 border-solid border-transparent text-white dark:text-white ' +
         'bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive ' +
         'dark:hover:bg-primaryActive dark:active:bg-primaryActive font-bold',

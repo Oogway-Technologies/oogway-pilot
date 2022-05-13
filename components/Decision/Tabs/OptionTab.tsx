@@ -6,6 +6,7 @@ import {
     addSelectedOption,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
@@ -20,6 +21,7 @@ export const OptionTab: FC = () => {
         setValue,
         formState: { errors },
     } = useFormContext()
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -83,7 +85,9 @@ export const OptionTab: FC = () => {
                                 })}
                             />
                             {(item as unknown as Options).isAI && (
-                                <div className={AiBox}>AI Suggestion</div>
+                                <div className={AiBox}>
+                                    AI{!isMobile ? ' Suggestion' : ''}
+                                </div>
                             )}
                         </>
                     </ErrorWraperField>
