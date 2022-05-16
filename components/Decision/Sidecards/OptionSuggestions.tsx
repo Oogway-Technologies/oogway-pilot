@@ -53,7 +53,7 @@ export const OptionSuggestions = () => {
     }
 
     return (
-        <AISidebar title={'AI Suggestions'}>
+        <AISidebar title={'AI Suggestions'} infoCircle>
             <>
                 {optionsList.length && !loadingAiSuggestions
                     ? !isMobile && (

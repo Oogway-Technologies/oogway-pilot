@@ -33,7 +33,7 @@ export const CriteriaSuggestions = () => {
     }
 
     return (
-        <AISidebar title={'AI Suggestions'}>
+        <AISidebar title={'AI Suggestions'} infoCircle>
             <>
                 {criteriaList.length
                     ? !isMobile && (

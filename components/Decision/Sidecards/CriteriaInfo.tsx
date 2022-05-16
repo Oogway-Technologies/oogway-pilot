@@ -121,7 +121,7 @@ export const CriteriaInfo: FC = () => {
                             ${option} and ${criterion}.`
 
     return (
-        <AISidebar subtitle={'AI Answer Card'}>
+        <AISidebar subtitle={'AI Answer Card'} infoCircle>
             <div
                 className={`flex w-full p-2 max-h-[320px] overflow-auto ${
                     isMobile ? 'items-center space-x-2' : 'flex-col space-y-2'

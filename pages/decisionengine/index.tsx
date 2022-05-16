@@ -3,6 +3,7 @@ import Head from 'next/head'
 import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
+import GenericSidebar from '../../components/Decision/common/GenericSidebar'
 import { DecisionBarHandler } from '../../components/Decision/layout/DecisionBarHandler'
 import { DecisionSideBar } from '../../components/Decision/layout/DecisionSideBar'
 import { DecisionTabWrapper } from '../../components/Decision/layout/DecisionTabWrapper'
@@ -15,6 +16,7 @@ import { DecisionTab } from '../../components/Decision/Tabs/DecisionTab'
 import { OptionTab } from '../../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../../components/Decision/Tabs/ResultTab'
+import FeedDisclaimer from '../../components/Feed/Sidebar/FeedDisclaimer'
 import useMediaQuery from '../../hooks/useMediaQuery'
 import { useAppSelector } from '../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../queries/decisionActivity'
@@ -166,7 +168,7 @@ const DecisionEngine: FC = () => {
                         </div>
                     </div>
                     {!isMobile && (
-                        <div className={'col-span-1'}>
+                        <div className={'flex flex-col col-span-1'}>
                             {/* {!isLoading &&
                             !user &&
                             (currentTab === 2 || currentTab === 3) ? (
@@ -184,6 +186,13 @@ const DecisionEngine: FC = () => {
                             {currentTab === 4 && decisionCriteriaQueryKey && (
                                 <CriteriaInfo />
                             )}
+                            <GenericSidebar
+                                title="Disclaimer"
+                                titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
+                                extraClass="mt-auto"
+                            >
+                                <FeedDisclaimer />
+                            </GenericSidebar>
                         </div>
                     )}
                 </form>
