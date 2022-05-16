@@ -6,10 +6,16 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 interface AISidebarProps {
     title?: string
     subtitle?: string
+    infoCircle?: boolean
     children: JSX.Element
 }
 
-const AISidebar: FC<AISidebarProps> = ({ title, subtitle, children }) => {
+const AISidebar: FC<AISidebarProps> = ({
+    title,
+    subtitle,
+    infoCircle,
+    children,
+}) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
     return (
         <div
@@ -36,7 +42,7 @@ const AISidebar: FC<AISidebarProps> = ({ title, subtitle, children }) => {
                         {subtitle}
                     </span>
                 )}
-                {!isMobile && (
+                {!isMobile && infoCircle && (
                     <UilInfoCircle
                         className={
                             'justify-self-end ml-auto fill-neutral-700 dark:fill-neutralDark-150'
