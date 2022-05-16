@@ -25,27 +25,28 @@ export const getOrCreateUserFromFirebase = async (
         const checkIfUserExists = await getDocs(
             query(collection(db, 'users'), where('auth0', '==', user.sub))
         )
-
         // Create user if it doesn't already exist
         if (!checkIfUserExists.docs.length) {
             // The mapping is not present:
             // This is the first time ever the user logs into the app.
             // Create a new user
-
             const userAuth: { email: string } = await fetcher(
                 `/api/registerEmail?userId=${user.sub}`
             )
-            console.log(userAuth.email)
 
             const newUser: FirebaseUser = {
                 email: userAuth.email || '',
                 lastSeen: serverTimestamp(),
-                name: user?.name || '',
+                name: user?.name?.includes('@')
+                    ? user?.name?.split('@')[0]
+                    : user?.name || '',
                 provider: 'Auth0',
                 auth0: user?.sub || '',
                 blockedUsers: {}, // List of people blocked by the user
                 posts: {}, // List of posts the user has made,
+                timestamp: serverTimestamp(),
             }
+
             const newlyAddedUserRef = await addDoc(
                 collection(db, 'users'),
                 newUser
@@ -59,7 +60,9 @@ export const getOrCreateUserFromFirebase = async (
                 lastName: '',
                 location: '',
                 resetProfile: true, // true since this is the default profile
-                name: '',
+                name: user?.name?.includes('@')
+                    ? user?.name?.split('@')[0]
+                    : user?.name || '',
                 profilePic: user.picture || '',
                 username: user.nickname || '',
                 uid: newlyAddedUserRef.id, // store the user's id in profile so accessible in global state

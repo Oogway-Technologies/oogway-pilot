@@ -81,6 +81,7 @@ export interface FirebaseUser {
     blockedUsers: blockedUsersMap
     posts: postsMap
     auth0: string
+    timestamp: FieldValue
 }
 
 export interface FirebaseProfile {
