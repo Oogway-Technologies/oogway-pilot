@@ -65,7 +65,7 @@ const DecisionEngine: FC = () => {
     return (
         <div>
             <Head>
-                <title>Oogway | Social - Wisdom of the crowd</title>
+                <title>Oogway | Decision Engine</title>
             </Head>
             <FormProvider {...methods}>
                 <form
