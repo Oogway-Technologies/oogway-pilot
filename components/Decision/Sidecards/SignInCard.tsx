@@ -31,9 +31,9 @@ export const SignInCard: FC<SignInCardProps> = ({
             </span>
 
             <span
-                className={`${bodyHeavy} my-2 text-neutral-700 dark:text-neutralDark-150 font-normal`}
+                className={`${bodyHeavy} my-3 text-neutral-700 dark:text-neutralDark-150 font-normal text-center`}
             >
-                <b>Curious?</b> Sign in to find out.
+                Sign in to see AI and latest features.
             </span>
 
             <Button
