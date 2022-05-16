@@ -22,6 +22,8 @@ const initialState: DecisionSliceStates = {
         criteria: [],
     },
     decisionCriteriaQueryKey: undefined,
+    decisionActivityId: undefined,
+    decisionQuestion: undefined,
 }
 
 export const decisionSlice = createSlice({
@@ -138,6 +140,18 @@ export const decisionSlice = createSlice({
         ) => {
             state.decisionCriteriaQueryKey = payload
         },
+        setDecisionActivityId: (
+            state,
+            { payload }: PayloadAction<string | undefined>
+        ) => {
+            state.decisionActivityId = payload
+        },
+        setDecisionQuestion: (
+            state,
+            { payload }: PayloadAction<string | undefined>
+        ) => {
+            state.decisionQuestion = payload
+        },
     },
 })
 
@@ -157,6 +171,8 @@ export const {
     setPreviousIndex,
     setRatingTabChecker,
     setDecisionCriteriaQueryKey,
+    setDecisionActivityId,
+    setDecisionQuestion,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

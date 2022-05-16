@@ -1,4 +1,10 @@
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import {
+    addDoc,
+    collection,
+    doc,
+    serverTimestamp,
+    setDoc,
+} from 'firebase/firestore'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { db } from '../../firebase'
@@ -13,6 +19,16 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
             ...body,
             timestamp: serverTimestamp(),
         }
+
+        // Check if decision activity already exists
+        // If so, update
+        if (decision.id) {
+            const updateDocRef = doc(db, 'decision-activity', decision.id)
+            await setDoc(updateDocRef, decision, { merge: true })
+            return res.status(200).json({ ...decision })
+        }
+
+        // otherwise create a new one.
         const docRef = await addDoc(
             collection(db, 'decision-activity'),
             decision
@@ -24,7 +40,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
                 .status(403)
                 .json({ err: `Failed to log decision: ${decision}` })
         }
-        return res.status(201).json(decision)
+        return res.status(201).json({ id: docRef.id, ...decision })
     } catch (err) {
         return res.status(403).json({ err: 'Error!' })
     }
