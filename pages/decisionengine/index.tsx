@@ -19,24 +19,19 @@ import { ResultTab } from '../../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../../components/Feed/Sidebar/FeedDisclaimer'
 import useMediaQuery from '../../hooks/useMediaQuery'
 import { useAppSelector } from '../../hooks/useRedux'
-import { useCreateDecisionActivity } from '../../queries/decisionActivity'
 import { bigContainer, decisionContainer } from '../../styles/decision'
 import { decisionTitle } from '../../utils/constants/global'
-import { FirebaseDecisionActivity } from '../../utils/types/firebase'
 import { DecisionForm } from '../../utils/types/global'
 
 const DecisionEngine: FC = () => {
-    const userProfile = useAppSelector(state => state.userSlice.user)
     const decisionCriteriaQueryKey = useAppSelector(
         state => state.decisionSlice.decisionCriteriaQueryKey
     )
-    const decisionMutation = useCreateDecisionActivity()
     const [currentTab, setCurrentTab] = useState(1)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
     const deviceIp = Cookies.get('userIp')
 
-    // const { user, isLoading } = useUser()
     const methods = useForm<DecisionForm>({
         defaultValues: {
             question: '',
@@ -55,14 +50,6 @@ const DecisionEngine: FC = () => {
             ],
         },
     })
-    // handler functions
-    const onSubmit = (data: any) => {
-        const decisionActivity: FirebaseDecisionActivity = {
-            userId: userProfile.uid,
-            ...data,
-        }
-        decisionMutation.mutate(decisionActivity)
-    }
 
     return (
         <div>
@@ -71,7 +58,7 @@ const DecisionEngine: FC = () => {
             </Head>
             <FormProvider {...methods}>
                 <form
-                    onSubmit={methods.handleSubmit(onSubmit)}
+                    // onSubmit={methods.handleSubmit(onSubmit)}
                     className={`${decisionContainer} ${
                         isMobile
                             ? 'my-2 mx-4 h-[82vh]'
@@ -133,7 +120,11 @@ const DecisionEngine: FC = () => {
                                             {currentTab === 3 && (
                                                 <CriteriaTab />
                                             )}
-                                            {currentTab === 4 && <RatingTab />}
+                                            {currentTab === 4 && (
+                                                <RatingTab
+                                                    deviceIp={deviceIp || ''}
+                                                />
+                                            )}
                                             {currentTab === 5 && (
                                                 <ResultTab
                                                     deviceIp={deviceIp || ''}

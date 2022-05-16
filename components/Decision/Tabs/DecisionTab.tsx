@@ -13,7 +13,9 @@ export const DecisionTab: FC = () => {
 
     useEffect(() => {
         // to fix error not working on first step.
-        trigger('question').then(() => clearErrors('question'))
+        trigger('question').then(() => {
+            clearErrors('question')
+        })
         return () => {
             useAppDispatch(setPreviousIndex(1))
         }

@@ -1,9 +1,10 @@
-import { serverTimestamp } from 'firebase/firestore'
 import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
+    setDecisionActivityId,
     setDecisionEngineBestOption,
+    setDecisionQuestion,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -13,6 +14,7 @@ import { bodyHeavy } from '../../../styles/typography'
 import {
     decisionCriteria,
     decisionOption,
+    decisionRating,
     FirebaseDecisionActivity,
 } from '../../../utils/types/firebase'
 import { ResultCard } from '../common/ResultCard'
@@ -28,6 +30,13 @@ export const ResultTab: FC<ResultTabProps> = ({
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
     const user = useAppSelector(state => state.userSlice.user)
+    const decisionActivityId = useAppSelector(
+        state => state.decisionSlice.decisionActivityId
+    )
+    const aiSuggestions = useAppSelector(
+        state => state.decisionSlice.suggestions
+    )
+    const ratings: Array<decisionRating> = getValues('ratings')
     const options: Array<decisionOption> = useWatch({
         control,
         name: 'options',
@@ -35,7 +44,6 @@ export const ResultTab: FC<ResultTabProps> = ({
     const saveDecision = useCreateDecisionActivity()
 
     // Determine best option from scores on mount.
-    // Edge case: ties not accounted for
     useEffect(() => {
         useAppDispatch(setDecisionEngineBestOption(calcBestOption()))
         if (getValues('question')) {
@@ -64,14 +72,34 @@ export const ResultTab: FC<ResultTabProps> = ({
                 }
             }
         )
+
+        // to remove empties
+        let filteredRatings = ratings.filter((item: decisionRating) => {
+            if (item.option) {
+                return item
+            }
+        })
+        filteredRatings = filteredRatings.map(option => {
+            const filteredRating = option.rating.filter(item => {
+                if (item.criteria) return item
+            })
+            option.rating = filteredRating
+            return option
+        })
+
         // Result object for firebase.
         const result: FirebaseDecisionActivity = {
-            userId: user.uid ? user.uid : deviceIp,
+            id: decisionActivityId,
+            userId: user.uid,
+            ipAddress: deviceIp,
             question: decision.question,
             context: decision.context,
             criteria: filteredCriteria,
             options: filteredOptions,
-            timestamp: serverTimestamp(),
+            suggestedOptions: aiSuggestions.optionsList,
+            suggestedCriteria: aiSuggestions.criteriaList,
+            ratings: filteredRatings,
+            isComplete: true,
         }
         // saving result to firebase.
         saveDecision.mutate(result)
@@ -117,6 +145,9 @@ export const ResultTab: FC<ResultTabProps> = ({
         reset()
         // Return to first tab
         setCurrentTab(1)
+        // Wipe previous decision question and id
+        useAppDispatch(setDecisionQuestion(undefined))
+        useAppDispatch(setDecisionActivityId(undefined))
     }
 
     return (
