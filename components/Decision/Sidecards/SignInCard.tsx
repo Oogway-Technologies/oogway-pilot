@@ -18,7 +18,7 @@ export const SignInCard: FC<SignInCardProps> = ({
     }
     return (
         <div
-            className={`flex flex-col bg-white rounded-2xl p-3 dark:bg-neutralDark-500 mt-2 custom-box-shadow dark:custom-box-shadow-dark  ${
+            className={`flex flex-col bg-white rounded-2xl p-3 dark:bg-neutralDark-500 mb-4 custom-box-shadow dark:custom-box-shadow-dark  ${
                 className ? className : ''
             }`}
         >
