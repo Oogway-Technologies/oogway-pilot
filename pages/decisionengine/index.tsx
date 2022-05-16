@@ -67,7 +67,7 @@ const DecisionEngine: FC = () => {
 
         return () => {
             window.removeEventListener('orientationchange', () => {
-                console.log('removed')
+                console.log('removed listener')
             })
         }
     }, [])
@@ -82,11 +82,7 @@ const DecisionEngine: FC = () => {
                     // onSubmit={methods.handleSubmit(onSubmit)}
                     className={`${decisionContainer} ${
                         isMobile
-                            ? `mx-4 h-[82vh]  ${
-                                  !isPortrait
-                                      ? 'overflow-y-scroll my-4'
-                                      : 'my-2'
-                              }`
+                            ? `mx-4 h-[82vh]`
                             : 'my-xl mx-xxl gap-4 h-[78vh]'
                     }`}
                     autoComplete="off"
@@ -116,11 +112,17 @@ const DecisionEngine: FC = () => {
                         <div
                             className={`flex flex-col ${
                                 isMobile
-                                    ? 'col-span-4 mx-3 mb-4'
+                                    ? `col-span-4 mx-3 mb-4 ${
+                                          isPortrait ? 'mb-8 pb-8' : ''
+                                      }`
                                     : 'col-span-3 mr-5 pt-5 mb-6'
                             }`}
                         >
-                            <div className="flex flex-col justify-between items-center space-y-lg h-full">
+                            <div
+                                className={
+                                    'flex flex-col justify-between items-center space-y-lg h-full'
+                                }
+                            >
                                 <div
                                     className={
                                         'overflow-y-scroll relative w-full h-[55vh] custom-scrollbar dark:custom-scrollbar-dark'
