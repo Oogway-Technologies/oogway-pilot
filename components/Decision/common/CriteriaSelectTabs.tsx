@@ -42,7 +42,7 @@ export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
                 isMobile
                     ? 'flex-col items-center p-3 space-y-4'
                     : 'items-center p-4 space-x-4'
-            } w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow`}
+            } overflow-scroll w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
         >
             {criteriaTabs.map(item => (
                 <div

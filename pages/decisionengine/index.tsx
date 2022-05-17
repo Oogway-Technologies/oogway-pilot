@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import React, { FC, useEffect, useState } from 'react'
@@ -11,6 +12,7 @@ import OptionRatingTabWrapper from '../../components/Decision/layout/OptionRatin
 import { CriteriaInfo } from '../../components/Decision/Sidecards/CriteriaInfo'
 import { CriteriaSuggestions } from '../../components/Decision/Sidecards/CriteriaSuggestions'
 import { OptionSuggestions } from '../../components/Decision/Sidecards/OptionSuggestions'
+import { SignInCard } from '../../components/Decision/Sidecards/SignInCard'
 import { CriteriaTab } from '../../components/Decision/Tabs/CriteriaTab'
 import { DecisionTab } from '../../components/Decision/Tabs/DecisionTab'
 import { OptionTab } from '../../components/Decision/Tabs/OptionTab'
@@ -33,6 +35,7 @@ const DecisionEngine: FC = () => {
     const deviceIp = Cookies.get('userIp')
     const [isPortrait, setIsPortrait] = useState(true)
 
+    const { user, isLoading } = useUser()
     const methods = useForm<DecisionForm>({
         defaultValues: {
             question: '',
@@ -161,16 +164,26 @@ const DecisionEngine: FC = () => {
                                 </div>
                                 {isMobile && (
                                     <div className={'w-full'}>
-                                        {currentTab === 2 && (
-                                            <OptionSuggestions />
+                                        {!isLoading &&
+                                        !user &&
+                                        (currentTab === 2 ||
+                                            currentTab === 3 ||
+                                            currentTab === 4) ? (
+                                            <SignInCard />
+                                        ) : (
+                                            <>
+                                                {currentTab === 2 && (
+                                                    <OptionSuggestions />
+                                                )}
+                                                {currentTab === 3 && (
+                                                    <CriteriaSuggestions />
+                                                )}
+                                                {currentTab === 4 &&
+                                                    decisionCriteriaQueryKey && (
+                                                        <CriteriaInfo />
+                                                    )}
+                                            </>
                                         )}
-                                        {currentTab === 3 && (
-                                            <CriteriaSuggestions />
-                                        )}
-                                        {currentTab === 4 &&
-                                            decisionCriteriaQueryKey && (
-                                                <CriteriaInfo />
-                                            )}
                                     </div>
                                 )}
                                 <DecisionBarHandler
@@ -182,10 +195,12 @@ const DecisionEngine: FC = () => {
                         </div>
                     </div>
                     {!isMobile && (
-                        <div className={'flex flex-col col-span-1'}>
-                            {/* {!isLoading &&
+                        <div className={'col-span-1'}>
+                            {!isLoading &&
                             !user &&
-                            (currentTab === 2 || currentTab === 3) ? (
+                            (currentTab === 2 ||
+                                currentTab === 3 ||
+                                currentTab === 4) ? (
                                 <SignInCard />
                             ) : (
                                 <>
@@ -193,12 +208,11 @@ const DecisionEngine: FC = () => {
                                     {currentTab === 3 && (
                                         <CriteriaSuggestions />
                                     )}
+                                    {currentTab === 4 &&
+                                        decisionCriteriaQueryKey && (
+                                            <CriteriaInfo />
+                                        )}
                                 </>
-                            )} */}
-                            {currentTab === 2 && <OptionSuggestions />}
-                            {currentTab === 3 && <CriteriaSuggestions />}
-                            {currentTab === 4 && decisionCriteriaQueryKey && (
-                                <CriteriaInfo />
                             )}
                             <GenericSidebar
                                 title="Disclaimer"

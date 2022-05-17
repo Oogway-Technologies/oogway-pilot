@@ -6,6 +6,7 @@ import {
     addSelectedCriteria,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { bodySmall } from '../../../styles/typography'
 import { AiBox, inputStyle } from '../../../styles/utils'
@@ -25,6 +26,7 @@ export const CriteriaTab = () => {
         control,
         name: 'criteria',
     })
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     useWatch({
         control,
@@ -59,7 +61,7 @@ export const CriteriaTab = () => {
         <>
             {fields.map((item, index) => (
                 <div
-                    className="flex flex-col py-7 px-6 space-y-4 w-full bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow"
+                    className="flex flex-col py-7 px-6 space-y-4 w-full bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark"
                     key={item.id}
                 >
                     <div className={'flex items-start'}>
@@ -106,7 +108,9 @@ export const CriteriaTab = () => {
                                 />
                                 {(item as unknown as { isAI: boolean })
                                     .isAI && (
-                                    <div className={AiBox}>AI Suggestion</div>
+                                    <div className={AiBox}>
+                                        AI{!isMobile ? ' Suggestion' : ''}
+                                    </div>
                                 )}
                             </>
                         </ErrorWraperField>
