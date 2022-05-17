@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import Head from 'next/head'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import GenericSidebar from '../../components/Decision/common/GenericSidebar'
@@ -31,6 +31,7 @@ const DecisionEngine: FC = () => {
 
     const isMobile = useMediaQuery('(max-width: 965px)')
     const deviceIp = Cookies.get('userIp')
+    const [isPortrait, setIsPortrait] = useState(true)
 
     const methods = useForm<DecisionForm>({
         defaultValues: {
@@ -51,6 +52,26 @@ const DecisionEngine: FC = () => {
         },
     })
 
+    useEffect(() => {
+        window.addEventListener(
+            'orientationchange',
+            () => {
+                if (window.innerHeight > window.innerWidth) {
+                    setIsPortrait(true)
+                } else {
+                    setIsPortrait(false)
+                }
+            },
+            false
+        )
+
+        return () => {
+            window.removeEventListener('orientationchange', () => {
+                console.log('removed listener')
+            })
+        }
+    }, [])
+
     return (
         <div>
             <Head>
@@ -61,7 +82,7 @@ const DecisionEngine: FC = () => {
                     // onSubmit={methods.handleSubmit(onSubmit)}
                     className={`${decisionContainer} ${
                         isMobile
-                            ? 'my-2 mx-4 h-[82vh]'
+                            ? `mx-4 h-[82vh]`
                             : 'my-xl mx-xxl gap-4 h-[78vh]'
                     }`}
                     autoComplete="off"
@@ -79,11 +100,7 @@ const DecisionEngine: FC = () => {
                     >
                         {!isMobile && (
                             <div
-                                className={`col-span-1 pt-6 bg-primary/10 dark:bg-primaryDark/10`}
-                                style={{
-                                    borderTopLeftRadius: '16px',
-                                    borderBottomLeftRadius: '16px',
-                                }}
+                                className={`col-span-1 pt-6 bg-primary/10 dark:bg-primaryDark/10 rounded-t-2xl`}
                             >
                                 <DecisionSideBar
                                     selectedTab={currentTab}
@@ -95,11 +112,17 @@ const DecisionEngine: FC = () => {
                         <div
                             className={`flex flex-col ${
                                 isMobile
-                                    ? 'col-span-4 mx-3 mb-4'
+                                    ? `col-span-4 mx-3 mb-4 ${
+                                          isPortrait ? 'mb-8 pb-8' : ''
+                                      }`
                                     : 'col-span-3 mr-5 pt-5 mb-6'
                             }`}
                         >
-                            <div className="flex flex-col justify-between items-center space-y-lg h-full">
+                            <div
+                                className={
+                                    'flex flex-col justify-between items-center space-y-lg h-full'
+                                }
+                            >
                                 <div
                                     className={
                                         'overflow-y-scroll relative w-full h-[55vh] custom-scrollbar dark:custom-scrollbar-dark'
