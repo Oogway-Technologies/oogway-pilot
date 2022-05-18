@@ -4,21 +4,29 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
     addSelectedOption,
+    setDecisionActivityId,
+    setDecisionQuestion,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { AiBox, inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
 import { Options } from '../../../utils/types/global'
 import { ErrorWraperField } from '../../Utils/ErrorWraperField'
 
-export const OptionTab: FC = () => {
+interface OptionTabProps {
+    deviceIp: string
+}
+
+export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
     const {
         register,
         control,
         watch,
         setValue,
+        getValues,
         formState: { errors },
     } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -27,8 +35,44 @@ export const OptionTab: FC = () => {
         control,
         name: 'options',
     })
-
+    const question = getValues('question')
     const optionsArray = watch(`options`)
+
+    const user = useAppSelector(state => state.userSlice.user)
+    const prevQuestion = useAppSelector(
+        state => state.decisionSlice.decisionQuestion
+    )
+    const createDecision = useCreateDecisionActivity()
+
+    useEffect(() => {
+        return () => {
+            useAppDispatch(setPreviousIndex(2))
+
+            // On dismount, check if new question matches previous question
+            // If not, update state to new question and instantiate new
+            // decision log
+            if (question !== prevQuestion) {
+                // Update previous question
+                useAppDispatch(setDecisionQuestion(question))
+
+                // Instantiate new decision
+                const initialDecisionInfo = {
+                    userId: user.uid,
+                    ipAddress: deviceIp,
+                    isComplete: false,
+                }
+                createDecision.mutate(initialDecisionInfo, {
+                    onSuccess: newDecision => {
+                        useAppDispatch(
+                            setDecisionActivityId(newDecision.data.id)
+                        )
+                    },
+                })
+            }
+        }
+    }, [])
+
+    // handler functions
     const checkFilledFields = () => {
         let check = false
         optionsArray.forEach((option: { name: string }) => {
@@ -38,12 +82,6 @@ export const OptionTab: FC = () => {
         })
         return check
     }
-
-    useEffect(() => {
-        return () => {
-            useAppDispatch(setPreviousIndex(2))
-        }
-    }, [])
 
     return (
         <>

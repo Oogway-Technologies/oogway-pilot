@@ -2,20 +2,13 @@ import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
-    setDecisionActivityId,
-    setDecisionQuestion,
     setDecisionRatingUpdate,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { RatingSlider } from '../common/RatingSlider'
 
-interface RatingTabProps {
-    deviceIp: string
-}
-
-export const RatingTab: FC<RatingTabProps> = ({ deviceIp }) => {
+export const RatingTab: FC = () => {
     const optionIndex = useAppSelector(
         state => state.decisionSlice.decisionEngineOptionTab
     )
@@ -23,12 +16,6 @@ export const RatingTab: FC<RatingTabProps> = ({ deviceIp }) => {
         state => state.decisionSlice.decisionRatingUpdate
     )
     const { getValues, setValue } = useFormContext()
-    const user = useAppSelector(state => state.userSlice.user)
-    const prevQuestion = useAppSelector(
-        state => state.decisionSlice.decisionQuestion
-    )
-    const createDecision = useCreateDecisionActivity()
-    const question = getValues('question')
 
     useEffect(() => {
         if (decisionRatingUpdate) {
@@ -55,28 +42,6 @@ export const RatingTab: FC<RatingTabProps> = ({ deviceIp }) => {
         }
         return () => {
             useAppDispatch(setPreviousIndex(4))
-
-            // On dismount, check if new question matches previous question
-            // If not, update state to new question and instantiate new
-            // decision log
-            if (question !== prevQuestion) {
-                // Update previous question
-                useAppDispatch(setDecisionQuestion(question))
-
-                // Instantiate new decision
-                const initialDecisionInfo = {
-                    userId: user.uid,
-                    ipAddress: deviceIp,
-                    isComplete: false,
-                }
-                createDecision.mutate(initialDecisionInfo, {
-                    onSuccess: newDecision => {
-                        useAppDispatch(
-                            setDecisionActivityId(newDecision.data.id)
-                        )
-                    },
-                })
-            }
         }
     }, [])
 

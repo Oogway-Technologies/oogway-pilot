@@ -24,23 +24,28 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
         // If so, update
         if (decision.id) {
             const updateDocRef = doc(db, 'decision-activity', decision.id)
+            if (!updateDocRef) {
+                return res.status(403).json({
+                    err: `Failed to update decision: ${decision}`,
+                })
+            }
             await setDoc(updateDocRef, decision, { merge: true })
             return res.status(200).json({ ...decision })
-        }
+        } else {
+            // otherwise create a new one.
+            const docRef = await addDoc(
+                collection(db, 'decision-activity'),
+                decision
+            )
 
-        // otherwise create a new one.
-        const docRef = await addDoc(
-            collection(db, 'decision-activity'),
-            decision
-        )
-
-        // Return status
-        if (!docRef) {
-            return res
-                .status(403)
-                .json({ err: `Failed to log decision: ${decision}` })
+            // Return status
+            if (!docRef) {
+                return res
+                    .status(403)
+                    .json({ err: `Failed to log decision: ${decision}` })
+            }
+            return res.status(201).json({ id: docRef.id, ...decision })
         }
-        return res.status(201).json({ id: docRef.id, ...decision })
     } catch (err) {
         return res.status(403).json({ err: 'Error!' })
     }

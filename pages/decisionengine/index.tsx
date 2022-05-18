@@ -142,15 +142,15 @@ const DecisionEngine: FC = () => {
                                             {currentTab === 1 && (
                                                 <DecisionTab />
                                             )}
-                                            {currentTab === 2 && <OptionTab />}
-                                            {currentTab === 3 && (
-                                                <CriteriaTab />
-                                            )}
-                                            {currentTab === 4 && (
-                                                <RatingTab
+                                            {currentTab === 2 && (
+                                                <OptionTab
                                                     deviceIp={deviceIp || ''}
                                                 />
                                             )}
+                                            {currentTab === 3 && (
+                                                <CriteriaTab />
+                                            )}
+                                            {currentTab === 4 && <RatingTab />}
                                             {currentTab === 5 && (
                                                 <ResultTab
                                                     deviceIp={deviceIp || ''}
