@@ -174,17 +174,11 @@ const NewPostForm: FC<
 
     const [isInputTitle, setIsInputTitle] = useState<boolean>(false)
 
-    // I'm pretty sure this is introducing a memory leak
-    // useEffect cannot include async logic
     useEffect(() => {
-        if (previewImage) {
+        if (previewImage && userProfile.uid) {
             sendPost().finally()
         }
     }, [previewImage])
-
-    useEffect(() => {
-        console.log('currentFeed - ', selectedFeed)
-    }, [selectedFeed])
 
     // Update form selection
     const selectFeedHandler = (selectedOption: staticFeedOptions | null) => {
@@ -297,7 +291,11 @@ const NewPostForm: FC<
 
         // Whether to sendPost or not
         return (
-            questionProvided && feedProvided && questionHasMedia && !isTitleURL
+            questionProvided &&
+            feedProvided &&
+            questionHasMedia &&
+            !isTitleURL &&
+            userProfile.uid
         )
     }
 
