@@ -38,7 +38,7 @@ export const SignInCard: FC<SignInCardProps> = ({
 
             <Button
                 onClick={signIn}
-                addStyle={`rounded-full justify-center py-2 md:py-3 text-white bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive dark:active:bg-primaryActive font-bold w-64 mx-auto`}
+                addStyle={`rounded-full w-full justify-center py-2 md:py-3 text-white bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive dark:active:bg-primaryActive font-bold mx-auto`}
                 text="Sign In"
                 keepText={true}
                 icon={null}

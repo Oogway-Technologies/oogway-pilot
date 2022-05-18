@@ -43,7 +43,7 @@ export const CriteriaSuggestions = () => {
                       )
                     : null}
                 <div
-                    className={`flex w-full max-h-[320px] overflow-auto ${
+                    className={`flex flex-col w-full max-h-[320px] overflow-auto ${
                         isMobile
                             ? 'items-center space-x-2'
                             : 'flex-col space-y-2'
