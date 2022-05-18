@@ -89,6 +89,9 @@ const NewCommentForm: React.FC<
     const addComment = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
+        // return early if redux failed to fetch user
+        if (!userProfile.uid) return
+
         // Return asap if no input
         if (inputRef && !inputRef?.current?.value) {
             setError(
