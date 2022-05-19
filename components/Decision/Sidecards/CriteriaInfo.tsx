@@ -1,17 +1,22 @@
 import { UilSpinner } from '@iconscout/react-unicons'
+import moment from 'moment'
 import Link from 'next/link'
 import { FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import { setDecisionCriteriaQueryKey } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import {
     getDecisionCriteriaInfoParams,
     useCreateDecisionCriteriaInfo,
     useDecisionCriteriaInfoQuery,
 } from '../../../queries/decisionCriteriaInfo'
-import { oogwayDecisionFTVersion } from '../../../utils/constants/global'
-import { titleCase } from '../../../utils/helpers/common'
+import {
+    criteriaInfoCacheDays,
+    oogwayDecisionFTVersion,
+} from '../../../utils/constants/global'
+import { parseTimestamp, titleCase } from '../../../utils/helpers/common'
 import { GoogleSearchHyperlink } from '../../../utils/types/googleapi'
 import AISidebar from '../common/AISidebar'
 
@@ -81,36 +86,62 @@ export const CriteriaInfo: FC = () => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     // Instatiate queries and POST mutator
-    const { data, status, isLoading, isError } = useDecisionCriteriaInfoQuery(
-        oogwayDecisionFTVersion,
-        optionArray[optionIndex].name,
-        criteria as string // always defined since component only mounts when set
-    )
     const decisionCriteriaInfo = useCreateDecisionCriteriaInfo()
     const [isAwaitingAI, setIsAwaitingAI] = useState<boolean>(true)
-
-    // On mount, heck if there is a cached result that will be used
-    // otherwise make a new call to the ai endpoint and store
-    // that in react-query's short term cache as well as the long-term
-    // firebase cache
-    useEffect(() => {
-        if (status === 'success' && data?.results) setIsAwaitingAI(false)
-        if (!(status === 'success' || data?.results)) {
-            setIsAwaitingAI(true)
-            const mutateParams: getDecisionCriteriaInfoParams = {
-                _version: oogwayDecisionFTVersion,
-                _option: optionArray[optionIndex].name,
-                _criterion: criteria as string,
-                _decision: decision,
-            }
-            decisionCriteriaInfo.mutate(mutateParams, {
-                onSettled: () => {
+    const today = moment()
+    const { data, isLoading, isError, isFetched } =
+        useDecisionCriteriaInfoQuery(
+            oogwayDecisionFTVersion,
+            optionArray[optionIndex].name,
+            criteria as string, // always defined since component only mounts when set
+            retrievedData => {
+                // On succesful query, check to ensure results were found
+                // and object has a timestamp. If cached result is still
+                // fresh, use result otherwise trigger a new call to AI endpoint
+                if (
+                    retrievedData?.err !== 'No results found' &&
+                    'timestamp' in retrievedData &&
+                    today.diff(
+                        moment(parseTimestamp(retrievedData?.timestamp)),
+                        'days'
+                    ) < criteriaInfoCacheDays
+                ) {
+                    console.log('CACHE used!')
                     setIsAwaitingAI(false)
-                },
-            })
-            decisionCriteriaInfo.reset()
+                } else {
+                    console.log('POST triggered!')
+                    const mutateParams: getDecisionCriteriaInfoParams = {
+                        _version: oogwayDecisionFTVersion,
+                        _option: optionArray[optionIndex].name,
+                        _criterion: criteria as string,
+                        _decision: decision,
+                    }
+                    decisionCriteriaInfo.mutate(mutateParams, {
+                        onSettled: () => {
+                            setIsAwaitingAI(false)
+                        },
+                    })
+                    decisionCriteriaInfo.reset()
+                }
+            }
+        )
+
+    // Handle instances where data already cached, isAwatingAI is set to true,
+    // but react query doesn't need to refetch, so the onSettled hook never has
+    // a chance to turn off isAwaitingAI even though data is already present
+    useEffect(() => {
+        if (isFetched) {
+            setIsAwaitingAI(false)
         }
-    }, [criteria, optionIndex])
+    }, [isFetched])
+
+    // Clean up function
+    useEffect(() => {
+        return () => {
+            useAppDispatch(setDecisionCriteriaQueryKey(undefined))
+            // setIsAwaitingAI(true)
+        }
+    }, [])
 
     // Helpers
     const errorMessage = (

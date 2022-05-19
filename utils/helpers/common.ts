@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-escape */
 
-import { DocumentSnapshot } from 'firebase/firestore'
+import { DocumentSnapshot, FieldValue } from 'firebase/firestore'
 
-import { TruncateTextProps } from '../types/global'
+import { jsonTimeObj, TruncateTextProps } from '../types/global'
 
 // count number of like in snapshot
 export const findLikes = (snapshot: any, setNumLikes: (n: number) => void) => {
@@ -168,4 +168,60 @@ export function titleCase(str: string) {
             return word.charAt(0).toUpperCase() + word.slice(1)
         })
         .join(' ')
+}
+
+/**
+ * Simple 53-bit hash
+ *
+ * Note:
+ * https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
+ *
+ * roughly similar to the well-known MurmurHash/xxHash algorithms. It uses a combination
+ * of multiplication and Xorshift to generate the hash, but not as thorough. As a result
+ * it's faster than either would be in JavaScript and significantly simpler to implement,
+ * but may not pass all tests in SMHasher. This is not a cryptographic hash function, so
+ * don't use this for security purposes.
+ */
+
+export const cyrb53 = (str: string, seed = 0) => {
+    let h1 = 0xdeadbeef ^ seed
+    let h2 = 0x41c6ce57 ^ seed
+    for (let i = 0, ch; i < str.length; i++) {
+        ch = str.charCodeAt(i)
+        h1 = Math.imul(h1 ^ ch, 2654435761)
+        h2 = Math.imul(h2 ^ ch, 1597334677)
+    }
+    h1 =
+        Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^
+        Math.imul(h2 ^ (h2 >>> 13), 3266489909)
+    h2 =
+        Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^
+        Math.imul(h1 ^ (h1 >>> 13), 3266489909)
+    return 4294967296 * (2097151 & h2) + (h1 >>> 0)
+}
+
+// Utility to parse timestamp
+
+export const parseTimestamp = (
+    timestamp: FieldValue | Date | jsonTimeObj | null
+) => {
+    // Return early on missing timestamp
+    if (!timestamp) {
+        return
+    }
+
+    // If timestamp is a JSON time object, convert to date
+    // Otherwise assume it has already been converted on pre-fetch
+    if (!(timestamp instanceof Date) && timestamp instanceof Object) {
+        if (!('seconds' in timestamp)) {
+            return 'Cannot fetch time'
+        }
+        const timestampType: jsonTimeObj = timestamp as jsonTimeObj
+        if (timestampType && timestampType.seconds) {
+            timestamp = new Date(timestampType?.seconds * 1000 || '')
+        }
+    }
+
+    // Convert to fromNow time
+    return timestamp
 }
