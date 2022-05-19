@@ -25,7 +25,7 @@ export default async function handleGet(
             })
             return
         }
+        console.log('User from within getUser callback: ', user) // remove
         res.status(200).json({ email: user.email })
-        return
     })
 }
