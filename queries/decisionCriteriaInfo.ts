@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import API from '../lib/axios/axios'
+import { cyrb53 } from '../utils/helpers/common'
 import {
     FirebaseDecisionContext,
     FirebaseDecisionCriteriaInfo,
 } from '../utils/types/firebase'
+import { jsonTimeObj } from '../utils/types/global'
 
 /**
  * GET hooks
@@ -18,6 +20,7 @@ export type getDecisionCriteriaInfoParams = {
 
 type getDecisionCriteriaInfoPayload = {
     results: FirebaseDecisionCriteriaInfo | null
+    timestamp?: jsonTimeObj
     err: string | null
 }
 
@@ -27,7 +30,7 @@ export const getDecisionCriteriaInfo = async (
 ): Promise<getDecisionCriteriaInfoPayload> => {
     // Creaate id from params
     const { _option, _version, _criterion } = params
-    const id = `${_version}-${_option}-${_criterion}`
+    const id = cyrb53(`${_version}-${_option}-${_criterion}`) // convert params to 53-bit hash ID
 
     // Call api
     const response = await API.get(`cacheDecisionCriteriaInfo/${id}`).catch(
@@ -43,7 +46,8 @@ export const getDecisionCriteriaInfo = async (
 export const useDecisionCriteriaInfoQuery = (
     version: 'v1',
     option: string,
-    criterion: string
+    criterion: string,
+    onSettled?: (data: any) => void
 ) => {
     const params: getDecisionCriteriaInfoParams = {
         _version: version,
@@ -54,8 +58,9 @@ export const useDecisionCriteriaInfoQuery = (
         ['cacheDecisionCriteriaInfo', version, option, criterion],
         () => getDecisionCriteriaInfo(params),
         {
-            cacheTime: 1000 * 60 * 15, // 15 minutes
-            staleTime: 1000 * 60 * 30, // 30 minutes
+            cacheTime: 1000 * 60 * 5, // 15 minutes
+            staleTime: 1000 * 30 * 1, //  30 seconds
+            onSettled: onSettled,
         }
     )
 }
@@ -71,7 +76,7 @@ export const cacheDecisionCriteriaInfo = async (
 ) => {
     // Creaate id from params
     const { _option, _version, _criterion, decisionCriteriaInfo } = params
-    const id = `${_version}-${_option}-${_criterion}`
+    const id = cyrb53(`${_version}-${_option}-${_criterion}`)
 
     return API.put(
         `cacheDecisionCriteriaInfo/${id}`,
