@@ -40,3 +40,9 @@ export const decisionInfoParagraph = [
     'Oogway helps you when making a decision. All you have to do is put in your decision, and let Oogway help you come up with the best answer.',
     'Oogway reads through different web sources , and combines all the information together to give you the best answer.',
 ]
+
+/**
+ * Caching
+ */
+
+export const criteriaInfoCacheDays = 21
