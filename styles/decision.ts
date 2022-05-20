@@ -19,5 +19,5 @@ export const optionRatingTab = {
     container:
         'flex overflow-auto items-center p-2 space-x-1 bg-primary/40 rounded-lg dark:bg-neutralDark-300 mt-3',
     itemContainer:
-        'flex items-center justify-center transition-all cursor-pointer w-fit whitespace-nowrap text-sm md:text-base not-italic font-bold tracking-normal',
+        'flex items-center justify-center transition-all cursor-pointer w-fit whitespace-nowrap text-sm md:text-base not-italic font-bold tracking-normal capitalize',
 }

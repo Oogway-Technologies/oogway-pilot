@@ -106,7 +106,7 @@ export const decisionSlice = createSlice({
                 return { name: item, isAI: true }
             })
             const commonCriteria = payload.common_criteria.map(item => {
-                return { name: item, weight: 1, isAI: true }
+                return { name: item, weight: 2, isAI: true }
             })
             const contextCriteria = payload.context_criteria.map(item => {
                 return { name: item, weight: 3, isAI: true }
