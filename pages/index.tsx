@@ -1,114 +1,232 @@
-// Next and react
+import { useUser } from '@auth0/nextjs-auth0'
+import Cookies from 'js-cookie'
 import Head from 'next/head'
-import React, { FC, ReactNode, useState } from 'react'
-// Queries
-import { dehydrate, QueryClient } from 'react-query'
+import React, { FC, useEffect, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 
-// Components and styling
-import FeedAPI from '../components/Feed/FeedAPI'
+import GenericSidebar from '../components/Decision/common/GenericSidebar'
+import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHandler'
+import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
+import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWrapper'
+import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
+import { CriteriaInfo } from '../components/Decision/Sidecards/CriteriaInfo'
+import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
+import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
+import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
+import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
+import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
+import { OptionTab } from '../components/Decision/Tabs/OptionTab'
+import { RatingTab } from '../components/Decision/Tabs/RatingTab'
+import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
-import { FeedSelectorMenu } from '../components/Feed/Sidebar/FeedSelector'
-import UserProfileForm from '../components/Forms/UserProfileForm'
-import Modal from '../components/Utils/Modal'
-import SidebarWidget from '../components/Utils/SidebarWidget'
-import { getPosts } from '../queries/posts'
-import queryClientConfig from '../query'
+import useMediaQuery from '../hooks/useMediaQuery'
+import { useAppSelector } from '../hooks/useRedux'
+import { bigContainer, decisionContainer } from '../styles/decision'
+import { decisionTitle } from '../utils/constants/global'
+import { DecisionForm } from '../utils/types/global'
 
-interface Props {
-    children: ReactNode
-}
-
-const Sidebar: FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = ({
-    children,
-}) => {
-    return (
-        <div
-            className={
-                'hidden lg:flex lg:visible lg:flex-col lg:w-3/12 lg:align-top'
-            }
-        >
-            {children}
-        </div>
+const DecisionEngine: FC = () => {
+    const decisionCriteriaQueryKey = useAppSelector(
+        state => state.decisionSlice.decisionCriteriaQueryKey
     )
-}
+    const [currentTab, setCurrentTab] = useState(1)
 
-const MainContent: FC<
-    React.PropsWithChildren<React.PropsWithChildren<Props>>
-> = ({ children }) => {
-    return (
-        <div
-            className={
-                'flex flex-col justify-center px-1 w-full lg:px-0 lg:w-6/12'
-            }
-        >
-            {children}
-        </div>
-    )
-}
+    const isMobile = useMediaQuery('(max-width: 965px)')
+    const deviceIp = Cookies.get('userIp')
+    const [isPortrait, setIsPortrait] = useState(true)
 
-/**
- * Home: The public (or personalized user) feed of the app
- * @return {JSX.Element} The JSX Code for the home page
- */
-export default function Home() {
-    // Call user Profile and check whether profile requires updating
-    // Should only be called on user first log-in
-    const [show, setShow] = useState(false)
+    const { user, isLoading } = useUser()
+    const methods = useForm<DecisionForm>({
+        defaultValues: {
+            question: '',
+            context: '',
+            options: [
+                { name: '', isAI: false },
+                { name: '', isAI: false },
+            ],
+            criteria: [{ name: '', weight: 2, isAI: false }],
+            ratings: [
+                {
+                    option: '',
+                    score: '',
+                    rating: [{ criteria: '', value: 0, weight: 1 }],
+                },
+            ],
+        },
+    })
 
-    const closeModal = () => {
-        setShow(false)
-    }
+    useEffect(() => {
+        window.addEventListener(
+            'orientationchange',
+            () => {
+                if (window.innerHeight > window.innerWidth) {
+                    setIsPortrait(true)
+                } else {
+                    setIsPortrait(false)
+                }
+            },
+            false
+        )
+
+        return () => {
+            window.removeEventListener('orientationchange', () => {
+                console.log('removed listener')
+            })
+        }
+    }, [])
 
     return (
         <div>
             <Head>
-                <title>Oogway | Social - Wisdom of the crowd</title>
+                <title>Oogway | Decision Engine</title>
             </Head>
+            <FormProvider {...methods}>
+                <form
+                    // onSubmit={methods.handleSubmit(onSubmit)}
+                    className={`${decisionContainer} ${
+                        isMobile
+                            ? `mx-4 h-[82vh]`
+                            : 'my-xl mx-xxl gap-4 h-[78vh]'
+                    }`}
+                    autoComplete="off"
+                >
+                    {isMobile && (
+                        <DecisionSideBar
+                            selectedTab={currentTab}
+                            setSelectedTab={setCurrentTab}
+                        />
+                    )}
+                    <div
+                        className={`${bigContainer} ${
+                            isMobile ? 'col-span-4' : 'col-span-3'
+                        }`}
+                    >
+                        {!isMobile && (
+                            <div
+                                className={`col-span-1 pt-6 bg-primary/10 dark:bg-primaryDark/10 rounded-t-2xl`}
+                            >
+                                <DecisionSideBar
+                                    selectedTab={currentTab}
+                                    setSelectedTab={setCurrentTab}
+                                />
+                            </div>
+                        )}
 
-            <div className="flex flex-row">
-                <Sidebar>
-                    <SidebarWidget>
-                        <FeedSelectorMenu />
-                    </SidebarWidget>
-                    <SidebarWidget title="Disclaimer">
-                        <FeedDisclaimer className="px-sm mx-sm mb-sm w-64" />
-                    </SidebarWidget>
-                </Sidebar>
-                <MainContent>
-                    <FeedAPI />
-                </MainContent>
-                <Sidebar>
-                    <div></div>
-                </Sidebar>
-            </div>
-
-            {/* Modal for user profile */}
-            <Modal show={show} onClose={closeModal}>
-                <UserProfileForm
-                    closeModal={closeModal}
-                    headerText="Setup Profile"
-                    cancelButtonText="skip"
-                />
-            </Modal>
+                        <div
+                            className={`flex flex-col ${
+                                isMobile
+                                    ? `col-span-4 mx-3 mb-4 ${
+                                          isPortrait ? 'mb-8 pb-8' : ''
+                                      }`
+                                    : 'col-span-3 mr-5 pt-5 mb-6'
+                            }`}
+                        >
+                            <div
+                                className={
+                                    'flex flex-col justify-between items-center space-y-lg h-full'
+                                }
+                            >
+                                <div
+                                    className={
+                                        'overflow-y-scroll relative w-full h-[55vh] custom-scrollbar dark:custom-scrollbar-dark'
+                                    }
+                                >
+                                    {currentTab === 4 && (
+                                        <OptionRatingTabWrapper />
+                                    )}
+                                    <DecisionTabWrapper
+                                        title={decisionTitle[currentTab]}
+                                        currentTab={currentTab}
+                                    >
+                                        <>
+                                            {currentTab === 1 && (
+                                                <DecisionTab />
+                                            )}
+                                            {currentTab === 2 && (
+                                                <OptionTab
+                                                    deviceIp={deviceIp || ''}
+                                                />
+                                            )}
+                                            {currentTab === 3 && (
+                                                <CriteriaTab />
+                                            )}
+                                            {currentTab === 4 && <RatingTab />}
+                                            {currentTab === 5 && (
+                                                <ResultTab
+                                                    deviceIp={deviceIp || ''}
+                                                    setCurrentTab={
+                                                        setCurrentTab
+                                                    }
+                                                />
+                                            )}
+                                        </>
+                                    </DecisionTabWrapper>
+                                </div>
+                                {isMobile && (
+                                    <div className={'w-full'}>
+                                        {!isLoading &&
+                                        !user &&
+                                        (currentTab === 2 ||
+                                            currentTab === 3 ||
+                                            currentTab === 4) ? (
+                                            <SignInCard />
+                                        ) : (
+                                            <>
+                                                {currentTab === 2 && (
+                                                    <OptionSuggestions />
+                                                )}
+                                                {currentTab === 3 && (
+                                                    <CriteriaSuggestions />
+                                                )}
+                                                {currentTab === 4 &&
+                                                    decisionCriteriaQueryKey && (
+                                                        <CriteriaInfo />
+                                                    )}
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                                <DecisionBarHandler
+                                    className="justify-self-end w-full"
+                                    selectedTab={currentTab}
+                                    setSelectedTab={setCurrentTab}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    {!isMobile && (
+                        <div className={'col-span-1'}>
+                            {!isLoading &&
+                            !user &&
+                            (currentTab === 2 ||
+                                currentTab === 3 ||
+                                currentTab === 4) ? (
+                                <SignInCard />
+                            ) : (
+                                <>
+                                    {currentTab === 2 && <OptionSuggestions />}
+                                    {currentTab === 3 && (
+                                        <CriteriaSuggestions />
+                                    )}
+                                    {currentTab === 4 &&
+                                        decisionCriteriaQueryKey && (
+                                            <CriteriaInfo />
+                                        )}
+                                </>
+                            )}
+                            <GenericSidebar
+                                title="Disclaimer"
+                                titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
+                                extraClass="mt-auto"
+                            >
+                                <FeedDisclaimer />
+                            </GenericSidebar>
+                        </div>
+                    )}
+                </form>
+            </FormProvider>
         </div>
     )
 }
 
-/**
- * getServerSideProps: Fetches server side props for the home page
- * @return {Promise} Promise containing props object with dehydrated posts from react query client
- */
-export async function getServerSideProps() {
-    const queryClient = new QueryClient(queryClientConfig)
-
-    // Get the posts
-    await queryClient.prefetchQuery(['posts', 'infinite'], getPosts)
-
-    return {
-        props: {
-            dehhydratedState: dehydrate(queryClient),
-            // posts: response?.data.posts, // pass the posts back as a list
-            // lastTimestamp: response?.data.lastTimestamp,
-        },
-    }
-}
+export default DecisionEngine

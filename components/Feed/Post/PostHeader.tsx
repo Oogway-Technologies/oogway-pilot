@@ -119,7 +119,7 @@ const PostHeader: FC<
         // the main feed. Otherwise, they need to be kept
         // on their current page
         if (router.asPath === `/comments/${id}`) {
-            return '/'
+            return '/feed'
         } else {
             return router.asPath
         }

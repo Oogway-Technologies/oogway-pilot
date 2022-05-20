@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-import getIP from '../../utils/helpers/getIP'
+import getIP from '../utils/helpers/getIP'
 
 export function middleware(req: NextRequest) {
     const response = NextResponse.next()

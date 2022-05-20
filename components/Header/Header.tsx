@@ -14,14 +14,14 @@ const Header = () => {
     const userProfile = useAppSelector(state => state.userSlice.user)
     const feed = useAppSelector(state => state.utilsSlice.feedState)
     let links = [
+        {
+            href: ['/feed', `/?feed=${feed}`],
+            text: 'Feed',
+        },
         // TODO: Add as pages created
         {
-            href: ['/decisionengine'],
+            href: ['/'],
             text: 'Decision Engine',
-        },
-        {
-            href: ['/', `/?feed=${feed}`],
-            text: 'Feed',
         },
     ]
     const userOnlyLinks = [
@@ -46,7 +46,7 @@ const Header = () => {
             <div className={headerClass.toolbar}>
                 {/* Left: Logo */}
                 <div className={headerClass.logo}>
-                    <Link href="/?feed=All" passHref>
+                    <Link href="/feed/?feed=All" passHref>
                         <a>
                             <Logo fill="currentColor" />
                         </a>

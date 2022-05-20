@@ -37,7 +37,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <>
             <Head>
-                <title>Oogway | Social - Wisdom of the crowd</title>
+                <title>Oogway | Decision Engine</title>
             </Head>
             <div className="flex overflow-y-clip flex-col min-h-screen max-h-screen">
                 <div className="sticky z-10">
