@@ -14,6 +14,11 @@ module.exports = {
         return [
             {
                 source: '/social',
+                destination: '/feed',
+                permanent: true,
+            },
+            {
+                source: '/decisionengine',
                 destination: '/',
                 permanent: true,
             },
