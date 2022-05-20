@@ -62,11 +62,7 @@ export const FeedSelector: FC<
                                     data-text={elem.label}
                                     onClick={() => {
                                         useAppDispatch(setFeedState(elem.label))
-                                        router.push(
-                                            `/?feed=${elem.label}`,
-                                            undefined,
-                                            { shallow: true }
-                                        )
+                                        router.push(`/feed/${elem.label}`)
                                         if (feedClickHandler) feedClickHandler()
                                     }}
                                 >
@@ -172,9 +168,7 @@ export const FeedSelectorMobile: FC<
                                                             )
                                                         )
                                                         router.push(
-                                                            `/?feed=${elem.label}`,
-                                                            undefined,
-                                                            { shallow: true }
+                                                            `/feed/${elem.label}`
                                                         )
                                                         close()
                                                     }}
@@ -223,9 +217,7 @@ export const FeedSelectorMenu: FC<
                 }
                 onClick={() => {
                     useAppDispatch(setFeedState('All'))
-                    router.push('/?feed=All', undefined, {
-                        shallow: true,
-                    })
+                    router.push('/feed')
                 }}
             />
             {/* Feed Selector Button */}
@@ -253,7 +245,10 @@ export const FeedSelectorMenu: FC<
                     {feed}
                     <UilTimes
                         className="text-neutral-700 dark:text-neutralDark-150 cursor-pointer"
-                        onClick={() => useAppDispatch(setFeedState('All'))}
+                        onClick={() => {
+                            useAppDispatch(setFeedState('All'))
+                            router.push(`/feed`)
+                        }}
                     />
                 </div>
             )}

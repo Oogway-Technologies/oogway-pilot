@@ -29,9 +29,7 @@ const FeedTitle = () => {
                             type="button"
                             onClick={() => {
                                 useAppDispatch(setFeedState('All'))
-                                router.push('/?feed=All', undefined, {
-                                    shallow: true,
-                                })
+                                router.push('/feed')
                             }}
                         />
                         {`${feed}`}

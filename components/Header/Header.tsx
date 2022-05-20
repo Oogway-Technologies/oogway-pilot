@@ -14,14 +14,14 @@ const Header = () => {
     const userProfile = useAppSelector(state => state.userSlice.user)
     const feed = useAppSelector(state => state.utilsSlice.feedState)
     let links = [
-        {
-            href: ['/feed', `/?feed=${feed}`],
-            text: 'Feed',
-        },
         // TODO: Add as pages created
         {
             href: ['/'],
             text: 'Decision Engine',
+        },
+        {
+            href: ['/feed', `/feed/${feed}`],
+            text: 'Feed',
         },
     ]
     const userOnlyLinks = [
