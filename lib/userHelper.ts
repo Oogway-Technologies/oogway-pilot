@@ -30,11 +30,9 @@ export const getOrCreateUserFromFirebase = async (
             // The mapping is not present:
             // This is the first time ever the user logs into the app.
             // Create a new user
-            console.log('Calling getUser API for user.sub: ', user.sub) // remove
             const userAuth: { email: string } = await fetcher(
                 `/api/registerEmail?userId=${user.sub}`
             )
-            console.log(userAuth) // remove
             const newUser: FirebaseUser = {
                 email: userAuth.email || '',
                 lastSeen: serverTimestamp(),
