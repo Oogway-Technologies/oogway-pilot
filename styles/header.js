@@ -1,6 +1,6 @@
 // Styling for header components
 export const headerClass = {
-    div: 'shadow-sm shadow-black/10 dark:shadow-white/20',
+    div: 'shadow-sm shadow-black/10 dark:shadow-white/20 md:mb-4 mb-3',
     toolbar:
         'grid grid-cols-2 md:grid-cols-3 gap-y-2 grid-flow-row-dense w-full ' +
         'pt-5 px-3 justify-items-stretch items-center bg-white ' +
@@ -16,8 +16,8 @@ export const headerClass = {
         'px-1 md:ml-auto text-neutral-700 dark:text-neutralDark-150',
     slug:
         'flex w-full items-center justify-center bg-white ' +
-        'dark:bg-neutralDark-500 px-3',
-    slugList: 'inline-flex m-auto space-x-sm md:space-x-md',
+        'dark:bg-neutralDark-500 pt-3',
+    slugList: 'inline-flex m-auto space-x-md',
 }
 
 export const searchBarClass = {
@@ -81,7 +81,7 @@ export const toggleThemeClass = {
 }
 
 export const navLinksClass = {
-    li: 'flex pt-2 pb-[6px] text-base hover:font-bold',
+    li: 'flex text-base hover:font-bold',
 }
 
 export const userDropdownClass = {

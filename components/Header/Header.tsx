@@ -16,11 +16,11 @@ const Header = () => {
     let links = [
         // TODO: Add as pages created
         {
-            href: ['/decisionengine'],
+            href: ['/'],
             text: 'Decision Engine',
         },
         {
-            href: ['/', `/?feed=${feed}`],
+            href: ['/feed', `/feed/${feed}`],
             text: 'Feed',
         },
     ]
@@ -46,7 +46,7 @@ const Header = () => {
             <div className={headerClass.toolbar}>
                 {/* Left: Logo */}
                 <div className={headerClass.logo}>
-                    <Link href="/?feed=All" passHref>
+                    <Link href="/feed/?feed=All" passHref>
                         <a>
                             <Logo fill="currentColor" />
                         </a>

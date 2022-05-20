@@ -664,7 +664,7 @@ const NewPostForm: FC<
                 !router.pathname.includes('/profile')
             ) {
                 useAppDispatch(setFeedState(selectedFeed))
-                router.push(`/?feed=${selectedFeed}`, undefined, {
+                router.push(`/feed/${selectedFeed}`, undefined, {
                     shallow: true,
                 })
             }

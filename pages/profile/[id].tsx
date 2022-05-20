@@ -64,7 +64,7 @@ const Profile: FC<
     return (
         <div className={commentsPageClass.outerDiv}>
             <Head>
-                <title>{`Profile | ${username}`}</title>
+                <title>Oogway | Profile | {username}</title>
             </Head>
 
             {/* Go Back */}
