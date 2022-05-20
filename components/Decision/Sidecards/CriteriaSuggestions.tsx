@@ -43,8 +43,8 @@ export const CriteriaSuggestions = () => {
                       )
                     : null}
                 <div
-                    className={`flex flex-col w-full max-h-[320px] overflow-auto ${
-                        isMobile
+                    className={`flex w-full max-h-[320px] overflow-auto ${
+                        isMobile && criteriaList.length && !loadingAiSuggestions
                             ? 'items-center space-x-2'
                             : 'flex-col space-y-2'
                     }`}

@@ -64,7 +64,7 @@ export const OptionSuggestions = () => {
                     : null}
                 <div
                     className={`flex w-full max-h-[320px] overflow-auto ${
-                        isMobile
+                        isMobile && optionsList.length && !loadingAiSuggestions
                             ? 'items-center space-x-2'
                             : 'flex-col space-y-2'
                     }`}
