@@ -6,24 +6,30 @@ interface ProgressBarProps {
     className?: string
     totalSteps: number
     currentStep: number
+    alignVertical?: boolean
+    separator?: string
 }
 
 export const ProgressBar: FC<ProgressBarProps> = ({
     className,
     totalSteps,
     currentStep,
+    alignVertical = false,
+    separator = 'of',
 }: ProgressBarProps) => {
     return (
         <div
-            className={`flex flex-col justify-center items-center ${
-                className ? className : ''
-            }`}
+            className={`flex ${
+                alignVertical ? '' : 'flex-col justify-center '
+            } items-center w-full ${className ? className : ''}`}
         >
-            <span
-                className={`${bodySmall} mb-2 text-neutral-700 dark:text-neutralDark-150`}
-            >
-                {currentStep} of {totalSteps}
-            </span>
+            {!alignVertical && (
+                <span
+                    className={`${bodySmall} mb-2 text-neutral-700 dark:text-neutralDark-150`}
+                >
+                    {currentStep} of {totalSteps}
+                </span>
+            )}
             <div className={`w-full h-2 bg-gray-200  rounded-full`}>
                 <div
                     className="h-2 bg-primary dark:bg-primaryDark rounded-full transition-all"
@@ -34,6 +40,13 @@ export const ProgressBar: FC<ProgressBarProps> = ({
                     }}
                 />
             </div>
+            {alignVertical && (
+                <span
+                    className={`${bodySmall} text-neutral-700 dark:text-neutralDark-150 whitespace-nowrap ml-3`}
+                >
+                    {currentStep} {separator} {totalSteps}
+                </span>
+            )}
         </div>
     )
 }

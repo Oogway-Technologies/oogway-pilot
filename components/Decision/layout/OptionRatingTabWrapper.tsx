@@ -9,7 +9,8 @@ import {
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { optionRatingTab } from '../../../styles/decision'
-import { bodyHeavy } from '../../../styles/typography'
+import { Options } from '../../../utils/types/global'
+import { ProgressBar } from '../../Utils/common/ProgressBar'
 
 const OptionRatingTabWrapper: FC = () => {
     const selectedTab = useAppSelector(
@@ -18,7 +19,7 @@ const OptionRatingTabWrapper: FC = () => {
     const ratingTabChecker = useAppSelector(
         state => state.decisionSlice.ratingTabChecker
     )
-    const { control, watch } = useFormContext()
+    const { control, watch, getValues } = useFormContext()
     const { fields } = useFieldArray({
         control,
         name: 'options',
@@ -37,12 +38,23 @@ const OptionRatingTabWrapper: FC = () => {
     }
     return (
         <>
-            <span
-                className={`${bodyHeavy} text-neutral-800 dark:text-neutralDark-150`}
+            <div className={`flex items-center mb-4 space-x-3 w-full`}>
+                <ProgressBar
+                    totalSteps={
+                        getValues('options').filter(
+                            (item: Options) => item.name && item
+                        ).length
+                    }
+                    currentStep={selectedTab + 1}
+                    alignVertical
+                    separator="/"
+                />
+            </div>
+            <div
+                className={
+                    'flex overflow-auto justify-self-start items-center mr-auto w-fit'
+                }
             >
-                Options
-            </span>
-            <div className={optionRatingTab.container}>
                 {fields.map((item, index) => {
                     return watchOptions[index].name ? (
                         <span
@@ -50,9 +62,9 @@ const OptionRatingTabWrapper: FC = () => {
                             onClick={() => handleClick(index)}
                             className={`${optionRatingTab.itemContainer} ${
                                 selectedTab === index
-                                    ? 'bg-primary dark:bg-primaryDark text-white rounded-lg'
-                                    : 'text-primary dark:text-primaryDark'
-                            } ${isMobile ? 'px-2 py-1' : 'px-3 py-2'}`}
+                                    ? 'text-neutral-800 bg-neutral-50 border border-neutral-800'
+                                    : 'text-neutralDark-150 border border-neutralDark-150 first:border-r-transparent last:border-l-transparent'
+                            } ${isMobile ? 'px-2 py-1.5' : 'px-4 py-2.5'}`}
                         >
                             {watchOptions[index].name}
                         </span>

@@ -6,7 +6,7 @@ import {
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { RatingSlider } from '../common/RatingSlider'
+import { RatingSelector } from '../common/RatingSelector'
 
 export const RatingTab: FC = () => {
     const optionIndex = useAppSelector(
@@ -58,22 +58,17 @@ export const RatingTab: FC = () => {
                         index: number
                     ) =>
                         item.criteria ? (
-                            <React.Fragment
-                                key={item.id + index + item.criteria}
+                            <div
+                                className="flex flex-col mt-8 w-full"
+                                key={`rating-tab-slider-${index}`}
                             >
-                                <div className="flex flex-col mt-8 w-full">
-                                    <RatingSlider
-                                        id={item.id + index}
-                                        registerName={
-                                            `ratings.${optionIndex}.rating.${index}.value` as const
-                                        }
-                                        min={1}
-                                        max={10}
-                                        step={1}
-                                        title={item.criteria}
-                                    />
-                                </div>
-                            </React.Fragment>
+                                <RatingSelector
+                                    registerName={
+                                        `ratings.${optionIndex}.rating.${index}.value` as const
+                                    }
+                                    title={item.criteria}
+                                />
+                            </div>
                         ) : null
                 )}
         </>

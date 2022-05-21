@@ -5,16 +5,17 @@ import Button from '../../Utils/Button'
 
 interface AskAIButtonProps {
     onClick: MouseEventHandler<HTMLButtonElement>
+    className?: string
 }
 
-const AskAIButton: FC<AskAIButtonProps> = ({ onClick }) => (
+const AskAIButton: FC<AskAIButtonProps> = ({ onClick, className }) => (
     <Button
         icon={<UilCreditCardSearch />}
         text={'Ask AI'}
         addStyle={
             'bg-primaryInactive dark:bg-primaryDark ' +
             'hover:bg-primaryActive dark:hover:bg-primaryActive ' +
-            'text-white rounded-md p-1 gap-x-1'
+            `text-white rounded-md p-1 gap-x-1 ${className ? className : ''}`
         }
         keepText={false}
         forceNoText={false}

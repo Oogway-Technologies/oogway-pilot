@@ -18,8 +18,7 @@ import { squareButton } from '../../../styles/decision'
 import { warningTime } from '../../../utils/constants/global'
 import { deepCopy, fetcher, objectsEqual } from '../../../utils/helpers/common'
 import { AISuggestions, Criteria, Options } from '../../../utils/types/global'
-import { ProgressBar } from '../../Utils/common/ProgressBar'
-import { DecisionSideBarOptions } from './DecisionSideBar'
+import { decisionSideBarOptions } from './DecisionSideBar'
 
 interface DecisionBarHandlerProps {
     className?: string
@@ -193,7 +192,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
 
     const handleForward = async () => {
         const isValid = await validationHandler(selectedTab)
-        if (selectedTab !== DecisionSideBarOptions.length && isValid) {
+        if (selectedTab !== decisionSideBarOptions.length && isValid) {
             setSelectedTab(selectedTab + 1)
         }
         useAppDispatch(setDecisionCriteriaQueryKey(undefined))
@@ -259,49 +258,44 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 className ? className : ''
             }`}
         >
-            <button
-                className={`${squareButton} mr-auto ${
-                    selectedTab === 1
-                        ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
-                        : 'border-primary focus:border-primary active:border-primary'
-                }`}
-                type="button"
-                onClick={handleBackwards}
-            >
-                <UilArrowLeft className="fill-neutral-700  dark:fill-neutralDark-150" />
-            </button>
-            <div
-                className={`w-3/6 ${
-                    pointerArray[selectedTab - 1] ? 'ml-3' : ''
-                }`}
-            >
-                <ProgressBar
-                    currentStep={selectedTab}
-                    totalSteps={DecisionSideBarOptions.length}
-                    className="w-full"
-                />
-            </div>
-            <button
-                className={`${squareButton} ml-auto ${
-                    pointerArray[selectedTab - 1] && selectedTab !== 5
-                        ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
-                        : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
-                }`}
-                type="button"
-                disabled={selectedTab === 5}
-                onClick={handleForward}
-            >
-                {pointerArray[selectedTab - 1] && selectedTab !== 5 ? (
-                    <span className="text-sm md:text-base">Continue</span>
-                ) : null}
-                <UilArrowRight
-                    className={`${
-                        pointerArray[selectedTab - 1] && selectedTab !== 5
-                            ? 'fill-primary dark:fill-primaryDark'
-                            : 'fill-neutral-700 dark:fill-neutralDark-150'
+            {selectedTab !== 1 ? (
+                <button
+                    className={`${squareButton} ml-auto ${
+                        selectedTab === 1
+                            ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
+                            : 'border-primary focus:border-primary active:border-primary'
                     }`}
-                />
-            </button>
+                    type="button"
+                    onClick={handleBackwards}
+                >
+                    <UilArrowLeft className="fill-neutral-700  dark:fill-neutralDark-150" />
+                </button>
+            ) : (
+                <div className="ml-auto" />
+            )}
+            {selectedTab !== 5 && (
+                <button
+                    className={`${squareButton} ml-3 ${
+                        pointerArray[selectedTab - 1] && selectedTab !== 5
+                            ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
+                            : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
+                    }`}
+                    type="button"
+                    disabled={selectedTab === 5}
+                    onClick={handleForward}
+                >
+                    {pointerArray[selectedTab - 1] && selectedTab !== 5 ? (
+                        <span className="text-sm md:text-base">Continue</span>
+                    ) : null}
+                    <UilArrowRight
+                        className={`${
+                            pointerArray[selectedTab - 1] && selectedTab !== 5
+                                ? 'fill-primary dark:fill-primaryDark'
+                                : 'fill-neutral-700 dark:fill-neutralDark-150'
+                        }`}
+                    />
+                </button>
+            )}
         </div>
     )
 }
