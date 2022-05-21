@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 import Head from 'next/head'
-import React, { FC, useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import React, { FC, useState } from 'react'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 
 import GenericSidebar from '../components/Decision/common/GenericSidebar'
 import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHandler'
@@ -10,6 +10,7 @@ import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWra
 import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
 import { CriteriaInfo } from '../components/Decision/Sidecards/CriteriaInfo'
 import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
+import { DecisionHelperCard } from '../components/Decision/Sidecards/DecisionHelperCard'
 import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
 import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
@@ -32,7 +33,6 @@ const DecisionEngine: FC = () => {
     const { decisionCriteriaQueryKey, userExceedsMaxDecisions } =
         useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(1)
-    const [isPortrait, setIsPortrait] = useState(true)
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
 
@@ -52,33 +52,11 @@ const DecisionEngine: FC = () => {
                     rating: [{ criteria: '', value: 0, weight: 1 }],
                 },
             ],
+            clickedConnect: false,
         },
     })
-
-    useEffect(() => {
-        console.log(isPortrait)
-        window.addEventListener(
-            'orientationchange',
-            () => {
-                if (window.innerHeight > window.innerWidth) {
-                    setIsPortrait(true)
-                } else {
-                    setIsPortrait(false)
-                }
-            },
-            false
-        )
-
-        return () => {
-            window.removeEventListener('orientationchange', () => {
-                console.log('removed listener')
-            })
-
-            // Reset tracked decision question when user leaves
-            useAppDispatch(setDecisionQuestion(undefined))
-            useAppDispatch(setUserExceedsMaxDecisions(false))
-        }
-    }, [])
+    const { control } = methods
+    const watchOption = useWatch({ name: 'question', control })
 
     const tabGenerator = () => {
         switch (currentTab) {
@@ -196,6 +174,12 @@ const DecisionEngine: FC = () => {
                                             <CriteriaInfo />
                                         )}
                                 </>
+                            )}
+                            {currentTab === 1 &&
+                            watchOption.split('').length ? (
+                                <DecisionHelperCard />
+                            ) : (
+                                ''
                             )}
                             <GenericSidebar
                                 title="Disclaimer"

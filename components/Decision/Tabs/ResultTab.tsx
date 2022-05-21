@@ -8,6 +8,7 @@ import {
     setDecisionEngineBestOption,
     setDecisionQuestion,
     setPreviousIndex,
+    setSideCardStep,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
@@ -130,10 +131,11 @@ export const ResultTab: FC<ResultTabProps> = ({
             context: decision.context,
             criteria: filteredCriteria,
             options: filteredOptions,
-            suggestedOptions: aiSuggestions.optionsList,
-            suggestedCriteria: aiSuggestions.criteriaList,
+            suggestedOptions: aiSuggestions.copyOptionsList,
+            suggestedCriteria: aiSuggestions.copyCriteriaList,
             ratings: filteredRatings,
             isComplete: true,
+            clickedConnect: getValues('clickedConnect'),
         }
         // saving result to firebase.
         saveDecision.mutate(result)
@@ -182,6 +184,7 @@ export const ResultTab: FC<ResultTabProps> = ({
         // Wipe previous decision question and id
         useAppDispatch(setDecisionQuestion(undefined))
         useAppDispatch(setDecisionActivityId(undefined))
+        useAppDispatch(setSideCardStep(1))
     }
 
     return (

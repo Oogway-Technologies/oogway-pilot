@@ -134,6 +134,7 @@ export interface FirebaseDecisionActivity {
     ratings?: decisionRating[]
     timestamp?: FieldValue
     isComplete: boolean
+    clickedConnect?: boolean
 }
 
 export interface FirebaseDecisionContext {

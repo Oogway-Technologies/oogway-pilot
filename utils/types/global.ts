@@ -59,6 +59,7 @@ export interface DecisionForm {
             rating: [{ criteria: string; value: number; weight: number }]
         }
     ]
+    clickedConnect: boolean
 }
 
 export interface Options {

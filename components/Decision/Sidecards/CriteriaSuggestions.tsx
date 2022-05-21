@@ -10,15 +10,12 @@ import AISidebar from '../common/AISidebar'
 import { SuggestionItem } from '../common/SuggestionItem'
 
 export const CriteriaSuggestions = () => {
-    const criteriaList = useAppSelector(
-        state => state.decisionSlice.suggestions.criteriaList
-    )
-    const loadingAiSuggestions = useAppSelector(
-        state => state.decisionSlice.loadingAiSuggestions
-    )
-    const isSuggestionsEmpty = useAppSelector(
-        state => state.decisionSlice.isSuggestionsEmpty
-    )
+    const {
+        isSuggestionsEmpty,
+        loadingAiSuggestions,
+        suggestions: { criteriaList },
+    } = useAppSelector(state => state.decisionSlice)
+
     const { getValues, setValue } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
 
