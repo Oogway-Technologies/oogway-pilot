@@ -86,6 +86,7 @@ export const CriteriaInfo: FC = () => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     // Instatiate queries and POST mutator
+    const [triggerNewCall, setTriggerNewCall] = useState<boolean>(false)
     const decisionCriteriaInfo = useCreateDecisionCriteriaInfo()
     const [isAwaitingAI, setIsAwaitingAI] = useState<boolean>(true)
     const today = moment()
@@ -106,25 +107,32 @@ export const CriteriaInfo: FC = () => {
                         'days'
                     ) < criteriaInfoCacheDays
                 ) {
-                    console.log('CACHE used!')
                     setIsAwaitingAI(false)
                 } else {
-                    console.log('POST triggered!')
-                    const mutateParams: getDecisionCriteriaInfoParams = {
-                        _version: oogwayDecisionFTVersion,
-                        _option: optionArray[optionIndex].name,
-                        _criterion: criteria as string,
-                        _decision: decision,
-                    }
-                    decisionCriteriaInfo.mutate(mutateParams, {
-                        onSettled: () => {
-                            setIsAwaitingAI(false)
-                        },
-                    })
-                    decisionCriteriaInfo.reset()
+                    setTriggerNewCall(true)
                 }
             }
         )
+
+    // Criteria is either not cached or the cached data is stale
+    // Make a new call to the endpoint
+    useEffect(() => {
+        if (triggerNewCall) {
+            const mutateParams: getDecisionCriteriaInfoParams = {
+                _version: oogwayDecisionFTVersion,
+                _option: optionArray[optionIndex].name,
+                _criterion: criteria as string,
+                _decision: decision,
+            }
+            decisionCriteriaInfo.mutate(mutateParams, {
+                onSettled: () => {
+                    setIsAwaitingAI(false)
+                    setTriggerNewCall(false)
+                },
+            })
+            decisionCriteriaInfo.reset()
+        }
+    }, [triggerNewCall])
 
     // Handle instances where data already cached, isAwatingAI is set to true,
     // but react query doesn't need to refetch, so the onSettled hook never has
@@ -143,6 +151,10 @@ export const CriteriaInfo: FC = () => {
         }
     }, [])
 
+    // useEffect(() => {
+    //     useAppDispatch(setDecisionCriteriaQueryKey(undefined))
+    // }, [optionIndex])
+
     // Helpers
     const errorMessage = (
         option: string | number,
@@ -158,7 +170,7 @@ export const CriteriaInfo: FC = () => {
                     isMobile ? 'items-center space-x-2' : 'flex-col space-y-2'
                 }`}
             >
-                {isLoading || isAwaitingAI ? (
+                {isLoading || isAwaitingAI || (!data?.results && !isError) ? (
                     <UilSpinner className={'my-3 mx-auto animate-spin'} />
                 ) : (
                     <div
