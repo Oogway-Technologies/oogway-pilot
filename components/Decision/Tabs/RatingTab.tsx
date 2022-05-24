@@ -40,6 +40,7 @@ export const RatingTab: FC = () => {
             setValue('ratings', mapRatingObject)
             useAppDispatch(setDecisionRatingUpdate(false))
         }
+
         return () => {
             useAppDispatch(setPreviousIndex(4))
         }

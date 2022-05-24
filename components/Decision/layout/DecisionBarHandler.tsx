@@ -6,6 +6,7 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import {
     populateSuggestions,
     resetSuggestions,
+    setDecisionCriteriaQueryKey,
     setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
     setIsSuggestionsEmpty,
@@ -180,6 +181,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 useAppDispatch(
                     setDecisionEngineOptionTab(selectedOptionTab + 1)
                 )
+                useAppDispatch(setDecisionCriteriaQueryKey(undefined))
                 return false
             }
         }
@@ -191,6 +193,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         if (selectedTab !== DecisionSideBarOptions.length && isValid) {
             setSelectedTab(selectedTab + 1)
         }
+        useAppDispatch(setDecisionCriteriaQueryKey(undefined))
     }
 
     const validateDecision = () => {
@@ -230,6 +233,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         } else if (selectedTab !== 1) {
             setSelectedTab(selectedTab - 1)
         }
+        useAppDispatch(setDecisionCriteriaQueryKey(undefined))
     }
 
     useEffect(() => {
