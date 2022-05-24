@@ -1,4 +1,4 @@
-import { Criteria, Options } from '../utils/types/global'
+import { Criteria, DecisionForm, Options } from '../utils/types/global'
 
 export interface UtilsSliceStates {
     fileSizeTooLarge: boolean
@@ -51,4 +51,5 @@ export interface DecisionSliceStates {
     criteriaMobileIndex: number
     sideCardStep: number
     clickedConnect: boolean
+    decisionFormState: DecisionForm
 }
