@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { AISuggestions } from '../../utils/types/global'
+import { AISuggestions, DecisionForm } from '../../utils/types/global'
 import { DecisionSliceStates, FormCopy } from '../interfaces'
 
 const initialState: DecisionSliceStates = {
@@ -24,6 +24,13 @@ const initialState: DecisionSliceStates = {
     decisionCriteriaQueryKey: undefined,
     decisionActivityId: undefined,
     decisionQuestion: undefined,
+    decisionFormState: {
+        question: '',
+        context: '',
+        options: [],
+        criteria: [],
+        ratings: [],
+    },
 }
 
 export const decisionSlice = createSlice({
@@ -152,6 +159,12 @@ export const decisionSlice = createSlice({
         ) => {
             state.decisionQuestion = payload
         },
+        setDecisionFormState: (
+            state,
+            { payload }: PayloadAction<DecisionForm>
+        ) => {
+            state.decisionFormState = payload
+        },
     },
 })
 
@@ -173,6 +186,7 @@ export const {
     setDecisionCriteriaQueryKey,
     setDecisionActivityId,
     setDecisionQuestion,
+    setDecisionFormState,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

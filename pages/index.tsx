@@ -29,6 +29,25 @@ const DecisionEngine: FC = () => {
     const decisionCriteriaQueryKey = useAppSelector(
         state => state.decisionSlice.decisionCriteriaQueryKey
     )
+    const decisionFormState = useAppSelector(
+        state => state.decisionSlice.decisionFormState
+    )
+    const [defaultValues, setDefaultValues] = useState<DecisionForm>({
+        question: '',
+        context: '',
+        options: [
+            { name: '', isAI: false },
+            { name: '', isAI: false },
+        ],
+        criteria: [{ name: '', weight: 2, isAI: false }],
+        ratings: [
+            {
+                option: '',
+                score: '',
+                rating: [{ criteria: '', value: 0, weight: 1 }],
+            },
+        ],
+    })
     const [currentTab, setCurrentTab] = useState(1)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -36,26 +55,9 @@ const DecisionEngine: FC = () => {
     const [isPortrait, setIsPortrait] = useState(true)
 
     const { user, isLoading } = useUser()
-    const methods = useForm<DecisionForm>({
-        defaultValues: {
-            question: '',
-            context: '',
-            options: [
-                { name: '', isAI: false },
-                { name: '', isAI: false },
-            ],
-            criteria: [{ name: '', weight: 2, isAI: false }],
-            ratings: [
-                {
-                    option: '',
-                    score: '',
-                    rating: [{ criteria: '', value: 0, weight: 1 }],
-                },
-            ],
-        },
-    })
 
     useEffect(() => {
+        // Add listener to screen orientation
         window.addEventListener(
             'orientationchange',
             () => {
@@ -68,12 +70,23 @@ const DecisionEngine: FC = () => {
             false
         )
 
+        // Determine whether previous form state exists and set as default values
+        // or use defaults
+        if (decisionFormState.question !== '') {
+            setDefaultValues(decisionFormState)
+        }
+        console.log(defaultValues) // remove
+
         return () => {
             window.removeEventListener('orientationchange', () => {
                 console.log('removed listener')
             })
         }
     }, [])
+
+    const methods = useForm<DecisionForm>({
+        defaultValues: defaultValues,
+    })
 
     return (
         <div>

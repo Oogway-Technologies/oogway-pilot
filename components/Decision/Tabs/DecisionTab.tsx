@@ -4,12 +4,13 @@ import { useFormContext } from 'react-hook-form'
 
 import { setPreviousIndex } from '../../../features/decision/decisionSlice'
 import { useAppDispatch } from '../../../hooks/useRedux'
+import useStoreDecisionTableOnUnmount from '../../../hooks/useStoreDecisionTableOnUnmount'
 import { inputStyle } from '../../../styles/utils'
 import { longLimit, shortLimit } from '../../../utils/constants/global'
 import { ErrorWraper } from '../../Utils/ErrorWraper'
 
 export const DecisionTab: FC = () => {
-    const { register, trigger, clearErrors } = useFormContext()
+    const { register, trigger, clearErrors, watch } = useFormContext()
 
     useEffect(() => {
         // to fix error not working on first step.
@@ -20,6 +21,9 @@ export const DecisionTab: FC = () => {
             useAppDispatch(setPreviousIndex(1))
         }
     }, [])
+
+    // Store decision table when tab is unmounted
+    useStoreDecisionTableOnUnmount(watch)
 
     return (
         <>

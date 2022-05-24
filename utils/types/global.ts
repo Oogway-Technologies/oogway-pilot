@@ -52,13 +52,13 @@ export interface DecisionForm {
     context: string
     options: Options[]
     criteria: Criteria[]
-    ratings: [
-        {
-            option: string
-            score: string
-            rating: [{ criteria: string; value: number; weight: number }]
-        }
-    ]
+    ratings: Ratings[]
+}
+
+export interface Ratings {
+    option: string
+    score: string
+    rating: [{ criteria: string; value: number; weight: number }]
 }
 
 export interface Options {
