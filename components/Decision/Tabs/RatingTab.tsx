@@ -5,7 +5,7 @@ import {
     setDecisionRatingUpdate,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
-import useMediaQuery from '../../../hooks/useMediaQuery'
+// import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { deepCopy } from '../../../utils/helpers/common'
 import { Rating, Ratings } from '../../../utils/types/global'
@@ -16,11 +16,11 @@ export const RatingTab: FC = () => {
     const {
         decisionEngineOptionTab,
         decisionRatingUpdate,
-        criteriaMobileIndex,
+        // criteriaMobileIndex,
     } = useAppSelector(state => state.decisionSlice)
 
     const ratingsList: Ratings[] = getValues('ratings')
-    const isMobile = useMediaQuery('(max-width: 965px)')
+    // const isMobile = useMediaQuery('(max-width: 965px)')
 
     const findInOption = (
         array: Ratings[],
@@ -109,24 +109,7 @@ export const RatingTab: FC = () => {
 
     return (
         <>
-            {!isMobile ? (
-                <div
-                    className="flex flex-col p-1 mt-8 w-full"
-                    key={`rating-tab-slider-${criteriaMobileIndex}`}
-                >
-                    <RatingSelector
-                        registerName={
-                            `ratings.${decisionEngineOptionTab}.rating.${criteriaMobileIndex}.value` as const
-                        }
-                        title={
-                            ratingsList[decisionEngineOptionTab].rating[
-                                criteriaMobileIndex
-                            ].criteria
-                        }
-                    />
-                </div>
-            ) : (
-                ratingsList[decisionEngineOptionTab] &&
+            {ratingsList[decisionEngineOptionTab] &&
                 ratingsList[decisionEngineOptionTab]?.rating.map(
                     (item: Rating, index: number) =>
                         item.criteria && (
@@ -142,8 +125,43 @@ export const RatingTab: FC = () => {
                                 />
                             </div>
                         )
-                )
-            )}
+                )}
         </>
     )
 }
+
+// {!isMobile ? (
+//     <div
+//         className="flex flex-col p-1 mt-8 w-full"
+//         key={`rating-tab-slider-${criteriaMobileIndex}`}
+//     >
+//         <RatingSelector
+//             registerName={
+//                 `ratings.${decisionEngineOptionTab}.rating.${criteriaMobileIndex}.value` as const
+//             }
+//             title={
+//                 ratingsList[decisionEngineOptionTab].rating[
+//                     criteriaMobileIndex
+//                 ].criteria
+//             }
+//         />
+//     </div>
+// ) : (
+//     ratingsList[decisionEngineOptionTab] &&
+//     ratingsList[decisionEngineOptionTab]?.rating.map(
+//         (item: Rating, index: number) =>
+//             item.criteria && (
+//                 <div
+//                     className="flex flex-col p-1 mt-8 w-full"
+//                     key={`rating-tab-slider-${index}`}
+//                 >
+//                     <RatingSelector
+//                         registerName={
+//                             `ratings.${decisionEngineOptionTab}.rating.${index}.value` as const
+//                         }
+//                         title={item.criteria}
+//                     />
+//                 </div>
+//             )
+//     )
+// )}
