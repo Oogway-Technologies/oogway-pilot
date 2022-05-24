@@ -39,7 +39,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             <h3
                 className={`${
                     isMobile ? bodyHeavy : ' text-2xl font-bold '
-                }text-neutral-700 dark:text-neutralDark-150`}
+                }text-neutral-700 dark:text-neutralDark-150 capitalize`}
             >
                 {title}
                 {currentTab === 5 && bestOption && (
@@ -51,7 +51,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                 {currentTab === 4 && (
                     <span className="text-neutral-700 dark:text-neutralDark-150">
                         Rate{' '}
-                        <span className="text-primary dark:text-primaryDark">
+                        <span className="text-primary dark:text-primaryDark capitalize">
                             {getValues('options')[optionIndex]?.name}
                         </span>{' '}
                         on each criteria.

@@ -3,27 +3,19 @@ import { FC } from 'react'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { bodyHeavy } from '../../../styles/typography'
+import { decisionSideBarOptions } from '../../../utils/constants/global'
+import { TabItem } from '../../../utils/types/global'
 
-interface TabItem {
-    title: string
-    tab: number
-}
 interface DecisionSideBarProps {
     className?: string
     selectedTab: number
+    setSelectedTab: (n: number) => void
 }
-
-export const decisionSideBarOptions: TabItem[] = [
-    { title: 'Decision', tab: 1 },
-    { title: 'Options', tab: 2 },
-    { title: 'Criteria', tab: 3 },
-    { title: 'Rating', tab: 4 },
-    { title: 'Result', tab: 5 },
-]
 
 export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     className,
     selectedTab,
+    setSelectedTab,
 }: DecisionSideBarProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
@@ -36,12 +28,14 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                 <div
                     className={`${bodyHeavy} ${
                         selectedTab === index + 1 || index + 1 < selectedTab
-                            ? 'text-primary bg-white border-primary/50'
-                            : 'bg-[#E2D9FC] text-neutral-700 font-normal border-transparent'
+                            ? 'text-primary dark:text-primaryDark bg-white  border-primary/50'
+                            : 'bg-[#E2D9FC] dark:bg-neutralDark-150 text-neutral-700 dark:text-neutralDark-300 font-normal border-transparent'
                     } flex items-center justify-center w-7 h-7 rounded-full border`}
                 >
                     {index + 1 < selectedTab ? (
-                        <UilCheck className={'fill-primary'} />
+                        <UilCheck
+                            className={'fill-primary stroke-primary stroke-2'}
+                        />
                     ) : (
                         item.tab
                     )}
@@ -50,13 +44,15 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                     className={`${bodyHeavy} ${
                         selectedTab === index + 1
                             ? 'text-white'
+                            : index + 1 < selectedTab
+                            ? 'text-white dark:text-neutralDark-50 font-normal'
                             : 'text-neutral-300 font-normal'
                     }  mx-2 truncate`}
                 >
                     {item.title}
                 </span>
                 {selectedTab === index + 1 ? (
-                    <div className="justify-self-end ml-auto w-1 h-full bg-[#E2D9FC] rounded" />
+                    <div className="justify-self-end ml-auto w-1.5 h-full bg-[#E2D9FC] dark:bg-primaryDark rounded" />
                 ) : (
                     ''
                 )}
@@ -64,7 +60,9 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
             {item.tab !== 5 ? (
                 <div
                     className={`relative justify-self-start mr-auto ml-6 w-[2px] h-16  ${
-                        index < selectedTab ? 'bg-[#E2D9FC]' : 'bg-neutral-300'
+                        index < selectedTab
+                            ? 'bg-[#E2D9FC] dark:bg-white'
+                            : 'bg-neutral-300 '
                     }`}
                 />
             ) : (
@@ -82,12 +80,16 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                 <div
                     className={`${bodyHeavy} ${
                         selectedTab === index + 1 || index + 1 < selectedTab
-                            ? 'text-primary bg-white border-primary/50'
-                            : 'bg-[#E2D9FC] text-neutral-700 font-normal border-transparent'
+                            ? 'text-primary dark:text-neutralDark-50 bg-white dark:bg-primaryDark border-primary/50'
+                            : 'bg-[#E2D9FC] dark:bg-neutralDark-150 text-neutral-700 dark:text-neutralDark-300 font-normal border-transparent'
                     } flex items-center justify-center w-7 h-7 rounded-full border  mb-3`}
                 >
                     {index + 1 < selectedTab ? (
-                        <UilCheck className={'fill-primary'} />
+                        <UilCheck
+                            className={
+                                'fill-primary dark:fill-neutralDark-50 stroke-primary dark:stroke-neutralDark-50 stroke-2'
+                            }
+                        />
                     ) : (
                         item.tab
                     )}
@@ -96,6 +98,8 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                     className={`${bodyHeavy} ${
                         selectedTab === index + 1
                             ? 'text-white'
+                            : index + 1 < selectedTab
+                            ? 'text-white dark:text-neutralDark-50 font-normal'
                             : 'text-neutral-300 font-normal'
                     } truncate`}
                 >
@@ -106,7 +110,7 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                 <UilArrowRight
                     className={`${
                         index + 1 < selectedTab
-                            ? 'fill-[#E2D9FC]'
+                            ? 'fill-[#E2D9FC] dark:fill-white'
                             : 'fill-neutral-300'
                     } mt-1`}
                 />
@@ -117,10 +121,10 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     )
     return (
         <div
-            className={`flex ${
+            className={`flex bg-primary dark:bg-neutralDark-300 ${
                 isMobile
-                    ? 'bg-primary p-2 justify-evenly sticky bottom-0 w-full'
-                    : 'flex-col justify-center items-center bg-primary h-full'
+                    ? ' p-2 justify-evenly sticky bottom-0 w-full'
+                    : 'flex-col justify-center items-center h-full'
             } ${className ? className : ''}`}
         >
             {decisionSideBarOptions.map((item, index) =>

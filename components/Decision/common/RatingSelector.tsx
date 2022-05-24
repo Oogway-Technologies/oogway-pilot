@@ -67,7 +67,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                         highlight
                             ? 'text-primary dark:text-primaryDark'
                             : 'text-neutral-700 dark:text-neutral-150'
-                    }`}
+                    } capitalize`}
                 >
                     {title}{' '}
                 </span>
@@ -83,7 +83,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
             <div
                 className={`flex ${
                     isMobile ? 'justify-evenly' : 'justify-between'
-                } items-center p-4 mt-12 w-full rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
+                } items-center bg-white dark:bg-neutralDark-300 p-4 mt-12 w-full rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
             >
                 {!isMobile && (
                     <span
@@ -94,33 +94,37 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                 )}
                 {Array(5)
                     .fill(0)
-                    .map((_, index) => (
-                        <Button
-                            key={`rating-button-${index}`}
-                            addStyle={`${bodyHeavy} rounded-lg border border-neutral-700 flex item-center py-2 px-3.5 ${
-                                selected >= index + 1
-                                    ? `text-white`
-                                    : 'text-neutral-700'
-                            }`}
-                            text={String(index + 1)}
-                            onClick={() => {
-                                handleChange(index + 1)
-                            }}
-                            style={{
-                                backgroundColor: `${
+                    .map((_, index) => {
+                        const colorClass = selected >= index + 1 ? `` : ''
+                        // 'bg-white dark:bg-neutralDark-300'
+                        return (
+                            <Button
+                                key={`rating-button-${index}`}
+                                addStyle={`${colorClass} ${bodyHeavy} rounded-lg border border-neutral-700 flex item-center py-2 px-3.5 ${
                                     selected >= index + 1
-                                        ? `${colorGenerator(selected)}`
-                                        : 'white'
-                                }`,
-                                WebkitTextStroke: `1px ${
-                                    selected >= index + 1
-                                        ? '#535353'
-                                        : 'transparent'
-                                }`,
-                            }}
-                            keepText
-                        />
-                    ))}
+                                        ? 'text-white'
+                                        : 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutralDark-300'
+                                } dark:border-white`}
+                                text={String(index + 1)}
+                                onClick={() => {
+                                    handleChange(index + 1)
+                                }}
+                                style={{
+                                    backgroundColor: `${
+                                        selected >= index + 1
+                                            ? `${colorGenerator(selected)}`
+                                            : ''
+                                    }`,
+                                    WebkitTextStroke: `1px ${
+                                        selected >= index + 1
+                                            ? '#535353'
+                                            : 'transparent'
+                                    }`,
+                                }}
+                                keepText
+                            />
+                        )
+                    })}
                 {!isMobile && (
                     <span
                         className={`${bodySmall} text-neutral-300 px-2.5 py-1 rounded border border-neutral-300`}

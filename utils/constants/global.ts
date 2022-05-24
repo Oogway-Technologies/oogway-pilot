@@ -1,5 +1,6 @@
 import service from '../../env/serviceAccount.enc'
 import decryptAES from '../helpers/decryptAES'
+import { TabItem } from '../types/global'
 
 /**
 import decryptAES from '../helpers/decryptAES';
@@ -30,9 +31,9 @@ export const oogwayDecisionFTVersion = 'v1'
 export const bingTopN = 5 // number of results to display from bing API in Oogway Bot comments
 export const decisionTitle = [
     '',
-    'What decision do you need help with?',
-    'What are your options?',
-    'What do you want to consider about your decision?',
+    'Your decision',
+    'Your options',
+    'Your criteria',
     '',
     'Your best option is',
 ]
@@ -47,3 +48,11 @@ export const decisionInfoParagraph = [
 
 export const criteriaInfoCacheDays = 21
 export const maxAllowedUnauthenticatedDecisions = 2
+
+export const decisionSideBarOptions: TabItem[] = [
+    { title: 'Decision', tab: 1 },
+    { title: 'Options', tab: 2 },
+    { title: 'Criteria', tab: 3 },
+    { title: 'Rating', tab: 4 },
+    { title: 'Result', tab: 5 },
+]

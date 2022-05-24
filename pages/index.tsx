@@ -133,6 +133,7 @@ const DecisionEngine: FC = () => {
                             <DecisionSideBar
                                 selectedTab={currentTab}
                                 className="col-span-1"
+                                setSelectedTab={setCurrentTab}
                             />
                         )}
                         <div
@@ -217,6 +218,7 @@ const DecisionEngine: FC = () => {
                 <DecisionSideBar
                     selectedTab={currentTab}
                     className="col-span-1"
+                    setSelectedTab={setCurrentTab}
                 />
             )}
         </div>

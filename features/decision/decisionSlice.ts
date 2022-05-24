@@ -25,12 +25,16 @@ const initialState: DecisionSliceStates = {
     decisionActivityId: undefined,
     decisionQuestion: undefined,
     userExceedsMaxDecisions: false,
+    criteriaMobileIndex: 0,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setCriteriaMobileIndex: (state, { payload }: PayloadAction<number>) => {
+            state.criteriaMobileIndex = payload
+        },
         setRatingTabChecker: (state, { payload }: PayloadAction<boolean[]>) => {
             state.ratingTabChecker = payload
         },
@@ -181,6 +185,7 @@ export const {
     setDecisionActivityId,
     setDecisionQuestion,
     setUserExceedsMaxDecisions,
+    setCriteriaMobileIndex,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

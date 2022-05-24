@@ -46,4 +46,5 @@ export interface DecisionSliceStates {
     decisionActivityId: string | undefined
     decisionQuestion: string | undefined
     userExceedsMaxDecisions: boolean
+    criteriaMobileIndex: number
 }

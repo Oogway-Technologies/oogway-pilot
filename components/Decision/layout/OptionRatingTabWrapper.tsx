@@ -52,7 +52,7 @@ const OptionRatingTabWrapper: FC = () => {
             </div>
             <div
                 className={
-                    'flex overflow-auto justify-self-start items-center mr-auto w-fit'
+                    'flex overflow-x-auto justify-self-start items-center mr-auto w-full'
                 }
             >
                 {fields.map((item, index) => {
@@ -64,7 +64,9 @@ const OptionRatingTabWrapper: FC = () => {
                                 selectedTab === index
                                     ? 'text-neutral-800 bg-neutral-50 border border-neutral-800'
                                     : 'text-neutralDark-150 border border-neutralDark-150 first:border-r-transparent last:border-l-transparent'
-                            } ${isMobile ? 'px-2 py-1.5' : 'px-4 py-2.5'}`}
+                            } ${
+                                isMobile ? 'px-2 py-1.5' : 'px-4 py-2.5'
+                            } capitalize`}
                         >
                             {watchOptions[index].name}
                         </span>

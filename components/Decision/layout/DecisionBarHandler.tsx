@@ -15,10 +15,12 @@ import {
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { squareButton } from '../../../styles/decision'
-import { warningTime } from '../../../utils/constants/global'
+import {
+    decisionSideBarOptions,
+    warningTime,
+} from '../../../utils/constants/global'
 import { deepCopy, fetcher, objectsEqual } from '../../../utils/helpers/common'
 import { AISuggestions, Criteria, Options } from '../../../utils/types/global'
-import { decisionSideBarOptions } from './DecisionSideBar'
 
 interface DecisionBarHandlerProps {
     className?: string
