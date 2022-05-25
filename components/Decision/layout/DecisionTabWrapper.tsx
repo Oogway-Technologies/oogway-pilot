@@ -20,16 +20,13 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
 }: DecisionTabWrapperProps) => {
     const { getValues } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const { decisionEngineBestOption, decisionEngineOptionTab } =
+        useAppSelector(state => state.decisionSlice)
 
-    const bestOption = useAppSelector(
-        state => state.decisionSlice.decisionEngineBestOption
-    )
-    const optionIndex = useAppSelector(
-        state => state.decisionSlice.decisionEngineOptionTab
-    )
-
-    const containerClass = `flex flex-col space-y-xl ${
-        isMobile ? `${currentTab !== 4 ? 'mt-0' : 'mt-5'}` : 'mt-10'
+    const containerClass = `flex flex-col  ${
+        isMobile
+            ? `${currentTab !== 4 ? 'mt-0 space-y-md' : 'mt-4'}`
+            : 'mt-10 space-y-xl'
     } w-full overflow-y-auto ${currentTab === 4 ? 'h-[50vh]' : 'h-[60vh]'} ${
         className ? className : ''
     }`
@@ -39,20 +36,23 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             <h3
                 className={`${
                     isMobile ? bodyHeavy : ' text-2xl font-bold '
-                }text-neutral-700 dark:text-neutralDark-150 capitalize`}
+                }text-neutral-800 dark:text-neutralDark-150 capitalize`}
             >
                 {title}
-                {currentTab === 5 && bestOption && (
+                {currentTab === 5 && decisionEngineBestOption && (
                     <span className="text-primary dark:text-primaryDark">
                         {' '}
-                        {bestOption}
+                        {decisionEngineBestOption}
                     </span>
                 )}
                 {currentTab === 4 && (
                     <span className="text-neutral-700 dark:text-neutralDark-150">
                         Rate{' '}
-                        <span className="text-primary dark:text-primaryDark capitalize">
-                            {getValues('options')[optionIndex]?.name}
+                        <span className="text-primary dark:text-primaryDark">
+                            {
+                                getValues('options')[decisionEngineOptionTab]
+                                    ?.name
+                            }
                         </span>{' '}
                         on each criteria.
                     </span>

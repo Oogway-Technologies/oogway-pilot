@@ -6,6 +6,7 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import {
     populateSuggestions,
     resetSuggestions,
+    setCriteriaMobileIndex,
     setDecisionCriteriaQueryKey,
     setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
@@ -13,6 +14,7 @@ import {
     setLoadingAiSuggestions,
     updateFormCopy,
 } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { squareButton } from '../../../styles/decision'
 import {
@@ -42,18 +44,15 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         resetField,
     } = useFormContext()
     const { user } = useUser()
-    const userExceedsMaxDecisions = useAppSelector(
-        state => state.decisionSlice.userExceedsMaxDecisions
-    )
-    const decisionRatingUpdate = useAppSelector(
-        state => state.decisionSlice.decisionRatingUpdate
-    )
-    const isSuggestionsEmpty = useAppSelector(
-        state => state.decisionSlice.isSuggestionsEmpty
-    )
-    const selectedOptionTab = useAppSelector(
-        state => state.decisionSlice.decisionEngineOptionTab
-    )
+    const {
+        decisionRatingUpdate,
+        isSuggestionsEmpty,
+        decisionEngineOptionTab,
+        criteriaMobileIndex,
+        userExceedsMaxDecisions,
+    } = useAppSelector(state => state.decisionSlice)
+
+    const isMobile = useMediaQuery('(max-width: 965px)')
     const formCopy = useAppSelector(state => state.decisionSlice.formCopy)
     const watchDecision = useWatch({ name: 'question', control })
     const watchOption = useWatch({ name: 'options', control })
@@ -181,12 +180,44 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     }
                 }
             )
-            if (selectedOptionTab < optionFilter.length - 1) {
-                useAppDispatch(
-                    setDecisionEngineOptionTab(selectedOptionTab + 1)
+
+            if (isMobile) {
+                const criteriaFilter = getValues('criteria').filter(
+                    (item: Criteria) => {
+                        if (item.name) {
+                            return item
+                        }
+                    }
                 )
-                useAppDispatch(setDecisionCriteriaQueryKey(undefined))
-                return false
+                console.log(criteriaFilter)
+                if (criteriaMobileIndex < criteriaFilter.length - 1) {
+                    useAppDispatch(
+                        setCriteriaMobileIndex(criteriaMobileIndex + 1)
+                    )
+                    useAppDispatch(setDecisionCriteriaQueryKey(undefined))
+                    return false
+                } else {
+                    if (decisionEngineOptionTab < optionFilter.length - 1) {
+                        useAppDispatch(setCriteriaMobileIndex(0))
+                        useAppDispatch(
+                            setDecisionEngineOptionTab(
+                                decisionEngineOptionTab + 1
+                            )
+                        )
+                        useAppDispatch(setDecisionCriteriaQueryKey(undefined))
+                        return false
+                    }
+                }
+            }
+
+            if (!isMobile) {
+                if (decisionEngineOptionTab < optionFilter.length - 1) {
+                    useAppDispatch(
+                        setDecisionEngineOptionTab(decisionEngineOptionTab + 1)
+                    )
+                    useAppDispatch(setDecisionCriteriaQueryKey(undefined))
+                    return false
+                }
             }
         }
         return true
@@ -232,10 +263,45 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     }
 
     const handleBackwards = () => {
-        if (selectedTab === 4 && selectedOptionTab !== 0) {
-            useAppDispatch(setDecisionEngineOptionTab(selectedOptionTab - 1))
-        } else if (selectedTab !== 1) {
-            setSelectedTab(selectedTab - 1)
+        // for mobile
+        if (isMobile && selectedTab === 4) {
+            if (criteriaMobileIndex !== 0) {
+                useAppDispatch(setCriteriaMobileIndex(criteriaMobileIndex - 1))
+            } else {
+                const criteriaFilter = getValues('criteria').filter(
+                    (item: Criteria) => {
+                        if (item.name) {
+                            return item
+                        }
+                    }
+                )
+                if (decisionEngineOptionTab !== 0) {
+                    useAppDispatch(
+                        setDecisionEngineOptionTab(decisionEngineOptionTab - 1)
+                    )
+                    useAppDispatch(
+                        setCriteriaMobileIndex(criteriaFilter.length - 1)
+                    )
+                } else {
+                    setSelectedTab(selectedTab - 1)
+                    useAppDispatch(setCriteriaMobileIndex(0))
+                }
+            }
+        } else {
+            if (isMobile && selectedTab !== 1) {
+                setSelectedTab(selectedTab - 1)
+            }
+        }
+
+        // for desktop
+        if (!isMobile) {
+            if (selectedTab === 4 && decisionEngineOptionTab !== 0) {
+                useAppDispatch(
+                    setDecisionEngineOptionTab(decisionEngineOptionTab - 1)
+                )
+            } else if (selectedTab !== 1) {
+                setSelectedTab(selectedTab - 1)
+            }
         }
         useAppDispatch(setDecisionCriteriaQueryKey(undefined))
     }

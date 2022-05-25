@@ -21,7 +21,7 @@ export const SuggestionItem = ({
                     'mr-2 min-w-[20px] min-h-[20px] transition-all cursor-pointer fill-neutral-300 group-hover:fill-primary md:mr-3'
                 }
             />
-            <span className="text-sm font-normal text-neutral-700 dark:text-neutralDark-150 capitalize truncate">
+            <span className="text-sm font-normal text-neutral-700 dark:text-neutralDark-150 truncate">
                 {suggestionItem.name}
             </span>
         </div>

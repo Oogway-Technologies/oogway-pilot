@@ -1,6 +1,5 @@
 export const decisionContainer = 'grid z-10 grid-cols-4'
-export const bigContainer =
-    'grid grid-cols-7 bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60 overflow-auto'
+export const bigContainer = 'grid grid-cols-7 overflow-auto'
 
 export const squareButton =
     'flex justify-center items-center p-1 md:p-2 border rounded transition-all'

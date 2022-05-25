@@ -225,3 +225,7 @@ export const parseTimestamp = (
     // Convert to fromNow time
     return timestamp
 }
+
+export const capitalize = (s: string) => {
+    return s.charAt(0).toUpperCase() + s.slice(1)
+}

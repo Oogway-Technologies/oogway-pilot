@@ -107,7 +107,7 @@ const DecisionEngine: FC = () => {
     }
 
     return (
-        <div>
+        <div className={isMobile ? 'flex flex-col h-[calc(100vh-121px)]' : ''}>
             <Head>
                 <title>Oogway | Decision Engine</title>
             </Head>
@@ -115,9 +115,7 @@ const DecisionEngine: FC = () => {
                 <form
                     // onSubmit={methods.handleSubmit(onSubmit)}
                     className={`${decisionContainer} ${
-                        isMobile
-                            ? `mx-4 h-[100vh]`
-                            : 'my-xl mx-xxl gap-4 h-[78vh]'
+                        isMobile ? `mx-4` : 'my-xl mx-xxl gap-4 h-[78vh]'
                     }`}
                     autoComplete="off"
                 >
@@ -126,7 +124,7 @@ const DecisionEngine: FC = () => {
                         className={`${bigContainer} ${
                             isMobile
                                 ? 'col-span-4 h-[70vh]'
-                                : 'col-span-3 h-full'
+                                : 'col-span-3 h-full bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
                         }`}
                     >
                         {!isMobile && (
@@ -137,8 +135,10 @@ const DecisionEngine: FC = () => {
                             />
                         )}
                         <div
-                            className={`flex flex-col py-4 px-5 ${
-                                isMobile ? `col-span-7 ` : 'col-span-6'
+                            className={`flex flex-col  ${
+                                isMobile
+                                    ? `col-span-7 pt-4`
+                                    : 'col-span-6 px-5 py-4'
                             }`}
                         >
                             <div

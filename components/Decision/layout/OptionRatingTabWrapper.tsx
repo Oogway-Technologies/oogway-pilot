@@ -64,9 +64,7 @@ const OptionRatingTabWrapper: FC = () => {
                                 selectedTab === index
                                     ? 'text-neutral-800 bg-neutral-50 border border-neutral-800'
                                     : 'text-neutralDark-150 border border-neutralDark-150 first:border-r-transparent last:border-l-transparent'
-                            } ${
-                                isMobile ? 'px-2 py-1.5' : 'px-4 py-2.5'
-                            } capitalize`}
+                            } ${isMobile ? 'px-2 py-1.5' : 'px-4 py-2.5'}`}
                         >
                             {watchOptions[index].name}
                         </span>
