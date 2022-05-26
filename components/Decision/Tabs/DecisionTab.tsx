@@ -1,14 +1,27 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import React, { useEffect } from 'react'
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { setPreviousIndex } from '../../../features/decision/decisionSlice'
+import {
+    setPreviousIndex,
+    setUserExceedsMaxDecisions,
+} from '../../../features/decision/decisionSlice'
 import { useAppDispatch } from '../../../hooks/useRedux'
+import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { inputStyle } from '../../../styles/utils'
-import { longLimit, shortLimit } from '../../../utils/constants/global'
+import {
+    longLimit,
+    maxAllowedUnauthenticatedDecisions,
+    shortLimit,
+} from '../../../utils/constants/global'
 import { ErrorWraper } from '../../Utils/ErrorWraper'
 
-export const DecisionTab: FC = () => {
+interface DecisionTabProps {
+    deviceIp: string
+}
+
+export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     const { register, trigger, clearErrors } = useFormContext()
 
     useEffect(() => {
@@ -20,6 +33,24 @@ export const DecisionTab: FC = () => {
             useAppDispatch(setPreviousIndex(1))
         }
     }, [])
+
+    // Track number of decisions made by unauthenticated users
+    const { user } = useUser()
+    const { data, isFetched } = useUnauthenticatedDecisionQuery(deviceIp)
+    useEffect(() => {
+        // Await the query to be fetched
+        // If the user is unauthenticated, query the database for their
+        // record of unauthenticated decisions. If it exceeds the max,
+        // turn off AI.
+        if (isFetched && !user) {
+            if (
+                data?.results?.decisions.length >=
+                maxAllowedUnauthenticatedDecisions
+            ) {
+                useAppDispatch(setUserExceedsMaxDecisions(true))
+            }
+        }
+    }, [isFetched, user])
 
     return (
         <>

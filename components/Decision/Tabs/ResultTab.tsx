@@ -1,5 +1,7 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
+import { useQueryClient } from 'react-query'
 
 import {
     setDecisionActivityId,
@@ -9,6 +11,10 @@ import {
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
+import {
+    getUnauthenticatedDecisionPayload,
+    usePutUnauthenticatedDecision,
+} from '../../../queries/unauthenticatedDecisions'
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
 import {
@@ -16,6 +22,7 @@ import {
     decisionOption,
     decisionRating,
     FirebaseDecisionActivity,
+    FirebaseUnauthenticatedDecision,
 } from '../../../utils/types/firebase'
 import { ResultCard } from '../common/ResultCard'
 
@@ -29,7 +36,7 @@ export const ResultTab: FC<ResultTabProps> = ({
     deviceIp,
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
-    const user = useAppSelector(state => state.userSlice.user)
+    const userProfile = useAppSelector(state => state.userSlice.user)
     const decisionActivityId = useAppSelector(
         state => state.decisionSlice.decisionActivityId
     )
@@ -42,6 +49,8 @@ export const ResultTab: FC<ResultTabProps> = ({
         name: 'options',
     })
     const saveDecision = useCreateDecisionActivity()
+    const createUnauthenticatedDecisions = usePutUnauthenticatedDecision()
+    const queryClient = useQueryClient()
 
     // Determine best option from scores on mount.
     useEffect(() => {
@@ -53,6 +62,34 @@ export const ResultTab: FC<ResultTabProps> = ({
             useAppDispatch(setPreviousIndex(5))
         }
     }, [options])
+
+    // Update unauthenticatedDecisions
+    const { user } = useUser()
+    useEffect(() => {
+        if (!user && decisionActivityId) {
+            console.log('DecisionActivityID: ', decisionActivityId)
+            console.log('DeviceIp: ', deviceIp)
+            const data: getUnauthenticatedDecisionPayload | undefined =
+                queryClient.getQueryData(['unauthenticatedDecisions', deviceIp])
+            const unauthenticatedDecision = data?.results
+            const payload: FirebaseUnauthenticatedDecision =
+                unauthenticatedDecision
+                    ? {
+                          decisions: [
+                              ...unauthenticatedDecision.decisions,
+                              decisionActivityId,
+                          ],
+                      }
+                    : {
+                          decisions: [decisionActivityId],
+                      }
+            console.log('Payload: ', payload)
+            createUnauthenticatedDecisions.mutate({
+                _ipAddress: deviceIp,
+                unauthenticatedDecision: payload,
+            })
+        }
+    }, [user, decisionActivityId])
 
     const saveResult = () => {
         const decision = getValues()
@@ -90,7 +127,7 @@ export const ResultTab: FC<ResultTabProps> = ({
         // Result object for firebase.
         const result: FirebaseDecisionActivity = {
             id: decisionActivityId,
-            userId: user.uid,
+            userId: userProfile.uid,
             ipAddress: deviceIp,
             question: decision.question,
             context: decision.context,

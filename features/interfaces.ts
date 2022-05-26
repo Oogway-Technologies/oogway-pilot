@@ -45,4 +45,5 @@ export interface DecisionSliceStates {
     decisionCriteriaQueryKey: string | undefined
     decisionActivityId: string | undefined
     decisionQuestion: string | undefined
+    userExceedsMaxDecisions: boolean
 }

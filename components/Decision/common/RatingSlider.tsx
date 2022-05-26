@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { setDecisionCriteriaQueryKey } from '../../../features/decision/decisionSlice'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy, bodySmall } from '../../../styles/typography'
 import AskAIButton from './AskAIButton'
 
@@ -29,6 +29,9 @@ export const RatingSlider: FC<RatingSliderProps> = ({
     const { register, getValues, setValue } = useFormContext()
     const [left, setLeft] = useState(1)
     const { user } = useUser()
+    const userExceedsMaxDecisions = useAppSelector(
+        state => state.decisionSlice.userExceedsMaxDecisions
+    )
 
     useEffect(() => {
         setLeft(getValues(registerName))
@@ -62,15 +65,16 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                     } inline-flex items-center gap-x-md capitalize`}
                 >
                     {title}{' '}
-                    {user && (
-                        <AskAIButton
-                            onClick={() =>
-                                useAppDispatch(
-                                    setDecisionCriteriaQueryKey(title)
-                                )
-                            }
-                        />
-                    )}
+                    {user ||
+                        (!userExceedsMaxDecisions && (
+                            <AskAIButton
+                                onClick={() =>
+                                    useAppDispatch(
+                                        setDecisionCriteriaQueryKey(title)
+                                    )
+                                }
+                            />
+                        ))}
                 </span>
                 <div
                     className={
