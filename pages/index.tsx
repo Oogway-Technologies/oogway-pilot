@@ -211,16 +211,15 @@ const DecisionEngine: FC = () => {
                         </div>
                     )}
                 </form>
+                {/* step bar for mobile */}
+                {isMobile && (
+                    <DecisionSideBar
+                        selectedTab={currentTab}
+                        className="col-span-1"
+                        setSelectedTab={setCurrentTab}
+                    />
+                )}
             </FormProvider>
-
-            {/* step bar for mobile */}
-            {isMobile && (
-                <DecisionSideBar
-                    selectedTab={currentTab}
-                    className="col-span-1"
-                    setSelectedTab={setCurrentTab}
-                />
-            )}
         </div>
     )
 }

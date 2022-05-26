@@ -21,67 +21,64 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
 }: DecisionSideBarProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
-    // const previousIndex = useAppSelector(
-    //     state => state.decisionSlice.previousIndex
-    // )
-    // const [pointerArray, setPointerArray] = useState([
-    //     false,
-    //     false,
-    //     false,
-    //     false,
-    //     false,
-    // ])
+    const previousIndex = useAppSelector(
+        state => state.decisionSlice.previousIndex
+    )
+    const [pointerArray, setPointerArray] = useState([
+        false,
+        false,
+        false,
+        false,
+        false,
+    ])
 
-    // const { control } = useFormContext()
-    // const watchDecision = useWatch({ name: 'question' })
-    // const watchOption = useWatch({ name: 'options' })
-    // const watchCriteria = useWatch({ name: 'criteria' })
+    const { control } = useFormContext()
+    const watchDecision = useWatch({ name: 'question', control })
+    const watchOption = useWatch({ name: 'options', control })
+    const watchCriteria = useWatch({ name: 'criteria', control })
 
-    // const validateDecision = () => {
-    //     if (watchOption) {
-    //         return true
-    //     }
-    //     return false
-    // }
+    const validateDecision = () => {
+        if (watchOption) {
+            return true
+        }
+        return false
+    }
 
-    // const validateOption = () => {
-    //     let check = false
-    //     watchOption.forEach((item: Options) => {
-    //         if (item.name) {
-    //             check = true
-    //         }
-    //     })
+    const validateOption = () => {
+        let check = false
+        watchOption.forEach((item: Options) => {
+            if (item.name) {
+                check = true
+            }
+        })
+        return check
+    }
 
-    //     return check
-    // }
+    const validateCriteria = () => {
+        let check = false
+        watchCriteria.forEach((item: Criteria) => {
+            if (item.name) {
+                check = true
+            }
+        })
+        return check
+    }
 
-    // const validateCriteria = () => {
-    //     let check = false
-    //     watchCriteria.forEach((item: Criteria) => {
-    //         if (item.name) {
-    //             check = true
-    //         }
-    //     })
-    //     return check
-    // }
-
-    // useEffect(() => {
-    //     console.log(watchDecision, watchOption, watchCriteria)
-
-    //     if (validateDecision() && validateOption() && validateCriteria()) {
-    //         setPointerArray([true, true, true, true, true])
-    //     } else {
-    //         const newArray = [
-    //             validateDecision(),
-    //             validateOption(),
-    //             validateCriteria(),
-    //             false,
-    //             false,
-    //         ]
-    //         newArray[previousIndex - 1] = true
-    //         setPointerArray(newArray)
-    //     }
-    // }, [watchDecision, watchOption, watchCriteria])
+    useEffect(() => {
+        if (validateDecision() && validateOption() && validateCriteria()) {
+            setPointerArray([true, true, true, true, true])
+        } else {
+            const newArray = [
+                validateDecision(),
+                validateOption(),
+                validateCriteria(),
+                false,
+                false,
+            ]
+            newArray[previousIndex - 1] = true
+            setPointerArray(newArray)
+        }
+    }, [watchDecision, watchOption, watchCriteria])
 
     return (
         <div
@@ -98,6 +95,8 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                         index={index}
                         item={item}
                         selectedTab={selectedTab}
+                        setSelectedTab={setSelectedTab}
+                        pointerArray={pointerArray}
                     />
                 ) : (
                     <DesktopItem
@@ -105,6 +104,8 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                         index={index}
                         item={item}
                         selectedTab={selectedTab}
+                        setSelectedTab={setSelectedTab}
+                        pointerArray={pointerArray}
                     />
                 )
             )}
@@ -116,17 +117,37 @@ interface ItemProps {
     item: TabItem
     index: number
     selectedTab: number
+    setSelectedTab: (n: number) => void
+    pointerArray: boolean[]
 }
 
-const DesktopItem = ({ item, index, selectedTab }: ItemProps) => (
+const DesktopItem = ({
+    item,
+    index,
+    selectedTab,
+    setSelectedTab,
+    pointerArray,
+}: ItemProps) => (
     <>
         <div className="flex items-center pl-3 w-full">
             <div
+                onClick={() => {
+                    if (
+                        item.tab !== selectedTab &&
+                        pointerArray[item.tab - 1]
+                    ) {
+                        setSelectedTab(item.tab)
+                    }
+                }}
                 className={`${bodyHeavy} ${
                     selectedTab === index + 1 || index + 1 < selectedTab
                         ? 'text-primary dark:text-white bg-white dark:bg-primaryDark border-primary/50'
                         : 'bg-[#E2D9FC] dark:bg-neutralDark-150 text-neutral-700 dark:text-neutralDark-300 font-normal border-transparent'
-                } flex items-center justify-center w-7 h-7 rounded-full border`}
+                } flex items-center justify-center w-7 h-7 rounded-full border ${
+                    pointerArray[item.tab - 1]
+                        ? 'cursor-pointer'
+                        : 'cursor-default'
+                }`}
             >
                 {index + 1 < selectedTab ? (
                     <UilCheck
@@ -169,15 +190,33 @@ const DesktopItem = ({ item, index, selectedTab }: ItemProps) => (
     </>
 )
 
-const MobileItem = ({ item, index, selectedTab }: ItemProps) => (
+const MobileItem = ({
+    item,
+    index,
+    selectedTab,
+    setSelectedTab,
+    pointerArray,
+}: ItemProps) => (
     <>
         <div className="flex flex-col justify-center items-center w-fit">
             <div
+                onClick={() => {
+                    if (
+                        item.tab !== selectedTab &&
+                        pointerArray[item.tab - 1]
+                    ) {
+                        setSelectedTab(item.tab)
+                    }
+                }}
                 className={`${bodyHeavy} ${
                     selectedTab === index + 1 || index + 1 < selectedTab
                         ? 'text-primary dark:text-white bg-white dark:bg-primaryDark border-primary/50'
                         : 'bg-[#E2D9FC] dark:bg-neutralDark-150 text-neutral-700 dark:text-neutralDark-300 font-normal border-transparent'
-                } flex items-center justify-center w-7 h-7 rounded-full border  mb-3`}
+                } flex items-center justify-center w-7 h-7 rounded-full border mb-3 ${
+                    pointerArray[item.tab - 1]
+                        ? 'cursor-pointer'
+                        : 'cursor-default'
+                }`}
             >
                 {index + 1 < selectedTab ? (
                     <UilCheck
