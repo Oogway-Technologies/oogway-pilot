@@ -58,7 +58,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
         <div
             className={`flex flex-col space-y-4 ${
                 isMobile
-                    ? 'py-4 px-3 bg-white rounded-2xl shadow-md custom-box-shadow dark:custom-box-shadow-dark'
+                    ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl shadow-md custom-box-shadow dark:custom-box-shadow-dark'
                     : ''
             }`}
         >
