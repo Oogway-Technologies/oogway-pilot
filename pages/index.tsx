@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import React, { FC, useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 
 import GenericSidebar from '../components/Decision/common/GenericSidebar'
 import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHandler'
@@ -10,6 +10,7 @@ import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWra
 import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
 import { CriteriaInfo } from '../components/Decision/Sidecards/CriteriaInfo'
 import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
+import { DecisionHelperCard } from '../components/Decision/Sidecards/DecisionHelperCard'
 import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
 import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
@@ -19,8 +20,8 @@ import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
 import {
-    setDecisionQuestion,
-    setUserExceedsMaxDecisions,
+    setClickedConnect,
+    setSideCardStep,
 } from '../features/decision/decisionSlice'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
@@ -32,7 +33,6 @@ const DecisionEngine: FC = () => {
     const { decisionCriteriaQueryKey, userExceedsMaxDecisions } =
         useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(1)
-    const [isPortrait, setIsPortrait] = useState(true)
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
 
@@ -54,31 +54,14 @@ const DecisionEngine: FC = () => {
             ],
         },
     })
+    const { control } = methods
 
+    // Whenever watch question changes, reset decision helper card and clicked connnct state
+    const watchQuestion = useWatch({ name: 'question', control })
     useEffect(() => {
-        console.log(isPortrait)
-        window.addEventListener(
-            'orientationchange',
-            () => {
-                if (window.innerHeight > window.innerWidth) {
-                    setIsPortrait(true)
-                } else {
-                    setIsPortrait(false)
-                }
-            },
-            false
-        )
-
-        return () => {
-            window.removeEventListener('orientationchange', () => {
-                console.log('removed listener')
-            })
-
-            // Reset tracked decision question when user leaves
-            useAppDispatch(setDecisionQuestion(undefined))
-            useAppDispatch(setUserExceedsMaxDecisions(false))
-        }
-    }, [])
+        useAppDispatch(setSideCardStep(1))
+        useAppDispatch(setClickedConnect(false))
+    }, [watchQuestion])
 
     const tabGenerator = () => {
         switch (currentTab) {
@@ -138,7 +121,9 @@ const DecisionEngine: FC = () => {
                             }`}
                         >
                             <div
-                                className={'flex flex-col items-center h-full'}
+                                className={
+                                    'flex flex-col gap-y-md items-center h-full'
+                                }
                             >
                                 {currentTab === 4 && <OptionRatingTabWrapper />}
                                 <DecisionTabWrapper
@@ -168,6 +153,12 @@ const DecisionEngine: FC = () => {
                                                     )}
                                             </>
                                         )}
+                                        {currentTab === 1 &&
+                                        watchQuestion.split('').length ? (
+                                            <DecisionHelperCard />
+                                        ) : (
+                                            ''
+                                        )}
                                     </div>
                                 )}
                                 <DecisionBarHandler
@@ -196,6 +187,12 @@ const DecisionEngine: FC = () => {
                                             <CriteriaInfo />
                                         )}
                                 </>
+                            )}
+                            {currentTab === 1 &&
+                            watchQuestion.split('').length ? (
+                                <DecisionHelperCard />
+                            ) : (
+                                ''
                             )}
                             <GenericSidebar
                                 title="Disclaimer"

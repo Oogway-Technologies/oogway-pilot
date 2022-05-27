@@ -24,6 +24,8 @@ export interface UtilsSliceStates {
 export interface Suggestions {
     optionsList: Options[]
     criteriaList: Criteria[]
+    copyOptionsList: Options[]
+    copyCriteriaList: Criteria[]
 }
 export interface FormCopy {
     question: ''
@@ -47,4 +49,6 @@ export interface DecisionSliceStates {
     decisionQuestion: string | undefined
     userExceedsMaxDecisions: boolean
     criteriaMobileIndex: number
+    sideCardStep: number
+    clickedConnect: boolean
 }

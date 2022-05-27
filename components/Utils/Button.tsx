@@ -10,6 +10,7 @@ interface ToolbarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     addStyle?: string
     onClick: MouseEventHandler<HTMLButtonElement>
     type?: 'submit' | 'reset' | 'button'
+    className?: string
 }
 
 const Button: FC<
@@ -24,15 +25,19 @@ const Button: FC<
         addStyle = '',
         onClick,
         type = 'button',
+        className,
+        ...rest
     } = props
     const isMobile = useMediaQuery('(max-width: 965px)')
     return (
         <button
-            {...props}
+            {...rest}
             type={type}
             disabled={disabled}
             onClick={onClick}
-            className={'inline-flex ' + addStyle}
+            className={`inline-flex ${addStyle ? addStyle : ''} ${
+                className ? className : ''
+            }`}
         >
             {icon}{' '}
             {!forceNoText && (keepText || !isMobile) && (

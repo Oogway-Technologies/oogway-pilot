@@ -27,9 +27,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
         isMobile
             ? `${currentTab !== 4 ? 'mt-0 space-y-md' : 'mt-4'}`
             : 'mt-10 space-y-xl'
-    } w-full overflow-y-auto ${currentTab === 4 ? 'h-[50vh]' : 'h-[60vh]'} ${
-        className ? className : ''
-    }`
+    } w-full overflow-y-auto gap-y-sm ${className ? className : ''}`
 
     return (
         <div className={containerClass}>

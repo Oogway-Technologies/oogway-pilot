@@ -39,8 +39,8 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
     const optionsArray = watch(`options`)
 
     const user = useAppSelector(state => state.userSlice.user)
-    const prevQuestion = useAppSelector(
-        state => state.decisionSlice.decisionQuestion
+    const { decisionQuestion: prevQuestion, clickedConnect } = useAppSelector(
+        state => state.decisionSlice
     )
     const createDecision = useCreateDecisionActivity()
 
@@ -48,7 +48,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
         return () => {
             useAppDispatch(setPreviousIndex(2))
 
-            // On dismount, check if new question matches previous question
+            // On mount, check if new question matches previous question
             // If not, update state to new question and instantiate new
             // decision log
             if (question !== prevQuestion) {
@@ -60,6 +60,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                     userId: user.uid,
                     ipAddress: deviceIp,
                     isComplete: false,
+                    clickedConnect: clickedConnect,
                 }
                 createDecision.mutate(initialDecisionInfo, {
                     onSuccess: newDecision => {

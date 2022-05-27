@@ -15,6 +15,8 @@ const initialState: DecisionSliceStates = {
     suggestions: {
         optionsList: [],
         criteriaList: [],
+        copyOptionsList: [],
+        copyCriteriaList: [],
     },
     formCopy: {
         question: '',
@@ -27,12 +29,17 @@ const initialState: DecisionSliceStates = {
     decisionQuestion: undefined,
     userExceedsMaxDecisions: false,
     criteriaMobileIndex: 0,
+    sideCardStep: 1,
+    clickedConnect: false,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setSideCardStep: (state, { payload }: PayloadAction<number>) => {
+            state.sideCardStep = payload
+        },
         setCriteriaMobileIndex: (state, { payload }: PayloadAction<number>) => {
             state.criteriaMobileIndex = payload
         },
@@ -48,6 +55,8 @@ export const decisionSlice = createSlice({
         resetSuggestions: state => {
             state.suggestions.criteriaList = []
             state.suggestions.optionsList = []
+            state.suggestions.copyCriteriaList = []
+            state.suggestions.copyOptionsList = []
         },
         setLoadingAiSuggestions: (
             state,
@@ -108,9 +117,11 @@ export const decisionSlice = createSlice({
             state,
             { payload }: PayloadAction<AISuggestions>
         ) => {
-            state.suggestions.optionsList = payload.options.map(item => {
+            const options = payload.options.map(item => {
                 return { name: capitalize(item), isAI: true }
             })
+            state.suggestions.optionsList = options
+            state.suggestions.copyOptionsList = options
             const commonCriteria = payload.common_criteria.map(item => {
                 return { name: capitalize(item), weight: 2, isAI: true }
             })
@@ -118,6 +129,10 @@ export const decisionSlice = createSlice({
                 return { name: capitalize(item), weight: 3, isAI: true }
             })
             state.suggestions.criteriaList = [
+                ...commonCriteria,
+                ...contextCriteria,
+            ]
+            state.suggestions.copyCriteriaList = [
                 ...commonCriteria,
                 ...contextCriteria,
             ]
@@ -164,6 +179,9 @@ export const decisionSlice = createSlice({
         ) => {
             state.userExceedsMaxDecisions = payload
         },
+        setClickedConnect: (state, { payload }: PayloadAction<boolean>) => {
+            state.clickedConnect = payload
+        },
     },
 })
 
@@ -187,6 +205,8 @@ export const {
     setDecisionQuestion,
     setUserExceedsMaxDecisions,
     setCriteriaMobileIndex,
+    setSideCardStep,
+    setClickedConnect,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer
