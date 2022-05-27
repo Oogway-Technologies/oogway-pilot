@@ -46,3 +46,4 @@ export const decisionInfoParagraph = [
  */
 
 export const criteriaInfoCacheDays = 21
+export const maxAllowedUnauthenticatedDecisions = 2

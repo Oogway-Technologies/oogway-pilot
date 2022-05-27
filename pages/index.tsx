@@ -1,4 +1,3 @@
-import { useUser } from '@auth0/nextjs-auth0'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import React, { FC, useEffect, useState } from 'react'
@@ -19,8 +18,12 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
+import {
+    setDecisionQuestion,
+    setUserExceedsMaxDecisions,
+} from '../features/decision/decisionSlice'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppSelector } from '../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { DecisionForm } from '../utils/types/global'
@@ -30,12 +33,13 @@ const DecisionEngine: FC = () => {
         state => state.decisionSlice.decisionCriteriaQueryKey
     )
     const [currentTab, setCurrentTab] = useState(1)
-
     const isMobile = useMediaQuery('(max-width: 965px)')
     const deviceIp = Cookies.get('userIp')
     const [isPortrait, setIsPortrait] = useState(true)
+    const userExceedsMaxDecisions = useAppSelector(
+        state => state.decisionSlice.userExceedsMaxDecisions
+    )
 
-    const { user, isLoading } = useUser()
     const methods = useForm<DecisionForm>({
         defaultValues: {
             question: '',
@@ -72,6 +76,10 @@ const DecisionEngine: FC = () => {
             window.removeEventListener('orientationchange', () => {
                 console.log('removed listener')
             })
+
+            // Reset tracked decision question when user leaves
+            useAppDispatch(setDecisionQuestion(undefined))
+            useAppDispatch(setUserExceedsMaxDecisions(false))
         }
     }, [])
 
@@ -140,7 +148,9 @@ const DecisionEngine: FC = () => {
                                     >
                                         <>
                                             {currentTab === 1 && (
-                                                <DecisionTab />
+                                                <DecisionTab
+                                                    deviceIp={deviceIp || ''}
+                                                />
                                             )}
                                             {currentTab === 2 && (
                                                 <OptionTab
@@ -164,8 +174,7 @@ const DecisionEngine: FC = () => {
                                 </div>
                                 {isMobile && (
                                     <div className={'w-full'}>
-                                        {!isLoading &&
-                                        !user &&
+                                        {userExceedsMaxDecisions &&
                                         (currentTab === 2 ||
                                             currentTab === 3 ||
                                             currentTab === 4) ? (
@@ -196,8 +205,7 @@ const DecisionEngine: FC = () => {
                     </div>
                     {!isMobile && (
                         <div className={'col-span-1'}>
-                            {!isLoading &&
-                            !user &&
+                            {userExceedsMaxDecisions &&
                             (currentTab === 2 ||
                                 currentTab === 3 ||
                                 currentTab === 4) ? (

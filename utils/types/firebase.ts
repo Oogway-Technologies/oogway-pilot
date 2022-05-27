@@ -180,6 +180,13 @@ export interface FirebaseEngagementFragment {
     isNew?: boolean
 }
 
+export interface FirebaseUnauthenticatedDecision {
+    id?: string // user ipAddress
+    decisions: string[]
+    createdAt?: FieldValue
+    updatedAt?: FieldValue
+}
+
 /**
  * Type guards
  */

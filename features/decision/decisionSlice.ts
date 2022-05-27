@@ -24,6 +24,7 @@ const initialState: DecisionSliceStates = {
     decisionCriteriaQueryKey: undefined,
     decisionActivityId: undefined,
     decisionQuestion: undefined,
+    userExceedsMaxDecisions: false,
 }
 
 export const decisionSlice = createSlice({
@@ -152,6 +153,12 @@ export const decisionSlice = createSlice({
         ) => {
             state.decisionQuestion = payload
         },
+        setUserExceedsMaxDecisions: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.userExceedsMaxDecisions = payload
+        },
     },
 })
 
@@ -173,6 +180,7 @@ export const {
     setDecisionCriteriaQueryKey,
     setDecisionActivityId,
     setDecisionQuestion,
+    setUserExceedsMaxDecisions,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

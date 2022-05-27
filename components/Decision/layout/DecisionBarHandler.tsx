@@ -41,6 +41,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         resetField,
     } = useFormContext()
     const { user } = useUser()
+    const userExceedsMaxDecisions = useAppSelector(
+        state => state.decisionSlice.userExceedsMaxDecisions
+    )
     const decisionRatingUpdate = useAppSelector(
         state => state.decisionSlice.decisionRatingUpdate
     )
@@ -100,7 +103,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 resetField('options')
                 resetField('criteria')
                 useAppDispatch(resetSuggestions())
-                if (user) {
+                if (!userExceedsMaxDecisions || user) {
                     loadSuggestions()
                 }
                 useAppDispatch(
