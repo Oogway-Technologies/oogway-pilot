@@ -67,8 +67,6 @@ export const ResultTab: FC<ResultTabProps> = ({
     const { user } = useUser()
     useEffect(() => {
         if (!user && decisionActivityId) {
-            console.log('DecisionActivityID: ', decisionActivityId)
-            console.log('DeviceIp: ', deviceIp)
             const data: getUnauthenticatedDecisionPayload | undefined =
                 queryClient.getQueryData(['unauthenticatedDecisions', deviceIp])
             const unauthenticatedDecision = data?.results
@@ -83,7 +81,6 @@ export const ResultTab: FC<ResultTabProps> = ({
                     : {
                           decisions: [decisionActivityId],
                       }
-            console.log('Payload: ', payload)
             createUnauthenticatedDecisions.mutate({
                 _ipAddress: deviceIp,
                 unauthenticatedDecision: payload,
