@@ -50,4 +50,5 @@ export interface DecisionSliceStates {
     userExceedsMaxDecisions: boolean
     criteriaMobileIndex: number
     sideCardStep: number
+    clickedConnect: boolean
 }

@@ -30,11 +30,10 @@ const Button: FC<
     const isMobile = useMediaQuery('(max-width: 965px)')
     return (
         <button
-            {...props}
             type={type}
             disabled={disabled}
             onClick={onClick}
-            className={`${addStyle ? addStyle : ''} ${
+            className={`inline-flex ${addStyle ? addStyle : ''} ${
                 className ? className : ''
             }`}
         >

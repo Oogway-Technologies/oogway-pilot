@@ -30,6 +30,7 @@ const initialState: DecisionSliceStates = {
     userExceedsMaxDecisions: false,
     criteriaMobileIndex: 0,
     sideCardStep: 1,
+    clickedConnect: false,
 }
 
 export const decisionSlice = createSlice({
@@ -178,6 +179,9 @@ export const decisionSlice = createSlice({
         ) => {
             state.userExceedsMaxDecisions = payload
         },
+        setClickedConnect: (state, { payload }: PayloadAction<boolean>) => {
+            state.clickedConnect = payload
+        },
     },
 })
 
@@ -202,6 +206,7 @@ export const {
     setUserExceedsMaxDecisions,
     setCriteriaMobileIndex,
     setSideCardStep,
+    setClickedConnect,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

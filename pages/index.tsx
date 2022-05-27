@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import Head from 'next/head'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 
 import GenericSidebar from '../components/Decision/common/GenericSidebar'
@@ -19,8 +19,12 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
+import {
+    setClickedConnect,
+    setSideCardStep,
+} from '../features/decision/decisionSlice'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppSelector } from '../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { DecisionForm } from '../utils/types/global'
@@ -48,11 +52,16 @@ const DecisionEngine: FC = () => {
                     rating: [{ criteria: '', value: 0, weight: 1 }],
                 },
             ],
-            clickedConnect: false,
         },
     })
     const { control } = methods
-    const watchOption = useWatch({ name: 'question', control })
+
+    // Whenever watch question changes, reset decision helper card and clicked connnct state
+    const watchQuestion = useWatch({ name: 'question', control })
+    useEffect(() => {
+        useAppDispatch(setSideCardStep(1))
+        useAppDispatch(setClickedConnect(false))
+    }, [watchQuestion])
 
     const tabGenerator = () => {
         switch (currentTab) {
@@ -112,7 +121,9 @@ const DecisionEngine: FC = () => {
                             }`}
                         >
                             <div
-                                className={'flex flex-col items-center h-full'}
+                                className={
+                                    'flex flex-col gap-y-md items-center h-full'
+                                }
                             >
                                 {currentTab === 4 && <OptionRatingTabWrapper />}
                                 <DecisionTabWrapper
@@ -143,7 +154,7 @@ const DecisionEngine: FC = () => {
                                             </>
                                         )}
                                         {currentTab === 1 &&
-                                        watchOption.split('').length ? (
+                                        watchQuestion.split('').length ? (
                                             <DecisionHelperCard />
                                         ) : (
                                             ''
@@ -178,7 +189,7 @@ const DecisionEngine: FC = () => {
                                 </>
                             )}
                             {currentTab === 1 &&
-                            watchOption.split('').length ? (
+                            watchQuestion.split('').length ? (
                                 <DecisionHelperCard />
                             ) : (
                                 ''

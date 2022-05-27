@@ -1,9 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
-import { useFormContext } from 'react-hook-form'
 
-import { setSideCardStep } from '../../../features/decision/decisionSlice'
+import {
+    setClickedConnect,
+    setSideCardStep,
+} from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { body, bodyHeavy } from '../../../styles/typography'
@@ -19,7 +21,6 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
     const isMobile = useMediaQuery('(max-width: 965px)')
     const router = useRouter()
     const step = useAppSelector(state => state.decisionSlice.sideCardStep)
-    const { setValue } = useFormContext()
     const { user, isLoading } = useUser()
 
     const buttonClass = `flex items-center text-center text-white bg-primary py-3 dark:bg-primaryDark rounded-lg w-full justify-center ${
@@ -57,6 +58,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         text="Connect"
                         onClick={() => {
                             useAppDispatch(setSideCardStep(step + 1))
+                            useAppDispatch(setClickedConnect(true))
                         }}
                         className={buttonClass}
                     />
@@ -84,7 +86,6 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                             } else {
                                 useAppDispatch(setSideCardStep(step + 1))
                             }
-                            setValue('clickedConnect', true)
                         }}
                         className={
                             'flex items-center text-center text-white bg-primary mt-6 ' +
