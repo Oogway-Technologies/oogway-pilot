@@ -29,16 +29,12 @@ import { decisionTitle } from '../utils/constants/global'
 import { DecisionForm } from '../utils/types/global'
 
 const DecisionEngine: FC = () => {
-    const decisionCriteriaQueryKey = useAppSelector(
-        state => state.decisionSlice.decisionCriteriaQueryKey
-    )
+    const { decisionCriteriaQueryKey, userExceedsMaxDecisions } =
+        useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(1)
-    const isMobile = useMediaQuery('(max-width: 965px)')
-    const deviceIp = Cookies.get('userIp')
     const [isPortrait, setIsPortrait] = useState(true)
-    const userExceedsMaxDecisions = useAppSelector(
-        state => state.decisionSlice.userExceedsMaxDecisions
-    )
+    const deviceIp = Cookies.get('userIp')
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     const methods = useForm<DecisionForm>({
         defaultValues: {
