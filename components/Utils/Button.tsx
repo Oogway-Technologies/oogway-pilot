@@ -26,10 +26,12 @@ const Button: FC<
         onClick,
         type = 'button',
         className,
+        ...rest
     } = props
     const isMobile = useMediaQuery('(max-width: 965px)')
     return (
         <button
+            {...rest}
             type={type}
             disabled={disabled}
             onClick={onClick}
