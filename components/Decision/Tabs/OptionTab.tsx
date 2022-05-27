@@ -60,6 +60,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                     userId: user.uid,
                     ipAddress: deviceIp,
                     isComplete: false,
+                    clickedConnect: getValues('clickedConnect'),
                 }
                 createDecision.mutate(initialDecisionInfo, {
                     onSuccess: newDecision => {

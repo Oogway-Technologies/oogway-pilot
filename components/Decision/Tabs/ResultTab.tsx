@@ -135,7 +135,6 @@ export const ResultTab: FC<ResultTabProps> = ({
             suggestedCriteria: aiSuggestions.copyCriteriaList,
             ratings: filteredRatings,
             isComplete: true,
-            clickedConnect: getValues('clickedConnect'),
         }
         // saving result to firebase.
         saveDecision.mutate(result)

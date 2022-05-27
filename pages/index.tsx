@@ -19,12 +19,8 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
-import {
-    setDecisionQuestion,
-    setUserExceedsMaxDecisions,
-} from '../features/decision/decisionSlice'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
+import { useAppSelector } from '../hooks/useRedux'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { DecisionForm } from '../utils/types/global'
@@ -145,6 +141,12 @@ const DecisionEngine: FC = () => {
                                                         <CriteriaInfo />
                                                     )}
                                             </>
+                                        )}
+                                        {currentTab === 1 &&
+                                        watchOption.split('').length ? (
+                                            <DecisionHelperCard />
+                                        ) : (
+                                            ''
                                         )}
                                     </div>
                                 )}

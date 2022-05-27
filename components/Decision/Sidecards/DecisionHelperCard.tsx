@@ -4,6 +4,7 @@ import React, { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { setSideCardStep } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { FileSVG, HappyGuy } from '../../../utils/icons/CustomIcons'
@@ -15,10 +16,15 @@ interface DecisionHelperCardProps {
 export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
     className,
 }: DecisionHelperCardProps) => {
+    const isMobile = useMediaQuery('(max-width: 965px)')
+    const router = useRouter()
     const step = useAppSelector(state => state.decisionSlice.sideCardStep)
     const { setValue } = useFormContext()
-    const router = useRouter()
     const { user, isLoading } = useUser()
+
+    const buttonClass = `flex items-center text-center text-white bg-primary py-3 dark:bg-primaryDark rounded-lg w-full justify-center ${
+        isMobile ? 'mt-4 self-center' : '-mt-14'
+    } cursor-pointer hover:font-bold transition-all`
 
     const handleSignIn = () => {
         setSideCardStep(step + 1)
@@ -45,16 +51,14 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         wants to connect and share their insights and journey
                         with you.
                     </span>
-                    <HappyGuy />
+                    {!isMobile ? <HappyGuy /> : null}
                     <Button
+                        keepText
                         text="Connect"
                         onClick={() => {
                             useAppDispatch(setSideCardStep(step + 1))
                         }}
-                        addStyle={
-                            'flex items-center text-center text-white bg-primary ' +
-                            'dark:bg-primaryDark rounded-lg w-full py-3 justify-center -mt-14 cursor-pointer hover:font-bold transition-all'
-                        }
+                        className={buttonClass}
                     />
                 </>
             )}
@@ -72,6 +76,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         connecting with other decision makers
                     </span>
                     <Button
+                        keepText
                         text="Become a Decision Helper"
                         onClick={() => {
                             if (!isLoading && user) {
@@ -81,8 +86,8 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                             }
                             setValue('clickedConnect', true)
                         }}
-                        addStyle={
-                            'flex items-center text-center text-white bg-primary mt-6' +
+                        className={
+                            'flex items-center text-center text-white bg-primary mt-6 ' +
                             'dark:bg-primaryDark rounded-lg w-full py-3 justify-center cursor-pointer hover:font-bold transition-all'
                         }
                     />
@@ -103,10 +108,11 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         <br /> decision makers
                     </span>
                     <Button
+                        keepText
                         text="Create New Account"
                         onClick={handleSignIn}
-                        addStyle={
-                            'flex items-center text-center text-white bg-primary mt-6' +
+                        className={
+                            'flex items-center text-center text-white bg-primary mt-6 ' +
                             'dark:bg-primaryDark rounded-lg w-full py-3 justify-center cursor-pointer hover:font-bold transition-all'
                         }
                     />
