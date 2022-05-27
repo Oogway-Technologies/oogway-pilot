@@ -7,6 +7,7 @@ import {
     setPreviousIndex,
     setUserExceedsMaxDecisions,
 } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { inputStyle } from '../../../styles/utils'
@@ -23,6 +24,7 @@ interface DecisionTabProps {
 
 export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     const { register, trigger, clearErrors } = useFormContext()
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     useEffect(() => {
         // to fix error not working on first step.
@@ -53,7 +55,13 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     }, [isFetched, user])
 
     return (
-        <>
+        <div
+            className={`flex flex-col space-y-4 ${
+                isMobile
+                    ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl shadow-md custom-box-shadow dark:custom-box-shadow-dark'
+                    : ''
+            }`}
+        >
             <ErrorWraper errorField="question">
                 <input
                     className={inputStyle}
@@ -73,7 +81,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
             </ErrorWraper>
             <ErrorWraper errorField="context">
                 <textarea
-                    className={`${inputStyle} h-40 resize-none`}
+                    className={`${inputStyle} h-40 resize-none mb-6`}
                     placeholder="Context for your decision (optional)"
                     {...register('context', {
                         maxLength: {
@@ -83,6 +91,6 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                     })}
                 />
             </ErrorWraper>
-        </>
+        </div>
     )
 }

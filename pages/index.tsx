@@ -29,16 +29,12 @@ import { decisionTitle } from '../utils/constants/global'
 import { DecisionForm } from '../utils/types/global'
 
 const DecisionEngine: FC = () => {
-    const decisionCriteriaQueryKey = useAppSelector(
-        state => state.decisionSlice.decisionCriteriaQueryKey
-    )
+    const { decisionCriteriaQueryKey, userExceedsMaxDecisions } =
+        useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(1)
-    const isMobile = useMediaQuery('(max-width: 965px)')
-    const deviceIp = Cookies.get('userIp')
     const [isPortrait, setIsPortrait] = useState(true)
-    const userExceedsMaxDecisions = useAppSelector(
-        state => state.decisionSlice.userExceedsMaxDecisions
-    )
+    const deviceIp = Cookies.get('userIp')
+    const isMobile = useMediaQuery('(max-width: 965px)')
 
     const methods = useForm<DecisionForm>({
         defaultValues: {
@@ -60,6 +56,7 @@ const DecisionEngine: FC = () => {
     })
 
     useEffect(() => {
+        console.log(isPortrait)
         window.addEventListener(
             'orientationchange',
             () => {
@@ -83,8 +80,30 @@ const DecisionEngine: FC = () => {
         }
     }, [])
 
+    const tabGenerator = () => {
+        switch (currentTab) {
+            case 1:
+                return <DecisionTab deviceIp={deviceIp || ''} />
+            case 2:
+                return <OptionTab deviceIp={deviceIp || ''} />
+            case 3:
+                return <CriteriaTab />
+            case 4:
+                return <RatingTab />
+            case 5:
+                return (
+                    <ResultTab
+                        deviceIp={deviceIp || ''}
+                        setCurrentTab={setCurrentTab}
+                    />
+                )
+            default:
+                return <div />
+        }
+    }
+
     return (
-        <div>
+        <div className={isMobile ? 'flex flex-col h-[calc(100vh-121px)]' : ''}>
             <Head>
                 <title>Oogway | Decision Engine</title>
             </Head>
@@ -92,88 +111,44 @@ const DecisionEngine: FC = () => {
                 <form
                     // onSubmit={methods.handleSubmit(onSubmit)}
                     className={`${decisionContainer} ${
-                        isMobile
-                            ? `mx-4 h-[82vh]`
-                            : 'my-xl mx-xxl gap-4 h-[78vh]'
+                        isMobile ? `mx-4` : 'my-xl mx-xxl gap-4 h-[78vh]'
                     }`}
                     autoComplete="off"
                 >
-                    {isMobile && (
-                        <DecisionSideBar
-                            selectedTab={currentTab}
-                            setSelectedTab={setCurrentTab}
-                        />
-                    )}
+                    {/* main body */}
                     <div
                         className={`${bigContainer} ${
-                            isMobile ? 'col-span-4' : 'col-span-3'
+                            isMobile
+                                ? 'col-span-4 h-[70vh]'
+                                : 'col-span-3 h-full bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
                         }`}
                     >
                         {!isMobile && (
-                            <div
-                                className={`col-span-1 pt-6 bg-primary/10 dark:bg-primaryDark/10 rounded-t-2xl`}
-                            >
-                                <DecisionSideBar
-                                    selectedTab={currentTab}
-                                    setSelectedTab={setCurrentTab}
-                                />
-                            </div>
+                            <DecisionSideBar
+                                selectedTab={currentTab}
+                                className="col-span-1"
+                                setSelectedTab={setCurrentTab}
+                            />
                         )}
-
                         <div
-                            className={`flex flex-col ${
+                            className={`flex flex-col  ${
                                 isMobile
-                                    ? `col-span-4 mx-3 mb-4 ${
-                                          isPortrait ? 'mb-8 pb-8' : ''
-                                      }`
-                                    : 'col-span-3 mr-5 pt-5 mb-6'
+                                    ? `col-span-7 pt-4`
+                                    : 'col-span-6 px-5 py-4'
                             }`}
                         >
                             <div
-                                className={
-                                    'flex flex-col justify-between items-center space-y-lg h-full'
-                                }
+                                className={'flex flex-col items-center h-full'}
                             >
-                                <div
-                                    className={
-                                        'overflow-y-scroll relative w-full h-[55vh] custom-scrollbar dark:custom-scrollbar-dark'
-                                    }
+                                {currentTab === 4 && <OptionRatingTabWrapper />}
+                                <DecisionTabWrapper
+                                    title={decisionTitle[currentTab]}
+                                    currentTab={currentTab}
                                 >
-                                    {currentTab === 4 && (
-                                        <OptionRatingTabWrapper />
-                                    )}
-                                    <DecisionTabWrapper
-                                        title={decisionTitle[currentTab]}
-                                        currentTab={currentTab}
-                                    >
-                                        <>
-                                            {currentTab === 1 && (
-                                                <DecisionTab
-                                                    deviceIp={deviceIp || ''}
-                                                />
-                                            )}
-                                            {currentTab === 2 && (
-                                                <OptionTab
-                                                    deviceIp={deviceIp || ''}
-                                                />
-                                            )}
-                                            {currentTab === 3 && (
-                                                <CriteriaTab />
-                                            )}
-                                            {currentTab === 4 && <RatingTab />}
-                                            {currentTab === 5 && (
-                                                <ResultTab
-                                                    deviceIp={deviceIp || ''}
-                                                    setCurrentTab={
-                                                        setCurrentTab
-                                                    }
-                                                />
-                                            )}
-                                        </>
-                                    </DecisionTabWrapper>
-                                </div>
+                                    {tabGenerator()}
+                                </DecisionTabWrapper>
                                 {isMobile && (
-                                    <div className={'w-full'}>
+                                    <div className={'mb-3 w-full'}>
                                         {userExceedsMaxDecisions &&
                                         (currentTab === 2 ||
                                             currentTab === 3 ||
@@ -196,7 +171,7 @@ const DecisionEngine: FC = () => {
                                     </div>
                                 )}
                                 <DecisionBarHandler
-                                    className="justify-self-end w-full"
+                                    className="justify-self-end mt-auto w-full"
                                     selectedTab={currentTab}
                                     setSelectedTab={setCurrentTab}
                                 />
@@ -232,6 +207,14 @@ const DecisionEngine: FC = () => {
                         </div>
                     )}
                 </form>
+                {/* step bar for mobile */}
+                {isMobile && (
+                    <DecisionSideBar
+                        selectedTab={currentTab}
+                        className="col-span-1"
+                        setSelectedTab={setCurrentTab}
+                    />
+                )}
             </FormProvider>
         </div>
     )

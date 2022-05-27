@@ -1,13 +1,15 @@
 import { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppSelector } from '../../../hooks/useRedux'
+import { bodyHeavy } from '../../../styles/typography'
 
 interface DecisionTabWrapperProps {
     className?: string
     title: string
     currentTab: number
-    children: JSX.Element
+    children: JSX.Element | JSX.Element[]
 }
 
 export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
@@ -17,35 +19,42 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     children,
 }: DecisionTabWrapperProps) => {
     const { getValues } = useFormContext()
+    const isMobile = useMediaQuery('(max-width: 965px)')
+    const { decisionEngineBestOption, decisionEngineOptionTab } =
+        useAppSelector(state => state.decisionSlice)
 
-    const bestOption = useAppSelector(
-        state => state.decisionSlice.decisionEngineBestOption
-    )
-    const optionIndex = useAppSelector(
-        state => state.decisionSlice.decisionEngineOptionTab
-    )
+    const containerClass = `flex flex-col  ${
+        isMobile
+            ? `${currentTab !== 4 ? 'mt-0 space-y-md' : 'mt-4'}`
+            : 'mt-10 space-y-xl'
+    } w-full overflow-y-auto ${currentTab === 4 ? 'h-[50vh]' : 'h-[60vh]'} ${
+        className ? className : ''
+    }`
 
     return (
-        <div
-            className={`flex flex-col space-y-lg py-2 items-center w-full px-1  ${
-                className ? className : ''
-            }`}
-        >
-            <h3 className="text-lg font-bold text-neutral-700 dark:text-neutralDark-150 md:text-2xl">
+        <div className={containerClass}>
+            <h3
+                className={`${
+                    isMobile ? bodyHeavy : ' text-2xl font-bold '
+                }text-neutral-800 dark:text-neutralDark-150 capitalize`}
+            >
                 {title}
-                {currentTab === 5 && bestOption && (
+                {currentTab === 5 && decisionEngineBestOption && (
                     <span className="text-primary dark:text-primaryDark">
                         {' '}
-                        {bestOption}
+                        {decisionEngineBestOption}
                     </span>
                 )}
                 {currentTab === 4 && (
                     <span className="text-neutral-700 dark:text-neutralDark-150">
-                        How does{' '}
+                        Rate{' '}
                         <span className="text-primary dark:text-primaryDark">
-                            {getValues('options')[optionIndex]?.name}
+                            {
+                                getValues('options')[decisionEngineOptionTab]
+                                    ?.name
+                            }
                         </span>{' '}
-                        score on each criteria?
+                        on each criteria.
                     </span>
                 )}
             </h3>

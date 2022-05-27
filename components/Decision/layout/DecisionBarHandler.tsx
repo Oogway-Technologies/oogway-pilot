@@ -6,6 +6,7 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import {
     populateSuggestions,
     resetSuggestions,
+    setCriteriaMobileIndex,
     setDecisionCriteriaQueryKey,
     setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
@@ -13,13 +14,15 @@ import {
     setLoadingAiSuggestions,
     updateFormCopy,
 } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { squareButton } from '../../../styles/decision'
-import { warningTime } from '../../../utils/constants/global'
+import {
+    decisionSideBarOptions,
+    warningTime,
+} from '../../../utils/constants/global'
 import { deepCopy, fetcher, objectsEqual } from '../../../utils/helpers/common'
 import { AISuggestions, Criteria, Options } from '../../../utils/types/global'
-import { ProgressBar } from '../../Utils/common/ProgressBar'
-import { DecisionSideBarOptions } from './DecisionSideBar'
 
 interface DecisionBarHandlerProps {
     className?: string
@@ -41,18 +44,15 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         resetField,
     } = useFormContext()
     const { user } = useUser()
-    const userExceedsMaxDecisions = useAppSelector(
-        state => state.decisionSlice.userExceedsMaxDecisions
-    )
-    const decisionRatingUpdate = useAppSelector(
-        state => state.decisionSlice.decisionRatingUpdate
-    )
-    const isSuggestionsEmpty = useAppSelector(
-        state => state.decisionSlice.isSuggestionsEmpty
-    )
-    const selectedOptionTab = useAppSelector(
-        state => state.decisionSlice.decisionEngineOptionTab
-    )
+    const {
+        decisionRatingUpdate,
+        isSuggestionsEmpty,
+        decisionEngineOptionTab,
+        criteriaMobileIndex,
+        userExceedsMaxDecisions,
+    } = useAppSelector(state => state.decisionSlice)
+
+    const isMobile = useMediaQuery('(max-width: 965px)')
     const formCopy = useAppSelector(state => state.decisionSlice.formCopy)
     const watchDecision = useWatch({ name: 'question', control })
     const watchOption = useWatch({ name: 'options', control })
@@ -180,12 +180,44 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     }
                 }
             )
-            if (selectedOptionTab < optionFilter.length - 1) {
-                useAppDispatch(
-                    setDecisionEngineOptionTab(selectedOptionTab + 1)
+
+            if (isMobile) {
+                const criteriaFilter = getValues('criteria').filter(
+                    (item: Criteria) => {
+                        if (item.name) {
+                            return item
+                        }
+                    }
                 )
-                useAppDispatch(setDecisionCriteriaQueryKey(undefined))
-                return false
+                console.log(criteriaFilter)
+                if (criteriaMobileIndex < criteriaFilter.length - 1) {
+                    useAppDispatch(
+                        setCriteriaMobileIndex(criteriaMobileIndex + 1)
+                    )
+                    useAppDispatch(setDecisionCriteriaQueryKey(undefined))
+                    return false
+                } else {
+                    if (decisionEngineOptionTab < optionFilter.length - 1) {
+                        useAppDispatch(setCriteriaMobileIndex(0))
+                        useAppDispatch(
+                            setDecisionEngineOptionTab(
+                                decisionEngineOptionTab + 1
+                            )
+                        )
+                        useAppDispatch(setDecisionCriteriaQueryKey(undefined))
+                        return false
+                    }
+                }
+            }
+
+            if (!isMobile) {
+                if (decisionEngineOptionTab < optionFilter.length - 1) {
+                    useAppDispatch(
+                        setDecisionEngineOptionTab(decisionEngineOptionTab + 1)
+                    )
+                    useAppDispatch(setDecisionCriteriaQueryKey(undefined))
+                    return false
+                }
             }
         }
         return true
@@ -193,7 +225,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
 
     const handleForward = async () => {
         const isValid = await validationHandler(selectedTab)
-        if (selectedTab !== DecisionSideBarOptions.length && isValid) {
+        if (selectedTab !== decisionSideBarOptions.length && isValid) {
             setSelectedTab(selectedTab + 1)
         }
         useAppDispatch(setDecisionCriteriaQueryKey(undefined))
@@ -231,10 +263,45 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     }
 
     const handleBackwards = () => {
-        if (selectedTab === 4 && selectedOptionTab !== 0) {
-            useAppDispatch(setDecisionEngineOptionTab(selectedOptionTab - 1))
-        } else if (selectedTab !== 1) {
-            setSelectedTab(selectedTab - 1)
+        // for mobile
+        if (isMobile && selectedTab === 4) {
+            if (criteriaMobileIndex !== 0) {
+                useAppDispatch(setCriteriaMobileIndex(criteriaMobileIndex - 1))
+            } else {
+                const criteriaFilter = getValues('criteria').filter(
+                    (item: Criteria) => {
+                        if (item.name) {
+                            return item
+                        }
+                    }
+                )
+                if (decisionEngineOptionTab !== 0) {
+                    useAppDispatch(
+                        setDecisionEngineOptionTab(decisionEngineOptionTab - 1)
+                    )
+                    useAppDispatch(
+                        setCriteriaMobileIndex(criteriaFilter.length - 1)
+                    )
+                } else {
+                    setSelectedTab(selectedTab - 1)
+                    useAppDispatch(setCriteriaMobileIndex(0))
+                }
+            }
+        } else {
+            if (isMobile && selectedTab !== 1) {
+                setSelectedTab(selectedTab - 1)
+            }
+        }
+
+        // for desktop
+        if (!isMobile) {
+            if (selectedTab === 4 && decisionEngineOptionTab !== 0) {
+                useAppDispatch(
+                    setDecisionEngineOptionTab(decisionEngineOptionTab - 1)
+                )
+            } else if (selectedTab !== 1) {
+                setSelectedTab(selectedTab - 1)
+            }
         }
         useAppDispatch(setDecisionCriteriaQueryKey(undefined))
     }
@@ -259,49 +326,44 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 className ? className : ''
             }`}
         >
-            <button
-                className={`${squareButton} mr-auto ${
-                    selectedTab === 1
-                        ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
-                        : 'border-primary focus:border-primary active:border-primary'
-                }`}
-                type="button"
-                onClick={handleBackwards}
-            >
-                <UilArrowLeft className="fill-neutral-700  dark:fill-neutralDark-150" />
-            </button>
-            <div
-                className={`w-3/6 ${
-                    pointerArray[selectedTab - 1] ? 'ml-3' : ''
-                }`}
-            >
-                <ProgressBar
-                    currentStep={selectedTab}
-                    totalSteps={DecisionSideBarOptions.length}
-                    className="w-full"
-                />
-            </div>
-            <button
-                className={`${squareButton} ml-auto ${
-                    pointerArray[selectedTab - 1] && selectedTab !== 5
-                        ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
-                        : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
-                }`}
-                type="button"
-                disabled={selectedTab === 5}
-                onClick={handleForward}
-            >
-                {pointerArray[selectedTab - 1] && selectedTab !== 5 ? (
-                    <span className="text-sm md:text-base">Continue</span>
-                ) : null}
-                <UilArrowRight
-                    className={`${
-                        pointerArray[selectedTab - 1] && selectedTab !== 5
-                            ? 'fill-primary dark:fill-primaryDark'
-                            : 'fill-neutral-700 dark:fill-neutralDark-150'
+            {selectedTab !== 1 ? (
+                <button
+                    className={`${squareButton} ml-auto ${
+                        selectedTab === 1
+                            ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
+                            : 'border-primary focus:border-primary active:border-primary'
                     }`}
-                />
-            </button>
+                    type="button"
+                    onClick={handleBackwards}
+                >
+                    <UilArrowLeft className="fill-neutral-700  dark:fill-neutralDark-150" />
+                </button>
+            ) : (
+                <div className="ml-auto" />
+            )}
+            {selectedTab !== 5 && (
+                <button
+                    className={`${squareButton} ml-3 ${
+                        pointerArray[selectedTab - 1] && selectedTab !== 5
+                            ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
+                            : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
+                    }`}
+                    type="button"
+                    disabled={selectedTab === 5}
+                    onClick={handleForward}
+                >
+                    {pointerArray[selectedTab - 1] && selectedTab !== 5 ? (
+                        <span className="text-sm md:text-base">Continue</span>
+                    ) : null}
+                    <UilArrowRight
+                        className={`${
+                            pointerArray[selectedTab - 1] && selectedTab !== 5
+                                ? 'fill-primary dark:fill-primaryDark'
+                                : 'fill-neutral-700 dark:fill-neutralDark-150'
+                        }`}
+                    />
+                </button>
+            )}
         </div>
     )
 }

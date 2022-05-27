@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import { capitalize } from '../../utils/helpers/common'
 import { AISuggestions } from '../../utils/types/global'
 import { DecisionSliceStates, FormCopy } from '../interfaces'
 
@@ -25,12 +26,16 @@ const initialState: DecisionSliceStates = {
     decisionActivityId: undefined,
     decisionQuestion: undefined,
     userExceedsMaxDecisions: false,
+    criteriaMobileIndex: 0,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setCriteriaMobileIndex: (state, { payload }: PayloadAction<number>) => {
+            state.criteriaMobileIndex = payload
+        },
         setRatingTabChecker: (state, { payload }: PayloadAction<boolean[]>) => {
             state.ratingTabChecker = payload
         },
@@ -104,13 +109,13 @@ export const decisionSlice = createSlice({
             { payload }: PayloadAction<AISuggestions>
         ) => {
             state.suggestions.optionsList = payload.options.map(item => {
-                return { name: item, isAI: true }
+                return { name: capitalize(item), isAI: true }
             })
             const commonCriteria = payload.common_criteria.map(item => {
-                return { name: item, weight: 2, isAI: true }
+                return { name: capitalize(item), weight: 2, isAI: true }
             })
             const contextCriteria = payload.context_criteria.map(item => {
-                return { name: item, weight: 3, isAI: true }
+                return { name: capitalize(item), weight: 3, isAI: true }
             })
             state.suggestions.criteriaList = [
                 ...commonCriteria,
@@ -181,6 +186,7 @@ export const {
     setDecisionActivityId,
     setDecisionQuestion,
     setUserExceedsMaxDecisions,
+    setCriteriaMobileIndex,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

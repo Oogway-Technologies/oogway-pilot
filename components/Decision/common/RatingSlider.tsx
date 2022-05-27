@@ -62,7 +62,7 @@ export const RatingSlider: FC<RatingSliderProps> = ({
                         highlight
                             ? 'text-primary dark:text-primaryDark'
                             : 'text-neutral-700 dark:text-neutral-150'
-                    } inline-flex items-center gap-x-md capitalize`}
+                    } inline-flex items-center gap-x-md`}
                 >
                     {title}{' '}
                     {user ||

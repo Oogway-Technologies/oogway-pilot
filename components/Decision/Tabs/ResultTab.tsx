@@ -205,7 +205,7 @@ export const ResultTab: FC<ResultTabProps> = ({
                     ) : null
                 )}
             </div>
-            <div className="flex items-center pt-5 space-x-6">
+            <div className="flex items-center pt-5 mx-auto space-x-6">
                 <button
                     onClick={handleReset}
                     className={feedToolbarClass.newPostButton}
