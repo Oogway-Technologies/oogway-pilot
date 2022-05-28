@@ -16,6 +16,7 @@ import {
     maxAllowedUnauthenticatedDecisions,
     shortLimit,
 } from '../../../utils/constants/global'
+import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import { ErrorWraper } from '../../Utils/ErrorWraper'
 
 interface DecisionTabProps {
@@ -66,6 +67,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                 <input
                     className={inputStyle}
                     type="text"
+                    onKeyPress={preventDefaultOnEnter}
                     placeholder="Where should I move to?"
                     {...register('question' as const, {
                         required: {
