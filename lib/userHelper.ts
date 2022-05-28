@@ -9,21 +9,29 @@ import {
     query,
     serverTimestamp,
     setDoc,
+    updateDoc,
     where,
 } from 'firebase/firestore'
 
 import { db } from '../firebase'
 import { fetcher } from '../utils/helpers/common'
-import { FirebaseProfile, FirebaseUser } from '../utils/types/firebase'
+import {
+    FirebaseProfile,
+    FirebaseUser,
+    userConverter,
+} from '../utils/types/firebase'
 
 export const getOrCreateUserFromFirebase = async (
-    user: UserProfile
+    user: UserProfile,
+    ipAddress: string | null | undefined
 ): Promise<any> => {
     try {
         // Check if the Auth0-Firebase mapping is available
-        // TODO: Check if the user is in the database and/or is defined
         const checkIfUserExists = await getDocs(
-            query(collection(db, 'users'), where('auth0', '==', user.sub))
+            query(
+                collection(db, 'users'),
+                where('auth0', '==', user.sub)
+            ).withConverter(userConverter)
         )
         // Create user if it doesn't already exist
         if (!checkIfUserExists.docs.length) {
@@ -44,8 +52,9 @@ export const getOrCreateUserFromFirebase = async (
                 blockedUsers: {}, // List of people blocked by the user
                 posts: {}, // List of posts the user has made,
                 timestamp: serverTimestamp(),
+                ipAddresses: ipAddress ? [ipAddress] : [],
             }
-
+            // Create a new authenticated user in Firebase
             const newlyAddedUserRef = await addDoc(
                 collection(db, 'users'),
                 newUser
@@ -68,10 +77,34 @@ export const getOrCreateUserFromFirebase = async (
             }
             await setDoc(doc(db, 'profiles', newlyAddedUserRef.id), newProfile)
 
-            // Create a new authenticated user in Firebase
-
             // Return the new profile
             return newProfile
+        } else {
+            if (
+                ipAddress &&
+                ipAddress !== '127.0.0.1' &&
+                ipAddress.includes('.')
+            ) {
+                const existingUser = checkIfUserExists.docs[0].data()
+                if (!('ipAddress' in existingUser)) {
+                    // If user exists and doesn't have ipAddress, add ipAddress to user object
+                    await updateDoc(
+                        doc(db, 'users', checkIfUserExists.docs[0].id),
+                        { ipAddresses: [ipAddress] }
+                    )
+                } else {
+                    // If user exists and tracked ip address is not in current user object
+                    // add to list of ipAddresses
+                    if (!existingUser.ipAddresses?.includes(ipAddress)) {
+                        existingUser.ipAddresses?.push(ipAddress)
+                        await setDoc(
+                            doc(db, 'users', checkIfUserExists.docs[0].id),
+                            existingUser,
+                            { merge: true }
+                        )
+                    }
+                }
+            }
         }
 
         // User already exists, fetch profile and return it

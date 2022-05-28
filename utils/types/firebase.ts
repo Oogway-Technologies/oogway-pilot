@@ -82,6 +82,7 @@ export interface FirebaseUser {
     posts: postsMap
     auth0: string
     timestamp: FieldValue
+    ipAddresses?: string[]
 }
 
 export interface FirebaseProfile {
@@ -283,6 +284,39 @@ export const replyConverter = {
             authorUid: data.authorUid,
             likes: data.likes,
             timestamp: data.timestamp,
+        }
+    },
+}
+
+export const userConverter = {
+    toFirestore(user: FirebaseUser): DocumentData {
+        return {
+            email: user.email,
+            lastSeen: user.lastSeen,
+            name: user.name,
+            provider: user.provider,
+            blockedUsers: user.blockedUsers,
+            posts: user.posts,
+            auth0: user.auth0,
+            timestamp: user.timestamp,
+            ipAddresses: user.ipAddresses ? user.ipAddresses : [],
+        }
+    },
+    fromFirestore(
+        snapshot: QueryDocumentSnapshot,
+        options: SnapshotOptions
+    ): FirebaseUser {
+        const data = snapshot.data(options)
+        return {
+            email: data.email,
+            lastSeen: data.lastSeen,
+            name: data.name,
+            provider: data.provider,
+            blockedUsers: data.blockedUsers,
+            posts: data.posts,
+            auth0: data.auth0,
+            timestamp: data.timestamp,
+            ipAddresses: data.ipAddresses ? data.ipAddresses : [],
         }
     },
 }
