@@ -1,6 +1,7 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
 import { NextApiRequest, NextApiResponse } from 'next'
+import requestIp from 'request-ip'
 
 import { getOrCreateUserFromFirebase } from '../../../lib/userHelper'
 
@@ -56,7 +57,11 @@ const afterCallback = async (req: any, res: any, session: any, state: any) => {
 
     // Everything is good, get (or create) user and profile in firebase on login
     // prior to redirecting to page
-    const userProfile = await getOrCreateUserFromFirebase(session.user)
+    const ipAddress = requestIp.getClientIp(req)
+    const userProfile = await getOrCreateUserFromFirebase(
+        session.user,
+        ipAddress
+    )
 
     // Append firebase uid to auth0 UserProfile
     session.user.uid = userProfile?.uid

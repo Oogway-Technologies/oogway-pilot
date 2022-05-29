@@ -1,5 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import firebase from 'firebase/compat'
+import Cookies from 'js-cookie'
 import Head from 'next/head'
 import React, { useEffect } from 'react'
 
@@ -16,6 +17,7 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
     const { user, isLoading } = useUser()
+    const ipAddress = Cookies.get('userIp')
 
     // This useEffect will run every time the page is reloaded
     // to fetch the user profile information from the backend.
@@ -26,7 +28,7 @@ const Layout = ({ children }: LayoutProps) => {
         // getUserFromFirebase will get the returned user from the backend
         // and set it to redux state by useAppDispatch(setUser(data as FirebaseProfile))
         if (!isLoading && user) {
-            getOrCreateUserFromFirebase(user).then(
+            getOrCreateUserFromFirebase(user, ipAddress).then(
                 (data: FirebaseProfile | DocumentData | undefined) => {
                     useAppDispatch(setUser(data as FirebaseProfile))
                 }
