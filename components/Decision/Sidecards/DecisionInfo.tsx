@@ -1,6 +1,7 @@
 import { FC } from 'react'
 
 import { bodyHeavy, bodySmall } from '../../../styles/typography'
+import { BaseCard } from '../common/BaseCard'
 
 interface DecisionInfoProps {
     className?: string
@@ -14,11 +15,7 @@ export const DecisionInfo: FC<DecisionInfoProps> = ({
     paragraph,
 }: DecisionInfoProps) => {
     return (
-        <div
-            className={`flex flex-col bg-white rounded-2xl shadow-md p-3 dark:bg-neutralDark-500 dark:shadow-black/60   ${
-                className ? className : ''
-            }`}
-        >
+        <BaseCard className={`flex flex-col p-3 ${className ? className : ''}`}>
             <span
                 className={`${bodyHeavy} mb-3 mt-2 text-neutral-700 dark:text-neutralDark-150`}
             >
@@ -29,6 +26,6 @@ export const DecisionInfo: FC<DecisionInfoProps> = ({
             >
                 {paragraph}
             </span>
-        </div>
+        </BaseCard>
     )
 }

@@ -1,10 +1,11 @@
+import { UilQuestionCircle } from '@iconscout/react-unicons'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { removeSelectedCriteria } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { bodyHeavy } from '../../../styles/typography'
+import { body, bodyHeavy } from '../../../styles/typography'
 import { deepCopy } from '../../../utils/helpers/common'
 import AISidebar from '../common/AISidebar'
 import { SuggestionItem } from '../common/SuggestionItem'
@@ -26,7 +27,7 @@ export const CriteriaSuggestions = () => {
     }) => {
         const optionArray = getValues('criteria')
         useAppDispatch(removeSelectedCriteria(item))
-        setValue('criteria', deepCopy([item, ...optionArray]))
+        setValue('criteria', deepCopy([...optionArray, item]))
     }
 
     return (
@@ -34,15 +35,17 @@ export const CriteriaSuggestions = () => {
             <>
                 {criteriaList.length
                     ? !isMobile && (
-                          <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
-                              Click on the listed items to auto-fill.
+                          <span
+                              className={`${body} text-neutral-700 dark:text-neutralDark-150`}
+                          >
+                              Click on suggestion to auto-fill
                           </span>
                       )
                     : null}
                 <div
                     className={`flex w-full max-h-[320px] overflow-auto ${
                         isMobile && criteriaList.length && !loadingAiSuggestions
-                            ? 'items-center space-x-2'
+                            ? 'items-center space-x-5'
                             : 'flex-col space-y-2'
                     }`}
                 >
@@ -65,11 +68,18 @@ export const CriteriaSuggestions = () => {
                     )}
                     {criteriaList.map((item, index) => {
                         return (
-                            <SuggestionItem
-                                key={item.name + index}
-                                suggestionItem={item}
-                                onClick={handleItemAdd}
-                            />
+                            <div
+                                key={`criteria-list-item-${index}`}
+                                className={'flex items-center mt-4 w-full'}
+                            >
+                                <SuggestionItem
+                                    suggestionItem={item}
+                                    onClick={handleItemAdd}
+                                />
+                                <div className=" group flex justify-center items-center p-2 ml-2 h-full hover:bg-primary hover:dark:bg-primaryDark rounded-lg border border-neutral-300 transition-all cursor-pointer">
+                                    <UilQuestionCircle className=" min-w-[20px] min-h-[20px] fill-neutral-300 group-hover:fill-white" />
+                                </div>
+                            </div>
                         )
                     })}
                 </div>

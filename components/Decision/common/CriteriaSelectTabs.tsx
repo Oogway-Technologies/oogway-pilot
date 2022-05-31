@@ -1,25 +1,21 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import useMediaQuery from '../../../hooks/useMediaQuery'
-
-type Tab = { name: string; weight: number }
-const criteriaTabs: Tab[] = [
-    { name: 'Not too\n important  ', weight: 1 },
-    { name: 'Somewhat\n important', weight: 2 },
-    { name: 'Fairly\n important', weight: 3 },
-    { name: 'Super\n important', weight: 4 },
-]
+import { criteriaTabs } from '../../../utils/constants/global'
+import { Tab } from '../../../utils/types/global'
 
 interface CriteriaSelectTabsProps {
     registerName: string
+    isMobile: boolean
+    removeShadow?: boolean
 }
 export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
     registerName,
+    isMobile,
+    removeShadow = false,
 }: CriteriaSelectTabsProps) => {
     const { getValues, setValue } = useFormContext()
     const [selected, setSelected] = useState<Tab>()
-    const isMobile = useMediaQuery('(max-width: 965px)')
 
     useEffect(() => {
         const weight = getValues(registerName)
@@ -41,16 +37,20 @@ export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
                 isMobile
                     ? 'flex-col items-center p-3 space-y-4'
                     : 'items-center p-4 space-x-4 justify-between'
-            } overflow-scroll w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
+            } overflow-scroll w-full bg-white dark:bg-neutralDark-500 rounded-2xl ${
+                removeShadow
+                    ? ''
+                    : 'custom-box-shadow dark:custom-box-shadow-dark'
+            } `}
         >
             {criteriaTabs.map(item => (
                 <div
                     key={`criteria-select-tabs-${item.name}`}
-                    className={`md:text-base text-sm not-italic font-bold tracking-normal ${
+                    className={`md:text-base text-sm not-italic font-bold tracking-normal whitespace-nowrap ${
                         isMobile ? 'w-full' : ''
-                    } flex items-center justify-center py-2 px-8 text-center cursor-pointer rounded-lg ${
+                    } flex items-center justify-center py-2 px-4 text-center cursor-pointer rounded-lg ${
                         selected?.name === item.name
-                            ? 'text-white bg-primary dark:bg-primaryDark'
+                            ? 'text-primary dark:text-primaryDark bg-primary/20 dark:bg-primaryDark/20'
                             : 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutralDark-300'
                     }`}
                     onClick={() => handleClick(item)}

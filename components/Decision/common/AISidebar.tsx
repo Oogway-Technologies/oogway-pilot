@@ -2,6 +2,7 @@ import { UilInfoCircle } from '@iconscout/react-unicons'
 import React, { FC } from 'react'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
+import { bodySmallHeavy } from '../../../styles/typography'
 
 interface AISidebarProps {
     title?: string
@@ -19,16 +20,20 @@ const AISidebar: FC<AISidebarProps> = ({
     const isMobile = useMediaQuery('(max-width: 965px)')
     return (
         <div
-            className={
-                'flex flex-col bg-white dark:bg-neutralDark-500 md:py-4 md:px-3 md:mb-4 md:rounded-2xl md:shadow-md md:dark:shadow-black/60'
-            }
+            className={`flex flex-col ${
+                isMobile
+                    ? 'my-4'
+                    : 'py-4 px-3 mb-4 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark bg-white dark:bg-neutralDark-500'
+            } `}
         >
-            <div className="flex items-center md:mb-3">
+            <div className="flex items-center md:mb-2">
                 {title && (
                     <span
-                        className={
-                            'text-base font-bold leading-6 text-primary dark:text-primaryDark  md:text-2xl'
-                        }
+                        className={`${
+                            isMobile
+                                ? bodySmallHeavy
+                                : 'font-bold leading-6 text-2xl'
+                        } text-primary dark:text-primaryDark`}
                     >
                         {title}
                     </span>

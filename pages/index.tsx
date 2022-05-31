@@ -38,12 +38,9 @@ const DecisionEngine: FC = () => {
 
     const methods = useForm<DecisionForm>({
         defaultValues: {
-            question: '',
-            context: '',
-            options: [
-                { name: '', isAI: false },
-                { name: '', isAI: false },
-            ],
+            question: 'Which game should i play?',
+            context: 'I like shooting games',
+            options: [{ name: '', isAI: false }],
             criteria: [{ name: '', weight: 2, isAI: false }],
             ratings: [
                 {
@@ -97,6 +94,11 @@ const DecisionEngine: FC = () => {
                         isMobile ? `mx-4` : 'my-xl mx-xxl gap-4 h-[78vh]'
                     }`}
                     autoComplete="off"
+                    onKeyDown={event => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault()
+                        }
+                    }}
                 >
                     {/* main body */}
                     <div
@@ -132,35 +134,6 @@ const DecisionEngine: FC = () => {
                                 >
                                     {tabGenerator()}
                                 </DecisionTabWrapper>
-                                {isMobile && (
-                                    <div className={'mb-3 w-full'}>
-                                        {userExceedsMaxDecisions &&
-                                        (currentTab === 2 ||
-                                            currentTab === 3 ||
-                                            currentTab === 4) ? (
-                                            <SignInCard />
-                                        ) : (
-                                            <>
-                                                {currentTab === 2 && (
-                                                    <OptionSuggestions />
-                                                )}
-                                                {currentTab === 3 && (
-                                                    <CriteriaSuggestions />
-                                                )}
-                                                {currentTab === 4 &&
-                                                    decisionCriteriaQueryKey && (
-                                                        <CriteriaInfo />
-                                                    )}
-                                            </>
-                                        )}
-                                        {currentTab === 1 &&
-                                        watchQuestion.split('').length ? (
-                                            <DecisionHelperCard />
-                                        ) : (
-                                            ''
-                                        )}
-                                    </div>
-                                )}
                                 <DecisionBarHandler
                                     className="justify-self-end mt-auto w-full"
                                     selectedTab={currentTab}

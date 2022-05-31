@@ -4,6 +4,7 @@ import { useFormContext } from 'react-hook-form'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
+import { QuestionCard } from '../Sidecards/QuestionCard'
 
 interface DecisionTabWrapperProps {
     className?: string
@@ -23,18 +24,39 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     const { decisionEngineBestOption, decisionEngineOptionTab } =
         useAppSelector(state => state.decisionSlice)
 
-    const containerClass = `flex flex-col  ${
+    const heightDecider = (tab: number) => {
+        switch (tab) {
+            case 1:
+                return 'h-[calc(100vh-22rem)]'
+            case 2:
+                return 'h-[calc(100vh-19.5rem)]'
+            case 3:
+                return 'h-[calc(100vh-19.5rem)]'
+            case 4:
+                return 'h-[50vh]'
+            case 5:
+                return 'h-[60vh]'
+            default:
+                return 'h-[60vh]'
+        }
+    }
+    const containerClass = `flex flex-col ${
         isMobile
-            ? `${currentTab !== 4 ? 'mt-0 space-y-md' : 'mt-4'}`
-            : 'mt-10 space-y-xl'
-    } w-full overflow-y-auto gap-y-sm ${className ? className : ''}`
+            ? `${currentTab !== 4 ? 'mt-0 space-y-md p-0.5' : 'mt-4'}`
+            : 'space-y-lg'
+    } ${
+        [2, 3, 4].includes(currentTab) ? 'mt-0' : 'mt-10'
+    } w-full overflow-y-auto ${heightDecider(currentTab)} ${
+        className ? className : ''
+    }`
 
     return (
         <div className={containerClass}>
+            {[2, 3].includes(currentTab) && !isMobile ? <QuestionCard /> : ''}
             <h3
                 className={`${
-                    isMobile ? bodyHeavy : ' text-2xl font-bold '
-                }text-neutral-800 dark:text-neutralDark-150 capitalize`}
+                    isMobile ? bodyHeavy : 'text-2xl font-bold'
+                } text-neutral-800 dark:text-white capitalize`}
             >
                 {title}
                 {currentTab === 5 && decisionEngineBestOption && (

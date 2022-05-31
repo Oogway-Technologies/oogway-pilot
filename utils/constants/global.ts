@@ -1,6 +1,6 @@
 import service from '../../env/serviceAccount.enc'
 import decryptAES from '../helpers/decryptAES'
-import { TabItem } from '../types/global'
+import { Tab, TabItem } from '../types/global'
 
 /**
 import decryptAES from '../helpers/decryptAES';
@@ -55,4 +55,11 @@ export const decisionSideBarOptions: TabItem[] = [
     { title: 'Criteria', tab: 3 },
     { title: 'Rating', tab: 4 },
     { title: 'Result', tab: 5 },
+]
+
+export const criteriaTabs: Tab[] = [
+    { name: 'Not much', weight: 1 },
+    { name: 'Somewhat', weight: 2 },
+    { name: 'Fairly', weight: 3 },
+    { name: 'Super', weight: 4 },
 ]

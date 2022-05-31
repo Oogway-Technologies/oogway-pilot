@@ -8,7 +8,7 @@ import {
     setUserExceedsMaxDecisions,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { inputStyle } from '../../../styles/utils'
 import {
@@ -18,15 +18,19 @@ import {
 } from '../../../utils/constants/global'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import { ErrorWraper } from '../../Utils/ErrorWraper'
+import { DecisionHelperCard } from '../Sidecards/DecisionHelperCard'
+import { SignInCard } from '../Sidecards/SignInCard'
 
 interface DecisionTabProps {
     deviceIp: string
 }
 
 export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
-    const { register, trigger, clearErrors } = useFormContext()
+    const { register, trigger, clearErrors, getValues } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
-
+    const { userExceedsMaxDecisions } = useAppSelector(
+        state => state.decisionSlice
+    )
     useEffect(() => {
         // to fix error not working on first step.
         trigger('question').then(() => {
@@ -56,43 +60,54 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     }, [isFetched, user])
 
     return (
-        <div
-            className={`flex flex-col space-y-4 ${
-                isMobile
-                    ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl shadow-md custom-box-shadow dark:custom-box-shadow-dark'
-                    : ''
-            }`}
-        >
-            <ErrorWraper errorField="question">
-                <input
-                    className={inputStyle}
-                    type="text"
-                    onKeyPress={preventDefaultOnEnter}
-                    placeholder="Where should I move to?"
-                    {...register('question' as const, {
-                        required: {
-                            value: true,
-                            message: 'You must enter the required question.',
-                        },
-                        maxLength: {
-                            value: shortLimit,
-                            message: `Question length should be less than ${shortLimit}`,
-                        },
-                    })}
-                />
-            </ErrorWraper>
-            <ErrorWraper errorField="context">
-                <textarea
-                    className={`${inputStyle} h-40 resize-none mb-6`}
-                    placeholder="Context for your decision (optional)"
-                    {...register('context', {
-                        maxLength: {
-                            value: longLimit,
-                            message: `Context length should be less than ${longLimit}`,
-                        },
-                    })}
-                />
-            </ErrorWraper>
-        </div>
+        <>
+            <div
+                className={`flex flex-col space-y-4 ${
+                    isMobile
+                        ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl shadow-md custom-box-shadow dark:custom-box-shadow-dark'
+                        : ''
+                }`}
+            >
+                <ErrorWraper errorField="question">
+                    <input
+                        className={inputStyle}
+                        type="text"
+                        onKeyPress={preventDefaultOnEnter}
+                        placeholder="Where should I move to?"
+                        {...register('question' as const, {
+                            required: {
+                                value: true,
+                                message:
+                                    'You must enter the required question.',
+                            },
+                            maxLength: {
+                                value: shortLimit,
+                                message: `Question length should be less than ${shortLimit}`,
+                            },
+                        })}
+                    />
+                </ErrorWraper>
+                <ErrorWraper errorField="context">
+                    <textarea
+                        className={`${inputStyle} h-40 resize-none mb-6`}
+                        placeholder="Context for your decision (optional)"
+                        {...register('context', {
+                            maxLength: {
+                                value: longLimit,
+                                message: `Context length should be less than ${longLimit}`,
+                            },
+                        })}
+                    />
+                </ErrorWraper>
+            </div>
+            {isMobile ? (
+                !userExceedsMaxDecisions &&
+                getValues('question').split('').length ? (
+                    <DecisionHelperCard />
+                ) : (
+                    <SignInCard />
+                )
+            ) : null}
+        </>
     )
 }
