@@ -42,7 +42,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
         userExceedsMaxDecisions,
     } = useAppSelector(state => state.decisionSlice)
 
-    const { fields, prepend, remove } = useFieldArray({
+    const { fields, remove } = useFieldArray({
         control,
         name: 'options',
     })
@@ -143,10 +143,13 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                                         event.key === 'Enter' &&
                                         event.currentTarget.value
                                     ) {
-                                        prepend({
-                                            name: event.currentTarget.value,
-                                            isAI: false,
-                                        })
+                                        setValue('options', [
+                                            ...watchOptions,
+                                            {
+                                                name: event.currentTarget.value,
+                                                isAI: false,
+                                            },
+                                        ])
                                         setValue(`options.[0].name`, '')
                                     }
                                 }}
@@ -166,11 +169,14 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                                 })}
                                 onBlur={event => {
                                     if (event.target.value) {
-                                        prepend({
-                                            name: event.target.value,
-                                            isAI: false,
-                                        })
-                                        setValue('options.[0].name', '')
+                                        setValue('options', [
+                                            ...watchOptions,
+                                            {
+                                                name: event.currentTarget.value,
+                                                isAI: false,
+                                            },
+                                        ])
+                                        setValue(`options.[0].name`, '')
                                     }
                                 }}
                             />
@@ -201,6 +207,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                         {fields.map((item, index) =>
                             index !== 0 ? (
                                 <OptionCard
+                                    key={`option-card-${index}`}
                                     index={index}
                                     item={item as any}
                                     onClickRemove={() => handleModal(index)}

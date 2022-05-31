@@ -38,8 +38,8 @@ const DecisionEngine: FC = () => {
 
     const methods = useForm<DecisionForm>({
         defaultValues: {
-            question: 'Which game should i play?',
-            context: 'I like shooting games',
+            question: '',
+            context: '',
             options: [{ name: '', isAI: false }],
             criteria: [{ name: '', weight: 2, isAI: false }],
             ratings: [

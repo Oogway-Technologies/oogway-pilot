@@ -87,6 +87,8 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     }
 
     const validationHandler = async (tab: number) => {
+        console.log('Form state-> ', getValues())
+
         if (tab === 1) {
             await trigger(['question', 'context'])
             if (errors?.['question']?.message || errors?.['context']?.message) {
@@ -119,6 +121,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
         if (tab === 2) {
             await trigger(['options'])
+            console.log(errors)
             if (errors?.options && errors?.options.length) {
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false

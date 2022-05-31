@@ -33,9 +33,9 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             case 3:
                 return 'h-[calc(100vh-19.5rem)]'
             case 4:
-                return 'h-[50vh]'
+                return 'h-[calc(100vh-25.5rem)]'
             case 5:
-                return 'h-[60vh]'
+                return 'h-[calc(100vh-21.5rem)]'
             default:
                 return 'h-[60vh]'
         }

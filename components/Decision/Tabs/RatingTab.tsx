@@ -8,7 +8,7 @@ import {
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { deepCopy } from '../../../utils/helpers/common'
-import { Rating, Ratings } from '../../../utils/types/global'
+import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
 import { RatingSelector } from '../common/RatingSelector'
 
 export const RatingTab: FC = () => {
@@ -49,8 +49,18 @@ export const RatingTab: FC = () => {
 
     useEffect(() => {
         if (decisionRatingUpdate) {
-            const optionsList = getValues('options')
-            const criteriaList = getValues('criteria')
+            const orgOptionsList = getValues('options')
+            const orgCriteriaList = getValues('criteria')
+
+            const criteriaList = orgCriteriaList.filter(
+                (item: Criteria) => item.name
+            )
+            const optionsList = orgOptionsList.filter(
+                (item: Options) => item.name
+            )
+            setValue('options', optionsList)
+            setValue('criteria', criteriaList)
+
             const mapRatingObject: Ratings[] = []
             const reShapeCriteriaList: Rating[] = []
 

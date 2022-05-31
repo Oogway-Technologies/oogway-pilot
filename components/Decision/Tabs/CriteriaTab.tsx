@@ -35,7 +35,7 @@ export const CriteriaTab = () => {
         state => state.decisionSlice
     )
 
-    const { fields, prepend, remove } = useFieldArray({
+    const { fields, remove } = useFieldArray({
         control,
         name: 'criteria',
     })
@@ -134,11 +134,14 @@ export const CriteriaTab = () => {
                                         event.key === 'Enter' &&
                                         event.currentTarget.value
                                     ) {
-                                        prepend({
-                                            name: event.currentTarget.value,
-                                            weight: 2,
-                                            isAI: false,
-                                        })
+                                        setValue('criteria', [
+                                            ...watchCriteria,
+                                            {
+                                                name: event.currentTarget.value,
+                                                weight: 2,
+                                                isAI: false,
+                                            },
+                                        ])
                                         setValue('criteria.[0].name', '')
                                     }
                                 }}
@@ -161,11 +164,14 @@ export const CriteriaTab = () => {
                                 )}
                                 onBlur={event => {
                                     if (event.target.value) {
-                                        prepend({
-                                            name: event.target.value,
-                                            weight: 2,
-                                            isAI: false,
-                                        })
+                                        setValue('criteria', [
+                                            ...watchCriteria,
+                                            {
+                                                name: event.currentTarget.value,
+                                                weight: 2,
+                                                isAI: false,
+                                            },
+                                        ])
                                         setValue('criteria.[0].name', '')
                                     }
                                 }}
