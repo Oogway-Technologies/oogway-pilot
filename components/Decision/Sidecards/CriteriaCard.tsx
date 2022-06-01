@@ -32,10 +32,10 @@ export const CriteriaCard = ({
             key={item.id}
             className="flex items-center p-3 w-full bg-white dark:bg-neutralDark-300"
         >
-            <div className="flex flex-col w-full truncate">
-                <div className="flex items-center ">
+            <div className="flex flex-col w-full">
+                <div className="flex items-center">
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2 `}
+                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2`}
                     >
                         {item.name}
                     </span>
@@ -57,7 +57,7 @@ export const CriteriaCard = ({
                 <span
                     className={`${body} text-neutral-700 dark:text-neutral-150 whitespace-nowrap truncate w-full`}
                 >
-                    {weightToString(item.weight)}
+                    {weightToString(item.weight)} important
                 </span>
             </div>
         </BaseCard>
@@ -88,13 +88,13 @@ export const CriteriaCard = ({
                 <span
                     className={`${body} text-neutral-700 dark:text-neutral-150 whitespace-nowrap truncate w-full`}
                 >
-                    {weightToString(item.weight)}
+                    {weightToString(item.weight)} important
                 </span>
             </div>
 
             {item.isAI ? (
                 <span
-                    className={`${bodyXSmall} text-primary dark:text-primaryDark text-center pt-1 pb-4`}
+                    className={`${bodyXSmall} text-primary dark:text-primaryDark text-center py-3`}
                 >
                     AI Suggestion
                 </span>

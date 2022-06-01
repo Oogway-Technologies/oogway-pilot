@@ -3,16 +3,16 @@ import React, { FC } from 'react'
 
 import { body } from '../../styles/typography'
 
-interface ErrorWraperFieldProps {
+interface ErrorWrapperFieldProps {
     errorField: string
     children: JSX.Element | JSX.Element[]
     textClass?: string
 }
-export const ErrorWraperField: FC<ErrorWraperFieldProps> = ({
+export const ErrorWrapperField: FC<ErrorWrapperFieldProps> = ({
     errorField,
     children,
     textClass,
-}: ErrorWraperFieldProps) => {
+}: ErrorWrapperFieldProps) => {
     return (
         <div className="relative w-full h-auto">
             {children}

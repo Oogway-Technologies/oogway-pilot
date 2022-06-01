@@ -11,10 +11,10 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { body, bodyHeavy, bodySmall } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { criteriaTabs, shortLimit } from '../../../utils/constants/global'
-import { weightToString } from '../../../utils/helpers/common'
+import { insertAtArray, weightToString } from '../../../utils/helpers/common'
 import { Criteria } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
-import { ErrorWraperField } from '../../Utils/ErrorWraperField'
+import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
 import { BaseCard } from '../common/BaseCard'
 import { CriteriaSelectTabs } from '../common/CriteriaSelectTabs'
@@ -29,6 +29,7 @@ export const CriteriaTab = () => {
         setValue,
         formState: { errors },
         watch,
+        setFocus,
     } = useFormContext()
 
     const { userExceedsMaxDecisions } = useAppSelector(
@@ -83,6 +84,9 @@ export const CriteriaTab = () => {
     }
 
     useEffect(() => {
+        // to focus on input on mount
+        setFocus('options.[0].name')
+
         return () => {
             useAppDispatch(setPreviousIndex(3))
             setOpen(false)
@@ -93,8 +97,16 @@ export const CriteriaTab = () => {
                 name: '',
                 weight: 1,
             })
+            setValue('criteria.[0].name', '')
         }
     }, [])
+
+    useEffect(() => {
+        // handle focus on enter
+        if (!watchCriteria[0].name) {
+            setFocus('criteria.[0].name')
+        }
+    }, [watchCriteria])
 
     return (
         <div className="flex flex-col mx-1">
@@ -117,7 +129,7 @@ export const CriteriaTab = () => {
                         key={item.id}
                         className="flex flex-col py-5 px-4 mt-4"
                     >
-                        <ErrorWraperField
+                        <ErrorWrapperField
                             errorField={
                                 errors?.criteria &&
                                 errors?.criteria[index]?.name?.message
@@ -134,14 +146,14 @@ export const CriteriaTab = () => {
                                         event.key === 'Enter' &&
                                         event.currentTarget.value
                                     ) {
-                                        setValue('criteria', [
-                                            ...watchCriteria,
-                                            {
+                                        setValue(
+                                            'criteria',
+                                            insertAtArray(watchCriteria, 1, {
                                                 name: event.currentTarget.value,
                                                 weight: 2,
                                                 isAI: false,
-                                            },
-                                        ])
+                                            })
+                                        )
                                         setValue('criteria.[0].name', '')
                                     }
                                 }}
@@ -162,21 +174,8 @@ export const CriteriaTab = () => {
                                         },
                                     }
                                 )}
-                                onBlur={event => {
-                                    if (event.target.value) {
-                                        setValue('criteria', [
-                                            ...watchCriteria,
-                                            {
-                                                name: event.currentTarget.value,
-                                                weight: 2,
-                                                isAI: false,
-                                            },
-                                        ])
-                                        setValue('criteria.[0].name', '')
-                                    }
-                                }}
                             />
-                        </ErrorWraperField>
+                        </ErrorWrapperField>
                         <span
                             className={`text-neutral-700 dark:text-neutralDark-150 ${bodySmall} mt-5 mb-2`}
                         >
@@ -211,6 +210,7 @@ export const CriteriaTab = () => {
                         {watchCriteria.map((item, index) =>
                             index !== 0 ? (
                                 <CriteriaCard
+                                    key={`criteria-card-${index}`}
                                     item={item as any}
                                     onClickRemove={() => handleModal(index)}
                                     onClickEdit={() =>
@@ -252,7 +252,7 @@ export const CriteriaTab = () => {
             </Modal>
 
             <Modal show={isEdit} onClose={handleCloseEdit}>
-                <div className="flex flex-col w-96">
+                <div className="flex flex-col w-full">
                     <div className="flex items-center mb-4">
                         <UilPen
                             className={'mr-1 fill-neutral-800 dark:fill-white'}
@@ -302,7 +302,7 @@ export const CriteriaTab = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-4">
                         <Button
                             keepText
                             text="Cancel"

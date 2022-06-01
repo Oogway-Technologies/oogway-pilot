@@ -1,4 +1,4 @@
-import { UilQuestionCircle, UilSpinner } from '@iconscout/react-unicons'
+import { UilSpinner } from '@iconscout/react-unicons'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
@@ -6,7 +6,7 @@ import { removeSelectedOption } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { body, bodyHeavy } from '../../../styles/typography'
-import { deepCopy } from '../../../utils/helpers/common'
+import { deepCopy, insertAtArray } from '../../../utils/helpers/common'
 import AISidebar from '../common/AISidebar'
 import { SuggestionItem } from '../common/SuggestionItem'
 
@@ -26,29 +26,7 @@ export const OptionSuggestions = () => {
     }) => {
         const optionArray = getValues('options')
         useAppDispatch(removeSelectedOption(item))
-        setValue('options', deepCopy([...optionArray, item]))
-
-        // if (optionArray.length < 5) {
-        //     useAppDispatch(removeSelectedOption(item))
-        //     if (optionArray[0].name && !optionArray[1].name) {
-        //         optionArray[1] = item
-        //         setValue(
-        //             'options',
-        //             deepCopy([...optionArray, { name: '', isAI: false }])
-        //         )
-        //     } else if (!optionArray[0].name) {
-        //         optionArray[0] = item
-        //         setValue('options', deepCopy([...optionArray]))
-        //     } else {
-        //         setValue('options', deepCopy([item, ...optionArray]))
-        //     }
-        // } else {
-        //     if (!optionArray[4].name) {
-        //         useAppDispatch(removeSelectedOption(item))
-        //         optionArray[4] = item
-        //         setValue('options', deepCopy([...optionArray]))
-        //     }
-        // }
+        setValue('options', deepCopy(insertAtArray(optionArray, 1, item)))
     }
 
     return (
@@ -100,9 +78,9 @@ export const OptionSuggestions = () => {
                                     suggestionItem={item}
                                     onClick={handleItemAdd}
                                 />
-                                <div className=" group flex justify-center items-center p-2 ml-2 h-full hover:bg-primary hover:dark:bg-primaryDark rounded-lg border border-neutral-300 transition-all cursor-pointer">
+                                {/* <div className=" group flex justify-center items-center p-2 ml-2 h-full hover:bg-primary hover:dark:bg-primaryDark rounded-lg border border-neutral-300 transition-all cursor-pointer">
                                     <UilQuestionCircle className=" min-w-[20px] min-h-[20px] fill-neutral-300 group-hover:fill-white" />
-                                </div>
+                                </div> */}
                             </div>
                         )
                     })}

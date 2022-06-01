@@ -65,7 +65,7 @@ export const HappyGuy = () => (
         height="235"
         viewBox="0 0 190 235"
         fill="none"
-        className={'-mb-2 -ml-4'}
+        style={{ marginBottom: '-8px', marginLeft: '-16px' }}
     >
         <rect
             x="-1"

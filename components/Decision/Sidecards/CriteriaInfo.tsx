@@ -175,7 +175,7 @@ export const CriteriaInfo: FC = () => {
                 ) : (
                     <div
                         className={
-                            'flex flex-col w-full bg-neutral-25 dark:bg-neutralDark-300 rounded-xl md:p-sm md:shadow-md md:dark:shadow-black/10'
+                            'flex flex-col w-full bg-neutral-25 dark:bg-neutralDark-300 rounded-xl md:p-sm custom-box-shadow dark:custom-box-shadow-dark'
                         }
                     >
                         {isError ? (

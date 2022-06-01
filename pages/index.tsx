@@ -27,6 +27,7 @@ import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
+import { insertAtArray } from '../utils/helpers/common'
 import { DecisionForm } from '../utils/types/global'
 
 const DecisionEngine: FC = () => {
@@ -51,14 +52,42 @@ const DecisionEngine: FC = () => {
             ],
         },
     })
-    const { control } = methods
+    const { control, getValues, setValue } = methods
 
     // Whenever watch question changes, reset decision helper card and clicked connnct state
     const watchQuestion = useWatch({ name: 'question', control })
+
     useEffect(() => {
         useAppDispatch(setSideCardStep(1))
         useAppDispatch(setClickedConnect(false))
     }, [watchQuestion])
+
+    useEffect(() => {
+        const optionList = getValues('options')
+        const criteriaList = getValues('criteria')
+        if (
+            currentTab !== 4 &&
+            currentTab !== 5 &&
+            (optionList[0].name || criteriaList[0].name)
+        ) {
+            if (optionList[0].name) {
+                setValue(
+                    'options',
+                    insertAtArray(optionList, 0, { name: '', isAI: false })
+                )
+            }
+            if (criteriaList[0].name) {
+                setValue(
+                    'criteria',
+                    insertAtArray(criteriaList, 0, {
+                        name: '',
+                        weight: 2,
+                        isAI: false,
+                    })
+                )
+            }
+        }
+    }, [currentTab])
 
     const tabGenerator = () => {
         switch (currentTab) {
@@ -104,7 +133,7 @@ const DecisionEngine: FC = () => {
                     <div
                         className={`${bigContainer} ${
                             isMobile
-                                ? 'col-span-4 h-[70vh]'
+                                ? 'col-span-4 h-[65vh]'
                                 : 'col-span-3 h-full bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
                         }`}
                     >
@@ -134,11 +163,13 @@ const DecisionEngine: FC = () => {
                                 >
                                     {tabGenerator()}
                                 </DecisionTabWrapper>
-                                <DecisionBarHandler
-                                    className="justify-self-end mt-auto w-full"
-                                    selectedTab={currentTab}
-                                    setSelectedTab={setCurrentTab}
-                                />
+                                {!isMobile && (
+                                    <DecisionBarHandler
+                                        className="justify-self-end mt-auto w-full"
+                                        selectedTab={currentTab}
+                                        setSelectedTab={setCurrentTab}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>
@@ -177,6 +208,13 @@ const DecisionEngine: FC = () => {
                         </div>
                     )}
                 </form>
+                {isMobile && (
+                    <DecisionBarHandler
+                        className="justify-self-end pr-3 mt-auto w-full"
+                        selectedTab={currentTab}
+                        setSelectedTab={setCurrentTab}
+                    />
+                )}
                 {/* step bar for mobile */}
                 {isMobile && (
                     <DecisionSideBar

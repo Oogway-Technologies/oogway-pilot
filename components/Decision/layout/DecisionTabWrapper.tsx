@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
-import { QuestionCard } from '../Sidecards/QuestionCard'
+// import { QuestionCard } from '../Sidecards/QuestionCard'
 
 interface DecisionTabWrapperProps {
     className?: string
@@ -27,15 +27,15 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     const heightDecider = (tab: number) => {
         switch (tab) {
             case 1:
-                return 'h-[calc(100vh-22rem)]'
+                return 'h-[calc(100vh-19.5rem)]'
             case 2:
-                return 'h-[calc(100vh-19.5rem)]'
+                return 'h-[calc(100vh-17.5rem)]'
             case 3:
-                return 'h-[calc(100vh-19.5rem)]'
+                return 'h-[calc(100vh-17.5rem)]'
             case 4:
-                return 'h-[calc(100vh-25.5rem)]'
+                return 'h-[calc(100vh-25rem)]'
             case 5:
-                return 'h-[calc(100vh-21.5rem)]'
+                return 'h-[calc(100vh-20.5rem)]'
             default:
                 return 'h-[60vh]'
         }
@@ -52,7 +52,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
 
     return (
         <div className={containerClass}>
-            {[2, 3].includes(currentTab) && !isMobile ? <QuestionCard /> : ''}
+            {/* {[2, 3].includes(currentTab) && !isMobile ? <QuestionCard /> : ''} */}
             <h3
                 className={`${
                     isMobile ? bodyHeavy : 'text-2xl font-bold'

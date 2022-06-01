@@ -14,8 +14,9 @@ import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
+import { insertAtArray } from '../../../utils/helpers/common'
 import Button from '../../Utils/Button'
-import { ErrorWraperField } from '../../Utils/ErrorWraperField'
+import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
 import { BaseCard } from '../common/BaseCard'
 import { OptionCard } from '../Sidecards/OptionCard'
@@ -34,6 +35,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
         getValues,
         formState: { errors },
         watch,
+        setFocus,
     } = useFormContext()
 
     const {
@@ -56,10 +58,14 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
     const watchOptions = watch('options')
 
     useEffect(() => {
+        // to focus on input on mount
+        setFocus('options.[0].name')
+
         return () => {
             useAppDispatch(setPreviousIndex(2))
             setOpen(false)
             setIndex(undefined)
+            setValue(`options.[0].name`, '')
 
             // On mount, check if new question matches previous question
             // If not, update state to new question and instantiate new
@@ -85,6 +91,13 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
             }
         }
     }, [])
+
+    useEffect(() => {
+        // handle focus on enter
+        if (!watchOptions[0].name) {
+            setFocus('options.[0].name')
+        }
+    }, [watchOptions])
 
     const handleModal = (index: number) => {
         setIndex(index)
@@ -126,7 +139,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                         key={item.id}
                         className="flex flex-col py-5 px-4 mt-4"
                     >
-                        <ErrorWraperField
+                        <ErrorWrapperField
                             errorField={
                                 errors?.options &&
                                 errors?.options[index]?.name?.message
@@ -143,13 +156,13 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                                         event.key === 'Enter' &&
                                         event.currentTarget.value
                                     ) {
-                                        setValue('options', [
-                                            ...watchOptions,
-                                            {
+                                        setValue(
+                                            'options',
+                                            insertAtArray(watchOptions, 1, {
                                                 name: event.currentTarget.value,
                                                 isAI: false,
-                                            },
-                                        ])
+                                            })
+                                        )
                                         setValue(`options.[0].name`, '')
                                     }
                                 }}
@@ -167,20 +180,8 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                                         message: `Option length should be less than ${shortLimit}`,
                                     },
                                 })}
-                                onBlur={event => {
-                                    if (event.target.value) {
-                                        setValue('options', [
-                                            ...watchOptions,
-                                            {
-                                                name: event.currentTarget.value,
-                                                isAI: false,
-                                            },
-                                        ])
-                                        setValue(`options.[0].name`, '')
-                                    }
-                                }}
                             />
-                        </ErrorWraperField>
+                        </ErrorWrapperField>
                     </BaseCard>
                 ) : (
                     ''

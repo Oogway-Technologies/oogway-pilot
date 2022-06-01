@@ -8,7 +8,7 @@ import {
     setUserExceedsMaxDecisions,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { inputStyle } from '../../../styles/utils'
 import {
@@ -17,9 +17,8 @@ import {
     shortLimit,
 } from '../../../utils/constants/global'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
-import { ErrorWraper } from '../../Utils/ErrorWraper'
+import { ErrorWrapper } from '../../Utils/ErrorWrapper'
 import { DecisionHelperCard } from '../Sidecards/DecisionHelperCard'
-import { SignInCard } from '../Sidecards/SignInCard'
 
 interface DecisionTabProps {
     deviceIp: string
@@ -28,9 +27,7 @@ interface DecisionTabProps {
 export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     const { register, trigger, clearErrors, getValues } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const { userExceedsMaxDecisions } = useAppSelector(
-        state => state.decisionSlice
-    )
+
     useEffect(() => {
         // to fix error not working on first step.
         trigger('question').then(() => {
@@ -64,11 +61,11 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
             <div
                 className={`flex flex-col space-y-4 ${
                     isMobile
-                        ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl shadow-md custom-box-shadow dark:custom-box-shadow-dark'
+                        ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark'
                         : ''
                 }`}
             >
-                <ErrorWraper errorField="question">
+                <ErrorWrapper errorField="question">
                     <input
                         className={inputStyle}
                         type="text"
@@ -86,8 +83,8 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                             },
                         })}
                     />
-                </ErrorWraper>
-                <ErrorWraper errorField="context">
+                </ErrorWrapper>
+                <ErrorWrapper errorField="context">
                     <textarea
                         className={`${inputStyle} h-40 resize-none mb-6`}
                         placeholder="Context for your decision (optional)"
@@ -98,15 +95,10 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                             },
                         })}
                     />
-                </ErrorWraper>
+                </ErrorWrapper>
             </div>
-            {isMobile ? (
-                !userExceedsMaxDecisions &&
-                getValues('question').split('').length ? (
-                    <DecisionHelperCard />
-                ) : (
-                    <SignInCard />
-                )
+            {isMobile && getValues('question').split('').length ? (
+                <DecisionHelperCard />
             ) : null}
         </>
     )
