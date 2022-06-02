@@ -120,7 +120,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
     return (
         <div className="flex flex-col mx-1">
             <span
-                className={`-mt-5 ${body} text-neutral-800 dark:text-neutral-150`}
+                className={`-ml-1 md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
             >
                 Add at least two
             </span>
@@ -166,6 +166,9 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                                         setValue(`options.[0].name`, '')
                                     }
                                 }}
+                                disabled={
+                                    watchOptions.length < 6 ? false : true
+                                }
                                 {...register(`options.${index}.name` as const, {
                                     required: {
                                         value:
@@ -180,6 +183,18 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                                         message: `Option length should be less than ${shortLimit}`,
                                     },
                                 })}
+                                onBlur={event => {
+                                    if (event.currentTarget.value) {
+                                        setValue(
+                                            'options',
+                                            insertAtArray(watchOptions, 1, {
+                                                name: event.currentTarget.value,
+                                                isAI: false,
+                                            })
+                                        )
+                                        setValue(`options.[0].name`, '')
+                                    }
+                                }}
                             />
                         </ErrorWrapperField>
                     </BaseCard>

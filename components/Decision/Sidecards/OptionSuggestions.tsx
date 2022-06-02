@@ -25,8 +25,10 @@ export const OptionSuggestions = () => {
         isAI: boolean
     }) => {
         const optionArray = getValues('options')
-        useAppDispatch(removeSelectedOption(item))
-        setValue('options', deepCopy(insertAtArray(optionArray, 1, item)))
+        if (optionArray.length < 6) {
+            useAppDispatch(removeSelectedOption(item))
+            setValue('options', deepCopy(insertAtArray(optionArray, 1, item)))
+        }
     }
 
     return (

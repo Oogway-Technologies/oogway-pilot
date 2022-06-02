@@ -30,6 +30,7 @@ export const CriteriaTab = () => {
         formState: { errors },
         watch,
         setFocus,
+        getValues,
     } = useFormContext()
 
     const { userExceedsMaxDecisions } = useAppSelector(
@@ -111,7 +112,7 @@ export const CriteriaTab = () => {
     return (
         <div className="flex flex-col mx-1">
             <span
-                className={`-mt-5 ${body} text-neutral-800 dark:text-neutral-150`}
+                className={`-ml-1 md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
             >
                 Add what you want to consider
             </span>
@@ -138,6 +139,7 @@ export const CriteriaTab = () => {
                             }
                         >
                             <input
+                                key={item.id}
                                 className={inputStyle}
                                 type="text"
                                 placeholder={'Enter your Criterion'}
@@ -150,7 +152,9 @@ export const CriteriaTab = () => {
                                             'criteria',
                                             insertAtArray(watchCriteria, 1, {
                                                 name: event.currentTarget.value,
-                                                weight: 2,
+                                                weight: getValues(
+                                                    'criteria.0.weight'
+                                                ),
                                                 isAI: false,
                                             })
                                         )
@@ -174,6 +178,21 @@ export const CriteriaTab = () => {
                                         },
                                     }
                                 )}
+                                onBlur={event => {
+                                    if (event.currentTarget.value) {
+                                        setValue(
+                                            'criteria',
+                                            insertAtArray(watchCriteria, 1, {
+                                                name: event.currentTarget.value,
+                                                weight: getValues(
+                                                    'criteria.0.weight'
+                                                ),
+                                                isAI: false,
+                                            })
+                                        )
+                                        setValue('criteria.[0].name', '')
+                                    }
+                                }}
                             />
                         </ErrorWrapperField>
                         <span
@@ -183,7 +202,7 @@ export const CriteriaTab = () => {
                         </span>
                         <CriteriaSelectTabs
                             key={item.id}
-                            registerName={`criteria.${index}.weight` as const}
+                            registerName={'criteria.0.weight' as const}
                             isMobile={isMobile}
                         />
                     </BaseCard>

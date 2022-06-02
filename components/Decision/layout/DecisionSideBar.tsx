@@ -84,7 +84,7 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         <div
             className={`flex bg-primary dark:bg-neutralDark-300 ${
                 isMobile
-                    ? 'p-2 justify-evenly mt-auto self-end w-full'
+                    ? 'p-2 justify-evenly mt-3 self-end w-full'
                     : 'flex-col justify-center items-center h-full'
             } ${className ? className : ''}`}
         >

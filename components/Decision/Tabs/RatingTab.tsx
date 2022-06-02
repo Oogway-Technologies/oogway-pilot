@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { deepCopy } from '../../../utils/helpers/common'
 import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
 import { RatingSelector } from '../common/RatingSelector'
-import { CriteriaInfo } from '../Sidecards/CriteriaInfo'
 
 export const RatingTab: FC = () => {
     const { getValues, setValue } = useFormContext()
@@ -18,7 +17,6 @@ export const RatingTab: FC = () => {
         decisionEngineOptionTab,
         decisionRatingUpdate,
         criteriaMobileIndex,
-        decisionCriteriaQueryKey,
     } = useAppSelector(state => state.decisionSlice)
 
     const ratingsList: Ratings[] = getValues('ratings')
@@ -122,7 +120,7 @@ export const RatingTab: FC = () => {
             {isMobile ? (
                 <>
                     <div
-                        className="flex flex-col p-1 !m-auto w-full"
+                        className="flex flex-col p-1 mt-auto w-full"
                         key={`rating-tab-slider-${criteriaMobileIndex}`}
                     >
                         <RatingSelector
@@ -136,7 +134,6 @@ export const RatingTab: FC = () => {
                             }
                         />
                     </div>
-                    {decisionCriteriaQueryKey ? <CriteriaInfo /> : null}
                 </>
             ) : (
                 ratingsList[decisionEngineOptionTab] &&

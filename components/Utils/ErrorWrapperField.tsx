@@ -7,14 +7,16 @@ interface ErrorWrapperFieldProps {
     errorField: string
     children: JSX.Element | JSX.Element[]
     textClass?: string
+    className?: string
 }
 export const ErrorWrapperField: FC<ErrorWrapperFieldProps> = ({
     errorField,
     children,
     textClass,
+    className,
 }: ErrorWrapperFieldProps) => {
     return (
-        <div className="relative w-full h-auto">
+        <div className={`relative w-full h-auto ${className ? className : ''}`}>
             {children}
             {errorField && (
                 <div className="flex items-center mt-2">

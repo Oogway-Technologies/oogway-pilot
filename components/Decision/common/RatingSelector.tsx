@@ -4,13 +4,14 @@ import { useFormContext } from 'react-hook-form'
 
 import { setDecisionCriteriaQueryKey } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import {
     bodyHeavy,
     bodySmall,
     bodySmallHeavy,
 } from '../../../styles/typography'
 import Button from '../../Utils/Button'
+import { CriteriaInfo } from '../Sidecards/CriteriaInfo'
 import AskAIButton from './AskAIButton'
 
 interface RatingSelectorProps {
@@ -28,6 +29,9 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { getValues, setValue } = useFormContext()
     const { user } = useUser()
+    const { decisionCriteriaQueryKey } = useAppSelector(
+        state => state.decisionSlice
+    )
 
     useEffect(() => {
         setSelected(getValues(registerName))
@@ -147,6 +151,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                     </span>
                 </div>
             )}
+            {decisionCriteriaQueryKey && isMobile ? <CriteriaInfo /> : null}
         </div>
     )
 }

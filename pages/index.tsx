@@ -133,8 +133,8 @@ const DecisionEngine: FC = () => {
                     <div
                         className={`${bigContainer} ${
                             isMobile
-                                ? 'col-span-4 h-[65vh]'
-                                : 'col-span-3 h-full bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
+                                ? 'col-span-4 h-[70vh]'
+                                : 'col-span-3 h-max bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
                         }`}
                     >
                         {!isMobile && (

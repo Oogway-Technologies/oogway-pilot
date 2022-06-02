@@ -33,9 +33,9 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
     return isMobile ? (
         <BaseCard
             key={item.id}
-            className="flex items-center p-3 w-full bg-white dark:bg-neutralDark-300"
+            className="flex items-center p-3 bg-white dark:bg-neutralDark-300"
         >
-            <div className="flex items-center">
+            <div className="flex items-center w-full">
                 {isEdit ? (
                     <ErrorWrapperField
                         errorField={
@@ -118,15 +118,17 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     </span>
                 ) : null}
             </div>
-            <TabsMenu
-                firstItemText={'Edit Option'}
-                secondItemText={'Delete Option'}
-                onClickFirst={() => {
-                    setEdit(true)
-                }}
-                onClickSecond={onClickRemove}
-                isAI={item.isAI}
-            />
+            {!isEdit && isMobile && (
+                <TabsMenu
+                    firstItemText={'Edit Option'}
+                    secondItemText={'Delete Option'}
+                    onClickFirst={() => {
+                        setEdit(true)
+                    }}
+                    onClickSecond={onClickRemove}
+                    isAI={item.isAI}
+                />
+            )}
         </BaseCard>
     ) : (
         <BaseCard

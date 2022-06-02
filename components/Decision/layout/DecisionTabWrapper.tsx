@@ -21,8 +21,11 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
 }: DecisionTabWrapperProps) => {
     const { getValues } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const { decisionEngineBestOption, decisionEngineOptionTab } =
-        useAppSelector(state => state.decisionSlice)
+    const {
+        decisionEngineBestOption,
+        decisionEngineOptionTab,
+        decisionCriteriaQueryKey,
+    } = useAppSelector(state => state.decisionSlice)
 
     const heightDecider = (tab: number) => {
         switch (tab) {
@@ -33,7 +36,12 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             case 3:
                 return 'h-[calc(100vh-17.5rem)]'
             case 4:
-                return 'h-[calc(100vh-25rem)]'
+                return decisionCriteriaQueryKey
+                    ? 'h-[calc(100vh-25rem)]'
+                    : isMobile
+                    ? 'h-[calc(100vh-30.5rem)]'
+                    : 'h-[calc(100vh-25rem)]'
+
             case 5:
                 return 'h-[calc(100vh-20.5rem)]'
             default:
@@ -47,8 +55,8 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     } ${
         [2, 3, 4].includes(currentTab) ? 'mt-0' : 'mt-10'
     } w-full overflow-y-auto ${heightDecider(currentTab)} ${
-        className ? className : ''
-    }`
+        currentTab === 5 ? '' : ''
+    } ${className ? className : ''}`
 
     return (
         <div className={containerClass}>
