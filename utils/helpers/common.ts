@@ -2,6 +2,7 @@
 
 import { DocumentSnapshot, FieldValue } from 'firebase/firestore'
 
+import { criteriaTabs } from '../constants/global'
 import { jsonTimeObj, TruncateTextProps } from '../types/global'
 
 // count number of like in snapshot
@@ -229,3 +230,27 @@ export const parseTimestamp = (
 export const capitalize = (s: string) => {
     return s.charAt(0).toUpperCase() + s.slice(1)
 }
+
+export const weightToString = (weight: number) => {
+    switch (weight) {
+        case criteriaTabs[0].weight:
+            return criteriaTabs[0].name
+        case criteriaTabs[1].weight:
+            return criteriaTabs[1].name
+        case criteriaTabs[2].weight:
+            return criteriaTabs[2].name
+        case criteriaTabs[3].weight:
+            return criteriaTabs[3].name
+        default:
+            return ''
+    }
+}
+
+export const insertAtArray = (arr: any, index: number, newItem: any) => [
+    // part of the array before the specified index
+    ...arr.slice(0, index),
+    // inserted item
+    newItem,
+    // part of the array after the specified index
+    ...arr.slice(index),
+]

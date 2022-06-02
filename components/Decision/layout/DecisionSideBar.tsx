@@ -84,7 +84,7 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         <div
             className={`flex bg-primary dark:bg-neutralDark-300 ${
                 isMobile
-                    ? 'p-2 justify-evenly mt-auto self-end w-full'
+                    ? 'p-2 justify-evenly mt-3 self-end w-full'
                     : 'flex-col justify-center items-center h-full'
             } ${className ? className : ''}`}
         >
@@ -129,25 +129,22 @@ const DesktopItem = ({
     pointerArray,
 }: ItemProps) => (
     <>
-        <div className="flex items-center pl-3 w-full">
+        <div
+            className={`flex items-center pl-3 w-full ${
+                pointerArray[item.tab - 1] ? 'cursor-pointer' : 'cursor-default'
+            }`}
+            onClick={() => {
+                if (item.tab !== selectedTab && pointerArray[item.tab - 1]) {
+                    setSelectedTab(item.tab)
+                }
+            }}
+        >
             <div
-                onClick={() => {
-                    if (
-                        item.tab !== selectedTab &&
-                        pointerArray[item.tab - 1]
-                    ) {
-                        setSelectedTab(item.tab)
-                    }
-                }}
                 className={`${bodyHeavy} ${
                     selectedTab === index + 1 || index + 1 < selectedTab
                         ? 'text-primary dark:text-white bg-white dark:bg-primaryDark border-primary/50'
                         : 'bg-[#E2D9FC] dark:bg-neutralDark-150 text-neutral-700 dark:text-neutralDark-300 font-normal border-transparent'
-                } flex items-center justify-center w-7 h-7 rounded-full border ${
-                    pointerArray[item.tab - 1]
-                        ? 'cursor-pointer'
-                        : 'cursor-default'
-                }`}
+                } flex items-center justify-center w-7 h-7 rounded-full border`}
             >
                 {index + 1 < selectedTab ? (
                     <UilCheck
@@ -198,25 +195,22 @@ const MobileItem = ({
     pointerArray,
 }: ItemProps) => (
     <>
-        <div className="flex flex-col justify-center items-center w-fit">
+        <div
+            className={`flex flex-col justify-center items-center w-fit ${
+                pointerArray[item.tab - 1] ? 'cursor-pointer' : 'cursor-default'
+            }`}
+            onClick={() => {
+                if (item.tab !== selectedTab && pointerArray[item.tab - 1]) {
+                    setSelectedTab(item.tab)
+                }
+            }}
+        >
             <div
-                onClick={() => {
-                    if (
-                        item.tab !== selectedTab &&
-                        pointerArray[item.tab - 1]
-                    ) {
-                        setSelectedTab(item.tab)
-                    }
-                }}
                 className={`${bodyHeavy} ${
                     selectedTab === index + 1 || index + 1 < selectedTab
                         ? 'text-primary dark:text-white bg-white dark:bg-primaryDark border-primary/50'
                         : 'bg-[#E2D9FC] dark:bg-neutralDark-150 text-neutral-700 dark:text-neutralDark-300 font-normal border-transparent'
-                } flex items-center justify-center w-7 h-7 rounded-full border mb-3 ${
-                    pointerArray[item.tab - 1]
-                        ? 'cursor-pointer'
-                        : 'cursor-default'
-                }`}
+                } flex items-center justify-center w-7 h-7 rounded-full border mb-3 `}
             >
                 {index + 1 < selectedTab ? (
                     <UilCheck

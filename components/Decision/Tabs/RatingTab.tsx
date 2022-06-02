@@ -8,7 +8,7 @@ import {
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { deepCopy } from '../../../utils/helpers/common'
-import { Rating, Ratings } from '../../../utils/types/global'
+import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
 import { RatingSelector } from '../common/RatingSelector'
 
 export const RatingTab: FC = () => {
@@ -48,9 +48,17 @@ export const RatingTab: FC = () => {
     }
 
     useEffect(() => {
+        const orgOptionsList = getValues('options')
+        const orgCriteriaList = getValues('criteria')
+
+        const criteriaList = orgCriteriaList.filter(
+            (item: Criteria) => item.name
+        )
+        const optionsList = orgOptionsList.filter((item: Options) => item.name)
+        setValue('options', optionsList)
+        setValue('criteria', criteriaList)
+
         if (decisionRatingUpdate) {
-            const optionsList = getValues('options')
-            const criteriaList = getValues('criteria')
             const mapRatingObject: Ratings[] = []
             const reShapeCriteriaList: Rating[] = []
 
@@ -110,21 +118,23 @@ export const RatingTab: FC = () => {
     return (
         <>
             {isMobile ? (
-                <div
-                    className="flex flex-col p-1 !m-auto w-full"
-                    key={`rating-tab-slider-${criteriaMobileIndex}`}
-                >
-                    <RatingSelector
-                        registerName={
-                            `ratings.${decisionEngineOptionTab}.rating.${criteriaMobileIndex}.value` as const
-                        }
-                        title={
-                            ratingsList[decisionEngineOptionTab].rating[
-                                criteriaMobileIndex
-                            ].criteria
-                        }
-                    />
-                </div>
+                <>
+                    <div
+                        className="flex flex-col p-1 mt-auto w-full"
+                        key={`rating-tab-slider-${criteriaMobileIndex}`}
+                    >
+                        <RatingSelector
+                            registerName={
+                                `ratings.${decisionEngineOptionTab}.rating.${criteriaMobileIndex}.value` as const
+                            }
+                            title={
+                                ratingsList[decisionEngineOptionTab].rating[
+                                    criteriaMobileIndex
+                                ].criteria
+                            }
+                        />
+                    </div>
+                </>
             ) : (
                 ratingsList[decisionEngineOptionTab] &&
                 ratingsList[decisionEngineOptionTab]?.rating.map(

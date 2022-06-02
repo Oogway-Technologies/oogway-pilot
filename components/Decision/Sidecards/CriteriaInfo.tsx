@@ -164,7 +164,7 @@ export const CriteriaInfo: FC = () => {
                             ${option} and ${criterion}.`
 
     return (
-        <AISidebar subtitle={'AI Answer Card'} infoCircle>
+        <AISidebar subtitle={'Ask AI'} infoCircle>
             <div
                 className={`flex w-full p-2 max-h-[320px] overflow-auto ${
                     isMobile ? 'items-center space-x-2' : 'flex-col space-y-2'
@@ -175,7 +175,7 @@ export const CriteriaInfo: FC = () => {
                 ) : (
                     <div
                         className={
-                            'flex flex-col w-full bg-neutral-25 dark:bg-neutralDark-300 rounded-xl md:p-sm md:shadow-md md:dark:shadow-black/10'
+                            'flex flex-col w-full bg-white dark:bg-neutralDark-300 rounded-xl md:p-sm custom-box-shadow dark:custom-box-shadow-dark'
                         }
                     >
                         {isError ? (

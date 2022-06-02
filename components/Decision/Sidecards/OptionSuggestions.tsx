@@ -5,8 +5,8 @@ import { useFormContext } from 'react-hook-form'
 import { removeSelectedOption } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { bodyHeavy } from '../../../styles/typography'
-import { deepCopy } from '../../../utils/helpers/common'
+import { body, bodyHeavy } from '../../../styles/typography'
+import { deepCopy, insertAtArray } from '../../../utils/helpers/common'
 import AISidebar from '../common/AISidebar'
 import { SuggestionItem } from '../common/SuggestionItem'
 
@@ -25,26 +25,9 @@ export const OptionSuggestions = () => {
         isAI: boolean
     }) => {
         const optionArray = getValues('options')
-        if (optionArray.length < 5) {
+        if (optionArray.length < 6) {
             useAppDispatch(removeSelectedOption(item))
-            if (optionArray[0].name && !optionArray[1].name) {
-                optionArray[1] = item
-                setValue(
-                    'options',
-                    deepCopy([...optionArray, { name: '', isAI: false }])
-                )
-            } else if (!optionArray[0].name) {
-                optionArray[0] = item
-                setValue('options', deepCopy([...optionArray]))
-            } else {
-                setValue('options', deepCopy([item, ...optionArray]))
-            }
-        } else {
-            if (!optionArray[4].name) {
-                useAppDispatch(removeSelectedOption(item))
-                optionArray[4] = item
-                setValue('options', deepCopy([...optionArray]))
-            }
+            setValue('options', deepCopy(insertAtArray(optionArray, 1, item)))
         }
     }
 
@@ -53,15 +36,17 @@ export const OptionSuggestions = () => {
             <>
                 {optionsList.length && !loadingAiSuggestions
                     ? !isMobile && (
-                          <span className="text-base font-normal leading-6 text-neutral-700 dark:text-neutralDark-150">
-                              Click on the listed items to auto-fill.
+                          <span
+                              className={`${body} text-neutral-700 dark:text-neutralDark-150`}
+                          >
+                              Click on suggestion to auto-fill
                           </span>
                       )
                     : null}
                 <div
                     className={`flex w-full max-h-[320px] overflow-auto ${
                         isMobile && optionsList.length && !loadingAiSuggestions
-                            ? 'items-center space-x-2'
+                            ? 'items-center space-x-5'
                             : 'flex-col space-y-2'
                     }`}
                 >
@@ -87,11 +72,18 @@ export const OptionSuggestions = () => {
                     )}
                     {optionsList.map((item, index) => {
                         return (
-                            <SuggestionItem
-                                key={item.name + index}
-                                suggestionItem={item}
-                                onClick={handleItemAdd}
-                            />
+                            <div
+                                key={`option-list-item-${index}`}
+                                className={'flex items-center mt-4 w-full'}
+                            >
+                                <SuggestionItem
+                                    suggestionItem={item}
+                                    onClick={handleItemAdd}
+                                />
+                                {/* <div className=" group flex justify-center items-center p-2 ml-2 h-full hover:bg-primary hover:dark:bg-primaryDark rounded-lg border border-neutral-300 transition-all cursor-pointer">
+                                    <UilQuestionCircle className=" min-w-[20px] min-h-[20px] fill-neutral-300 group-hover:fill-white" />
+                                </div> */}
+                            </div>
                         )
                     })}
                 </div>

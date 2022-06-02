@@ -1,5 +1,5 @@
-import { UilPlus, UilTrash } from '@iconscout/react-unicons'
-import React, { FC, useEffect } from 'react'
+import { UilTrashAlt } from '@iconscout/react-unicons'
+import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
@@ -11,10 +11,17 @@ import {
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
-import { AiBox, inputStyle } from '../../../styles/utils'
+import { body, bodyHeavy } from '../../../styles/typography'
+import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
-import { Options } from '../../../utils/types/global'
-import { ErrorWraperField } from '../../Utils/ErrorWraperField'
+import { insertAtArray } from '../../../utils/helpers/common'
+import Button from '../../Utils/Button'
+import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
+import Modal from '../../Utils/Modal'
+import { BaseCard } from '../common/BaseCard'
+import { OptionCard } from '../Sidecards/OptionCard'
+import { OptionSuggestions } from '../Sidecards/OptionSuggestions'
+import { SignInCard } from '../Sidecards/SignInCard'
 
 interface OptionTabProps {
     deviceIp: string
@@ -24,29 +31,41 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
     const {
         register,
         control,
-        watch,
         setValue,
         getValues,
         formState: { errors },
+        watch,
+        setFocus,
     } = useFormContext()
-    const isMobile = useMediaQuery('(max-width: 965px)')
 
-    const { fields, append, remove } = useFieldArray({
+    const {
+        decisionQuestion: prevQuestion,
+        clickedConnect,
+        userExceedsMaxDecisions,
+    } = useAppSelector(state => state.decisionSlice)
+
+    const { fields, remove } = useFieldArray({
         control,
         name: 'options',
     })
-    const question = getValues('question')
-    const optionsArray = watch(`options`)
 
-    const user = useAppSelector(state => state.userSlice.user)
-    const { decisionQuestion: prevQuestion, clickedConnect } = useAppSelector(
-        state => state.decisionSlice
-    )
+    const [isOpen, setOpen] = useState(false)
+    const [selectedIndex, setIndex] = useState<number>()
     const createDecision = useCreateDecisionActivity()
+    const isMobile = useMediaQuery('(max-width: 965px)')
+    const question = getValues('question')
+    const user = useAppSelector(state => state.userSlice.user)
+    const watchOptions = watch('options')
 
     useEffect(() => {
+        // to focus on input on mount
+        setFocus('options.[0].name')
+
         return () => {
             useAppDispatch(setPreviousIndex(2))
+            setOpen(false)
+            setIndex(undefined)
+            setValue(`options.[0].name`, '')
 
             // On mount, check if new question matches previous question
             // If not, update state to new question and instantiate new
@@ -73,45 +92,87 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
         }
     }, [])
 
-    // handler functions
-    const checkFilledFields = () => {
-        let check = false
-        optionsArray.forEach((option: { name: string }) => {
-            if (!option.name) {
-                check = true
-            }
-        })
-        return check
+    useEffect(() => {
+        // handle focus on enter
+        if (!watchOptions[0].name) {
+            setFocus('options.[0].name')
+        }
+    }, [watchOptions])
+
+    const handleModal = (index: number) => {
+        setIndex(index)
+        setOpen(true)
+    }
+
+    const handleDelete = () => {
+        if (selectedIndex && watchOptions[selectedIndex].isAI) {
+            useAppDispatch(addSelectedOption(watchOptions[selectedIndex]))
+        }
+        remove(selectedIndex)
+        setOpen(false)
+    }
+
+    const handleClose = () => {
+        setIndex(undefined)
+        setOpen(false)
     }
 
     return (
-        <>
-            {fields.map((item, index) => (
-                <div key={item.id} className={'flex items-start w-full'}>
-                    <ErrorWraperField
-                        errorField={
-                            errors?.options &&
-                            errors?.options[index]?.name?.message
-                                ? errors?.options[index]?.name?.message
-                                : ''
-                        }
+        <div className="flex flex-col mx-1">
+            <span
+                className={`-ml-1 md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
+            >
+                Add at least two
+            </span>
+
+            {isMobile ? (
+                !userExceedsMaxDecisions ? (
+                    <OptionSuggestions />
+                ) : (
+                    <SignInCard />
+                )
+            ) : null}
+
+            {fields.map((item, index) =>
+                index === 0 ? (
+                    <BaseCard
+                        key={item.id}
+                        className="flex flex-col py-5 px-4 mt-4"
                     >
-                        <>
+                        <ErrorWrapperField
+                            errorField={
+                                errors?.options &&
+                                errors?.options[index]?.name?.message
+                                    ? errors?.options[index]?.name?.message
+                                    : ''
+                            }
+                        >
                             <input
-                                key={item.id}
-                                className={`${inputStyle} ${
-                                    (item as unknown as Options).isAI
-                                        ? 'pr-28'
-                                        : ''
-                                }`}
+                                className={inputStyle}
                                 type="text"
-                                disabled={(item as unknown as Options).isAI}
-                                placeholder={`Enter your Option ${index + 1}`}
+                                placeholder={'Enter your Option'}
+                                onKeyDown={event => {
+                                    if (
+                                        event.key === 'Enter' &&
+                                        event.currentTarget.value
+                                    ) {
+                                        setValue(
+                                            'options',
+                                            insertAtArray(watchOptions, 1, {
+                                                name: event.currentTarget.value,
+                                                isAI: false,
+                                            })
+                                        )
+                                        setValue(`options.[0].name`, '')
+                                    }
+                                }}
+                                disabled={
+                                    watchOptions.length < 6 ? false : true
+                                }
                                 {...register(`options.${index}.name` as const, {
                                     required: {
                                         value:
-                                            index === fields.length - 1 &&
-                                            index > 1
+                                            watchOptions.length >= 3
                                                 ? false
                                                 : true,
                                         message:
@@ -122,153 +183,89 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                                         message: `Option length should be less than ${shortLimit}`,
                                     },
                                 })}
+                                onBlur={event => {
+                                    if (event.currentTarget.value) {
+                                        setValue(
+                                            'options',
+                                            insertAtArray(watchOptions, 1, {
+                                                name: event.currentTarget.value,
+                                                isAI: false,
+                                            })
+                                        )
+                                        setValue(`options.[0].name`, '')
+                                    }
+                                }}
                             />
-                            {(item as unknown as Options).isAI && (
-                                <div className={AiBox}>
-                                    AI{!isMobile ? ' Suggestion' : ''}
-                                </div>
-                            )}
-                        </>
-                    </ErrorWraperField>
-
-                    {(item as unknown as Options).isAI ||
-                    ((item as unknown as Options).isAI &&
-                        index === fields.length - 1) ? (
-                        index === 4 ? (
-                            <button
-                                className="p-1 my-2 ml-3"
-                                type="button"
-                                onClick={() => {
-                                    if (
-                                        (item as unknown as { isAI: boolean })
-                                            .isAI
-                                    ) {
-                                        useAppDispatch(
-                                            addSelectedOption(
-                                                item as unknown as {
-                                                    name: string
-                                                    isAI: boolean
-                                                }
-                                            )
-                                        )
-                                    }
-                                    remove(index)
-                                    if (fields[index]) {
-                                        append({ name: '', isAI: false })
-                                    }
-                                }}
-                            >
-                                <UilTrash className={'fill-neutral-700'} />
-                            </button>
-                        ) : (
-                            <button
-                                className="p-1 my-2 ml-3"
-                                type="button"
-                                onClick={() => {
-                                    remove(index)
-                                    if (
-                                        (item as unknown as { isAI: boolean })
-                                            .isAI
-                                    ) {
-                                        useAppDispatch(
-                                            addSelectedOption(
-                                                item as unknown as {
-                                                    name: string
-                                                    isAI: boolean
-                                                }
-                                            )
-                                        )
-                                    }
-                                    if (
-                                        optionsArray.length === 2 ||
-                                        optionsArray.length === 1
-                                    ) {
-                                        if (fields[index]) {
-                                            append({ name: '', isAI: false })
-                                        }
-                                    }
-                                }}
-                            >
-                                <UilTrash className={'fill-neutral-700'} />
-                            </button>
-                        )
-                    ) : index === fields.length - 1 ? (
-                        index < 4 ? (
-                            <button
-                                className="p-1 my-2 ml-3 align-middle bg-primary disabled:bg-primary/40 rounded-full"
-                                type="button"
-                                disabled={checkFilledFields()}
-                                onClick={() => {
-                                    if (fields[index]) {
-                                        append({ name: '', isAI: false })
-                                    }
-                                }}
-                            >
-                                <UilPlus className={'fill-white'} />
-                            </button>
-                        ) : (
-                            <button
-                                className="p-1 my-2 ml-3"
-                                type="button"
-                                onClick={() => {
-                                    if (index === 4) {
-                                        setValue(`options.${index}.name`, '')
-                                    } else {
-                                        remove(index)
-                                    }
-                                }}
-                            >
-                                <UilTrash className={'fill-neutral-700'} />
-                            </button>
-                        )
-                    ) : index > 1 ? (
-                        <button
-                            className="p-1 my-2 ml-3"
-                            type="button"
-                            onClick={() => {
-                                remove(index)
-                                if (index === 0 || index === 1) {
-                                    append({ name: '', isAI: false })
-                                }
-                                if (
-                                    (item as unknown as { isAI: boolean }).isAI
-                                ) {
-                                    useAppDispatch(
-                                        addSelectedOption(
-                                            item as unknown as {
-                                                name: string
-                                                isAI: boolean
-                                            }
-                                        )
-                                    )
-                                }
-                            }}
+                        </ErrorWrapperField>
+                    </BaseCard>
+                ) : (
+                    ''
+                )
+            )}
+            <BaseCard className="flex flex-col p-5 mt-xl mb-1">
+                <span
+                    className={`${bodyHeavy} text-neutral-800 dark:text-white`}
+                >
+                    Added options
+                </span>
+                {fields.length === 1 ? (
+                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                        No option added yet
+                    </span>
+                ) : (
+                    <div
+                        className={
+                            isMobile
+                                ? 'mt-4 flex flex-col space-y-3'
+                                : 'grid grid-cols-2 gap-4 mt-5'
+                        }
+                    >
+                        {fields.map((item, index) =>
+                            index !== 0 ? (
+                                <OptionCard
+                                    key={`option-card-${index}`}
+                                    index={index}
+                                    item={item as any}
+                                    onClickRemove={() => handleModal(index)}
+                                />
+                            ) : null
+                        )}
+                    </div>
+                )}
+            </BaseCard>
+            <Modal show={isOpen} onClose={handleClose}>
+                <div className="flex flex-col">
+                    <div className="flex items-center">
+                        <UilTrashAlt
+                            className={'mr-1 fill-neutral-800 dark:fill-white'}
+                        />
+                        <span
+                            className={`${bodyHeavy} text-neutral-800 dark:text-white`}
                         >
-                            <UilTrash className={'fill-neutral-700'} />
-                        </button>
-                    ) : optionsArray[index].name ? (
-                        <button
-                            className="p-1 my-2 ml-3"
-                            type="button"
-                            onClick={() => {
-                                if (
-                                    optionsArray.length === 1 ||
-                                    optionsArray.length === 2
-                                ) {
-                                    remove(index)
-                                    append({ name: '', isAI: false })
-                                } else {
-                                    remove(index)
-                                }
-                            }}
-                        >
-                            <UilTrash className={'fill-neutral-700'} />
-                        </button>
-                    ) : (
-                        <span className="p-1 my-2 ml-3 w-8 h-8" />
-                    )}
+                            Delete option
+                        </span>
+                    </div>
+                    <span
+                        className={`${body} text-neutral-800 mt-4 mb-6 dark:text-white`}
+                    >
+                        Are you sure you want to delete this option?
+                    </span>
+                    <div className="flex justify-between items-center">
+                        <Button
+                            keepText
+                            text="Cancel"
+                            className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
+                            onClick={handleClose}
+                        />
+                        <Button
+                            keepText
+                            text="Delete"
+                            className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            onClick={handleDelete}
+                        />
+                    </div>
                 </div>
-            ))}
-        </>
+            </Modal>
+        </div>
     )
 }

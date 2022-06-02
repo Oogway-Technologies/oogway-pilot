@@ -87,3 +87,4 @@ export interface TabItem {
     title: string
     tab: number
 }
+export type Tab = { name: string; weight: number }

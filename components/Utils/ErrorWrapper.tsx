@@ -2,14 +2,14 @@ import { UilExclamationTriangle } from '@iconscout/react-unicons'
 import React, { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-interface ErrorWraperProps {
+interface ErrorWrapperProps {
     errorField: string
     children: JSX.Element
 }
-export const ErrorWraper: FC<ErrorWraperProps> = ({
+export const ErrorWrapper: FC<ErrorWrapperProps> = ({
     errorField,
     children,
-}: ErrorWraperProps) => {
+}: ErrorWrapperProps) => {
     const {
         formState: { errors },
     } = useFormContext()
