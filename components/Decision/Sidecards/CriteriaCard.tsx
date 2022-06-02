@@ -35,7 +35,7 @@ export const CriteriaCard = ({
             <div className="flex flex-col w-full">
                 <div className="flex items-center">
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2`}
+                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2 truncate min-w-[80%]`}
                     >
                         {item.name}
                     </span>
@@ -73,7 +73,7 @@ export const CriteriaCard = ({
             >
                 <div className="flex items-center">
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate w-full`}
+                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate min-w-[80%]`}
                     >
                         {item.name}
                     </span>

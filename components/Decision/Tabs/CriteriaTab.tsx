@@ -98,7 +98,17 @@ export const CriteriaTab = () => {
                 name: '',
                 weight: 1,
             })
-            setValue('criteria.[0].name', '')
+            if (getValues('criteria.[0].name')) {
+                setValue(
+                    'criteria',
+                    insertAtArray(watchCriteria, 1, {
+                        name: getValues('criteria.0.name'),
+                        weight: getValues('criteria.0.weight'),
+                        isAI: false,
+                    })
+                )
+                setValue('criteria.[0].name', '')
+            }
         }
     }, [])
 
@@ -178,21 +188,6 @@ export const CriteriaTab = () => {
                                         },
                                     }
                                 )}
-                                onBlur={event => {
-                                    if (event.currentTarget.value) {
-                                        setValue(
-                                            'criteria',
-                                            insertAtArray(watchCriteria, 1, {
-                                                name: event.currentTarget.value,
-                                                weight: getValues(
-                                                    'criteria.0.weight'
-                                                ),
-                                                isAI: false,
-                                            })
-                                        )
-                                        setValue('criteria.[0].name', '')
-                                    }
-                                }}
                             />
                         </ErrorWrapperField>
                         <span

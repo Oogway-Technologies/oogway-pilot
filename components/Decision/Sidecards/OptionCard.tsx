@@ -28,6 +28,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
         formState: { errors },
         clearErrors,
         getValues,
+        setValue,
     } = useFormContext()
 
     return isMobile ? (
@@ -35,7 +36,11 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
             key={item.id}
             className="flex items-center p-3 bg-white dark:bg-neutralDark-300"
         >
-            <div className="flex items-center w-full">
+            <div
+                className={`flex items-center w-full  ${
+                    isEdit ? 'w-full' : 'max-w-[80%]'
+                }`}
+            >
                 {isEdit ? (
                     <ErrorWrapperField
                         errorField={
@@ -85,27 +90,15 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                                 className={
                                     'mx-2 cursor-pointer fill-neutral-700 dark:fill-white'
                                 }
-                                onClick={async () => {
-                                    await trigger(`options.${index}.name`)
-                                    if (
-                                        errors?.options &&
-                                        errors?.options.length
-                                    ) {
-                                        setTimeout(
-                                            () => clearErrors(['options']),
-                                            warningTime
-                                        )
-                                        return false
-                                    } else {
-                                        setEdit(false)
-                                    }
+                                onClick={() => {
+                                    setValue(`options.${index}.name`, '')
                                 }}
                             />
                         </div>
                     </ErrorWrapperField>
                 ) : (
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2 `}
+                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2 truncate`}
                     >
                         {getValues(`options.${index}.name`)}
                     </span>
@@ -183,17 +176,8 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                             className={
                                 'mx-2 cursor-pointer fill-neutral-700 dark:fill-white'
                             }
-                            onClick={async () => {
-                                await trigger(`options.${index}.name`)
-                                if (errors?.options && errors?.options.length) {
-                                    setTimeout(
-                                        () => clearErrors(['options']),
-                                        warningTime
-                                    )
-                                    return false
-                                } else {
-                                    setEdit(false)
-                                }
+                            onClick={() => {
+                                setValue(`options.${index}.name`, '')
                             }}
                         />
                     </div>
@@ -205,7 +189,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     }`}
                 >
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate w-full`}
+                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate min-w-[80%]`}
                     >
                         {getValues(`options.${index}.name`)}
                     </span>

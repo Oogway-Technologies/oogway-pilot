@@ -53,7 +53,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             ? `${currentTab !== 4 ? 'mt-0 space-y-md p-0.5' : 'mt-4'}`
             : 'space-y-lg'
     } ${
-        [2, 3, 4].includes(currentTab) ? 'mt-0' : 'mt-10'
+        [1, 2, 3, 4].includes(currentTab) ? 'mt-0' : 'mt-10'
     } w-full overflow-y-auto ${heightDecider(currentTab)} ${
         currentTab === 5 ? '' : ''
     } ${className ? className : ''}`

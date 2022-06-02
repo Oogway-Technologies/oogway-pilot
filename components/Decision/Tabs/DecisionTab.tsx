@@ -59,10 +59,10 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     return (
         <>
             <div
-                className={`flex flex-col space-y-4 ${
+                className={`flex flex-col  ${
                     isMobile
-                        ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark'
-                        : ''
+                        ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark space-y-3'
+                        : 'space-y-4'
                 }`}
             >
                 <ErrorWrapper errorField="question">
@@ -86,7 +86,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                 </ErrorWrapper>
                 <ErrorWrapper errorField="context">
                     <textarea
-                        className={`${inputStyle} h-40 resize-none mb-6`}
+                        className={`${inputStyle} h-40 resize-none mb-3 md:mb-6`}
                         placeholder="Context for your decision (optional)"
                         {...register('context', {
                             maxLength: {
