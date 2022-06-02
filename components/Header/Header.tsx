@@ -46,7 +46,7 @@ const Header = () => {
             <div className={headerClass.toolbar}>
                 {/* Left: Logo */}
                 <div className={headerClass.logo}>
-                    <Link href="/feed/?feed=All" passHref>
+                    <Link href="/" passHref>
                         <a>
                             <Logo fill="currentColor" />
                         </a>
