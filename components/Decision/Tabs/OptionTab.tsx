@@ -128,11 +128,15 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
             </span>
 
             {isMobile ? (
-                !userExceedsMaxDecisions ? (
+                !authUser ? (
+                    !userExceedsMaxDecisions ? (
+                        <OptionSuggestions />
+                    ) : (
+                        <SignInCard />
+                    )
+                ) : (
                     <OptionSuggestions />
-                ) : !authUser ? (
-                    <SignInCard />
-                ) : null
+                )
             ) : null}
 
             {fields.map((item, index) =>

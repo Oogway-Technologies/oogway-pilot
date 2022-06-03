@@ -97,6 +97,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                     />
                 </ErrorWrapper>
             </div>
+
             {isMobile && getValues('question').split('').length ? (
                 <DecisionHelperCard />
             ) : null}

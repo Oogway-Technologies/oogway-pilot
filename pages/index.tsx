@@ -177,13 +177,26 @@ const DecisionEngine: FC = () => {
                     </div>
                     {!isMobile && (
                         <div className={'col-span-1'}>
-                            {userExceedsMaxDecisions &&
-                            (currentTab === 2 ||
-                                currentTab === 3 ||
-                                currentTab === 4) ? (
-                                !user ? (
+                            {!user ? (
+                                !userExceedsMaxDecisions &&
+                                (currentTab === 2 ||
+                                    currentTab === 3 ||
+                                    currentTab === 4) ? (
+                                    <>
+                                        {currentTab === 2 && (
+                                            <OptionSuggestions />
+                                        )}
+                                        {currentTab === 3 && (
+                                            <CriteriaSuggestions />
+                                        )}
+                                        {currentTab === 4 &&
+                                            decisionCriteriaQueryKey && (
+                                                <CriteriaInfo />
+                                            )}
+                                    </>
+                                ) : (
                                     <SignInCard />
-                                ) : null
+                                )
                             ) : (
                                 <>
                                     {currentTab === 2 && <OptionSuggestions />}
@@ -199,9 +212,7 @@ const DecisionEngine: FC = () => {
                             {currentTab === 1 &&
                             watchQuestion.split('').length ? (
                                 <DecisionHelperCard />
-                            ) : (
-                                ''
-                            )}
+                            ) : null}
                             <GenericSidebar
                                 title="Disclaimer"
                                 titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"

@@ -129,11 +129,15 @@ export const CriteriaTab = () => {
                 Add what you want to consider
             </span>
             {isMobile ? (
-                !userExceedsMaxDecisions ? (
+                !user ? (
+                    !userExceedsMaxDecisions ? (
+                        <CriteriaSuggestions />
+                    ) : (
+                        <SignInCard />
+                    )
+                ) : (
                     <CriteriaSuggestions />
-                ) : !user ? (
-                    <SignInCard />
-                ) : null
+                )
             ) : null}
 
             {fields.map((item, index) =>
