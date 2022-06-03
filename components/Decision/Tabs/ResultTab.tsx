@@ -1,5 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import React, { FC, useEffect } from 'react'
+import { UilArrowDownRight } from '@iconscout/react-unicons'
+import React, { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useQueryClient } from 'react-query'
 
@@ -12,10 +13,12 @@ import {
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
     setIsRatingsModified,
+    setIsThereATie,
     setPreviousIndex,
     setSideCardStep,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
+import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import {
@@ -23,13 +26,19 @@ import {
     usePutUnauthenticatedDecision,
 } from '../../../queries/unauthenticatedDecisions'
 import { feedToolbarClass } from '../../../styles/feed'
-import { bodyHeavy } from '../../../styles/typography'
+import { body, bodyHeavy } from '../../../styles/typography'
 import {
     decisionOption,
+    decisionRating,
     FirebaseDecisionActivity,
     FirebaseUnauthenticatedDecision,
 } from '../../../utils/types/firebase'
-import { ResultCard } from '../common/ResultCard'
+import { Criteria, Options } from '../../../utils/types/global'
+import { Collapse } from '../../Utils/common/Collapse'
+import { BaseCard } from '../common/BaseCard'
+import { ResultChart } from '../common/ResultChart'
+import { ResultTable } from '../common/ResultTable'
+import { ScoreCard } from '../SideCards/ScoreCard'
 
 interface ResultTabProps {
     setCurrentTab: React.Dispatch<React.SetStateAction<number>>
@@ -41,19 +50,25 @@ export const ResultTab: FC<ResultTabProps> = ({
     deviceIp,
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
-    const { decisionActivityId, decisionFormState } = useAppSelector(
-        state => state.decisionSlice
-    )
-    const aiSuggestions = useAppSelector(
-        state => state.decisionSlice.suggestions
-    )
+    const isMobile = useMediaQuery('(max-width: 965px)')
+
+    const {
+        decisionActivityId,
+        suggestions: aiSuggestions,
+        decisionEngineBestOption,
+        isThereATie,
+        decisionFormState,
+    } = useAppSelector(state => state.decisionSlice)
+
     const options: Array<decisionOption> = useWatch({
         control,
         name: 'options',
     })
-    const updateDecision = useCreateDecisionActivity()
+    const [isOpen, setOpen] = useState(false)
     const createUnauthenticatedDecisions = usePutUnauthenticatedDecision()
     const queryClient = useQueryClient()
+    const updateDecision = useCreateDecisionActivity()
+    const { user } = useUser()
 
     // Determine best option from scores on mount.
     useEffect(() => {
@@ -66,8 +81,13 @@ export const ResultTab: FC<ResultTabProps> = ({
         }
     }, [options, decisionActivityId])
 
-    // Update unauthenticatedDecisions
-    const { user } = useUser()
+    useEffect(() => {
+        fixUpStates()
+        getValues('options').forEach((_: Options, index: number) => {
+            setValue(`options.${index}.score`, calcScore(index))
+        })
+    }, [])
+
     useEffect(() => {
         if (!user && decisionActivityId) {
             const data: getUnauthenticatedDecisionPayload | undefined =
@@ -91,12 +111,23 @@ export const ResultTab: FC<ResultTabProps> = ({
         }
     }, [user, decisionActivityId])
 
+    const fixUpStates = () => {
+        const orgOptionsList = getValues('options')
+        const orgCriteriaList = getValues('criteria')
+
+        const criteriaList = orgCriteriaList.filter(
+            (item: Criteria) => item.name
+        )
+        const optionsList = orgOptionsList.filter((item: Options) => item.name)
+        setValue('options', optionsList)
+        setValue('criteria', criteriaList)
+    }
+
     const saveResult = (id: string) => {
         // Update decision form state
         useAppDispatch(
             updateDecisionFormState({ currentTab: 5, isComplete: true })
         )
-
         // Result object for firebase.
         const result: FirebaseDecisionActivity = {
             id: id,
@@ -135,16 +166,16 @@ export const ResultTab: FC<ResultTabProps> = ({
         }
 
         // In case of ties, randomly choose best option
-        if (currentBestOptions.length > 1) {
+        if ([...new Set(currentBestOptions)].length > 1) {
+            useAppDispatch(setIsThereATie(true))
             return currentBestOptions[
                 (Math.random() * currentBestOptions.length) | 0
             ]
         } else {
+            useAppDispatch(setIsThereATie(false))
             return currentBestOptions[0]
         }
     }
-
-    // Handler functions
     const handleReset = () => {
         // reset form state
         reset()
@@ -160,29 +191,69 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setIsRatingsModified(false))
         useAppDispatch(setIsDecisionRehydrated(false))
     }
+    const calcScore = (index: number): number => {
+        let sumWeights = 0
+        let sumWeightedScore = 0
+        // Calculate denominator
+        const criteriaList = getValues('criteria')
+        for (const criteria of criteriaList) {
+            sumWeights += criteria.weight
+        }
+
+        const ratingList = getValues(`ratings.${index}.rating`)
+        // Calculate numerator
+        if (ratingList) {
+            for (const rating of ratingList) {
+                sumWeightedScore += rating.value * rating.weight
+            }
+        }
+        return parseFloat((sumWeightedScore / sumWeights).toFixed(1))
+    }
 
     return (
-        <>
-            <span
-                className={`${bodyHeavy} text-neutral-700 mt-5 flex justify-start items-center mr-auto dark:text-neutralDark-150`}
-            >
-                Scores
-            </span>
-            <div className="flex flex-wrap gap-3 justify-center items-center">
-                {options.map((option, index) =>
-                    option.name ? (
-                        <ResultCard
-                            key={index}
-                            optionIndex={index}
-                            option={option}
-                            criteriaArray={getValues('criteria')}
-                            ratingsArray={getValues(`ratings.${index}.rating`)}
-                            setValue={setValue}
-                        />
-                    ) : null
+        <div className="flex flex-col mb-3 space-y-3">
+            <div className="flex flex-col my-4 space-y-1 text-center">
+                {isThereATie ? (
+                    <>
+                        <span
+                            className={`text-xl font-bold tracking-normal leading-10 text-center text-neutral-800 dark:text-white`}
+                        >
+                            It’s a tie!
+                        </span>
+                        <span
+                            className={`${body} text-neutral-700 dark:text-neutralDark-150`}
+                        >
+                            We’ve randomly picked{' '}
+                            <b className="text-primary dark:text-primaryDark">
+                                {decisionEngineBestOption}
+                            </b>
+                            .
+                        </span>
+                        <span
+                            className={`${body} text-neutral-700 dark:text-neutralDark-150`}
+                        >
+                            Refine{' '}
+                            <b className="text-primary dark:text-primaryDark">
+                                rating
+                            </b>{' '}
+                            for criteria to get a more accurate result.
+                        </span>
+                    </>
+                ) : (
+                    <>
+                        <span
+                            className={`${body} text-neutral-700 dark:text-neutralDark-150`}
+                        >
+                            Your best option is
+                        </span>
+                        <span className="text-3xl font-bold tracking-normal leading-10 text-center text-primary dark:text-primaryDark">
+                            {decisionEngineBestOption}
+                        </span>
+                    </>
                 )}
             </div>
-            <div className="flex items-center pt-5 mx-auto space-x-6">
+            <ResultChart />
+            <div className="flex items-center py-4 mx-auto space-x-4">
                 <button
                     onClick={handleReset}
                     className={feedToolbarClass.newPostButton}
@@ -196,6 +267,27 @@ export const ResultTab: FC<ResultTabProps> = ({
                     Get Feedback
                 </button> */}
             </div>
-        </>
+            {isMobile ? <ScoreCard /> : ''}
+            <BaseCard className="p-3  my-2 md:p-5 md:mx-1">
+                <div
+                    onClick={() => setOpen(!isOpen)}
+                    className={'flex items-center cursor-pointer'}
+                >
+                    <span
+                        className={`${bodyHeavy} text-neutral-700 dark:text-white w-full`}
+                    >
+                        Score Breakdown
+                    </span>
+                    <UilArrowDownRight
+                        className={`fill-neutral-700 dark:fill-neutral-150 transition-all ${
+                            isOpen ? 'rotate-180' : 'rotate-0'
+                        }`}
+                    />
+                </div>
+                <Collapse show={isOpen} className={'overflow-y-scroll'}>
+                    <ResultTable />
+                </Collapse>
+            </BaseCard>
+        </div>
     )
 }

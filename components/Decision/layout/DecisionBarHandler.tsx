@@ -192,7 +192,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         }
                     }
                 )
-                console.log(criteriaFilter)
                 if (criteriaMobileIndex < criteriaFilter.length - 1) {
                     useAppDispatch(
                         setCriteriaMobileIndex(criteriaMobileIndex + 1)

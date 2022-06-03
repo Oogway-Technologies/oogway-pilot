@@ -23,6 +23,10 @@ module.exports = {
             numeric: ['tnum', 'salt', 'ss02'],
         },
         extend: {
+            transitionProperty: {
+                height: 'height',
+                spacing: 'margin, padding',
+            },
             spacing: {
                 xs: '4px',
                 sm: '8px',

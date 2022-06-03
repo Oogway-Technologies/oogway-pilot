@@ -13,6 +13,7 @@ import { CriteriaInfo } from '../components/Decision/SideCards/CriteriaInfo'
 import { CriteriaSuggestions } from '../components/Decision/SideCards/CriteriaSuggestions'
 import { DecisionHelperCard } from '../components/Decision/SideCards/DecisionHelperCard'
 import { OptionSuggestions } from '../components/Decision/SideCards/OptionSuggestions'
+import { ScoreCard } from '../components/Decision/SideCards/ScoreCard'
 import { SignInCard } from '../components/Decision/SideCards/SignInCard'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
 import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
@@ -29,8 +30,11 @@ import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
 
 const DecisionEngine: FC = () => {
-    const { decisionCriteriaQueryKey, userExceedsMaxDecisions } =
-        useAppSelector(state => state.decisionSlice)
+    const {
+        decisionCriteriaQueryKey,
+        userExceedsMaxDecisions,
+        decisionEngineOptionTab,
+    } = useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(1)
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -116,7 +120,7 @@ const DecisionEngine: FC = () => {
                     <div
                         className={`${bigContainer} ${
                             isMobile
-                                ? 'col-span-4 h-[70vh]'
+                                ? 'col-span-4 h-[calc(100vh-15.5rem)]'
                                 : 'col-span-3 h-max bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
                         }`}
                     >
@@ -128,32 +132,39 @@ const DecisionEngine: FC = () => {
                             />
                         )}
                         <div
-                            className={`flex flex-col  ${
+                            className={`flex flex-col gap-y-md ${
                                 isMobile
-                                    ? `col-span-7 pt-4`
-                                    : 'col-span-6 px-5 py-4'
+                                    ? `col-span-7 pt-4 h-[calc(100vh-16rem)]`
+                                    : 'col-span-6 px-5 py-4 h-full'
                             }`}
                         >
-                            <div
-                                className={
-                                    'flex flex-col gap-y-md items-center h-full'
-                                }
+                            {currentTab === 4 && <OptionRatingTabWrapper />}
+                            {currentTab === 4 && (
+                                <span className="text-neutral-700 dark:text-neutralDark-150">
+                                    Rate{' '}
+                                    <span className="text-primary dark:text-primaryDark">
+                                        {
+                                            getValues('options')?[
+                                                decisionEngineOptionTab
+                                            ]?.name || ''
+                                        }
+                                    </span>{' '}
+                                    on each criteria.
+                                </span>
+                            )}
+                            <DecisionTabWrapper
+                                title={decisionTitle[currentTab]}
+                                currentTab={currentTab}
                             >
-                                {currentTab === 4 && <OptionRatingTabWrapper />}
-                                <DecisionTabWrapper
-                                    title={decisionTitle[currentTab]}
-                                    currentTab={currentTab}
-                                >
-                                    {tabGenerator()}
-                                </DecisionTabWrapper>
-                                {!isMobile && (
-                                    <DecisionBarHandler
-                                        className="justify-self-end mt-auto w-full"
-                                        selectedTab={currentTab}
-                                        setSelectedTab={setCurrentTab}
-                                    />
-                                )}
-                            </div>
+                                {tabGenerator()}
+                            </DecisionTabWrapper>
+                            {!isMobile && (
+                                <DecisionBarHandler
+                                    className="justify-self-end mt-auto w-full"
+                                    selectedTab={currentTab}
+                                    setSelectedTab={setCurrentTab}
+                                />
+                            )}
                         </div>
                     </div>
                     {!isMobile && (
@@ -194,6 +205,7 @@ const DecisionEngine: FC = () => {
                             watchQuestion.split('').length ? (
                                 <DecisionHelperCard />
                             ) : null}
+                            {currentTab === 5 ? <ScoreCard /> : null}
                             <GenericSidebar
                                 title="Disclaimer"
                                 titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"

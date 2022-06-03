@@ -171,7 +171,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     }`}
                 >
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate min-w-[80%]`}
+                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate min-w-[70%]`}
                     >
                         {getValues(`options.${index}.name`)}
                     </span>

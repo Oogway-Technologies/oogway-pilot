@@ -74,6 +74,16 @@ export type decisionFormFields =
     | 'options'
     | 'criteria'
     | 'ratings'
+export interface Options {
+    name: string
+    isAI: boolean
+    score?: number
+}
+export interface Criteria {
+    name: string
+    weight: number
+    isAI: boolean
+}
 
 export interface Rating {
     criteria: string
@@ -101,3 +111,8 @@ export interface TabItem {
     tab: number
 }
 export type Tab = { name: string; weight: number }
+
+export interface IV {
+    index: number
+    value: string
+}

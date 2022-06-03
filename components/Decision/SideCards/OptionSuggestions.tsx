@@ -32,7 +32,15 @@ export const OptionSuggestions = () => {
     }
 
     return (
-        <AISidebar title={'AI Suggestions'} infoCircle>
+        <AISidebar
+            title={'AI Suggestions'}
+            infoCircle
+            className={
+                isMobile
+                    ? 'sticky -mx-1 top-11 pt-1 dark:bg-neutralDark-600 bg-neutral-25 z-50'
+                    : ''
+            }
+        >
             <>
                 {optionsList.length && !loadingAiSuggestions
                     ? !isMobile && (
@@ -48,7 +56,7 @@ export const OptionSuggestions = () => {
                         isMobile && optionsList.length && !loadingAiSuggestions
                             ? 'items-center space-x-5'
                             : 'flex-col space-y-2'
-                    }`}
+                    } ${isMobile ? 'pb-2' : ''}`}
                 >
                     {loadingAiSuggestions && (
                         <UilSpinner className={'my-3 mx-auto animate-spin'} />

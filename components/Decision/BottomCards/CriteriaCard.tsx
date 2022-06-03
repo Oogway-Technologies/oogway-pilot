@@ -35,7 +35,7 @@ export const CriteriaCard = ({
             <div className="flex flex-col w-full">
                 <div className="flex items-center">
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2 truncate min-w-[80%]`}
+                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2 truncate min-w-[70%]`}
                     >
                         {item.name}
                     </span>
@@ -47,11 +47,11 @@ export const CriteriaCard = ({
                         </span>
                     ) : null}
                     <TabsMenu
-                        firstItemText={'Edit Option'}
-                        secondItemText={'Delete Option'}
+                        firstItemText={'Edit Criteria'}
+                        secondItemText={'Delete Criteria'}
                         onClickFirst={onClickEdit}
                         onClickSecond={onClickRemove}
-                        isAI={item.isAI}
+                        isAI={false}
                     />
                 </div>
                 <span
@@ -73,7 +73,7 @@ export const CriteriaCard = ({
             >
                 <div className="flex items-center">
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate min-w-[80%]`}
+                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate min-w-[70%]`}
                     >
                         {item.name}
                     </span>
@@ -82,7 +82,7 @@ export const CriteriaCard = ({
                         secondItemText={'Delete Criteria'}
                         onClickFirst={onClickEdit}
                         onClickSecond={onClickRemove}
-                        isAI={item.isAI}
+                        isAI={false}
                     />
                 </div>
                 <span

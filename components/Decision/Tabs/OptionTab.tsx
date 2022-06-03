@@ -25,8 +25,8 @@ import {
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
+import { OptionCard } from '../BottomCards/OptionCard'
 import { BaseCard } from '../common/BaseCard'
-import { OptionCard } from '../SideCards/OptionCard'
 import { OptionSuggestions } from '../SideCards/OptionSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
 
@@ -142,7 +142,11 @@ export const OptionTab: FC = () => {
     return (
         <div className="flex flex-col mx-1">
             <span
-                className={`-ml-1 md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
+                className={`${
+                    isMobile
+                        ? 'sticky top-4 pt-1 z-50 dark:bg-neutralDark-600 bg-neutral-25 -mx-1'
+                        : ''
+                } md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
             >
                 Add at least two
             </span>
