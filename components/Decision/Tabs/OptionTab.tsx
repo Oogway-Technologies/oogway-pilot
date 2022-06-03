@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
@@ -48,6 +49,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
         control,
         name: 'options',
     })
+    const { user: authUser } = useUser()
 
     const [isOpen, setOpen] = useState(false)
     const [selectedIndex, setIndex] = useState<number>()
@@ -128,9 +130,9 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
             {isMobile ? (
                 !userExceedsMaxDecisions ? (
                     <OptionSuggestions />
-                ) : (
+                ) : !authUser ? (
                     <SignInCard />
-                )
+                ) : null
             ) : null}
 
             {fields.map((item, index) =>

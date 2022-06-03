@@ -21,7 +21,7 @@ const CommentPage: FC<
     const router = useRouter()
 
     const goBack = () => {
-        router.push(`/`)
+        router.push(`/feed`)
     }
 
     return (

@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { UilPen, UilTrashAlt } from '@iconscout/react-unicons'
 import React, { useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
@@ -41,6 +42,7 @@ export const CriteriaTab = () => {
         control,
         name: 'criteria',
     })
+    const { user } = useUser()
 
     const [isEdit, setEdit] = useState(false)
     const [isOpen, setOpen] = useState(false)
@@ -129,9 +131,9 @@ export const CriteriaTab = () => {
             {isMobile ? (
                 !userExceedsMaxDecisions ? (
                     <CriteriaSuggestions />
-                ) : (
+                ) : !user ? (
                     <SignInCard />
-                )
+                ) : null
             ) : null}
 
             {fields.map((item, index) =>
