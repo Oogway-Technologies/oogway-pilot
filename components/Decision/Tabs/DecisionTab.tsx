@@ -18,7 +18,7 @@ import {
 } from '../../../utils/constants/global'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import { ErrorWrapper } from '../../Utils/ErrorWrapper'
-import { DecisionHelperCard } from '../Sidecards/DecisionHelperCard'
+import { DecisionHelperCard } from '../SideCards/DecisionHelperCard'
 
 interface DecisionTabProps {
     deviceIp: string
@@ -27,6 +27,7 @@ interface DecisionTabProps {
 export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     const { register, trigger, clearErrors, getValues } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const { user } = useUser()
 
     useEffect(() => {
         // to fix error not working on first step.
@@ -39,7 +40,6 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     }, [])
 
     // Track number of decisions made by unauthenticated users
-    const { user } = useUser()
     const { data, isFetched } = useUnauthenticatedDecisionQuery(deviceIp)
     useEffect(() => {
         // Await the query to be fetched
