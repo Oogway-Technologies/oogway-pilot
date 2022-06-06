@@ -11,7 +11,7 @@ import {
     bodySmallHeavy,
 } from '../../../styles/typography'
 import Button from '../../Utils/Button'
-import { CriteriaInfo } from '../SideCards/CriteriaInfo'
+import { CriteriaInfo } from '../Sidecards/CriteriaInfo'
 import AskAIButton from './AskAIButton'
 
 interface RatingSelectorProps {

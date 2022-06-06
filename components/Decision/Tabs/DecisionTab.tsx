@@ -19,7 +19,7 @@ import {
 } from '../../../utils/constants/global'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import { ErrorWrapper } from '../../Utils/ErrorWrapper'
-import { DecisionHelperCard } from '../SideCards/DecisionHelperCard'
+import { DecisionHelperCard } from '../Sidecards/DecisionHelperCard'
 
 interface DecisionTabProps {
     deviceIp: string

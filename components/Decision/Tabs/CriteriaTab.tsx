@@ -22,9 +22,9 @@ import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
 import { BaseCard } from '../common/BaseCard'
 import { CriteriaSelectTabs } from '../common/CriteriaSelectTabs'
-import { CriteriaCard } from '../SideCards/CriteriaCard'
-import { CriteriaSuggestions } from '../SideCards/CriteriaSuggestions'
-import { SignInCard } from '../SideCards/SignInCard'
+import { CriteriaCard } from '../Sidecards/CriteriaCard'
+import { CriteriaSuggestions } from '../Sidecards/CriteriaSuggestions'
+import { SignInCard } from '../Sidecards/SignInCard'
 
 export const CriteriaTab = () => {
     const {
