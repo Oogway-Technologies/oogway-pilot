@@ -295,7 +295,7 @@ export const commentFormClass = {
         'p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent ' +
         'text-black dark:text-white text-sm md:text-base w-inherit',
     growingTextArea:
-        'w-full p-sm resize-none justify-self-start focus:outline-none border-none bg-transparent ' +
+        'w-full resize-none justify-self-start focus:outline-none border-none bg-transparent' +
         'text-black dark:text-white text-sm md:text-base h-[24px] max-h-[100px] scrollbar-hide p-0',
     mobileSubmitDiv: 'inline-flex justify-between mt-sm',
     imageButton:

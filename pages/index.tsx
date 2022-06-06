@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import React, { FC, useEffect, useState } from 'react'
@@ -8,11 +9,11 @@ import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHan
 import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
 import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWrapper'
 import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
-import { CriteriaInfo } from '../components/Decision/Sidecards/CriteriaInfo'
-import { CriteriaSuggestions } from '../components/Decision/Sidecards/CriteriaSuggestions'
-import { DecisionHelperCard } from '../components/Decision/Sidecards/DecisionHelperCard'
-import { OptionSuggestions } from '../components/Decision/Sidecards/OptionSuggestions'
-import { SignInCard } from '../components/Decision/Sidecards/SignInCard'
+import { CriteriaInfo } from '../components/Decision/SideCards/CriteriaInfo'
+import { CriteriaSuggestions } from '../components/Decision/SideCards/CriteriaSuggestions'
+import { DecisionHelperCard } from '../components/Decision/SideCards/DecisionHelperCard'
+import { OptionSuggestions } from '../components/Decision/SideCards/OptionSuggestions'
+import { SignInCard } from '../components/Decision/SideCards/SignInCard'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
 import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
 import { OptionTab } from '../components/Decision/Tabs/OptionTab'
@@ -36,6 +37,7 @@ const DecisionEngine: FC = () => {
     const [currentTab, setCurrentTab] = useState(1)
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const { user } = useUser()
 
     const methods = useForm<DecisionForm>({
         defaultValues: {
@@ -175,11 +177,26 @@ const DecisionEngine: FC = () => {
                     </div>
                     {!isMobile && (
                         <div className={'col-span-1'}>
-                            {userExceedsMaxDecisions &&
-                            (currentTab === 2 ||
-                                currentTab === 3 ||
-                                currentTab === 4) ? (
-                                <SignInCard />
+                            {!user ? (
+                                !userExceedsMaxDecisions &&
+                                (currentTab === 2 ||
+                                    currentTab === 3 ||
+                                    currentTab === 4) ? (
+                                    <>
+                                        {currentTab === 2 && (
+                                            <OptionSuggestions />
+                                        )}
+                                        {currentTab === 3 && (
+                                            <CriteriaSuggestions />
+                                        )}
+                                        {currentTab === 4 &&
+                                            decisionCriteriaQueryKey && (
+                                                <CriteriaInfo />
+                                            )}
+                                    </>
+                                ) : (
+                                    <SignInCard />
+                                )
                             ) : (
                                 <>
                                     {currentTab === 2 && <OptionSuggestions />}
@@ -195,9 +212,7 @@ const DecisionEngine: FC = () => {
                             {currentTab === 1 &&
                             watchQuestion.split('').length ? (
                                 <DecisionHelperCard />
-                            ) : (
-                                ''
-                            )}
+                            ) : null}
                             <GenericSidebar
                                 title="Disclaimer"
                                 titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"

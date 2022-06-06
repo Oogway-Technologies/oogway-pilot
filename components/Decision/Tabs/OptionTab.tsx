@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
@@ -19,9 +20,9 @@ import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
 import { BaseCard } from '../common/BaseCard'
-import { OptionCard } from '../Sidecards/OptionCard'
-import { OptionSuggestions } from '../Sidecards/OptionSuggestions'
-import { SignInCard } from '../Sidecards/SignInCard'
+import { OptionCard } from '../SideCards/OptionCard'
+import { OptionSuggestions } from '../SideCards/OptionSuggestions'
+import { SignInCard } from '../SideCards/SignInCard'
 
 interface OptionTabProps {
     deviceIp: string
@@ -48,6 +49,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
         control,
         name: 'options',
     })
+    const { user: authUser } = useUser()
 
     const [isOpen, setOpen] = useState(false)
     const [selectedIndex, setIndex] = useState<number>()
@@ -126,10 +128,14 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
             </span>
 
             {isMobile ? (
-                !userExceedsMaxDecisions ? (
-                    <OptionSuggestions />
+                !authUser ? (
+                    !userExceedsMaxDecisions ? (
+                        <OptionSuggestions />
+                    ) : (
+                        <SignInCard />
+                    )
                 ) : (
-                    <SignInCard />
+                    <OptionSuggestions />
                 )
             ) : null}
 

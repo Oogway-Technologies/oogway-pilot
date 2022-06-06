@@ -1,5 +1,5 @@
 import { UilTimes } from '@iconscout/react-unicons'
-import React, { useState } from 'react'
+import React, { KeyboardEvent, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -29,7 +29,31 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
         clearErrors,
         getValues,
         setValue,
+        setFocus,
     } = useFormContext()
+
+    useEffect(() => {
+        if (isEdit) {
+            setFocus(`options.${index}.name`)
+        }
+    }, [isEdit])
+
+    const handleCross = () => {
+        setFocus(`options.${index}.name`)
+        setValue(`options.${index}.name`, '')
+    }
+
+    const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter' && event.currentTarget.value) {
+            await trigger(`options.${index}.name`)
+            if (errors?.options && errors?.options.length) {
+                setTimeout(() => clearErrors(['options']), warningTime)
+                return false
+            } else {
+                setEdit(false)
+            }
+        }
+    }
 
     return isMobile ? (
         <BaseCard
@@ -65,34 +89,13 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                                         message: `Option length should be less than ${shortLimit}`,
                                     },
                                 })}
-                                onKeyDown={async event => {
-                                    if (
-                                        event.key === 'Enter' &&
-                                        event.currentTarget.value
-                                    ) {
-                                        await trigger(`options.${index}.name`)
-                                        if (
-                                            errors?.options &&
-                                            errors?.options.length
-                                        ) {
-                                            setTimeout(
-                                                () => clearErrors(['options']),
-                                                warningTime
-                                            )
-                                            return false
-                                        } else {
-                                            setEdit(false)
-                                        }
-                                    }
-                                }}
+                                onKeyDown={handleKeyDown}
                             />
                             <UilTimes
                                 className={
                                     'mx-2 cursor-pointer fill-neutral-700 dark:fill-white'
                                 }
-                                onClick={() => {
-                                    setValue(`options.${index}.name`, '')
-                                }}
+                                onClick={handleCross}
                             />
                         </div>
                     </ErrorWrapperField>
@@ -111,7 +114,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     </span>
                 ) : null}
             </div>
-            {!isEdit && isMobile && (
+            {!isEdit && (
                 <TabsMenu
                     firstItemText={'Edit Option'}
                     secondItemText={'Delete Option'}
@@ -151,34 +154,13 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                                     message: `Option length should be less than ${shortLimit}`,
                                 },
                             })}
-                            onKeyDown={async event => {
-                                if (
-                                    event.key === 'Enter' &&
-                                    event.currentTarget.value
-                                ) {
-                                    await trigger(`options.${index}.name`)
-                                    if (
-                                        errors?.options &&
-                                        errors?.options.length
-                                    ) {
-                                        setTimeout(
-                                            () => clearErrors(['options']),
-                                            warningTime
-                                        )
-                                        return false
-                                    } else {
-                                        setEdit(false)
-                                    }
-                                }
-                            }}
+                            onKeyDown={handleKeyDown}
                         />
                         <UilTimes
                             className={
                                 'mx-2 cursor-pointer fill-neutral-700 dark:fill-white'
                             }
-                            onClick={() => {
-                                setValue(`options.${index}.name`, '')
-                            }}
+                            onClick={handleCross}
                         />
                     </div>
                 </ErrorWrapperField>

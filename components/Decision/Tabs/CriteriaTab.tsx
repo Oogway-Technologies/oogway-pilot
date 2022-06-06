@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { UilPen, UilTrashAlt } from '@iconscout/react-unicons'
 import React, { useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
@@ -18,9 +19,9 @@ import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
 import { BaseCard } from '../common/BaseCard'
 import { CriteriaSelectTabs } from '../common/CriteriaSelectTabs'
-import { CriteriaCard } from '../Sidecards/CriteriaCard'
-import { CriteriaSuggestions } from '../Sidecards/CriteriaSuggestions'
-import { SignInCard } from '../Sidecards/SignInCard'
+import { CriteriaCard } from '../SideCards/CriteriaCard'
+import { CriteriaSuggestions } from '../SideCards/CriteriaSuggestions'
+import { SignInCard } from '../SideCards/SignInCard'
 
 export const CriteriaTab = () => {
     const {
@@ -41,6 +42,7 @@ export const CriteriaTab = () => {
         control,
         name: 'criteria',
     })
+    const { user } = useUser()
 
     const [isEdit, setEdit] = useState(false)
     const [isOpen, setOpen] = useState(false)
@@ -127,10 +129,14 @@ export const CriteriaTab = () => {
                 Add what you want to consider
             </span>
             {isMobile ? (
-                !userExceedsMaxDecisions ? (
-                    <CriteriaSuggestions />
+                !user ? (
+                    !userExceedsMaxDecisions ? (
+                        <CriteriaSuggestions />
+                    ) : (
+                        <SignInCard />
+                    )
                 ) : (
-                    <SignInCard />
+                    <CriteriaSuggestions />
                 )
             ) : null}
 
