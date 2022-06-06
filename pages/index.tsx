@@ -1,7 +1,7 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 
 import GenericSidebar from '../components/Decision/common/GenericSidebar'
@@ -22,13 +22,16 @@ import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
 import {
     setClickedConnect,
+    setDecisionActivityId,
     setSideCardStep,
 } from '../features/decision/decisionSlice'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
+import { useInfiniteDecisionsQuery } from '../queries/decisionActivity'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
+import { deepCopy } from '../utils/helpers/common'
 import { DecisionForm } from '../utils/types/global'
 
 const DecisionEngine: FC = () => {
@@ -38,23 +41,80 @@ const DecisionEngine: FC = () => {
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
+    const userProfile = useAppSelector(state => state.userSlice.user)
+    // const { user, isLoading } = useUser()
+
+    // Rehydrate form state from stored values
+    // TODO: make custom hook
+    const [defaultValues, setDefaultValues] = useState({
+        question: '',
+        context: '',
+        options: [
+            { name: '', isAI: false },
+            { name: '', isAI: false },
+        ],
+        criteria: [{ name: '', weight: 2, isAI: false }],
+        ratings: [
+            {
+                option: '',
+                score: '',
+                rating: [{ criteria: '', value: 0, weight: 1 }],
+            },
+        ],
+    })
+    useInfiniteDecisionsQuery(
+        userProfile.uid,
+        undefined,
+        userProfile.uid !== '', // only enable the call if the userProfile.uid is defined
+        retrievedData => {
+            if (!retrievedData.pages[0].decisions[0].isComplete) {
+                const incompleteDecision = deepCopy(
+                    retrievedData.pages[0].decisions[0]
+                )
+                const copyDefaultValues = deepCopy(defaultValues)
+                // update form state
+                console.log('Default values: ', {
+                    ...copyDefaultValues,
+                    ...incompleteDecision,
+                })
+                setDefaultValues({
+                    ...copyDefaultValues,
+                    ...incompleteDecision,
+                })
+                // update current tab
+                if (incompleteDecision.currentTab)
+                    setCurrentTab(incompleteDecision.currentTab)
+
+                // Set decisionActivityId
+                useAppDispatch(setDecisionActivityId(incompleteDecision.id))
+            }
+        }
+    )
+    // useEffect(() => {
+    //     // If call was successful and the most recent decision is incomplete,
+    //     // rehydrate default values with that state
+    //     if (isFetched && isSuccess && !data.pages[0].decisions[0].isComplete) {
+    //         const incompleteDecision = deepCopy(data.pages[0].decisions[0])
+    //         // update form state
+    //         setDefaultValues({
+    //             ...defaultValues,
+    //             ...incompleteDecision,
+    //         })
+    //         // update current tab
+    //         if (incompleteDecision.currentTab)
+    //             setCurrentTab(incompleteDecision.currentTab)
+    //     }
+    // }, [data, isFetched, isSuccess])
 
     const methods = useForm<DecisionForm>({
-        defaultValues: {
-            question: '',
-            context: '',
-            options: [{ name: '', isAI: false }],
-            criteria: [{ name: '', weight: 2, isAI: false }],
-            ratings: [
-                {
-                    option: '',
-                    score: '',
-                    rating: [{ criteria: '', value: 0, weight: 1 }],
-                },
-            ],
-        },
+        defaultValues: useMemo(() => {
+            return defaultValues
+        }, [defaultValues]),
     })
-    const { control, getValues, setValue } = methods
+    const { control, reset, getValues, setValue } = methods
+    useEffect(() => {
+        reset(defaultValues)
+    }, [defaultValues])
 
     // Whenever watch question changes, reset decision helper card and clicked connnct state
     const watchQuestion = useWatch({ name: 'question', control })
@@ -70,15 +130,16 @@ const DecisionEngine: FC = () => {
         if (
             currentTab !== 4 &&
             currentTab !== 5 &&
-            (optionList[0].name || criteriaList[0].name)
+            ((optionList && optionList[0].name) ||
+                (criteriaList && criteriaList[0].name))
         ) {
-            if (optionList[0].name) {
+            if (optionList && optionList[0].name) {
                 setValue(
                     'options',
                     insertAtArray(optionList, 0, { name: '', isAI: false })
                 )
             }
-            if (criteriaList[0].name) {
+            if (criteriaList && criteriaList[0].name) {
                 setValue(
                     'criteria',
                     insertAtArray(criteriaList, 0, {

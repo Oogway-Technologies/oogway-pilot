@@ -2,22 +2,28 @@ import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
+    setDecisionFormState,
     setDecisionRatingUpdate,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { deepCopy } from '../../../utils/helpers/common'
+import { decisionRating } from '../../../utils/types/firebase'
 import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
 import { RatingSelector } from '../common/RatingSelector'
 
 export const RatingTab: FC = () => {
-    const { getValues, setValue } = useFormContext()
+    const { getValues, setValue, watch } = useFormContext()
     const {
         decisionEngineOptionTab,
         decisionRatingUpdate,
         criteriaMobileIndex,
+        decisionFormState,
+        decisionActivityId,
     } = useAppSelector(state => state.decisionSlice)
+    const updateDecision = useCreateDecisionActivity()
 
     const ratingsList: Ratings[] = getValues('ratings')
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -114,6 +120,44 @@ export const RatingTab: FC = () => {
             useAppDispatch(setPreviousIndex(4))
         }
     }, [])
+
+    useEffect(() => {
+        // On mount, log form state from previous tab
+        console.log(
+            `Updating decision ${decisionActivityId} with data: `,
+            decisionFormState
+        )
+        updateDecision.mutate(decisionFormState)
+    }, [])
+
+    // Track form state
+    const ratingsArray: Array<decisionRating> = watch('ratings')
+    useEffect(() => {
+        if (decisionActivityId) {
+            // to remove empties
+            let filteredRatings = ratingsArray.filter(
+                (item: decisionRating) => {
+                    if (item.option) {
+                        return item
+                    }
+                }
+            )
+            filteredRatings = filteredRatings.map(option => {
+                const filteredRating = option.rating.filter(item => {
+                    if (item.criteria) return item
+                })
+                option.rating = filteredRating
+                return option
+            })
+            useAppDispatch(
+                setDecisionFormState({
+                    id: decisionActivityId,
+                    ratings: filteredRatings,
+                    currentTab: 4,
+                })
+            )
+        }
+    }, [decisionActivityId, ratingsArray])
 
     return (
         <>

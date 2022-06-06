@@ -6,6 +6,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 import {
     addSelectedOption,
     setDecisionActivityId,
+    setDecisionFormState,
     setDecisionQuestion,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
@@ -16,6 +17,7 @@ import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
 import { insertAtArray } from '../../../utils/helpers/common'
+import { decisionOption } from '../../../utils/types/firebase'
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
@@ -41,7 +43,8 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
 
     const {
         decisionQuestion: prevQuestion,
-        clickedConnect,
+        decisionFormState,
+        decisionActivityId,
         userExceedsMaxDecisions,
     } = useAppSelector(state => state.decisionSlice)
 
@@ -56,10 +59,29 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
     const createDecision = useCreateDecisionActivity()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const question = getValues('question')
-    const user = useAppSelector(state => state.userSlice.user)
+    // const user = useAppSelector(state => state.userSlice.user)
     const watchOptions = watch('options')
 
     useEffect(() => {
+        // On mount, check if new question matches previous question
+        // If not, update state to new question and instantiate new
+        // decision log
+        if (question !== prevQuestion) {
+            // Update previous question
+            useAppDispatch(setDecisionQuestion(question))
+
+            // Instantiate new decision
+            console.log(
+                `Updating decision ${decisionActivityId} with data: `,
+                decisionFormState
+            )
+            createDecision.mutate(decisionFormState, {
+                onSuccess: newDecision => {
+                    useAppDispatch(setDecisionActivityId(newDecision.data.id))
+                },
+            })
+        }
+
         // to focus on input on mount
         setFocus('options.[0].name')
 
@@ -68,31 +90,28 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
             setOpen(false)
             setIndex(undefined)
             setValue(`options.[0].name`, '')
-
-            // On mount, check if new question matches previous question
-            // If not, update state to new question and instantiate new
-            // decision log
-            if (question !== prevQuestion) {
-                // Update previous question
-                useAppDispatch(setDecisionQuestion(question))
-
-                // Instantiate new decision
-                const initialDecisionInfo = {
-                    userId: user.uid,
-                    ipAddress: deviceIp,
-                    isComplete: false,
-                    clickedConnect: clickedConnect,
-                }
-                createDecision.mutate(initialDecisionInfo, {
-                    onSuccess: newDecision => {
-                        useAppDispatch(
-                            setDecisionActivityId(newDecision.data.id)
-                        )
-                    },
-                })
-            }
         }
     }, [])
+
+    // Track form state
+    useEffect(() => {
+        if (decisionActivityId) {
+            const filteredOptions = watchOptions.filter(
+                (item: decisionOption) => {
+                    if (item.name) {
+                        return item
+                    }
+                }
+            )
+            useAppDispatch(
+                setDecisionFormState({
+                    id: decisionActivityId,
+                    options: filteredOptions,
+                    currentTab: 2,
+                })
+            )
+        }
+    }, [watchOptions, decisionActivityId])
 
     useEffect(() => {
         // handle focus on enter

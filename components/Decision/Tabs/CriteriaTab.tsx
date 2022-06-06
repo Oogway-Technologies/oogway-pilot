@@ -5,14 +5,17 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
     addSelectedCriteria,
+    setDecisionFormState,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { body, bodyHeavy, bodySmall } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { criteriaTabs, shortLimit } from '../../../utils/constants/global'
 import { insertAtArray, weightToString } from '../../../utils/helpers/common'
+import { decisionCriteria } from '../../../utils/types/firebase'
 import { Criteria } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
@@ -27,10 +30,10 @@ export const CriteriaTab = () => {
     const {
         register,
         control,
-        setValue,
         formState: { errors },
         watch,
         setFocus,
+        setValue,
         getValues,
     } = useFormContext()
 
@@ -120,6 +123,47 @@ export const CriteriaTab = () => {
             setFocus('criteria.[0].name')
         }
     }, [watchCriteria])
+
+    const { decisionFormState, decisionActivityId } = useAppSelector(
+        state => state.decisionSlice
+    )
+
+    // Log decision form staate
+    const updateDecision = useCreateDecisionActivity()
+    useEffect(() => {
+        // On mount, log form state from previous tab
+        console.log(
+            `Updating decision ${decisionActivityId} with data: `,
+            decisionFormState
+        )
+        updateDecision.mutate(decisionFormState)
+
+        return () => {
+            useAppDispatch(setPreviousIndex(3))
+        }
+    }, [])
+
+    // Track form state
+    const criteriaArray = watch('criteria')
+    useEffect(() => {
+        if (decisionActivityId) {
+            // to remove empty criteria if any.
+            const filteredCriteria = criteriaArray.filter(
+                (item: decisionCriteria) => {
+                    if (item.name) {
+                        return item
+                    }
+                }
+            )
+            useAppDispatch(
+                setDecisionFormState({
+                    id: decisionActivityId,
+                    criteria: filteredCriteria,
+                    currentTab: 3,
+                })
+            )
+        }
+    }, [decisionActivityId, criteriaArray])
 
     return (
         <div className="flex flex-col mx-1">

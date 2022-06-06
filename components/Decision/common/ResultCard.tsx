@@ -2,13 +2,14 @@ import React, { FC, useEffect } from 'react'
 import { FieldValues, UseFormSetValue } from 'react-hook-form'
 
 import { resultCard } from '../../../styles/decision'
+import { Criteria, Rating } from '../../../utils/types/global'
 
 interface ResultCardProps {
     optionIndex: number
     option: { name: string; score: number }
     setValue: UseFormSetValue<FieldValues>
-    criteriaArray: Array<{ name: string; weight: number }>
-    ratingsArray: Array<{ criteria: string; weight: number; value: number }>
+    criteriaArray: Array<Criteria>
+    ratingsArray: Array<Rating>
 }
 
 export const ResultCard: FC<ResultCardProps> = ({

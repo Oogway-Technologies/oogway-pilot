@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { capitalize } from '../../utils/helpers/common'
-import { AISuggestions, DecisionForm } from '../../utils/types/global'
+import { FirebaseDecisionActivity } from '../../utils/types/firebase'
+import { AISuggestions } from '../../utils/types/global'
 import { DecisionSliceStates, FormCopy } from '../interfaces'
 
 const initialState: DecisionSliceStates = {
@@ -32,11 +33,15 @@ const initialState: DecisionSliceStates = {
     sideCardStep: 1,
     clickedConnect: false,
     decisionFormState: {
+        userId: '',
+        ipAddress: '',
         question: '',
         context: '',
         options: [],
         criteria: [],
         ratings: [],
+        isComplete: false,
+        clickedConnect: false,
     },
 }
 
@@ -191,7 +196,7 @@ export const decisionSlice = createSlice({
         },
         setDecisionFormState: (
             state,
-            { payload }: PayloadAction<DecisionForm>
+            { payload }: PayloadAction<FirebaseDecisionActivity>
         ) => {
             state.decisionFormState = payload
         },
