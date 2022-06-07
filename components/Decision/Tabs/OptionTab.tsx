@@ -59,7 +59,6 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
     const createDecision = useCreateDecisionActivity()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const question = getValues('question')
-    // const user = useAppSelector(state => state.userSlice.user)
     const watchOptions = watch('options')
 
     useEffect(() => {

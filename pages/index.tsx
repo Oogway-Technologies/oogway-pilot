@@ -31,8 +31,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { useInfiniteDecisionsQuery } from '../queries/decisionActivity'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
-import { insertAtArray } from '../utils/helpers/common'
-import { deepCopy } from '../utils/helpers/common'
+import { deepCopy, insertAtArray } from '../utils/helpers/common'
 import { FirebaseDecisionActivity } from '../utils/types/firebase'
 import { DecisionForm } from '../utils/types/global'
 
@@ -47,23 +46,6 @@ const DecisionEngine: FC = () => {
     // const { user, isLoading } = useUser()
 
     // Rehydrate form state from stored values
-    // TODO: make custom hook
-    // const [defaultValues, setDefaultValues] = useState({
-    //     question: '',
-    //     context: '',
-    //     options: [
-    //         { name: '', isAI: false },
-    //         { name: '', isAI: false },
-    //     ],
-    //     criteria: [{ name: '', weight: 2, isAI: false }],
-    //     ratings: [
-    //         {
-    //             option: '',
-    //             score: '',
-    //             rating: [{ criteria: '', value: 0, weight: 1 }],
-    //         },
-    //     ],
-    // })
     const methods = useForm<DecisionForm>({
         defaultValues: {
             question: '',
@@ -78,9 +60,6 @@ const DecisionEngine: FC = () => {
                 },
             ],
         },
-        // useMemo(() => {
-        //     return deepCopy(defaultValues)
-        // }, [defaultValues]),
     })
     const { control, getValues, setValue } = methods
     useInfiniteDecisionsQuery(
@@ -121,15 +100,6 @@ const DecisionEngine: FC = () => {
                         shouldDirty: true,
                     })
                 }
-                // update form state
-                // console.log('Default values: ', {
-                //     ...copyDefaultValues,
-                //     ...incompleteDecision,
-                // })
-                // setDefaultValues({
-                //     ...copyDefaultValues,
-                //     ...incompleteDecision,
-                // })
                 // Set form state in redux
                 useAppDispatch(
                     setDecisionActivityId(
@@ -146,25 +116,6 @@ const DecisionEngine: FC = () => {
             }
         }
     )
-    // useEffect(() => {
-    //     // If call was successful and the most recent decision is incomplete,
-    //     // rehydrate default values with that state
-    //     if (isFetched && isSuccess && !data.pages[0].decisions[0].isComplete) {
-    //         const incompleteDecision = deepCopy(data.pages[0].decisions[0])
-    //         // update form state
-    //         setDefaultValues({
-    //             ...defaultValues,
-    //             ...incompleteDecision,
-    //         })
-    //         // update current tab
-    //         if (incompleteDecision.currentTab)
-    //             setCurrentTab(incompleteDecision.currentTab)
-    //     }
-    // }, [data, isFetched, isSuccess])
-
-    // useEffect(() => {
-    //     reset(deepCopy(defaultValues))
-    // }, [defaultValues])
 
     // Whenever watch question changes, reset decision helper card and clicked connect state
     const watchQuestion = useWatch({ name: 'question', control })
