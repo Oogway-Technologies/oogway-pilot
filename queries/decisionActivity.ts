@@ -87,7 +87,10 @@ export const useInfiniteDecisionsQuery = (
                 undefined,
             onSuccess: onSuccess,
             // Other params
-            staleTime: 60 * 1000 * 1, // One minute
+            staleTime: 1000 * 60 * 60, // One hour,
+            refetchOnMount: 'always',
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: false,
             enabled: enabled ?? true,
         }
     )

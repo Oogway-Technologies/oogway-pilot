@@ -1,7 +1,7 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 
 import GenericSidebar from '../components/Decision/common/GenericSidebar'
@@ -23,6 +23,7 @@ import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
 import {
     setClickedConnect,
     setDecisionActivityId,
+    setDecisionQuestion,
     setSideCardStep,
 } from '../features/decision/decisionSlice'
 import useMediaQuery from '../hooks/useMediaQuery'
@@ -32,6 +33,7 @@ import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
 import { deepCopy } from '../utils/helpers/common'
+import { FirebaseDecisionActivity } from '../utils/types/firebase'
 import { DecisionForm } from '../utils/types/global'
 
 const DecisionEngine: FC = () => {
@@ -46,47 +48,101 @@ const DecisionEngine: FC = () => {
 
     // Rehydrate form state from stored values
     // TODO: make custom hook
-    const [defaultValues, setDefaultValues] = useState({
-        question: '',
-        context: '',
-        options: [
-            { name: '', isAI: false },
-            { name: '', isAI: false },
-        ],
-        criteria: [{ name: '', weight: 2, isAI: false }],
-        ratings: [
-            {
-                option: '',
-                score: '',
-                rating: [{ criteria: '', value: 0, weight: 1 }],
-            },
-        ],
+    // const [defaultValues, setDefaultValues] = useState({
+    //     question: '',
+    //     context: '',
+    //     options: [
+    //         { name: '', isAI: false },
+    //         { name: '', isAI: false },
+    //     ],
+    //     criteria: [{ name: '', weight: 2, isAI: false }],
+    //     ratings: [
+    //         {
+    //             option: '',
+    //             score: '',
+    //             rating: [{ criteria: '', value: 0, weight: 1 }],
+    //         },
+    //     ],
+    // })
+    const methods = useForm<DecisionForm>({
+        defaultValues: {
+            question: '',
+            context: '',
+            options: [{ name: '', isAI: false }],
+            criteria: [{ name: '', weight: 2, isAI: false }],
+            ratings: [
+                {
+                    option: '',
+                    score: '',
+                    rating: [{ criteria: '', value: 0, weight: 1 }],
+                },
+            ],
+        },
+        // useMemo(() => {
+        //     return deepCopy(defaultValues)
+        // }, [defaultValues]),
     })
+    const { control, getValues, setValue } = methods
     useInfiniteDecisionsQuery(
         userProfile.uid,
         undefined,
         userProfile.uid !== '', // only enable the call if the userProfile.uid is defined
         retrievedData => {
+            console.log(
+                'Previous decision is incomplete: ',
+                !retrievedData.pages[0].decisions[0].isComplete
+            )
             if (!retrievedData.pages[0].decisions[0].isComplete) {
+                // Create copies
                 const incompleteDecision = deepCopy(
                     retrievedData.pages[0].decisions[0]
                 )
-                const copyDefaultValues = deepCopy(defaultValues)
-                // update form state
-                console.log('Default values: ', {
-                    ...copyDefaultValues,
-                    ...incompleteDecision,
-                })
-                setDefaultValues({
-                    ...copyDefaultValues,
-                    ...incompleteDecision,
-                })
-                // update current tab
-                if (incompleteDecision.currentTab)
-                    setCurrentTab(incompleteDecision.currentTab)
+                // const copyDefaultValues = deepCopy(defaultValues)
+                // remove extra fields
+                const extraFields = [
+                    'timestamp',
+                    'currentTab',
+                    'id',
+                    'userId',
+                    'isComplete',
+                    'ipAddress',
+                    'clickedConnect',
+                ]
+                for (const field of extraFields) {
+                    delete incompleteDecision[field]
+                }
+                const formData: FirebaseDecisionActivity =
+                    deepCopy(incompleteDecision)
 
-                // Set decisionActivityId
-                useAppDispatch(setDecisionActivityId(incompleteDecision.id))
+                // set values
+                for (const [key, value] of Object.entries(formData)) {
+                    setValue(key, value, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                    })
+                }
+                // update form state
+                // console.log('Default values: ', {
+                //     ...copyDefaultValues,
+                //     ...incompleteDecision,
+                // })
+                // setDefaultValues({
+                //     ...copyDefaultValues,
+                //     ...incompleteDecision,
+                // })
+                // Set form state in redux
+                useAppDispatch(
+                    setDecisionActivityId(
+                        retrievedData.pages[0].decisions[0].id
+                    )
+                )
+                useAppDispatch(setDecisionQuestion(incompleteDecision.question))
+
+                // update current tab
+                if (retrievedData.pages[0].decisions[0].currentTab)
+                    setCurrentTab(
+                        retrievedData.pages[0].decisions[0].currentTab
+                    )
             }
         }
     )
@@ -106,19 +162,12 @@ const DecisionEngine: FC = () => {
     //     }
     // }, [data, isFetched, isSuccess])
 
-    const methods = useForm<DecisionForm>({
-        defaultValues: useMemo(() => {
-            return defaultValues
-        }, [defaultValues]),
-    })
-    const { control, reset, getValues, setValue } = methods
-    useEffect(() => {
-        reset(defaultValues)
-    }, [defaultValues])
+    // useEffect(() => {
+    //     reset(deepCopy(defaultValues))
+    // }, [defaultValues])
 
-    // Whenever watch question changes, reset decision helper card and clicked connnct state
+    // Whenever watch question changes, reset decision helper card and clicked connect state
     const watchQuestion = useWatch({ name: 'question', control })
-
     useEffect(() => {
         useAppDispatch(setSideCardStep(1))
         useAppDispatch(setClickedConnect(false))

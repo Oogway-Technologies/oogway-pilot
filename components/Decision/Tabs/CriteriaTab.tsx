@@ -128,7 +128,7 @@ export const CriteriaTab = () => {
         state => state.decisionSlice
     )
 
-    // Log decision form staate
+    // Log decision form state
     const updateDecision = useCreateDecisionActivity()
     useEffect(() => {
         // On mount, log form state from previous tab
@@ -147,6 +147,7 @@ export const CriteriaTab = () => {
     const criteriaArray = watch('criteria')
     useEffect(() => {
         if (decisionActivityId) {
+            console.log('Criteria Tab -- updating decision form state')
             // to remove empty criteria if any.
             const filteredCriteria = criteriaArray.filter(
                 (item: decisionCriteria) => {
