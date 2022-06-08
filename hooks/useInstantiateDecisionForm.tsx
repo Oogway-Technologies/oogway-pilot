@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
@@ -42,7 +42,7 @@ const useInstantiateDecisionForm = ({
         },
     })
     const { setValue } = methods
-    useInfiniteDecisionsQuery(
+    const { isFetched, isSuccess } = useInfiniteDecisionsQuery(
         userProfile.uid,
         undefined,
         userProfile.uid !== '', // only enable the call if the userProfile.uid is defined
@@ -99,6 +99,13 @@ const useInstantiateDecisionForm = ({
             }
         }
     )
+
+    // Update ratings when user navigates back to decision engine tab
+    // and form is rehydrated
+    useEffect(() => {
+        if (isFetched && isSuccess)
+            useAppDispatch(setDecisionRatingUpdate(true))
+    }, [])
 
     // Return form methods
     return methods
