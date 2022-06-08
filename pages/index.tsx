@@ -2,7 +2,7 @@ import { useUser } from '@auth0/nextjs-auth0'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import React, { FC, useEffect, useState } from 'react'
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { FormProvider, useWatch } from 'react-hook-form'
 
 import GenericSidebar from '../components/Decision/common/GenericSidebar'
 import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHandler'
@@ -22,21 +22,14 @@ import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
 import {
     setClickedConnect,
-    setDecisionActivityId,
-    setDecisionQuestion,
-    setDecisionRatingUpdate,
-    setIsDecisionFormUpdating,
-    setIsDecisionRehydrated,
     setSideCardStep,
 } from '../features/decision/decisionSlice'
+import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
-import { useInfiniteDecisionsQuery } from '../queries/decisionActivity'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
-import { deepCopy, insertAtArray } from '../utils/helpers/common'
-import { FirebaseDecisionActivity } from '../utils/types/firebase'
-import { DecisionForm } from '../utils/types/global'
+import { insertAtArray } from '../utils/helpers/common'
 
 const DecisionEngine: FC = () => {
     const { decisionCriteriaQueryKey, userExceedsMaxDecisions } =
@@ -45,82 +38,10 @@ const DecisionEngine: FC = () => {
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
-    const userProfile = useAppSelector(state => state.userSlice.user)
 
-    // Rehydrate form state from stored values
-    const methods = useForm<DecisionForm>({
-        defaultValues: {
-            question: '',
-            context: '',
-            options: [{ name: '', isAI: false }],
-            criteria: [{ name: '', weight: 2, isAI: false }],
-            ratings: [
-                {
-                    option: '',
-                    score: '',
-                    rating: [{ criteria: '', value: 0, weight: 1 }],
-                },
-            ],
-        },
-    })
+    // Instantiate form
+    const methods = useInstantiateDecisionForm({ currentTab, setCurrentTab })
     const { control, getValues, setValue } = methods
-    useInfiniteDecisionsQuery(
-        userProfile.uid,
-        undefined,
-        userProfile.uid !== '', // only enable the call if the userProfile.uid is defined
-        retrievedData => {
-            if (!retrievedData.pages[0].decisions[0].isComplete) {
-                // Set rehydration flags
-                useAppDispatch(setIsDecisionFormUpdating(true))
-                useAppDispatch(setIsDecisionRehydrated(true))
-
-                // Create copies
-                const incompleteDecision = deepCopy(
-                    retrievedData.pages[0].decisions[0]
-                )
-                // const copyDefaultValues = deepCopy(defaultValues)
-                // remove extra fields
-                const extraFields = [
-                    'timestamp',
-                    'currentTab',
-                    'id',
-                    'userId',
-                    'isComplete',
-                    'ipAddress',
-                    'clickedConnect',
-                ]
-                for (const field of extraFields) {
-                    delete incompleteDecision[field]
-                }
-
-                // set values
-                for (const [key, value] of Object.entries(
-                    incompleteDecision as FirebaseDecisionActivity
-                )) {
-                    setValue(key, deepCopy(value), {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                    })
-                }
-                // Set form state in redux
-                useAppDispatch(
-                    setDecisionActivityId(
-                        retrievedData.pages[0].decisions[0].id
-                    )
-                )
-                useAppDispatch(setDecisionQuestion(incompleteDecision.question))
-
-                // update current tab
-                if (retrievedData.pages[0].decisions[0].currentTab) {
-                    setCurrentTab(
-                        retrievedData.pages[0].decisions[0].currentTab
-                    )
-                    if (currentTab === 4)
-                        useAppDispatch(setDecisionRatingUpdate(true))
-                }
-            }
-        }
-    )
 
     // Whenever watch question changes, reset decision helper card and clicked connect state
     const watchQuestion = useWatch({ name: 'question', control })
