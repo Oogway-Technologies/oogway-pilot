@@ -24,6 +24,9 @@ import {
     setClickedConnect,
     setDecisionActivityId,
     setDecisionQuestion,
+    setDecisionRatingUpdate,
+    setIsDecisionFormUpdating,
+    setIsDecisionRehydrated,
     setSideCardStep,
 } from '../features/decision/decisionSlice'
 import useMediaQuery from '../hooks/useMediaQuery'
@@ -43,7 +46,6 @@ const DecisionEngine: FC = () => {
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
     const userProfile = useAppSelector(state => state.userSlice.user)
-    // const { user, isLoading } = useUser()
 
     // Rehydrate form state from stored values
     const methods = useForm<DecisionForm>({
@@ -67,11 +69,11 @@ const DecisionEngine: FC = () => {
         undefined,
         userProfile.uid !== '', // only enable the call if the userProfile.uid is defined
         retrievedData => {
-            console.log(
-                'Previous decision is incomplete: ',
-                !retrievedData.pages[0].decisions[0].isComplete
-            )
             if (!retrievedData.pages[0].decisions[0].isComplete) {
+                // Set rehydration flags
+                useAppDispatch(setIsDecisionFormUpdating(true))
+                useAppDispatch(setIsDecisionRehydrated(true))
+
                 // Create copies
                 const incompleteDecision = deepCopy(
                     retrievedData.pages[0].decisions[0]
@@ -90,12 +92,12 @@ const DecisionEngine: FC = () => {
                 for (const field of extraFields) {
                     delete incompleteDecision[field]
                 }
-                const formData: FirebaseDecisionActivity =
-                    deepCopy(incompleteDecision)
 
                 // set values
-                for (const [key, value] of Object.entries(formData)) {
-                    setValue(key, value, {
+                for (const [key, value] of Object.entries(
+                    incompleteDecision as FirebaseDecisionActivity
+                )) {
+                    setValue(key, deepCopy(value), {
                         shouldValidate: true,
                         shouldDirty: true,
                     })
@@ -109,10 +111,13 @@ const DecisionEngine: FC = () => {
                 useAppDispatch(setDecisionQuestion(incompleteDecision.question))
 
                 // update current tab
-                if (retrievedData.pages[0].decisions[0].currentTab)
+                if (retrievedData.pages[0].decisions[0].currentTab) {
                     setCurrentTab(
                         retrievedData.pages[0].decisions[0].currentTab
                     )
+                    if (currentTab === 4)
+                        useAppDispatch(setDecisionRatingUpdate(true))
+                }
             }
         }
     )
@@ -157,7 +162,7 @@ const DecisionEngine: FC = () => {
             case 1:
                 return <DecisionTab deviceIp={deviceIp || ''} />
             case 2:
-                return <OptionTab deviceIp={deviceIp || ''} />
+                return <OptionTab />
             case 3:
                 return <CriteriaTab />
             case 4:

@@ -8,6 +8,7 @@ import {
     setDecisionActivityId,
     setDecisionFormState,
     setDecisionQuestion,
+    setIsDecisionFormUpdating,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -26,11 +27,7 @@ import { OptionCard } from '../Sidecards/OptionCard'
 import { OptionSuggestions } from '../Sidecards/OptionSuggestions'
 import { SignInCard } from '../Sidecards/SignInCard'
 
-interface OptionTabProps {
-    deviceIp: string
-}
-
-export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
+export const OptionTab: FC = () => {
     const {
         register,
         control,
@@ -46,6 +43,7 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
         decisionFormState,
         decisionActivityId,
         userExceedsMaxDecisions,
+        isDecisionFormUpdating,
     } = useAppSelector(state => state.decisionSlice)
 
     const { fields, remove } = useFieldArray({
@@ -65,15 +63,11 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
         // On mount, check if new question matches previous question
         // If not, update state to new question and instantiate new
         // decision log
-        if (question !== prevQuestion) {
+        if (question !== prevQuestion && !isDecisionFormUpdating) {
             // Update previous question
             useAppDispatch(setDecisionQuestion(question))
 
             // Instantiate new decision
-            console.log(
-                `Updating decision ${decisionActivityId} with data: `,
-                decisionFormState
-            )
             createDecision.mutate(decisionFormState, {
                 onSuccess: newDecision => {
                     useAppDispatch(setDecisionActivityId(newDecision.data.id))
@@ -106,9 +100,10 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
                 setDecisionFormState({
                     id: decisionActivityId,
                     options: filteredOptions,
-                    currentTab: 2,
+                    currentTab: 3,
                 })
             )
+            useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [watchOptions, decisionActivityId])
 

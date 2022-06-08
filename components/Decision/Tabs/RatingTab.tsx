@@ -4,24 +4,25 @@ import { useFormContext } from 'react-hook-form'
 import {
     setDecisionFormState,
     setDecisionRatingUpdate,
+    setIsDecisionFormUpdating,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { deepCopy } from '../../../utils/helpers/common'
-import { decisionRating } from '../../../utils/types/firebase'
 import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
 import { RatingSelector } from '../common/RatingSelector'
 
 export const RatingTab: FC = () => {
-    const { getValues, setValue, watch } = useFormContext()
+    const { getValues, setValue } = useFormContext()
     const {
         decisionEngineOptionTab,
         decisionRatingUpdate,
         criteriaMobileIndex,
         decisionFormState,
         decisionActivityId,
+        isDecisionFormUpdating,
     } = useAppSelector(state => state.decisionSlice)
     const updateDecision = useCreateDecisionActivity()
 
@@ -54,9 +55,11 @@ export const RatingTab: FC = () => {
     }
 
     useEffect(() => {
+        // Log previous form state
+        if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
+
         const orgOptionsList = getValues('options')
         const orgCriteriaList = getValues('criteria')
-
         const criteriaList = orgCriteriaList.filter(
             (item: Criteria) => item.name
         )
@@ -112,52 +115,27 @@ export const RatingTab: FC = () => {
                     }
                 })
             }
+            console.log('Setting ratings array...')
             setValue('ratings', mapRatingObject)
             useAppDispatch(setDecisionRatingUpdate(false))
+
+            // Track form state
+            if (decisionActivityId) {
+                useAppDispatch(
+                    setDecisionFormState({
+                        id: decisionActivityId,
+                        ratings: mapRatingObject,
+                        currentTab: 5,
+                    })
+                )
+                useAppDispatch(setIsDecisionFormUpdating(false))
+            }
         }
 
         return () => {
             useAppDispatch(setPreviousIndex(4))
         }
     }, [])
-
-    useEffect(() => {
-        // On mount, log form state from previous tab
-        console.log(
-            `Updating decision ${decisionActivityId} with data: `,
-            decisionFormState
-        )
-        updateDecision.mutate(decisionFormState)
-    }, [])
-
-    // Track form state
-    const ratingsArray: Array<decisionRating> = watch('ratings')
-    useEffect(() => {
-        if (decisionActivityId) {
-            // to remove empties
-            let filteredRatings = ratingsArray.filter(
-                (item: decisionRating) => {
-                    if (item.option) {
-                        return item
-                    }
-                }
-            )
-            filteredRatings = filteredRatings.map(option => {
-                const filteredRating = option.rating.filter(item => {
-                    if (item.criteria) return item
-                })
-                option.rating = filteredRating
-                return option
-            })
-            useAppDispatch(
-                setDecisionFormState({
-                    id: decisionActivityId,
-                    ratings: filteredRatings,
-                    currentTab: 4,
-                })
-            )
-        }
-    }, [decisionActivityId, ratingsArray])
 
     return (
         <>

@@ -1,10 +1,10 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import React, { useEffect } from 'react'
-import { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
     setDecisionFormState,
+    setIsDecisionFormUpdating,
     setPreviousIndex,
     setUserExceedsMaxDecisions,
 } from '../../../features/decision/decisionSlice'
@@ -47,9 +47,10 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                 context: context,
                 isComplete: false,
                 clickedConnect: clickedConnect,
-                currentTab: 1,
+                currentTab: 2,
             })
         )
+        useAppDispatch(setIsDecisionFormUpdating(false))
     }, [question, context, clickedConnect, userProfile])
 
     useEffect(() => {

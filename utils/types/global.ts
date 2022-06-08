@@ -68,6 +68,13 @@ export interface DecisionForm {
     clickedConnect?: boolean
 }
 
+export type decisionFormFields =
+    | 'question'
+    | 'context'
+    | 'options'
+    | 'criteria'
+    | 'ratings'
+
 export interface Rating {
     criteria: string
     value: number

@@ -43,6 +43,8 @@ const initialState: DecisionSliceStates = {
         isComplete: false,
         clickedConnect: false,
     },
+    isDecisionFormUpdating: false,
+    isDecisionRehydrated: false,
 }
 
 export const decisionSlice = createSlice({
@@ -200,6 +202,18 @@ export const decisionSlice = createSlice({
         ) => {
             state.decisionFormState = payload
         },
+        setIsDecisionFormUpdating: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.isDecisionFormUpdating = payload
+        },
+        setIsDecisionRehydrated: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.isDecisionRehydrated = payload
+        },
     },
 })
 
@@ -226,6 +240,8 @@ export const {
     setSideCardStep,
     setClickedConnect,
     setDecisionFormState,
+    setIsDecisionFormUpdating,
+    setIsDecisionRehydrated,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

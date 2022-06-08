@@ -35,9 +35,7 @@ export const ResultTab: FC<ResultTabProps> = ({
     deviceIp,
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
-    const { decisionActivityId, decisionFormState } = useAppSelector(
-        state => state.decisionSlice
-    )
+    const { decisionActivityId } = useAppSelector(state => state.decisionSlice)
     const aiSuggestions = useAppSelector(
         state => state.decisionSlice.suggestions
     )
@@ -48,11 +46,6 @@ export const ResultTab: FC<ResultTabProps> = ({
     const updateDecision = useCreateDecisionActivity()
     const createUnauthenticatedDecisions = usePutUnauthenticatedDecision()
     const queryClient = useQueryClient()
-
-    // On mouont, log form state from previous tab
-    useEffect(() => {
-        updateDecision.mutate(decisionFormState)
-    }, [])
 
     // Determine best option from scores on mount.
     useEffect(() => {
@@ -94,16 +87,12 @@ export const ResultTab: FC<ResultTabProps> = ({
         // Result object for firebase.
         const result: FirebaseDecisionActivity = {
             id: id,
+            ratings: getValues('ratings'),
             suggestedOptions: aiSuggestions.copyOptionsList,
             suggestedCriteria: aiSuggestions.copyCriteriaList,
             isComplete: true,
             currentTab: 5,
         }
-        console.log(
-            `Updating decision ${decisionActivityId} with data: `,
-            result
-        )
-        // saving result to firebase.
         updateDecision.mutate(result)
     }
 
@@ -146,13 +135,6 @@ export const ResultTab: FC<ResultTabProps> = ({
     const handleReset = () => {
         // reset form state
         reset()
-        // queryClient.invalidateQueries(
-        //     ['decisionActivity', userProfile.uid, false],
-        //     {
-        //         refetchActive: false,
-        //         refetchInactive: false,
-        //     }
-        // )
         // Return to first tab
         setCurrentTab(1)
         // Wipe previous decision question and id

@@ -6,7 +6,7 @@ import {
 } from 'firebase/firestore'
 
 import { BingReference } from './bingapi'
-import { Criteria, MediaObject, Options, Rating } from './global'
+import { Criteria, MediaObject, Options, Rating, Ratings } from './global'
 import { GoogleSearchHyperlink } from './googleapi'
 
 /**
@@ -132,7 +132,7 @@ export interface FirebaseDecisionActivity {
     options?: decisionOption[]
     suggestedOptions?: Options[]
     suggestedCriteria?: Criteria[]
-    ratings?: decisionRating[]
+    ratings?: decisionRating[] | Ratings[]
     timestamp?: FieldValue
     isComplete?: boolean
     clickedConnect?: boolean

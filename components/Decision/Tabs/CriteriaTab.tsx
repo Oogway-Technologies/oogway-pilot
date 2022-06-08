@@ -1,11 +1,12 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilPen, UilTrashAlt } from '@iconscout/react-unicons'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
     addSelectedCriteria,
     setDecisionFormState,
+    setIsDecisionFormUpdating,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -26,7 +27,7 @@ import { CriteriaCard } from '../Sidecards/CriteriaCard'
 import { CriteriaSuggestions } from '../Sidecards/CriteriaSuggestions'
 import { SignInCard } from '../Sidecards/SignInCard'
 
-export const CriteriaTab = () => {
+export const CriteriaTab: FC = () => {
     const {
         register,
         control,
@@ -37,9 +38,13 @@ export const CriteriaTab = () => {
         getValues,
     } = useFormContext()
 
-    const { userExceedsMaxDecisions } = useAppSelector(
-        state => state.decisionSlice
-    )
+    const {
+        userExceedsMaxDecisions,
+        decisionFormState,
+        decisionActivityId,
+        isDecisionFormUpdating,
+        isDecisionRehydrated,
+    } = useAppSelector(state => state.decisionSlice)
 
     const { fields, remove } = useFieldArray({
         control,
@@ -57,6 +62,7 @@ export const CriteriaTab = () => {
         name: '',
         weight: 1,
     })
+    const updateDecision = useCreateDecisionActivity()
 
     const handleEdit = (item: Criteria, index: number) => {
         setIndex(index)
@@ -91,7 +97,10 @@ export const CriteriaTab = () => {
 
     useEffect(() => {
         // to focus on input on mount
-        setFocus('options.[0].name')
+        if (!isDecisionRehydrated) setFocus('options.[0].name')
+
+        // On mount, log form state from previous tab
+        if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
 
         return () => {
             useAppDispatch(setPreviousIndex(3))
@@ -124,30 +133,10 @@ export const CriteriaTab = () => {
         }
     }, [watchCriteria])
 
-    const { decisionFormState, decisionActivityId } = useAppSelector(
-        state => state.decisionSlice
-    )
-
-    // Log decision form state
-    const updateDecision = useCreateDecisionActivity()
-    useEffect(() => {
-        // On mount, log form state from previous tab
-        console.log(
-            `Updating decision ${decisionActivityId} with data: `,
-            decisionFormState
-        )
-        updateDecision.mutate(decisionFormState)
-
-        return () => {
-            useAppDispatch(setPreviousIndex(3))
-        }
-    }, [])
-
     // Track form state
     const criteriaArray = watch('criteria')
     useEffect(() => {
         if (decisionActivityId) {
-            console.log('Criteria Tab -- updating decision form state')
             // to remove empty criteria if any.
             const filteredCriteria = criteriaArray.filter(
                 (item: decisionCriteria) => {
@@ -160,9 +149,10 @@ export const CriteriaTab = () => {
                 setDecisionFormState({
                     id: decisionActivityId,
                     criteria: filteredCriteria,
-                    currentTab: 3,
+                    currentTab: 4,
                 })
             )
+            useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [decisionActivityId, criteriaArray])
 

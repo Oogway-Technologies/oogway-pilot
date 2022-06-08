@@ -53,4 +53,6 @@ export interface DecisionSliceStates {
     sideCardStep: number
     clickedConnect: boolean
     decisionFormState: FirebaseDecisionActivity
+    isDecisionFormUpdating: boolean
+    isDecisionRehydrated: boolean
 }
