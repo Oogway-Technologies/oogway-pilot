@@ -1,5 +1,5 @@
-import React, { FC, useEffect } from 'react'
-import { useFormContext } from 'react-hook-form'
+import React, { FC, useEffect, useRef } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
     setDecisionFormState,
@@ -9,22 +9,19 @@ import {
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { deepCopy } from '../../../utils/helpers/common'
+import { FirebaseDecisionActivity } from '../../../utils/types/firebase'
 import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
 import { RatingSelector } from '../common/RatingSelector'
 
 export const RatingTab: FC = () => {
-    const { getValues, setValue } = useFormContext()
+    const { getValues, setValue, control } = useFormContext()
     const {
         decisionEngineOptionTab,
         decisionRatingUpdate,
         criteriaMobileIndex,
-        decisionFormState,
-        decisionActivityId,
-        isDecisionFormUpdating,
+        isRatingsModified,
     } = useAppSelector(state => state.decisionSlice)
-    const updateDecision = useCreateDecisionActivity()
 
     const ratingsList: Ratings[] = getValues('ratings')
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -54,10 +51,12 @@ export const RatingTab: FC = () => {
         return found
     }
 
+    const isRatingsModifiedRef = useRef(isRatingsModified)
     useEffect(() => {
-        // Log previous form state
-        if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
+        isRatingsModifiedRef.current = isRatingsModified
+    }, [isRatingsModified])
 
+    useEffect(() => {
         const orgOptionsList = getValues('options')
         const orgCriteriaList = getValues('criteria')
         const criteriaList = orgCriteriaList.filter(
@@ -115,27 +114,31 @@ export const RatingTab: FC = () => {
                     }
                 })
             }
-            console.log('Setting ratings array...')
             setValue('ratings', mapRatingObject)
             useAppDispatch(setDecisionRatingUpdate(false))
-
-            // Track form state
-            if (decisionActivityId) {
-                useAppDispatch(
-                    setDecisionFormState({
-                        id: decisionActivityId,
-                        ratings: mapRatingObject,
-                        currentTab: 5,
-                    })
-                )
-                useAppDispatch(setIsDecisionFormUpdating(false))
-            }
         }
 
         return () => {
             useAppDispatch(setPreviousIndex(4))
         }
     }, [])
+
+    const ratingsArray = useWatch({ name: 'ratings', control })
+    useEffect(() => {
+        // Track form state
+        let formState: FirebaseDecisionActivity = {
+            currentTab: 4,
+        }
+        if (ratingsArray.length && ratingsArray[0].option !== '') {
+            formState = {
+                ...formState,
+                ratings: deepCopy(ratingsArray),
+            }
+        }
+
+        useAppDispatch(setDecisionFormState(formState))
+        useAppDispatch(setIsDecisionFormUpdating(false))
+    }, [ratingsArray])
 
     return (
         <>

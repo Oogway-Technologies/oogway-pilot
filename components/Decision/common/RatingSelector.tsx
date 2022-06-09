@@ -2,7 +2,10 @@ import { useUser } from '@auth0/nextjs-auth0'
 import React, { FC, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { setDecisionCriteriaQueryKey } from '../../../features/decision/decisionSlice'
+import {
+    setDecisionCriteriaQueryKey,
+    setIsRatingsModified,
+} from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import {
@@ -40,6 +43,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
     const handleChange = (value: number) => {
         setSelected(value)
         setValue(registerName, value)
+        useAppDispatch(setIsRatingsModified(true))
     }
 
     const colorGenerator = (index: number) => {

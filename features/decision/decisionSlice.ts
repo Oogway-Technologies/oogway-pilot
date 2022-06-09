@@ -32,19 +32,10 @@ const initialState: DecisionSliceStates = {
     criteriaMobileIndex: 0,
     sideCardStep: 1,
     clickedConnect: false,
-    decisionFormState: {
-        userId: '',
-        ipAddress: '',
-        question: '',
-        context: '',
-        options: [],
-        criteria: [],
-        ratings: [],
-        isComplete: false,
-        clickedConnect: false,
-    },
+    decisionFormState: {},
     isDecisionFormUpdating: false,
     isDecisionRehydrated: false,
+    isRatingsModified: false,
 }
 
 export const decisionSlice = createSlice({
@@ -200,7 +191,10 @@ export const decisionSlice = createSlice({
             state,
             { payload }: PayloadAction<FirebaseDecisionActivity>
         ) => {
-            state.decisionFormState = payload
+            state.decisionFormState = {
+                ...state.decisionFormState,
+                ...payload,
+            }
         },
         setIsDecisionFormUpdating: (
             state,
@@ -213,6 +207,9 @@ export const decisionSlice = createSlice({
             { payload }: PayloadAction<boolean>
         ) => {
             state.isDecisionRehydrated = payload
+        },
+        setIsRatingsModified: (state, { payload }: PayloadAction<boolean>) => {
+            state.isRatingsModified = payload
         },
     },
 })
@@ -242,6 +239,7 @@ export const {
     setDecisionFormState,
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
+    setIsRatingsModified,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

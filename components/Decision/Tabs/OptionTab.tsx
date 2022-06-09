@@ -18,7 +18,10 @@ import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
 import { insertAtArray } from '../../../utils/helpers/common'
-import { decisionOption } from '../../../utils/types/firebase'
+import {
+    decisionOption,
+    FirebaseDecisionActivity,
+} from '../../../utils/types/firebase'
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
@@ -96,13 +99,16 @@ export const OptionTab: FC = () => {
                     }
                 }
             )
-            useAppDispatch(
-                setDecisionFormState({
-                    id: decisionActivityId,
+            let formState: FirebaseDecisionActivity = {
+                id: decisionActivityId,
+                currentTab: 2,
+            }
+            if (filteredOptions.length)
+                formState = {
+                    ...formState,
                     options: filteredOptions,
-                    currentTab: 3,
-                })
-            )
+                }
+            useAppDispatch(setDecisionFormState(formState))
             useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [watchOptions, decisionActivityId])

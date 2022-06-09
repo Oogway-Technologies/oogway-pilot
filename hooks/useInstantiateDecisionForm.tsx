@@ -2,11 +2,14 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
+    setClickedConnect,
     setDecisionActivityId,
+    setDecisionFormState,
     setDecisionQuestion,
     setDecisionRatingUpdate,
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
+    setSideCardStep,
 } from '../features/decision/decisionSlice'
 import { useInfiniteDecisionsQuery } from '../queries/decisionActivity'
 import { deepCopy } from '../utils/helpers/common'
@@ -56,7 +59,6 @@ const useInstantiateDecisionForm = ({
                 const incompleteDecision = deepCopy(
                     retrievedData.pages[0].decisions[0]
                 )
-                // const copyDefaultValues = deepCopy(defaultValues)
                 // remove extra fields
                 const extraFields = [
                     'timestamp',
@@ -65,20 +67,24 @@ const useInstantiateDecisionForm = ({
                     'userId',
                     'isComplete',
                     'ipAddress',
-                    'clickedConnect',
                 ]
                 for (const field of extraFields) {
                     delete incompleteDecision[field]
                 }
 
                 // set values
+                const formState: FirebaseDecisionActivity = {}
                 for (const [key, value] of Object.entries(
                     incompleteDecision as FirebaseDecisionActivity
                 )) {
-                    setValue(key, deepCopy(value), {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                    })
+                    if (key !== 'clickedConnect') {
+                        setValue(key, deepCopy(value), {
+                            shouldValidate: true,
+                            shouldDirty: true,
+                        })
+                    }
+                    if (['question', 'context', 'clickedConnect'].includes(key))
+                        formState[key] = deepCopy(value)
                 }
                 // Set form state in redux
                 useAppDispatch(
@@ -87,6 +93,12 @@ const useInstantiateDecisionForm = ({
                     )
                 )
                 useAppDispatch(setDecisionQuestion(incompleteDecision.question))
+                useAppDispatch(
+                    setClickedConnect(incompleteDecision.clickedConnect)
+                )
+                if (incompleteDecision.clickedConnect)
+                    useAppDispatch(setSideCardStep(2))
+                useAppDispatch(setDecisionFormState(formState))
 
                 // update current tab
                 if (retrievedData.pages[0].decisions[0].currentTab) {

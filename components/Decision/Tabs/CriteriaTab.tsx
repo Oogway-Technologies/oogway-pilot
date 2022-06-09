@@ -11,12 +11,14 @@ import {
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { body, bodyHeavy, bodySmall } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { criteriaTabs, shortLimit } from '../../../utils/constants/global'
 import { insertAtArray, weightToString } from '../../../utils/helpers/common'
-import { decisionCriteria } from '../../../utils/types/firebase'
+import {
+    decisionCriteria,
+    FirebaseDecisionActivity,
+} from '../../../utils/types/firebase'
 import { Criteria } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
@@ -40,9 +42,7 @@ export const CriteriaTab: FC = () => {
 
     const {
         userExceedsMaxDecisions,
-        decisionFormState,
         decisionActivityId,
-        isDecisionFormUpdating,
         isDecisionRehydrated,
     } = useAppSelector(state => state.decisionSlice)
 
@@ -62,7 +62,6 @@ export const CriteriaTab: FC = () => {
         name: '',
         weight: 1,
     })
-    const updateDecision = useCreateDecisionActivity()
 
     const handleEdit = (item: Criteria, index: number) => {
         setIndex(index)
@@ -100,7 +99,7 @@ export const CriteriaTab: FC = () => {
         if (!isDecisionRehydrated) setFocus('options.[0].name')
 
         // On mount, log form state from previous tab
-        if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
+        // if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
 
         return () => {
             useAppDispatch(setPreviousIndex(3))
@@ -128,7 +127,7 @@ export const CriteriaTab: FC = () => {
 
     useEffect(() => {
         // handle focus on enter
-        if (!watchCriteria[0].name) {
+        if (!watchCriteria[0].name && !isDecisionRehydrated) {
             setFocus('criteria.[0].name')
         }
     }, [watchCriteria])
@@ -145,13 +144,15 @@ export const CriteriaTab: FC = () => {
                     }
                 }
             )
-            useAppDispatch(
-                setDecisionFormState({
-                    id: decisionActivityId,
+            let formState: FirebaseDecisionActivity = {
+                currentTab: 3,
+            }
+            if (filteredCriteria.length)
+                formState = {
+                    ...formState,
                     criteria: filteredCriteria,
-                    currentTab: 4,
-                })
-            )
+                }
+            useAppDispatch(setDecisionFormState(formState))
             useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [decisionActivityId, criteriaArray])

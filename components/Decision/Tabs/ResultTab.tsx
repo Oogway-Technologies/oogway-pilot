@@ -4,9 +4,14 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { useQueryClient } from 'react-query'
 
 import {
+    setClickedConnect,
     setDecisionActivityId,
     setDecisionEngineBestOption,
+    setDecisionFormState,
     setDecisionQuestion,
+    setIsDecisionFormUpdating,
+    setIsDecisionRehydrated,
+    setIsRatingsModified,
     setPreviousIndex,
     setSideCardStep,
 } from '../../../features/decision/decisionSlice'
@@ -84,6 +89,11 @@ export const ResultTab: FC<ResultTabProps> = ({
     }, [user, decisionActivityId])
 
     const saveResult = (id: string) => {
+        // Update decision form state
+        useAppDispatch(
+            setDecisionFormState({ currentTab: 5, isComplete: true })
+        )
+
         // Result object for firebase.
         const result: FirebaseDecisionActivity = {
             id: id,
@@ -141,6 +151,11 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setDecisionQuestion(undefined))
         useAppDispatch(setDecisionActivityId(undefined))
         useAppDispatch(setSideCardStep(1))
+        useAppDispatch(setClickedConnect(false))
+        useAppDispatch(setDecisionFormState({}))
+        useAppDispatch(setIsDecisionFormUpdating(false))
+        useAppDispatch(setIsRatingsModified(false))
+        useAppDispatch(setIsDecisionRehydrated(false))
     }
 
     return (

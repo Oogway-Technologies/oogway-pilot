@@ -55,4 +55,5 @@ export interface DecisionSliceStates {
     decisionFormState: FirebaseDecisionActivity
     isDecisionFormUpdating: boolean
     isDecisionRehydrated: boolean
+    isRatingsModified: boolean
 }

@@ -10,6 +10,7 @@ import {
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import useResetDecisionHelperCard from '../../../hooks/useResetDecisionHelperCard'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { inputStyle } from '../../../styles/utils'
 import {
@@ -36,6 +37,9 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     const clickedConnect = useAppSelector(
         state => state.decisionSlice.clickedConnect
     )
+
+    // Reset decision helper card when question is changed
+    useResetDecisionHelperCard(control)
 
     // Track decision data
     useEffect(() => {

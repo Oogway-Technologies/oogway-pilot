@@ -27,6 +27,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
         decisionCriteriaQueryKey,
     } = useAppSelector(state => state.decisionSlice)
 
+    // Handler functions
     const heightDecider = (tab: number) => {
         switch (tab) {
             case 1:
@@ -48,6 +49,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                 return 'h-[60vh]'
         }
     }
+
     const containerClass = `flex flex-col ${
         isMobile
             ? `${currentTab !== 4 ? 'mt-0 space-y-md p-0.5' : 'mt-4'}`
@@ -61,31 +63,34 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     return (
         <div className={containerClass}>
             {/* {[2, 3].includes(currentTab) && !isMobile ? <QuestionCard /> : ''} */}
-            <h3
-                className={`${
-                    isMobile ? bodyHeavy : 'text-2xl font-bold'
-                } text-neutral-800 dark:text-white capitalize`}
-            >
-                {title}
-                {currentTab === 5 && decisionEngineBestOption && (
-                    <span className="text-primary dark:text-primaryDark">
-                        {' '}
-                        {decisionEngineBestOption}
-                    </span>
-                )}
-                {currentTab === 4 && (
-                    <span className="text-neutral-700 dark:text-neutralDark-150">
-                        Rate{' '}
+            <div className="inline-flex justify-between items-center">
+                <h3
+                    className={`${
+                        isMobile ? bodyHeavy : 'text-2xl font-bold'
+                    } text-neutral-800 dark:text-white capitalize`}
+                >
+                    {title}
+                    {currentTab === 5 && decisionEngineBestOption && (
                         <span className="text-primary dark:text-primaryDark">
-                            {
-                                getValues('options')[decisionEngineOptionTab]
-                                    ?.name
-                            }
-                        </span>{' '}
-                        on each criteria.
-                    </span>
-                )}
-            </h3>
+                            {' '}
+                            {decisionEngineBestOption}
+                        </span>
+                    )}
+                    {currentTab === 4 && (
+                        <span className="text-neutral-700 dark:text-neutralDark-150">
+                            Rate{' '}
+                            <span className="text-primary dark:text-primaryDark">
+                                {
+                                    getValues('options')[
+                                        decisionEngineOptionTab
+                                    ]?.name
+                                }
+                            </span>{' '}
+                            on each criteria.
+                        </span>
+                    )}
+                </h3>
+            </div>
             {children}
         </div>
     )

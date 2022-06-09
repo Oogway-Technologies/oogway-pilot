@@ -20,13 +20,10 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
-import {
-    setClickedConnect,
-    setSideCardStep,
-} from '../features/decision/decisionSlice'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
+import { useAppSelector } from '../hooks/useRedux'
+import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
@@ -42,13 +39,7 @@ const DecisionEngine: FC = () => {
     // Instantiate form
     const methods = useInstantiateDecisionForm({ currentTab, setCurrentTab })
     const { control, getValues, setValue } = methods
-
-    // Whenever watch question changes, reset decision helper card and clicked connect state
     const watchQuestion = useWatch({ name: 'question', control })
-    useEffect(() => {
-        useAppDispatch(setSideCardStep(1))
-        useAppDispatch(setClickedConnect(false))
-    }, [watchQuestion])
 
     useEffect(() => {
         const optionList = getValues('options')
@@ -77,6 +68,9 @@ const DecisionEngine: FC = () => {
             }
         }
     }, [currentTab])
+
+    // On page unmoount, save form state
+    useSaveDecisionFormState()
 
     const tabGenerator = () => {
         switch (currentTab) {

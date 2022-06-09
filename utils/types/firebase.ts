@@ -123,6 +123,18 @@ export type decisionRating = {
 }
 
 export interface FirebaseDecisionActivity {
+    [index: string]:
+        | string
+        | decisionCriteria[]
+        | decisionOption[]
+        | Options[]
+        | Criteria[]
+        | decisionRating[]
+        | Ratings[]
+        | FieldValue
+        | boolean
+        | number
+        | undefined
     id?: string
     userId?: string
     ipAddress?: string
