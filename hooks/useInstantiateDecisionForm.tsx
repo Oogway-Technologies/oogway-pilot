@@ -9,7 +9,9 @@ import {
     setDecisionRatingUpdate,
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
+    setIsRatingsModified,
     setSideCardStep,
+    updateDecisionFormState,
 } from '../features/decision/decisionSlice'
 import { useInfiniteDecisionsQuery } from '../queries/decisionActivity'
 import { deepCopy } from '../utils/helpers/common'
@@ -73,7 +75,9 @@ const useInstantiateDecisionForm = ({
                 }
 
                 // set values
-                const formState: FirebaseDecisionActivity = {}
+                const formState: FirebaseDecisionActivity = {
+                    id: retrievedData.pages[0].decisions[0].id,
+                }
                 for (const [key, value] of Object.entries(
                     incompleteDecision as FirebaseDecisionActivity
                 )) {
@@ -83,8 +87,7 @@ const useInstantiateDecisionForm = ({
                             shouldDirty: true,
                         })
                     }
-                    if (['question', 'context', 'clickedConnect'].includes(key))
-                        formState[key] = deepCopy(value)
+                    formState[key] = deepCopy(value)
                 }
                 // Set form state in redux
                 useAppDispatch(
@@ -98,7 +101,7 @@ const useInstantiateDecisionForm = ({
                 )
                 if (incompleteDecision.clickedConnect)
                     useAppDispatch(setSideCardStep(2))
-                useAppDispatch(setDecisionFormState(formState))
+                useAppDispatch(updateDecisionFormState(formState))
 
                 // update current tab
                 if (retrievedData.pages[0].decisions[0].currentTab) {
@@ -117,6 +120,21 @@ const useInstantiateDecisionForm = ({
     useEffect(() => {
         if (isFetched && isSuccess)
             useAppDispatch(setDecisionRatingUpdate(true))
+    }, [])
+
+    // Clear redux state on unmount
+    useEffect(() => {
+        return () => {
+            // Wipe previous decision question and id
+            useAppDispatch(setDecisionQuestion(undefined))
+            useAppDispatch(setDecisionActivityId(undefined))
+            useAppDispatch(setSideCardStep(1))
+            useAppDispatch(setClickedConnect(false))
+            useAppDispatch(setDecisionFormState({}))
+            useAppDispatch(setIsDecisionFormUpdating(false))
+            useAppDispatch(setIsRatingsModified(false))
+            useAppDispatch(setIsDecisionRehydrated(false))
+        }
     }, [])
 
     // Return form methods

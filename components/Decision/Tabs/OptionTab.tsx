@@ -6,10 +6,10 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 import {
     addSelectedOption,
     setDecisionActivityId,
-    setDecisionFormState,
     setDecisionQuestion,
     setIsDecisionFormUpdating,
     setPreviousIndex,
+    updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -108,7 +108,7 @@ export const OptionTab: FC = () => {
                     ...formState,
                     options: filteredOptions,
                 }
-            useAppDispatch(setDecisionFormState(formState))
+            useAppDispatch(updateDecisionFormState(formState))
             useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [watchOptions, decisionActivityId])

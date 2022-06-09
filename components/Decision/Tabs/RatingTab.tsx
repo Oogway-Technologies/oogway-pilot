@@ -2,10 +2,10 @@ import React, { FC, useEffect, useRef } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
-    setDecisionFormState,
     setDecisionRatingUpdate,
     setIsDecisionFormUpdating,
     setPreviousIndex,
+    updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -136,7 +136,7 @@ export const RatingTab: FC = () => {
             }
         }
 
-        useAppDispatch(setDecisionFormState(formState))
+        useAppDispatch(updateDecisionFormState(formState))
         useAppDispatch(setIsDecisionFormUpdating(false))
     }, [ratingsArray])
 

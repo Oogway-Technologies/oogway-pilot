@@ -5,9 +5,9 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
     addSelectedCriteria,
-    setDecisionFormState,
     setIsDecisionFormUpdating,
     setPreviousIndex,
+    updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -152,7 +152,7 @@ export const CriteriaTab: FC = () => {
                     ...formState,
                     criteria: filteredCriteria,
                 }
-            useAppDispatch(setDecisionFormState(formState))
+            useAppDispatch(updateDecisionFormState(formState))
             useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [decisionActivityId, criteriaArray])
