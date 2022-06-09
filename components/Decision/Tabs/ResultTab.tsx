@@ -4,9 +4,14 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { useQueryClient } from 'react-query'
 
 import {
+    setClickedConnect,
     setDecisionActivityId,
     setDecisionEngineBestOption,
+    setDecisionFormState,
     setDecisionQuestion,
+    setIsDecisionFormUpdating,
+    setIsDecisionRehydrated,
+    setIsRatingsModified,
     setPreviousIndex,
     setSideCardStep,
 } from '../../../features/decision/decisionSlice'
@@ -19,9 +24,7 @@ import {
 import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
 import {
-    decisionCriteria,
     decisionOption,
-    decisionRating,
     FirebaseDecisionActivity,
     FirebaseUnauthenticatedDecision,
 } from '../../../utils/types/firebase'
@@ -37,32 +40,28 @@ export const ResultTab: FC<ResultTabProps> = ({
     deviceIp,
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
-    const userProfile = useAppSelector(state => state.userSlice.user)
-    const decisionActivityId = useAppSelector(
-        state => state.decisionSlice.decisionActivityId
-    )
+    const { decisionActivityId } = useAppSelector(state => state.decisionSlice)
     const aiSuggestions = useAppSelector(
         state => state.decisionSlice.suggestions
     )
-    const ratings: Array<decisionRating> = getValues('ratings')
     const options: Array<decisionOption> = useWatch({
         control,
         name: 'options',
     })
-    const saveDecision = useCreateDecisionActivity()
+    const updateDecision = useCreateDecisionActivity()
     const createUnauthenticatedDecisions = usePutUnauthenticatedDecision()
     const queryClient = useQueryClient()
 
     // Determine best option from scores on mount.
     useEffect(() => {
         useAppDispatch(setDecisionEngineBestOption(calcBestOption()))
-        if (getValues('question')) {
-            saveResult()
+        if (getValues('question') && decisionActivityId) {
+            saveResult(decisionActivityId)
         }
         return () => {
             useAppDispatch(setPreviousIndex(5))
         }
-    }, [options])
+    }, [options, decisionActivityId])
 
     // Update unauthenticatedDecisions
     const { user } = useUser()
@@ -89,56 +88,24 @@ export const ResultTab: FC<ResultTabProps> = ({
         }
     }, [user, decisionActivityId])
 
-    const saveResult = () => {
-        const decision = getValues()
-        // to remove empty option if any.
-        const filteredOptions = decision.options.filter(
-            (item: decisionOption) => {
-                if (item.name) {
-                    return item
-                }
-            }
+    const saveResult = (id: string) => {
+        // Update decision form state
+        useAppDispatch(
+            setDecisionFormState({ currentTab: 5, isComplete: true })
         )
-        // to remove empty criteria if any.
-        const filteredCriteria = decision.criteria.filter(
-            (item: decisionCriteria) => {
-                if (item.name) {
-                    return item
-                }
-            }
-        )
-
-        // to remove empties
-        let filteredRatings = ratings.filter((item: decisionRating) => {
-            if (item.option) {
-                return item
-            }
-        })
-        filteredRatings = filteredRatings.map(option => {
-            const filteredRating = option.rating.filter(item => {
-                if (item.criteria) return item
-            })
-            option.rating = filteredRating
-            return option
-        })
 
         // Result object for firebase.
         const result: FirebaseDecisionActivity = {
-            id: decisionActivityId,
-            userId: userProfile.uid,
-            ipAddress: deviceIp,
-            question: decision.question,
-            context: decision.context,
-            criteria: filteredCriteria,
-            options: filteredOptions,
+            id: id,
+            ratings: getValues('ratings'),
             suggestedOptions: aiSuggestions.copyOptionsList,
             suggestedCriteria: aiSuggestions.copyCriteriaList,
-            ratings: filteredRatings,
             isComplete: true,
+            currentTab: 5,
         }
-        // saving result to firebase.
-        saveDecision.mutate(result)
+        updateDecision.mutate(result)
     }
+
     const calcBestOption = () => {
         let currentBestScore = 0
         let currentBestOptions: string[] = []
@@ -184,6 +151,11 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setDecisionQuestion(undefined))
         useAppDispatch(setDecisionActivityId(undefined))
         useAppDispatch(setSideCardStep(1))
+        useAppDispatch(setClickedConnect(false))
+        useAppDispatch(setDecisionFormState({}))
+        useAppDispatch(setIsDecisionFormUpdating(false))
+        useAppDispatch(setIsRatingsModified(false))
+        useAppDispatch(setIsDecisionRehydrated(false))
     }
 
     return (

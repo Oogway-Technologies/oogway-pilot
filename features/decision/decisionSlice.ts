@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { capitalize } from '../../utils/helpers/common'
+import { FirebaseDecisionActivity } from '../../utils/types/firebase'
 import { AISuggestions } from '../../utils/types/global'
 import { DecisionSliceStates, FormCopy } from '../interfaces'
 
@@ -31,6 +32,10 @@ const initialState: DecisionSliceStates = {
     criteriaMobileIndex: 0,
     sideCardStep: 1,
     clickedConnect: false,
+    decisionFormState: {},
+    isDecisionFormUpdating: false,
+    isDecisionRehydrated: false,
+    isRatingsModified: false,
 }
 
 export const decisionSlice = createSlice({
@@ -182,6 +187,30 @@ export const decisionSlice = createSlice({
         setClickedConnect: (state, { payload }: PayloadAction<boolean>) => {
             state.clickedConnect = payload
         },
+        setDecisionFormState: (
+            state,
+            { payload }: PayloadAction<FirebaseDecisionActivity>
+        ) => {
+            state.decisionFormState = {
+                ...state.decisionFormState,
+                ...payload,
+            }
+        },
+        setIsDecisionFormUpdating: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.isDecisionFormUpdating = payload
+        },
+        setIsDecisionRehydrated: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.isDecisionRehydrated = payload
+        },
+        setIsRatingsModified: (state, { payload }: PayloadAction<boolean>) => {
+            state.isRatingsModified = payload
+        },
     },
 })
 
@@ -207,6 +236,10 @@ export const {
     setCriteriaMobileIndex,
     setSideCardStep,
     setClickedConnect,
+    setDecisionFormState,
+    setIsDecisionFormUpdating,
+    setIsDecisionRehydrated,
+    setIsRatingsModified,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

@@ -1,3 +1,4 @@
+import { FirebaseDecisionActivity } from '../utils/types/firebase'
 import { Criteria, Options } from '../utils/types/global'
 
 export interface UtilsSliceStates {
@@ -51,4 +52,8 @@ export interface DecisionSliceStates {
     criteriaMobileIndex: number
     sideCardStep: number
     clickedConnect: boolean
+    decisionFormState: FirebaseDecisionActivity
+    isDecisionFormUpdating: boolean
+    isDecisionRehydrated: boolean
+    isRatingsModified: boolean
 }

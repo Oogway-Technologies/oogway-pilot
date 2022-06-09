@@ -1,3 +1,5 @@
+import { decisionRating } from './firebase'
+
 export type jsonTimeObj = {
     seconds: number
     nanoseconds: number
@@ -48,29 +50,30 @@ export interface AISuggestions {
 }
 
 export interface DecisionForm {
+    [index: string]:
+        | string
+        | Options[]
+        | Criteria[]
+        | decisionRating[]
+        | boolean
+        | undefined
+    ipAddress: string
+    userId: string
+    isComplete: boolean
     question: string
     context: string
-    options: Options[]
-    criteria: Criteria[]
-    ratings: [
-        {
-            option: string
-            score: string
-            rating: [{ criteria: string; value: number; weight: number }]
-        }
-    ]
-    clickedConnect: boolean
+    options?: Options[]
+    criteria?: Criteria[]
+    ratings?: decisionRating[]
+    clickedConnect?: boolean
 }
 
-export interface Options {
-    name: string
-    isAI: boolean
-}
-export interface Criteria {
-    name: string
-    weight: number
-    isAI: boolean
-}
+export type decisionFormFields =
+    | 'question'
+    | 'context'
+    | 'options'
+    | 'criteria'
+    | 'ratings'
 
 export interface Rating {
     criteria: string
@@ -81,6 +84,16 @@ export interface Rating {
 export interface Ratings {
     option: string
     rating: Rating[]
+}
+
+export interface Options {
+    name: string
+    isAI: boolean
+}
+export interface Criteria {
+    name: string
+    weight: number
+    isAI: boolean
 }
 
 export interface TabItem {

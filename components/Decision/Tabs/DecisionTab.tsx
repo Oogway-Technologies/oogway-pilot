@@ -1,14 +1,16 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import React, { useEffect } from 'react'
-import { FC } from 'react'
-import { useFormContext } from 'react-hook-form'
+import React, { FC, useEffect } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
+    setDecisionFormState,
+    setIsDecisionFormUpdating,
     setPreviousIndex,
     setUserExceedsMaxDecisions,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import useResetDecisionHelperCard from '../../../hooks/useResetDecisionHelperCard'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { inputStyle } from '../../../styles/utils'
 import {
@@ -25,9 +27,35 @@ interface DecisionTabProps {
 }
 
 export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
-    const { register, trigger, clearErrors, getValues } = useFormContext()
+    const { register, trigger, clearErrors, getValues, control } =
+        useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
+    const question = useWatch({ name: 'question', control })
+    const context = useWatch({ name: 'context', control })
+    const userProfile = useAppSelector(state => state.userSlice.user)
+    const clickedConnect = useAppSelector(
+        state => state.decisionSlice.clickedConnect
+    )
+
+    // Reset decision helper card when question is changed
+    useResetDecisionHelperCard(control)
+
+    // Track decision data
+    useEffect(() => {
+        useAppDispatch(
+            setDecisionFormState({
+                userId: userProfile.uid,
+                ipAddress: deviceIp,
+                question: question,
+                context: context,
+                isComplete: false,
+                clickedConnect: clickedConnect,
+                currentTab: 2,
+            })
+        )
+        useAppDispatch(setIsDecisionFormUpdating(false))
+    }, [question, context, clickedConnect, userProfile])
 
     useEffect(() => {
         // to fix error not working on first step.

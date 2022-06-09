@@ -1,10 +1,12 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilPen, UilTrashAlt } from '@iconscout/react-unicons'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
     addSelectedCriteria,
+    setDecisionFormState,
+    setIsDecisionFormUpdating,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -13,6 +15,10 @@ import { body, bodyHeavy, bodySmall } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { criteriaTabs, shortLimit } from '../../../utils/constants/global'
 import { insertAtArray, weightToString } from '../../../utils/helpers/common'
+import {
+    decisionCriteria,
+    FirebaseDecisionActivity,
+} from '../../../utils/types/firebase'
 import { Criteria } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
@@ -23,20 +29,22 @@ import { CriteriaCard } from '../SideCards/CriteriaCard'
 import { CriteriaSuggestions } from '../SideCards/CriteriaSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
 
-export const CriteriaTab = () => {
+export const CriteriaTab: FC = () => {
     const {
         register,
         control,
-        setValue,
         formState: { errors },
         watch,
         setFocus,
+        setValue,
         getValues,
     } = useFormContext()
 
-    const { userExceedsMaxDecisions } = useAppSelector(
-        state => state.decisionSlice
-    )
+    const {
+        userExceedsMaxDecisions,
+        decisionActivityId,
+        isDecisionRehydrated,
+    } = useAppSelector(state => state.decisionSlice)
 
     const { fields, remove } = useFieldArray({
         control,
@@ -88,7 +96,10 @@ export const CriteriaTab = () => {
 
     useEffect(() => {
         // to focus on input on mount
-        setFocus('options.[0].name')
+        if (!isDecisionRehydrated) setFocus('options.[0].name')
+
+        // On mount, log form state from previous tab
+        // if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
 
         return () => {
             useAppDispatch(setPreviousIndex(3))
@@ -116,10 +127,35 @@ export const CriteriaTab = () => {
 
     useEffect(() => {
         // handle focus on enter
-        if (!watchCriteria[0].name) {
+        if (!watchCriteria[0].name && !isDecisionRehydrated) {
             setFocus('criteria.[0].name')
         }
     }, [watchCriteria])
+
+    // Track form state
+    const criteriaArray = watch('criteria')
+    useEffect(() => {
+        if (decisionActivityId) {
+            // to remove empty criteria if any.
+            const filteredCriteria = criteriaArray.filter(
+                (item: decisionCriteria) => {
+                    if (item.name) {
+                        return item
+                    }
+                }
+            )
+            let formState: FirebaseDecisionActivity = {
+                currentTab: 3,
+            }
+            if (filteredCriteria.length)
+                formState = {
+                    ...formState,
+                    criteria: filteredCriteria,
+                }
+            useAppDispatch(setDecisionFormState(formState))
+            useAppDispatch(setIsDecisionFormUpdating(false))
+        }
+    }, [decisionActivityId, criteriaArray])
 
     return (
         <div className="flex flex-col mx-1">

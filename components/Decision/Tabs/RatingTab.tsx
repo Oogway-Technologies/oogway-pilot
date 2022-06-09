@@ -1,22 +1,26 @@
-import React, { FC, useEffect } from 'react'
-import { useFormContext } from 'react-hook-form'
+import React, { FC, useEffect, useRef } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
+    setDecisionFormState,
     setDecisionRatingUpdate,
+    setIsDecisionFormUpdating,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { deepCopy } from '../../../utils/helpers/common'
+import { FirebaseDecisionActivity } from '../../../utils/types/firebase'
 import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
 import { RatingSelector } from '../common/RatingSelector'
 
 export const RatingTab: FC = () => {
-    const { getValues, setValue } = useFormContext()
+    const { getValues, setValue, control } = useFormContext()
     const {
         decisionEngineOptionTab,
         decisionRatingUpdate,
         criteriaMobileIndex,
+        isRatingsModified,
     } = useAppSelector(state => state.decisionSlice)
 
     const ratingsList: Ratings[] = getValues('ratings')
@@ -47,10 +51,14 @@ export const RatingTab: FC = () => {
         return found
     }
 
+    const isRatingsModifiedRef = useRef(isRatingsModified)
+    useEffect(() => {
+        isRatingsModifiedRef.current = isRatingsModified
+    }, [isRatingsModified])
+
     useEffect(() => {
         const orgOptionsList = getValues('options')
         const orgCriteriaList = getValues('criteria')
-
         const criteriaList = orgCriteriaList.filter(
             (item: Criteria) => item.name
         )
@@ -114,6 +122,23 @@ export const RatingTab: FC = () => {
             useAppDispatch(setPreviousIndex(4))
         }
     }, [])
+
+    const ratingsArray = useWatch({ name: 'ratings', control })
+    useEffect(() => {
+        // Track form state
+        let formState: FirebaseDecisionActivity = {
+            currentTab: 4,
+        }
+        if (ratingsArray.length && ratingsArray[0].option !== '') {
+            formState = {
+                ...formState,
+                ratings: deepCopy(ratingsArray),
+            }
+        }
+
+        useAppDispatch(setDecisionFormState(formState))
+        useAppDispatch(setIsDecisionFormUpdating(false))
+    }, [ratingsArray])
 
     return (
         <>

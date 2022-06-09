@@ -6,7 +6,9 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 import {
     addSelectedOption,
     setDecisionActivityId,
+    setDecisionFormState,
     setDecisionQuestion,
+    setIsDecisionFormUpdating,
     setPreviousIndex,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -16,6 +18,10 @@ import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
 import { insertAtArray } from '../../../utils/helpers/common'
+import {
+    decisionOption,
+    FirebaseDecisionActivity,
+} from '../../../utils/types/firebase'
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
@@ -24,11 +30,7 @@ import { OptionCard } from '../SideCards/OptionCard'
 import { OptionSuggestions } from '../SideCards/OptionSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
 
-interface OptionTabProps {
-    deviceIp: string
-}
-
-export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
+export const OptionTab: FC = () => {
     const {
         register,
         control,
@@ -41,8 +43,10 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
 
     const {
         decisionQuestion: prevQuestion,
-        clickedConnect,
+        decisionFormState,
+        decisionActivityId,
         userExceedsMaxDecisions,
+        isDecisionFormUpdating,
     } = useAppSelector(state => state.decisionSlice)
 
     const { fields, remove } = useFieldArray({
@@ -56,10 +60,24 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
     const createDecision = useCreateDecisionActivity()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const question = getValues('question')
-    const user = useAppSelector(state => state.userSlice.user)
     const watchOptions = watch('options')
 
     useEffect(() => {
+        // On mount, check if new question matches previous question
+        // If not, update state to new question and instantiate new
+        // decision log
+        if (question !== prevQuestion && !isDecisionFormUpdating) {
+            // Update previous question
+            useAppDispatch(setDecisionQuestion(question))
+
+            // Instantiate new decision
+            createDecision.mutate(decisionFormState, {
+                onSuccess: newDecision => {
+                    useAppDispatch(setDecisionActivityId(newDecision.data.id))
+                },
+            })
+        }
+
         // to focus on input on mount
         setFocus('options.[0].name')
 
@@ -68,31 +86,32 @@ export const OptionTab: FC<OptionTabProps> = ({ deviceIp }) => {
             setOpen(false)
             setIndex(undefined)
             setValue(`options.[0].name`, '')
-
-            // On mount, check if new question matches previous question
-            // If not, update state to new question and instantiate new
-            // decision log
-            if (question !== prevQuestion) {
-                // Update previous question
-                useAppDispatch(setDecisionQuestion(question))
-
-                // Instantiate new decision
-                const initialDecisionInfo = {
-                    userId: user.uid,
-                    ipAddress: deviceIp,
-                    isComplete: false,
-                    clickedConnect: clickedConnect,
-                }
-                createDecision.mutate(initialDecisionInfo, {
-                    onSuccess: newDecision => {
-                        useAppDispatch(
-                            setDecisionActivityId(newDecision.data.id)
-                        )
-                    },
-                })
-            }
         }
     }, [])
+
+    // Track form state
+    useEffect(() => {
+        if (decisionActivityId) {
+            const filteredOptions = watchOptions.filter(
+                (item: decisionOption) => {
+                    if (item.name) {
+                        return item
+                    }
+                }
+            )
+            let formState: FirebaseDecisionActivity = {
+                id: decisionActivityId,
+                currentTab: 2,
+            }
+            if (filteredOptions.length)
+                formState = {
+                    ...formState,
+                    options: filteredOptions,
+                }
+            useAppDispatch(setDecisionFormState(formState))
+            useAppDispatch(setIsDecisionFormUpdating(false))
+        }
+    }, [watchOptions, decisionActivityId])
 
     useEffect(() => {
         // handle focus on enter

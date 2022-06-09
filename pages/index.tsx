@@ -2,7 +2,7 @@ import { useUser } from '@auth0/nextjs-auth0'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import React, { FC, useEffect, useState } from 'react'
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { FormProvider, useWatch } from 'react-hook-form'
 
 import GenericSidebar from '../components/Decision/common/GenericSidebar'
 import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHandler'
@@ -20,16 +20,13 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
-import {
-    setClickedConnect,
-    setSideCardStep,
-} from '../features/decision/decisionSlice'
+import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
+import { useAppSelector } from '../hooks/useRedux'
+import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
-import { DecisionForm } from '../utils/types/global'
 
 const DecisionEngine: FC = () => {
     const { decisionCriteriaQueryKey, userExceedsMaxDecisions } =
@@ -39,30 +36,10 @@ const DecisionEngine: FC = () => {
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
 
-    const methods = useForm<DecisionForm>({
-        defaultValues: {
-            question: '',
-            context: '',
-            options: [{ name: '', isAI: false }],
-            criteria: [{ name: '', weight: 2, isAI: false }],
-            ratings: [
-                {
-                    option: '',
-                    score: '',
-                    rating: [{ criteria: '', value: 0, weight: 1 }],
-                },
-            ],
-        },
-    })
+    // Instantiate form
+    const methods = useInstantiateDecisionForm({ currentTab, setCurrentTab })
     const { control, getValues, setValue } = methods
-
-    // Whenever watch question changes, reset decision helper card and clicked connnct state
     const watchQuestion = useWatch({ name: 'question', control })
-
-    useEffect(() => {
-        useAppDispatch(setSideCardStep(1))
-        useAppDispatch(setClickedConnect(false))
-    }, [watchQuestion])
 
     useEffect(() => {
         const optionList = getValues('options')
@@ -70,15 +47,16 @@ const DecisionEngine: FC = () => {
         if (
             currentTab !== 4 &&
             currentTab !== 5 &&
-            (optionList[0].name || criteriaList[0].name)
+            ((optionList && optionList[0].name) ||
+                (criteriaList && criteriaList[0].name))
         ) {
-            if (optionList[0].name) {
+            if (optionList && optionList[0].name) {
                 setValue(
                     'options',
                     insertAtArray(optionList, 0, { name: '', isAI: false })
                 )
             }
-            if (criteriaList[0].name) {
+            if (criteriaList && criteriaList[0].name) {
                 setValue(
                     'criteria',
                     insertAtArray(criteriaList, 0, {
@@ -91,12 +69,15 @@ const DecisionEngine: FC = () => {
         }
     }, [currentTab])
 
+    // On page unmoount, save form state
+    useSaveDecisionFormState()
+
     const tabGenerator = () => {
         switch (currentTab) {
             case 1:
                 return <DecisionTab deviceIp={deviceIp || ''} />
             case 2:
-                return <OptionTab deviceIp={deviceIp || ''} />
+                return <OptionTab />
             case 3:
                 return <CriteriaTab />
             case 4:
