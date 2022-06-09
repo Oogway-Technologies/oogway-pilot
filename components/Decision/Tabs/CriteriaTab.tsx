@@ -169,7 +169,7 @@ export const CriteriaTab: FC = () => {
                     !userExceedsMaxDecisions ? (
                         <CriteriaSuggestions />
                     ) : (
-                        <SignInCard />
+                        <SignInCard currentTab={3} />
                     )
                 ) : (
                     <CriteriaSuggestions />
