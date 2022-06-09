@@ -26,9 +26,9 @@ import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
 import { BaseCard } from '../common/BaseCard'
-import { OptionCard } from '../Sidecards/OptionCard'
-import { OptionSuggestions } from '../Sidecards/OptionSuggestions'
-import { SignInCard } from '../Sidecards/SignInCard'
+import { OptionCard } from '../SideCards/OptionCard'
+import { OptionSuggestions } from '../SideCards/OptionSuggestions'
+import { SignInCard } from '../SideCards/SignInCard'
 
 export const OptionTab: FC = () => {
     const {

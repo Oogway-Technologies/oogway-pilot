@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
-// import { QuestionCard } from '../Sidecards/QuestionCard'
+// import { QuestionCard } from '../SideCards/QuestionCard'
 
 interface DecisionTabWrapperProps {
     className?: string
