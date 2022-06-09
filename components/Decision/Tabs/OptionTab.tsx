@@ -151,7 +151,7 @@ export const OptionTab: FC = () => {
                     !userExceedsMaxDecisions ? (
                         <OptionSuggestions />
                     ) : (
-                        <SignInCard />
+                        <SignInCard currentTab={2} />
                     )
                 ) : (
                     <OptionSuggestions />
