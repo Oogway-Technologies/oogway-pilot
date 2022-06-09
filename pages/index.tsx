@@ -44,10 +44,9 @@ const DecisionEngine: FC = () => {
     const methods = useInstantiateDecisionForm({ currentTab, setCurrentTab })
     const { control, getValues, setValue } = methods
     const watchQuestion = useWatch({ name: 'question', control })
-
+    const optionList = getValues('options')
+    const criteriaList = getValues('criteria')
     useEffect(() => {
-        const optionList = getValues('options')
-        const criteriaList = getValues('criteria')
         if (
             currentTab !== 4 &&
             currentTab !== 5 &&
@@ -143,11 +142,9 @@ const DecisionEngine: FC = () => {
                                 <span className="text-neutral-700 dark:text-neutralDark-150">
                                     Rate{' '}
                                     <span className="text-primary dark:text-primaryDark">
-                                        {
-                                            getValues('options')?[
-                                                decisionEngineOptionTab
-                                            ]?.name || ''
-                                        }
+                                        {optionList &&
+                                            optionList[decisionEngineOptionTab]
+                                                .name}
                                     </span>{' '}
                                     on each criteria.
                                 </span>
