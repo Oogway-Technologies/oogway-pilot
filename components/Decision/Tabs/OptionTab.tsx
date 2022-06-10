@@ -17,7 +17,7 @@ import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
-import { insertAtArray } from '../../../utils/helpers/common'
+import { deepCopy, insertAtArray } from '../../../utils/helpers/common'
 import {
     decisionOption,
     FirebaseDecisionActivity,
@@ -92,7 +92,8 @@ export const OptionTab: FC = () => {
     // Track form state
     useEffect(() => {
         if (decisionActivityId) {
-            const filteredOptions = watchOptions.filter(
+            const optionsClone = deepCopy(watchOptions)
+            const filteredOptions = optionsClone.filter(
                 (item: decisionOption) => {
                     if (item.name) {
                         return item

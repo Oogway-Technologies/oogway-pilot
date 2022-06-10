@@ -14,7 +14,11 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { body, bodyHeavy, bodySmall } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { criteriaTabs, shortLimit } from '../../../utils/constants/global'
-import { insertAtArray, weightToString } from '../../../utils/helpers/common'
+import {
+    deepCopy,
+    insertAtArray,
+    weightToString,
+} from '../../../utils/helpers/common'
 import {
     decisionCriteria,
     FirebaseDecisionActivity,
@@ -133,14 +137,14 @@ export const CriteriaTab: FC = () => {
     }, [watchCriteria])
 
     // Track form state
-    const criteriaArray = watch('criteria')
     useEffect(() => {
         if (decisionActivityId) {
             // to remove empty criteria if any.
-            const filteredCriteria = criteriaArray.filter(
+            const criteriaClone = deepCopy(watchCriteria)
+            const filteredCriteria = criteriaClone.filter(
                 (item: decisionCriteria) => {
                     if (item.name) {
-                        return item
+                        return deepCopy(item)
                     }
                 }
             )
@@ -155,7 +159,7 @@ export const CriteriaTab: FC = () => {
             useAppDispatch(updateDecisionFormState(formState))
             useAppDispatch(setIsDecisionFormUpdating(false))
         }
-    }, [decisionActivityId, criteriaArray])
+    }, [decisionActivityId, watchCriteria])
 
     return (
         <div className="flex flex-col mx-1">
