@@ -176,7 +176,7 @@ const DecisionEngine: FC = () => {
                                             )}
                                     </>
                                 ) : (
-                                    <SignInCard />
+                                    <SignInCard currentTab={currentTab} />
                                 )
                             ) : (
                                 <>

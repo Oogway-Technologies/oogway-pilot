@@ -6,10 +6,10 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 import {
     addSelectedOption,
     setDecisionActivityId,
-    setDecisionFormState,
     setDecisionQuestion,
     setIsDecisionFormUpdating,
     setPreviousIndex,
+    updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -17,7 +17,7 @@ import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
-import { insertAtArray } from '../../../utils/helpers/common'
+import { deepCopy, insertAtArray } from '../../../utils/helpers/common'
 import {
     decisionOption,
     FirebaseDecisionActivity,
@@ -92,7 +92,8 @@ export const OptionTab: FC = () => {
     // Track form state
     useEffect(() => {
         if (decisionActivityId) {
-            const filteredOptions = watchOptions.filter(
+            const optionsClone = deepCopy(watchOptions)
+            const filteredOptions = optionsClone.filter(
                 (item: decisionOption) => {
                     if (item.name) {
                         return item
@@ -108,7 +109,7 @@ export const OptionTab: FC = () => {
                     ...formState,
                     options: filteredOptions,
                 }
-            useAppDispatch(setDecisionFormState(formState))
+            useAppDispatch(updateDecisionFormState(formState))
             useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [watchOptions, decisionActivityId])
@@ -151,7 +152,7 @@ export const OptionTab: FC = () => {
                     !userExceedsMaxDecisions ? (
                         <OptionSuggestions />
                     ) : (
-                        <SignInCard />
+                        <SignInCard currentTab={2} />
                     )
                 ) : (
                     <OptionSuggestions />

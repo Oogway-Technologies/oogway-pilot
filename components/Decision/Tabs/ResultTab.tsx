@@ -14,6 +14,7 @@ import {
     setIsRatingsModified,
     setPreviousIndex,
     setSideCardStep,
+    updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
@@ -40,7 +41,9 @@ export const ResultTab: FC<ResultTabProps> = ({
     deviceIp,
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
-    const { decisionActivityId } = useAppSelector(state => state.decisionSlice)
+    const { decisionActivityId, decisionFormState } = useAppSelector(
+        state => state.decisionSlice
+    )
     const aiSuggestions = useAppSelector(
         state => state.decisionSlice.suggestions
     )
@@ -91,7 +94,7 @@ export const ResultTab: FC<ResultTabProps> = ({
     const saveResult = (id: string) => {
         // Update decision form state
         useAppDispatch(
-            setDecisionFormState({ currentTab: 5, isComplete: true })
+            updateDecisionFormState({ currentTab: 5, isComplete: true })
         )
 
         // Result object for firebase.
@@ -103,7 +106,7 @@ export const ResultTab: FC<ResultTabProps> = ({
             isComplete: true,
             currentTab: 5,
         }
-        updateDecision.mutate(result)
+        updateDecision.mutate({ ...decisionFormState, ...result })
     }
 
     const calcBestOption = () => {

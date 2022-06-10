@@ -187,7 +187,7 @@ export const decisionSlice = createSlice({
         setClickedConnect: (state, { payload }: PayloadAction<boolean>) => {
             state.clickedConnect = payload
         },
-        setDecisionFormState: (
+        updateDecisionFormState: (
             state,
             { payload }: PayloadAction<FirebaseDecisionActivity>
         ) => {
@@ -195,6 +195,12 @@ export const decisionSlice = createSlice({
                 ...state.decisionFormState,
                 ...payload,
             }
+        },
+        setDecisionFormState: (
+            state,
+            { payload }: PayloadAction<FirebaseDecisionActivity>
+        ) => {
+            state.decisionFormState = payload
         },
         setIsDecisionFormUpdating: (
             state,
@@ -237,6 +243,7 @@ export const {
     setSideCardStep,
     setClickedConnect,
     setDecisionFormState,
+    updateDecisionFormState,
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
     setIsRatingsModified,

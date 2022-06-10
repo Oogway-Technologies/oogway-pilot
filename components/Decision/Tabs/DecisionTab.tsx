@@ -7,6 +7,7 @@ import {
     setIsDecisionFormUpdating,
     setPreviousIndex,
     setUserExceedsMaxDecisions,
+    updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
@@ -48,14 +49,21 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                 userId: userProfile.uid,
                 ipAddress: deviceIp,
                 question: question,
-                context: context,
                 isComplete: false,
-                clickedConnect: clickedConnect,
                 currentTab: 2,
             })
         )
         useAppDispatch(setIsDecisionFormUpdating(false))
-    }, [question, context, clickedConnect, userProfile])
+    }, [question, userProfile])
+    useEffect(() => {
+        useAppDispatch(
+            updateDecisionFormState({
+                context: context,
+                clickedConnect: clickedConnect,
+            })
+        )
+        useAppDispatch(setIsDecisionFormUpdating(false))
+    }, [context, clickedConnect, userProfile])
 
     useEffect(() => {
         // to fix error not working on first step.

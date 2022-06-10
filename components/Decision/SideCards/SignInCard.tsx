@@ -7,10 +7,12 @@ import Button from '../../Utils/Button'
 
 interface SignInCardProps {
     className?: string
+    currentTab: number
 }
 
 export const SignInCard: FC<SignInCardProps> = ({
     className,
+    currentTab,
 }: SignInCardProps) => {
     const router = useRouter()
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -31,13 +33,15 @@ export const SignInCard: FC<SignInCardProps> = ({
                     'text-base font-bold leading-6 text-primary dark:text-primaryDark md:text-2xl'
                 }
             >
-                AI suggestions
+                {currentTab === 1 ? 'Decision Progress' : 'AI suggestions'}
             </span>
 
             <span
                 className={`${bodyHeavy} my-3 text-neutral-700 dark:text-neutralDark-150 font-normal text-center`}
             >
-                Sign in to keep using AI and latest features.
+                {currentTab === 1
+                    ? 'Sign in to save progress and track your decisions.'
+                    : 'Sign in to keep using AI and latest features.'}
             </span>
 
             <Button
