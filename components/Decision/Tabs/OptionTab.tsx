@@ -1,5 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilTrashAlt } from '@iconscout/react-unicons'
+import { UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -170,6 +170,7 @@ export const OptionTab: FC = () => {
                         className="flex flex-col py-5 px-4 mt-4"
                     >
                         <ErrorWrapperField
+                            className="flex items-center"
                             errorField={
                                 errors?.options &&
                                 errors?.options[index]?.name?.message
@@ -213,19 +214,29 @@ export const OptionTab: FC = () => {
                                         message: `Option length should be less than ${shortLimit}`,
                                     },
                                 })}
-                                onBlur={event => {
-                                    if (event.currentTarget.value) {
+                            />
+                            <button
+                                disabled={
+                                    watchOptions.length < 6 ? false : true
+                                }
+                                type="button"
+                                onClick={() => {
+                                    const value = getValues('options.[0].name')
+                                    if (value) {
                                         setValue(
                                             'options',
                                             insertAtArray(watchOptions, 1, {
-                                                name: event.currentTarget.value,
+                                                name: value,
                                                 isAI: false,
                                             })
                                         )
                                         setValue(`options.[0].name`, '')
                                     }
                                 }}
-                            />
+                                className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                            >
+                                <UilPlus className={'fill-white'} />
+                            </button>
                         </ErrorWrapperField>
                     </BaseCard>
                 ) : (

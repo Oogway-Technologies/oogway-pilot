@@ -1,5 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilPen, UilTrashAlt } from '@iconscout/react-unicons'
+import { UilPen, UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -196,6 +196,7 @@ export const CriteriaTab: FC = () => {
                         className="flex flex-col py-5 px-4 mt-4"
                     >
                         <ErrorWrapperField
+                            className="flex items-center"
                             errorField={
                                 errors?.criteria &&
                                 errors?.criteria[index]?.name?.message
@@ -244,6 +245,30 @@ export const CriteriaTab: FC = () => {
                                     }
                                 )}
                             />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const value = getValues('criteria.0.weight')
+                                    if (value) {
+                                        setValue(
+                                            'criteria',
+                                            insertAtArray(watchCriteria, 1, {
+                                                name: getValues(
+                                                    'criteria.[0].name'
+                                                ),
+                                                weight: getValues(
+                                                    'criteria.0.weight'
+                                                ),
+                                                isAI: false,
+                                            })
+                                        )
+                                        setValue('criteria.[0].name', '')
+                                    }
+                                }}
+                                className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                            >
+                                <UilPlus className={'fill-white'} />
+                            </button>
                         </ErrorWrapperField>
                         <span
                             className={`text-neutral-700 dark:text-neutralDark-150 ${bodySmall} mt-5 mb-2`}

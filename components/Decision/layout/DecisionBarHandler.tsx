@@ -11,6 +11,7 @@ import {
     setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
     setIsSuggestionsEmpty,
+    setIsThereATie,
     setLoadingAiSuggestions,
     updateFormCopy,
 } from '../../../features/decision/decisionSlice'
@@ -87,8 +88,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     }
 
     const validationHandler = async (tab: number) => {
-        console.log('Form state-> ', getValues())
-
         if (tab === 1) {
             await trigger(['question', 'context'])
             if (errors?.['question']?.message || errors?.['context']?.message) {
@@ -127,6 +126,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (!objectsEqual(formCopy.options, getValues('options'))) {
+                useAppDispatch(setIsThereATie(false))
                 useAppDispatch(setDecisionEngineOptionTab(0))
                 const optionFilter = getValues('options').filter(
                     (item: Options) => {
@@ -161,6 +161,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (!objectsEqual(formCopy.criteria, getValues('criteria'))) {
+                useAppDispatch(setIsThereATie(false))
                 useAppDispatch(setDecisionEngineOptionTab(0))
                 if (!decisionRatingUpdate) {
                     useAppDispatch(setDecisionRatingUpdate(true))
