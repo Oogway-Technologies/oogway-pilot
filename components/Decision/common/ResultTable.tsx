@@ -1,6 +1,6 @@
 import { UilAngleDown } from '@iconscout/react-unicons'
 import React, { useEffect, useState } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { body, bodyHeavy, bodySmall, caption } from '../../../styles/typography'
@@ -15,10 +15,10 @@ import {
 import { DropDownMenu } from '../../Utils/common/DropDownMenu'
 
 export const ResultTable = () => {
-    const { getValues } = useFormContext()
-    const rating: Ratings[] = getValues('ratings')
-    const criteria: Criteria[] = getValues('criteria')
-    const options: Options[] = getValues('options')
+    const { control } = useFormContext()
+    const rating: Ratings[] = useWatch({ name: 'ratings', control })
+    const criteria: Criteria[] = useWatch({ name: 'criteria', control })
+    const options: Options[] = useWatch({ name: 'options', control })
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     const [selectedRating, setSelectedRating] = useState<Ratings>(rating[0])
@@ -184,7 +184,7 @@ export const ResultTable = () => {
                     >
                         Score
                     </td>
-                    {options.map((item: Options, index: number) => (
+                    {options?.map((item: Options, index: number) => (
                         <td
                             key={`option-item-score-${index}`}
                             className={`${body} text-neutral-700 dark:text-white border-none text-center`}

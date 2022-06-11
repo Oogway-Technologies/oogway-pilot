@@ -46,6 +46,7 @@ const DecisionEngine: FC = () => {
     const watchQuestion = useWatch({ name: 'question', control })
     const optionList = getValues('options')
     const criteriaList = getValues('criteria')
+
     useEffect(() => {
         if (
             currentTab !== 4 &&

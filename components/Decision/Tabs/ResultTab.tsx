@@ -28,8 +28,6 @@ import {
 import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
 import {
-    decisionOption,
-    decisionRating,
     FirebaseDecisionActivity,
     FirebaseUnauthenticatedDecision,
 } from '../../../utils/types/firebase'
@@ -51,6 +49,7 @@ export const ResultTab: FC<ResultTabProps> = ({
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const optionList: Options[] = useWatch({ name: 'options', control })
 
     const {
         decisionActivityId,
@@ -60,10 +59,6 @@ export const ResultTab: FC<ResultTabProps> = ({
         decisionFormState,
     } = useAppSelector(state => state.decisionSlice)
 
-    const options: Array<decisionOption> = useWatch({
-        control,
-        name: 'options',
-    })
     const [isOpen, setOpen] = useState(false)
     const createUnauthenticatedDecisions = usePutUnauthenticatedDecision()
     const queryClient = useQueryClient()
@@ -76,14 +71,15 @@ export const ResultTab: FC<ResultTabProps> = ({
         if (getValues('question') && decisionActivityId) {
             saveResult(decisionActivityId)
         }
+
         return () => {
             useAppDispatch(setPreviousIndex(5))
         }
-    }, [options, decisionActivityId])
+    }, [optionList, decisionActivityId])
 
     useEffect(() => {
         fixUpStates()
-        getValues('options').forEach((_: Options, index: number) => {
+        optionList.forEach((_: Options, index: number) => {
             setValue(`options.${index}.score`, calcScore(index))
         })
     }, [])
@@ -143,8 +139,8 @@ export const ResultTab: FC<ResultTabProps> = ({
     const calcBestOption = () => {
         let currentBestScore = 0
         let currentBestOptions: string[] = []
-        for (const option of options) {
-            if (option.score > currentBestScore) {
+        for (const option of optionList) {
+            if (option.score && option.score > currentBestScore) {
                 // If there's only one or zero current best option(s),
                 // replace with new best
                 if (currentBestOptions.length < 2) {

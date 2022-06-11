@@ -5,9 +5,9 @@ import {
     ChartOptions,
     LinearScale,
 } from 'chart.js'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 
 import { Options } from '../../../utils/types/global'
 
@@ -49,11 +49,11 @@ const options: ChartOptions = {
 }
 
 export const ResultChart = () => {
-    const { getValues } = useFormContext()
-    const optionList = getValues('options')
+    const { control } = useFormContext()
+    const optionList: Options[] = useWatch({ name: 'options', control })
 
-    const data = {
-        labels: optionList.map((item: Options) =>
+    const [data, setData] = useState({
+        labels: optionList?.map((item: Options) =>
             item.name.split('').length > 12
                 ? `${item.name.substring(0, 12)}...`
                 : item.name
@@ -61,12 +61,30 @@ export const ResultChart = () => {
         datasets: [
             {
                 label: 'Option',
-                data: optionList.map((item: Options) => item.score),
+                data: optionList?.map((item: Options) => item.score),
                 backgroundColor: '#C194FF',
                 maxBarThickness: 100,
             },
         ],
-    }
+    })
+
+    useEffect(() => {
+        setData({
+            labels: optionList?.map((item: Options) =>
+                item.name.split('').length > 12
+                    ? `${item.name.substring(0, 12)}...`
+                    : item.name
+            ),
+            datasets: [
+                {
+                    label: 'Option',
+                    data: optionList?.map((item: Options) => item.score),
+                    backgroundColor: '#C194FF',
+                    maxBarThickness: 100,
+                },
+            ],
+        })
+    }, [optionList])
 
     return (
         <div className="flex justify-center items-center w-full">
