@@ -35,7 +35,7 @@ export const decisionTitle = [
     'Your options',
     'Your criteria',
     '',
-    'Your best option is',
+    '',
 ]
 export const decisionInfoParagraph = [
     'Oogway helps you when making a decision. All you have to do is put in your decision, and let Oogway help you come up with the best answer.',

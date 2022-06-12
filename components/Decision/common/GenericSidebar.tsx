@@ -16,7 +16,7 @@ const GenericSidebar: FC<GenericSidebarProps> = ({
     return (
         <div
             className={
-                'flex flex-col bg-white dark:bg-neutralDark-500 md:py-4 md:px-3 md:mb-4 md:rounded-2xl md:shadow-md md:dark:shadow-black/60 ' +
+                'flex flex-col bg-white dark:bg-neutralDark-500 md:py-4 md:px-3 md:mb-4 md:rounded-2xl custom-box-shadow dark:custom-box-shadow-dark ' +
                 (extraClass && extraClass)
             }
         >

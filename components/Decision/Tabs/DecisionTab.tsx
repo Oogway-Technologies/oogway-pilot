@@ -46,7 +46,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     useEffect(() => {
         useAppDispatch(
             setDecisionFormState({
-                userId: userProfile.uid,
+                userId: userProfile?.uid,
                 ipAddress: deviceIp,
                 question: question,
                 isComplete: false,

@@ -1,5 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilTrashAlt } from '@iconscout/react-unicons'
+import { UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -25,8 +25,8 @@ import {
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
+import { OptionCard } from '../BottomCards/OptionCard'
 import { BaseCard } from '../common/BaseCard'
-import { OptionCard } from '../SideCards/OptionCard'
 import { OptionSuggestions } from '../SideCards/OptionSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
 
@@ -142,7 +142,11 @@ export const OptionTab: FC = () => {
     return (
         <div className="flex flex-col mx-1">
             <span
-                className={`-ml-1 md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
+                className={`${
+                    isMobile
+                        ? 'sticky top-4 pt-1 z-50 dark:bg-neutralDark-600 bg-neutral-25 -mx-1'
+                        : ''
+                } md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
             >
                 Add at least two
             </span>
@@ -166,6 +170,7 @@ export const OptionTab: FC = () => {
                         className="flex flex-col py-5 px-4 mt-4"
                     >
                         <ErrorWrapperField
+                            className="flex items-center"
                             errorField={
                                 errors?.options &&
                                 errors?.options[index]?.name?.message
@@ -209,19 +214,29 @@ export const OptionTab: FC = () => {
                                         message: `Option length should be less than ${shortLimit}`,
                                     },
                                 })}
-                                onBlur={event => {
-                                    if (event.currentTarget.value) {
+                            />
+                            <button
+                                disabled={
+                                    watchOptions.length < 6 ? false : true
+                                }
+                                type="button"
+                                onClick={() => {
+                                    const value = getValues('options.[0].name')
+                                    if (value) {
                                         setValue(
                                             'options',
                                             insertAtArray(watchOptions, 1, {
-                                                name: event.currentTarget.value,
+                                                name: value,
                                                 isAI: false,
                                             })
                                         )
                                         setValue(`options.[0].name`, '')
                                     }
                                 }}
-                            />
+                                className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                            >
+                                <UilPlus className={'fill-white'} />
+                            </button>
                         </ErrorWrapperField>
                     </BaseCard>
                 ) : (

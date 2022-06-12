@@ -1,5 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilPen, UilTrashAlt } from '@iconscout/react-unicons'
+import { UilPen, UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -27,9 +27,9 @@ import { Criteria } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
 import { ErrorWrapperField } from '../../Utils/ErrorWrapperField'
 import Modal from '../../Utils/Modal'
+import { CriteriaCard } from '../BottomCards/CriteriaCard'
 import { BaseCard } from '../common/BaseCard'
 import { CriteriaSelectTabs } from '../common/CriteriaSelectTabs'
-import { CriteriaCard } from '../SideCards/CriteriaCard'
 import { CriteriaSuggestions } from '../SideCards/CriteriaSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
 
@@ -78,8 +78,13 @@ export const CriteriaTab: FC = () => {
         setEdit(false)
     }
     const handleUpdate = () => {
-        setValue(`criteria.${selectedIndex}.name`, selectedItem.name)
-        setValue(`criteria.${selectedIndex}.weight`, selectedItem.weight)
+        if (selectedItem.isAI) {
+            setValue(`criteria.${selectedIndex}.weight`, selectedItem.weight)
+        } else {
+            setValue(`criteria.${selectedIndex}.name`, selectedItem.name)
+            setValue(`criteria.${selectedIndex}.weight`, selectedItem.weight)
+        }
+
         setEdit(false)
     }
     const handleModal = (index: number) => {
@@ -164,7 +169,11 @@ export const CriteriaTab: FC = () => {
     return (
         <div className="flex flex-col mx-1">
             <span
-                className={`-ml-1 md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
+                className={`${
+                    isMobile
+                        ? 'sticky top-4 pt-1 z-50 dark:bg-neutralDark-600 bg-neutral-25 -mx-1'
+                        : ''
+                } md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
             >
                 Add what you want to consider
             </span>
@@ -187,6 +196,7 @@ export const CriteriaTab: FC = () => {
                         className="flex flex-col py-5 px-4 mt-4"
                     >
                         <ErrorWrapperField
+                            className="flex items-center"
                             errorField={
                                 errors?.criteria &&
                                 errors?.criteria[index]?.name?.message
@@ -235,6 +245,30 @@ export const CriteriaTab: FC = () => {
                                     }
                                 )}
                             />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const value = getValues('criteria.0.weight')
+                                    if (value) {
+                                        setValue(
+                                            'criteria',
+                                            insertAtArray(watchCriteria, 1, {
+                                                name: getValues(
+                                                    'criteria.[0].name'
+                                                ),
+                                                weight: getValues(
+                                                    'criteria.0.weight'
+                                                ),
+                                                isAI: false,
+                                            })
+                                        )
+                                        setValue('criteria.[0].name', '')
+                                    }
+                                }}
+                                className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                            >
+                                <UilPlus className={'fill-white'} />
+                            </button>
                         </ErrorWrapperField>
                         <span
                             className={`text-neutral-700 dark:text-neutralDark-150 ${bodySmall} mt-5 mb-2`}
@@ -286,19 +320,25 @@ export const CriteriaTab: FC = () => {
             <Modal show={isOpen} onClose={handleClose}>
                 <div className="flex flex-col">
                     <div className="flex items-center">
-                        <UilTrashAlt className={'mr-1 fill-neutral-800'} />
-                        <span className={`${bodyHeavy} text-neutral-800`}>
+                        <UilTrashAlt
+                            className={'mr-1 fill-neutral-800 dark:fill-white'}
+                        />
+                        <span
+                            className={`${bodyHeavy} text-neutral-800 dark:text-white`}
+                        >
                             Delete criteria
                         </span>
                     </div>
-                    <span className={`${body} text-neutral-800 mt-4 mb-6`}>
+                    <span
+                        className={`${body} text-neutral-800 mt-4 mb-6 dark:text-white`}
+                    >
                         Are you sure you want to delete this criteria?
                     </span>
                     <div className="flex justify-between items-center">
                         <Button
                             keepText
                             text="Cancel"
-                            className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            className={`border border-neutral-700 dark:border-neutral-150 text-neutral-700 dark:text-neutral-150 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
                             onClick={handleClose}
                         />
                         <Button
@@ -334,6 +374,7 @@ export const CriteriaTab: FC = () => {
                                 name: e.target.value,
                             })
                         }
+                        disabled={selectedItem.isAI}
                     />
                     <span
                         className={`${bodySmall} text-primary dark:text-primaryDark mt-1`}

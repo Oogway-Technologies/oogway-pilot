@@ -1,9 +1,13 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import { setDecisionRatingUpdate } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
+import { deepCopy } from '../../../utils/helpers/common'
+import { findInCriteria, findInOption } from '../../../utils/helpers/decision'
+import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
 // import { QuestionCard } from '../SideCards/QuestionCard'
 
 interface DecisionTabWrapperProps {
@@ -19,32 +23,99 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     currentTab,
     children,
 }: DecisionTabWrapperProps) => {
-    const { getValues } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const {
-        decisionEngineBestOption,
-        decisionEngineOptionTab,
-        decisionCriteriaQueryKey,
-    } = useAppSelector(state => state.decisionSlice)
+    const { decisionCriteriaQueryKey, decisionRatingUpdate } = useAppSelector(
+        state => state.decisionSlice
+    )
+    const { getValues, setValue } = useFormContext()
+
+    useEffect(() => {
+        let orgOptionsList = getValues('options')
+        let orgCriteriaList = getValues('criteria')
+        if (currentTab === 4 || currentTab === 5) {
+            orgCriteriaList = orgCriteriaList.filter(
+                (item: Criteria) => item.name
+            )
+            orgOptionsList = orgOptionsList.filter((item: Options) => item.name)
+        }
+        setValue('options', orgOptionsList)
+        setValue('criteria', orgCriteriaList)
+
+        if (decisionRatingUpdate || [2, 3, 4].includes(currentTab)) {
+            console.log('Runnng --- --- ---')
+
+            const mapRatingObject: Ratings[] = []
+            const reShapeCriteriaList: Rating[] = []
+
+            orgCriteriaList.forEach(
+                (item: { name: string; weight: number }) => {
+                    reShapeCriteriaList.push({
+                        criteria: item.name,
+                        value: 1,
+                        weight: item.weight,
+                    })
+                }
+            )
+            orgOptionsList.forEach((item: { name: string }) => {
+                mapRatingObject.push({
+                    option: item.name,
+                    rating: reShapeCriteriaList,
+                })
+            })
+            const existingRating: Ratings[] = getValues('ratings')
+            if (existingRating.length) {
+                mapRatingObject.forEach((item, indx) => {
+                    const isFound = findInOption(existingRating, item.option)
+                    if (isFound) {
+                        const newRating: Rating[] = []
+                        item.rating.forEach((ctr, idx) => {
+                            const isFoundCriteria = findInCriteria(
+                                existingRating[isFound.index].rating,
+                                ctr.criteria
+                            )
+                            if (isFoundCriteria) {
+                                newRating.push(
+                                    deepCopy({
+                                        criteria:
+                                            mapRatingObject[indx].rating[idx]
+                                                .criteria,
+                                        value: isFoundCriteria.value,
+                                        weight: mapRatingObject[indx].rating[
+                                            idx
+                                        ].weight,
+                                    })
+                                )
+                            } else {
+                                newRating.push(ctr)
+                            }
+                        })
+                        mapRatingObject[indx].rating = [...newRating]
+                    }
+                })
+            }
+            setValue('ratings', mapRatingObject)
+            useAppDispatch(setDecisionRatingUpdate(false))
+        }
+    }, [currentTab])
 
     // Handler functions
     const heightDecider = (tab: number) => {
         switch (tab) {
             case 1:
-                return 'h-[calc(100vh-19.5rem)]'
+                return 'h-[calc(100vh-17.5rem)]'
             case 2:
-                return 'h-[calc(100vh-17.5rem)]'
+                return 'h-[calc(100vh-16rem)]'
             case 3:
-                return 'h-[calc(100vh-17.5rem)]'
+                return 'h-[calc(100vh-16rem)]'
             case 4:
                 return decisionCriteriaQueryKey
-                    ? 'h-[calc(100vh-25rem)]'
+                    ? 'h-[calc(100vh-23rem)]'
                     : isMobile
-                    ? 'h-[calc(100vh-30.5rem)]'
-                    : 'h-[calc(100vh-25rem)]'
+                    ? 'h-[50%]'
+                    : 'h-[calc(100vh-23rem)]'
 
             case 5:
-                return 'h-[calc(100vh-20.5rem)]'
+                return 'h-[calc(100vh-18rem)]'
             default:
                 return 'h-[60vh]'
         }
@@ -52,45 +123,37 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
 
     const containerClass = `flex flex-col ${
         isMobile
-            ? `${currentTab !== 4 ? 'mt-0 space-y-md p-0.5' : 'mt-4'}`
-            : 'space-y-lg'
-    } ${
-        [1, 2, 3, 4].includes(currentTab) ? 'mt-0' : 'mt-10'
-    } w-full overflow-y-auto ${heightDecider(currentTab)} ${
-        currentTab === 5 ? '' : ''
-    } ${className ? className : ''}`
+            ? `${
+                  currentTab !== 4 ? 'mt-0 space-y-md p-0.5' : 'mt-4'
+              } ${heightDecider(currentTab)} `
+            : `space-y-lg ${
+                  currentTab !== 4
+                      ? 'h-[calc(100vh-17.5rem)]'
+                      : 'h-[calc(100vh-27.15rem)]'
+              }`
+    } mt-0 w-full overflow-y-auto ${className ? className : ''}`
 
     return (
         <div className={containerClass}>
             {/* {[2, 3].includes(currentTab) && !isMobile ? <QuestionCard /> : ''} */}
-            <div className="inline-flex justify-between items-center">
+            {currentTab !== 5 ? (
                 <h3
                     className={`${
                         isMobile ? bodyHeavy : 'text-2xl font-bold'
-                    } text-neutral-800 dark:text-white capitalize`}
+                    } text-neutral-800 dark:text-white capitalize ${
+                        [2, 3].includes(currentTab)
+                            ? `sticky top-[-2px] z-50 pb-2 ${
+                                  isMobile
+                                      ? 'dark:bg-neutralDark-600 bg-neutral-25'
+                                      : 'dark:bg-neutralDark-500 bg-white'
+                              }`
+                            : ''
+                    }
+                    `}
                 >
                     {title}
-                    {currentTab === 5 && decisionEngineBestOption && (
-                        <span className="text-primary dark:text-primaryDark">
-                            {' '}
-                            {decisionEngineBestOption}
-                        </span>
-                    )}
-                    {currentTab === 4 && (
-                        <span className="text-neutral-700 dark:text-neutralDark-150">
-                            Rate{' '}
-                            <span className="text-primary dark:text-primaryDark">
-                                {
-                                    getValues('options')[
-                                        decisionEngineOptionTab
-                                    ]?.name
-                                }
-                            </span>{' '}
-                            on each criteria.
-                        </span>
-                    )}
                 </h3>
-            </div>
+            ) : null}
             {children}
         </div>
     )

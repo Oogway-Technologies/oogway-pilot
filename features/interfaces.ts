@@ -56,4 +56,5 @@ export interface DecisionSliceStates {
     isDecisionFormUpdating: boolean
     isDecisionRehydrated: boolean
     isRatingsModified: boolean
+    isThereATie: boolean
 }

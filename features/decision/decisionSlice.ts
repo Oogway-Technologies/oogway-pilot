@@ -36,12 +36,16 @@ const initialState: DecisionSliceStates = {
     isDecisionFormUpdating: false,
     isDecisionRehydrated: false,
     isRatingsModified: false,
+    isThereATie: false,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setIsThereATie: (state, { payload }: PayloadAction<boolean>) => {
+            state.isThereATie = payload
+        },
         setSideCardStep: (state, { payload }: PayloadAction<number>) => {
             state.sideCardStep = payload
         },
@@ -122,12 +126,12 @@ export const decisionSlice = createSlice({
             state,
             { payload }: PayloadAction<AISuggestions>
         ) => {
-            const options = payload.options.map(item => {
+            const options = payload.options?.map(item => {
                 return { name: capitalize(item), isAI: true }
             })
             state.suggestions.optionsList = options
             state.suggestions.copyOptionsList = options
-            const commonCriteria = payload.common_criteria.map(item => {
+            const commonCriteria = payload.common_criteria?.map(item => {
                 return { name: capitalize(item), weight: 2, isAI: true }
             })
             const contextCriteria = payload.context_criteria.map(item => {
@@ -247,6 +251,7 @@ export const {
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
     setIsRatingsModified,
+    setIsThereATie,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

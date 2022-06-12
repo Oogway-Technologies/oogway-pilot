@@ -65,9 +65,9 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
 
     return (
         <div
-            className={
-                'flex relative flex-col p-5 space-y-2 w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark'
-            }
+            className={`flex relative flex-col ${
+                isMobile ? 'p-3' : 'p-5'
+            } space-y-2 w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
         >
             <div className="flex items-center">
                 <span
@@ -90,8 +90,8 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
             </div>
             <div
                 className={`flex ${
-                    isMobile ? 'justify-evenly' : 'justify-between'
-                } items-center bg-white dark:bg-neutralDark-300 p-4 mt-12 w-full rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
+                    isMobile ? 'justify-evenly p-2' : 'justify-between p-4'
+                } items-center bg-white dark:bg-neutralDark-300 mt-12 w-full rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
             >
                 {!isMobile && (
                     <span
