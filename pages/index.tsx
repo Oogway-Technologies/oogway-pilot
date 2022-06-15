@@ -23,11 +23,14 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
+import Button from '../components/Utils/Button'
+import { setIsQuestionSafeForAI } from '../features/decision/decisionSlice'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppSelector } from '../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
+import { bodyHeavy, bodySmall } from '../styles/typography'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
 
@@ -39,13 +42,15 @@ const DecisionEngine: FC = () => {
     } = useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(0)
     const [matrixStep, setMatrixStep] = useState(0)
+    const [userIgnoredUnsafeWarning, setUserIgnoredUnsafeWarning] =
+        useState(false)
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
 
     // Instantiate form
     const methods = useInstantiateDecisionForm({ currentTab, setCurrentTab })
-    const { control, getValues, setValue } = methods
+    const { control, getValues, setValue, reset } = methods
     const watchQuestion = useWatch({ name: 'question', control })
     const optionList = getValues('options')
     const criteriaList = getValues('criteria')
@@ -78,6 +83,13 @@ const DecisionEngine: FC = () => {
 
     useSaveDecisionFormState()
 
+    const handleReconsider = () => {
+        reset() // reset form state
+        useAppDispatch(setIsQuestionSafeForAI(true))
+        setUserIgnoredUnsafeWarning(false)
+        setCurrentTab(1)
+    }
+
     const matrixGenerator = () => {
         switch (matrixStep) {
             case 0:
@@ -100,6 +112,7 @@ const DecisionEngine: FC = () => {
                 return <div />
         }
     }
+
     const tabGenerator = () => {
         switch (currentTab) {
             case 1:
@@ -112,7 +125,15 @@ const DecisionEngine: FC = () => {
                     />
                 )
             case 2:
-                return <OptionTab />
+                return (
+                    <OptionTab
+                        setUserIgnoredUnsafeWarning={
+                            setUserIgnoredUnsafeWarning
+                        }
+                        userIgnoredUnsafeWarning={userIgnoredUnsafeWarning}
+                        handleReconsider={handleReconsider}
+                    />
+                )
             case 3:
                 return <CriteriaTab />
             case 4:
@@ -137,7 +158,6 @@ const DecisionEngine: FC = () => {
             </Head>
             <FormProvider {...methods}>
                 <form
-                    // onSubmit={methods.handleSubmit(onSubmit)}
                     className={`${decisionContainer} ${
                         isMobile ? `mx-4` : 'my-xl mx-xxl gap-4 h-[78vh]'
                     }`}
@@ -216,7 +236,13 @@ const DecisionEngine: FC = () => {
                         </div>
                     </div>
                     {!isMobile && (
-                        <div className={'col-span-1'}>
+                        <div
+                            className={
+                                'overflow-y-auto col-span-1 ' +
+                                'scrollbar scrollbar-sm scrollbar-rounded scrollbar-thumb-tertiary ' +
+                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300'
+                            }
+                        >
                             {!user ? (
                                 !userExceedsMaxDecisions &&
                                 (currentTab === 2 ||
@@ -254,6 +280,33 @@ const DecisionEngine: FC = () => {
                                 <DecisionHelperCard />
                             ) : null}
                             {currentTab === 5 ? <ScoreCard /> : null}
+                            {userIgnoredUnsafeWarning && (
+                                <GenericSidebar
+                                    title="Decision Unsupported"
+                                    titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
+                                    extraClass="mt-auto"
+                                >
+                                    <div className="flex flex-col">
+                                        <div
+                                            className={`${bodySmall} text-center text-neutral-800 mt-4 mb-6 dark:text-white`}
+                                        >
+                                            Sorry, this decision violates our
+                                            policies for content safety and AI
+                                            cannot provide any information. We
+                                            recommend you reconsider this
+                                            decision.
+                                        </div>
+                                        <div className="mx-auto">
+                                            <Button
+                                                keepText
+                                                text="Reconsider"
+                                                className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                                                onClick={handleReconsider}
+                                            />
+                                        </div>
+                                    </div>
+                                </GenericSidebar>
+                            )}
                             <GenericSidebar
                                 title="Disclaimer"
                                 titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
