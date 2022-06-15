@@ -47,6 +47,7 @@ export interface AISuggestions {
     context_criteria: string[]
     common_criteria: string[]
     content: string[]
+    is_safe: boolean
 }
 
 export interface DecisionForm {

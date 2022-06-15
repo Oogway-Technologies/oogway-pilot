@@ -10,6 +10,7 @@ import {
     setDecisionCriteriaQueryKey,
     setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
+    setIsQuestionSafeForAI,
     setIsSuggestionsEmpty,
     setIsThereATie,
     setLoadingAiSuggestions,
@@ -76,12 +77,15 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         const data: AISuggestions = await fetcher(
             `/api/getAISuggestions?question=${question}&context=${context}`
         )
-        useAppDispatch(populateSuggestions(data))
+        useAppDispatch(setIsQuestionSafeForAI(data.is_safe))
+        if (data.is_safe) useAppDispatch(populateSuggestions(data))
+        console.log(data)
         useAppDispatch(setLoadingAiSuggestions(false))
         if (
-            !data.options.length &&
-            !data.context_criteria.length &&
-            !data.common_criteria.length
+            (!data.options.length &&
+                !data.context_criteria.length &&
+                !data.common_criteria.length) ||
+            !data.is_safe
         ) {
             useAppDispatch(setIsSuggestionsEmpty(true))
         }

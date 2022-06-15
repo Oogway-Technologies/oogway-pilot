@@ -12,6 +12,7 @@ import {
     setDecisionQuestion,
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
+    setIsQuestionSafeForAI,
     setIsRatingsModified,
     setIsThereATie,
     setPreviousIndex,
@@ -186,6 +187,7 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setIsDecisionFormUpdating(false))
         useAppDispatch(setIsRatingsModified(false))
         useAppDispatch(setIsDecisionRehydrated(false))
+        useAppDispatch(setIsQuestionSafeForAI(true))
     }
     const calcScore = (index: number): number => {
         let sumWeights = 0

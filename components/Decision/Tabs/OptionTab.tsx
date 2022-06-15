@@ -1,5 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
+import {
+    UilExclamationTriangle,
+    UilPlus,
+    UilTrashAlt,
+} from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -30,7 +34,17 @@ import { BaseCard } from '../common/BaseCard'
 import { OptionSuggestions } from '../SideCards/OptionSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
 
-export const OptionTab: FC = () => {
+interface OptionTabProps {
+    setUserIgnoredUnsafeWarning: React.Dispatch<React.SetStateAction<boolean>>
+    userIgnoredUnsafeWarning: boolean
+    handleReconsider: () => void
+}
+
+export const OptionTab: FC<OptionTabProps> = ({
+    setUserIgnoredUnsafeWarning,
+    userIgnoredUnsafeWarning,
+    handleReconsider,
+}) => {
     const {
         register,
         control,
@@ -47,6 +61,7 @@ export const OptionTab: FC = () => {
         decisionActivityId,
         userExceedsMaxDecisions,
         isDecisionFormUpdating,
+        isQuestionSafeForAI,
     } = useAppSelector(state => state.decisionSlice)
 
     const { fields, remove } = useFieldArray({
@@ -56,6 +71,7 @@ export const OptionTab: FC = () => {
     const { user: authUser } = useUser()
 
     const [isOpen, setOpen] = useState(false)
+    const [isAIWarningModalOpen, setIsAIWarningModalOpen] = useState(false)
     const [selectedIndex, setIndex] = useState<number>()
     const createDecision = useCreateDecisionActivity()
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -121,6 +137,12 @@ export const OptionTab: FC = () => {
         }
     }, [watchOptions])
 
+    // Trigger warning modal
+    useEffect(() => {
+        if (!isQuestionSafeForAI && !userIgnoredUnsafeWarning)
+            setIsAIWarningModalOpen(true)
+    }, [isQuestionSafeForAI, userIgnoredUnsafeWarning])
+
     const handleModal = (index: number) => {
         setIndex(index)
         setOpen(true)
@@ -137,6 +159,12 @@ export const OptionTab: FC = () => {
     const handleClose = () => {
         setIndex(undefined)
         setOpen(false)
+    }
+
+    const handleWarningClose = () => {
+        setIsAIWarningModalOpen(false)
+        setUserIgnoredUnsafeWarning(true)
+        console.log('set user ignored to true.')
     }
 
     return (
@@ -303,6 +331,42 @@ export const OptionTab: FC = () => {
                             text="Delete"
                             className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
                             onClick={handleDelete}
+                        />
+                    </div>
+                </div>
+            </Modal>
+            <Modal show={isAIWarningModalOpen} onClose={handleWarningClose}>
+                <div className="flex flex-col">
+                    <div className="flex items-center">
+                        <UilExclamationTriangle
+                            className={'mr-1 fill-alert dark:fill-alert'}
+                        />
+                        <span
+                            className={`${bodyHeavy} text-alert dark:text-alert`}
+                        >
+                            Warning
+                        </span>
+                    </div>
+                    <div
+                        className={`${body} text-neutral-800 mt-4 mb-6 dark:text-white`}
+                    >
+                        Sorry, this decision violates our policies for content
+                        <br />
+                        safety and AI cannot provide any information. We <br />
+                        recommend you reconsider this decision.
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <Button
+                            keepText
+                            text="Continue"
+                            className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
+                            onClick={handleWarningClose}
+                        />
+                        <Button
+                            keepText
+                            text="Reconsider"
+                            className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            onClick={handleReconsider}
                         />
                     </div>
                 </div>
