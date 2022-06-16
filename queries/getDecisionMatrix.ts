@@ -1,11 +1,16 @@
-import axios from 'axios'
 import { useQuery } from 'react-query'
 
+import API from '../lib/axios/axios'
+
 const getDecisionMatrix = async (decision: string, context: string) => {
-    const { data } = await axios.post(
-        `/api/decisionMatrix?decision=${decision}&context=${context}`
-    )
-    return data
+    try {
+        const { data } = await API.post(
+            `/decisionMatrix?decision=${decision}&context=${context}`
+        )
+        return data
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // Custom Query hooks
