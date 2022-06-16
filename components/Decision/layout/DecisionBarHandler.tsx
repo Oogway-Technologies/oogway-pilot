@@ -97,10 +97,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 )
                 return false
             }
-            if (
-                formCopy.question !== getValues('question') ||
-                formCopy.context !== getValues('context')
-            ) {
+            if (formCopy.question !== getValues('question')) {
                 resetField('options')
                 resetField('criteria')
                 useAppDispatch(resetSuggestions())
@@ -120,7 +117,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
         if (tab === 2) {
             await trigger(['options'])
-            console.log(errors)
             if (errors?.options && errors?.options.length) {
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false

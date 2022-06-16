@@ -1,5 +1,5 @@
 import { UilAngleDown } from '@iconscout/react-unicons'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -12,9 +12,15 @@ import {
     Rating,
     Ratings,
 } from '../../../utils/types/global'
+import { TableLoader } from '../../Loaders/TableLoader'
 import { DropDownMenu } from '../../Utils/common/DropDownMenu'
 
-export const ResultTable = () => {
+interface ResultTableProps {
+    isLoading?: boolean
+}
+export const ResultTable: FC<ResultTableProps> = ({
+    isLoading = false,
+}: ResultTableProps) => {
     const { control } = useFormContext()
     const rating: Ratings[] = useWatch({ name: 'ratings', control })
     const criteria: Criteria[] = useWatch({ name: 'criteria', control })
@@ -29,7 +35,9 @@ export const ResultTable = () => {
         }
     }, [isMobile])
 
-    return isMobile ? (
+    return isLoading ? (
+        <TableLoader />
+    ) : isMobile ? (
         <table
             className="mt-3 w-full table-auto"
             style={{
@@ -38,15 +46,15 @@ export const ResultTable = () => {
             }}
         >
             <thead className="flex items-center w-full">
-                <th className={'flex mr-4 w-1/2'}>
+                <td className={'flex mr-4 w-1/2'}>
                     <span
                         className={`text-sm md:text-base leading-6 tracking-normal flex flex-col items-start text-primary dark:text-primaryDark px-2 py-1.5`}
                     >
                         <b>CRITERIA</b>
                         IMPORTANCE
                     </span>
-                </th>
-                <th className={'flex items-center space-x-3 w-1/2 '}>
+                </td>
+                <td className={'flex items-center space-x-3 w-1/2 '}>
                     <span
                         className={`${bodyHeavy} text-white bg-neutral-700 py-1 px-2 rounded-lg w-full truncate max-w-[8rem]`}
                     >
@@ -66,11 +74,11 @@ export const ResultTable = () => {
                             'max-w-full min-w-[2rem] cursor-pointer'
                         }
                     />
-                </th>
+                </td>
             </thead>
             <tbody className="flex flex-col">
                 {criteria.map((item: Criteria, index: number) => (
-                    <div
+                    <tr
                         className="flex items-center my-2 w-full h-14"
                         key={`result-table-row-ratings-item-${index}`}
                     >
@@ -94,7 +102,7 @@ export const ResultTable = () => {
                                 </td>
                             ) : null
                         )}
-                    </div>
+                    </tr>
                 ))}
 
                 {/* Score row */}

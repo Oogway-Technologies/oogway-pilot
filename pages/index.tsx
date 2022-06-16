@@ -4,6 +4,7 @@ import Head from 'next/head'
 import React, { FC, useEffect, useState } from 'react'
 import { FormProvider, useWatch } from 'react-hook-form'
 
+import { SideNavbar } from '../components/Decision/AutoMatrix/SideNavbar'
 import GenericSidebar from '../components/Decision/common/GenericSidebar'
 import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHandler'
 import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
@@ -21,21 +22,31 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
+import { TableLoader } from '../components/Loaders/TableLoader'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppSelector } from '../hooks/useRedux'
 import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
+import { useDecisionMatrix } from '../queries/getDecisionMatrix'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
 
 const DecisionEngine: FC = () => {
+    const { data, error, isError, isLoading } = useDecisionMatrix(
+        'what is the best game of 2020',
+        'i dont know'
+    )
+
+    console.log(data, error, isError, isLoading)
+
     const {
         decisionCriteriaQueryKey,
         userExceedsMaxDecisions,
         decisionEngineOptionTab,
     } = useAppSelector(state => state.decisionSlice)
-    const [currentTab, setCurrentTab] = useState(1)
+    const [currentTab, setCurrentTab] = useState(0)
+    const [matrixStep, setMatrixStep] = useState(0)
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
@@ -71,15 +82,39 @@ const DecisionEngine: FC = () => {
                 )
             }
         }
+
+        return () => {
+            // On page unmoount, save form state
+            useSaveDecisionFormState()
+        }
     }, [currentTab])
 
-    // On page unmoount, save form state
-    useSaveDecisionFormState()
-
+    const matrixGenerator = () => {
+        switch (matrixStep) {
+            case 0:
+                return (
+                    <DecisionTab
+                        currentTab={currentTab}
+                        matrixStep={matrixStep}
+                        setMatrixStep={setMatrixStep}
+                        deviceIp={deviceIp || ''}
+                    />
+                )
+            case 1:
+                return <TableLoader />
+            default:
+                return <div />
+        }
+    }
     const tabGenerator = () => {
         switch (currentTab) {
             case 1:
-                return <DecisionTab deviceIp={deviceIp || ''} />
+                return (
+                    <DecisionTab
+                        currentTab={currentTab}
+                        deviceIp={deviceIp || ''}
+                    />
+                )
             case 2:
                 return <OptionTab />
             case 3:
@@ -120,21 +155,36 @@ const DecisionEngine: FC = () => {
                     <div
                         className={`${bigContainer} ${
                             isMobile
-                                ? 'col-span-4 h-[calc(100vh-15.5rem)]'
+                                ? `col-span-4 ${
+                                      currentTab === 0
+                                          ? 'h-[calc(100vh-12.25rem)]'
+                                          : 'h-[calc(100vh-15.5rem)]'
+                                  }`
                                 : 'col-span-3 h-max bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
                         }`}
                     >
-                        {!isMobile && (
+                        {!isMobile && currentTab > 0 && (
                             <DecisionSideBar
                                 selectedTab={currentTab}
                                 className="col-span-1"
                                 setSelectedTab={setCurrentTab}
                             />
                         )}
+                        {!isMobile && currentTab === 0 && (
+                            <SideNavbar
+                                selectedTab={matrixStep}
+                                className="col-span-1"
+                                setSelectedTab={setMatrixStep}
+                            />
+                        )}
                         <div
                             className={`flex flex-col gap-y-md ${
                                 isMobile
-                                    ? `col-span-7 pt-4 h-[calc(100vh-16rem)]`
+                                    ? `col-span-7 pt-4 ${
+                                          currentTab === 0
+                                              ? 'h-[calc(100vh-12.25rem)]'
+                                              : 'h-[calc(100vh-16rem)]'
+                                      }`
                                     : 'col-span-6 px-5 py-4 h-full'
                             }`}
                         >
@@ -154,9 +204,11 @@ const DecisionEngine: FC = () => {
                                 title={decisionTitle[currentTab]}
                                 currentTab={currentTab}
                             >
-                                {tabGenerator()}
+                                {currentTab > 0
+                                    ? tabGenerator()
+                                    : matrixGenerator()}
                             </DecisionTabWrapper>
-                            {!isMobile && (
+                            {!isMobile && currentTab > 0 && (
                                 <DecisionBarHandler
                                     className="justify-self-end mt-auto w-full"
                                     selectedTab={currentTab}
@@ -214,7 +266,7 @@ const DecisionEngine: FC = () => {
                         </div>
                     )}
                 </form>
-                {isMobile && (
+                {isMobile && currentTab > 0 && (
                     <DecisionBarHandler
                         className="justify-self-end pr-3 mt-auto w-full"
                         selectedTab={currentTab}
@@ -222,11 +274,18 @@ const DecisionEngine: FC = () => {
                     />
                 )}
                 {/* step bar for mobile */}
-                {isMobile && (
+                {isMobile && currentTab > 0 && (
                     <DecisionSideBar
                         selectedTab={currentTab}
                         className="col-span-1"
                         setSelectedTab={setCurrentTab}
+                    />
+                )}
+                {isMobile && currentTab === 0 && (
+                    <SideNavbar
+                        selectedTab={matrixStep}
+                        className="col-span-1"
+                        setSelectedTab={setMatrixStep}
                     />
                 )}
             </FormProvider>

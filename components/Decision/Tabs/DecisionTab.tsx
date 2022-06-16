@@ -20,14 +20,23 @@ import {
     shortLimit,
 } from '../../../utils/constants/global'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
+import Button from '../../Utils/Button'
 import { ErrorWrapper } from '../../Utils/ErrorWrapper'
 import { DecisionHelperCard } from '../SideCards/DecisionHelperCard'
 
 interface DecisionTabProps {
     deviceIp: string
+    matrixStep?: number
+    currentTab: number
+    setMatrixStep?: (n: number) => void
 }
 
-export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
+export const DecisionTab: FC<DecisionTabProps> = ({
+    deviceIp,
+    currentTab,
+    matrixStep,
+    setMatrixStep,
+}) => {
     const { register, trigger, clearErrors, getValues, control } =
         useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -95,10 +104,8 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     return (
         <>
             <div
-                className={`flex flex-col  ${
-                    isMobile
-                        ? 'py-4 px-3 bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark space-y-3'
-                        : 'space-y-4'
+                className={`flex flex-col rounded-2xl custom-box-shadow dark:custom-box-shadow-dark bg-white dark:bg-neutralDark-300 py-4 px-3 ${
+                    isMobile ? 'space-y-3' : 'mx-1  space-y-4'
                 }`}
             >
                 <ErrorWrapper errorField="question">
@@ -137,6 +144,18 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
             {isMobile && getValues('question').split('').length ? (
                 <DecisionHelperCard />
             ) : null}
+            {matrixStep === 0 && currentTab === 0 && (
+                <Button
+                    onClick={() =>
+                        setMatrixStep && setMatrixStep(matrixStep + 1)
+                    }
+                    addStyle={`rounded-full w-2/6 justify-center py-2 md:py-3 text-white bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive dark:active:bg-primaryActive ml-auto`}
+                    text="Show Result"
+                    keepText={true}
+                    icon={null}
+                    type="button"
+                />
+            )}
         </>
     )
 }

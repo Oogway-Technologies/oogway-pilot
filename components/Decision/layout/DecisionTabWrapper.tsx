@@ -42,8 +42,6 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
         setValue('criteria', orgCriteriaList)
 
         if (decisionRatingUpdate || [2, 3, 4].includes(currentTab)) {
-            console.log('Runnng --- --- ---')
-
             const mapRatingObject: Ratings[] = []
             const reShapeCriteriaList: Rating[] = []
 
@@ -98,9 +96,10 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
         }
     }, [currentTab])
 
-    // Handler functions
     const heightDecider = (tab: number) => {
         switch (tab) {
+            case 0:
+                return 'h-[calc(100vh-15rem)]'
             case 1:
                 return 'h-[calc(100vh-17.5rem)]'
             case 2:
@@ -127,9 +126,11 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                   currentTab !== 4 ? 'mt-0 space-y-md p-0.5' : 'mt-4'
               } ${heightDecider(currentTab)} `
             : `space-y-lg ${
-                  currentTab !== 4
-                      ? 'h-[calc(100vh-17.5rem)]'
-                      : 'h-[calc(100vh-27.15rem)]'
+                  currentTab === 4
+                      ? 'h-[calc(100vh-27.15rem)]'
+                      : currentTab === 0
+                      ? 'h-[calc(100vh-13.75rem)]'
+                      : 'h-[calc(100vh-17.5rem)]'
               }`
     } mt-0 w-full overflow-y-auto ${className ? className : ''}`
 
@@ -148,7 +149,7 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                                       : 'dark:bg-neutralDark-500 bg-white'
                               }`
                             : ''
-                    }
+                    } ${currentTab === 0 ? 'mt-7' : ''}
                     `}
                 >
                     {title}
