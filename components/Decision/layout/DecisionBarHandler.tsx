@@ -350,6 +350,10 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
     }, [watchDecision, watchOption, watchCriteria, watchRating])
 
+    useEffect(() => {
+        console.log('------ > ', pointerArray)
+    }, [pointerArray])
+
     return (
         <div
             className={`flex items-center justify-between relative ${
@@ -376,6 +380,8 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     className={`${squareButton} ml-3 ${
                         pointerArray[selectedTab - 1] && selectedTab !== 5
                             ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
+                            : selectedTab === 4
+                            ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
                             : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
                     }`}
                     type="button"
@@ -384,10 +390,14 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 >
                     {pointerArray[selectedTab - 1] && selectedTab !== 5 ? (
                         <span className="text-sm md:text-base">Continue</span>
+                    ) : selectedTab === 4 ? (
+                        <span className="text-sm md:text-base">Continue</span>
                     ) : null}
                     <UilArrowRight
                         className={`${
                             pointerArray[selectedTab - 1] && selectedTab !== 5
+                                ? 'fill-primary dark:fill-primaryDark'
+                                : selectedTab === 4
                                 ? 'fill-primary dark:fill-primaryDark'
                                 : 'fill-neutral-700 dark:fill-neutralDark-150'
                         }`}
