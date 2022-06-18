@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { capitalize } from '../../utils/helpers/common'
 import { FirebaseDecisionActivity } from '../../utils/types/firebase'
-import { AISuggestions } from '../../utils/types/global'
+import { AISuggestions, Options } from '../../utils/types/global'
 import { DecisionSliceStates, FormCopy } from '../interfaces'
 
 const initialState: DecisionSliceStates = {
@@ -133,25 +133,21 @@ export const decisionSlice = createSlice({
             state,
             { payload }: PayloadAction<AISuggestions>
         ) => {
-            const options = payload.options?.map(item => {
+            const options: Options[] = payload.options?.map(item => {
                 return { name: capitalize(item), isAI: true }
             })
-            state.suggestions.optionsList = options
-            state.suggestions.copyOptionsList = options
             const commonCriteria = payload.common_criteria?.map(item => {
                 return { name: capitalize(item), weight: 2, isAI: true }
             })
             const contextCriteria = payload.context_criteria.map(item => {
                 return { name: capitalize(item), weight: 3, isAI: true }
             })
-            state.suggestions.criteriaList = [
-                ...commonCriteria,
-                ...contextCriteria,
-            ]
-            state.suggestions.copyCriteriaList = [
-                ...commonCriteria,
-                ...contextCriteria,
-            ]
+            const criteria = [...commonCriteria, ...contextCriteria]
+
+            state.suggestions.optionsList = options
+            state.suggestions.copyOptionsList = options
+            state.suggestions.criteriaList = criteria
+            state.suggestions.copyCriteriaList = criteria
         },
         setDecisionEngineOptionTab: (
             state,

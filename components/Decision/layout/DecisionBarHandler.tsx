@@ -106,6 +106,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 )
                 return false
             }
+
             if (formCopy.question !== getValues('question')) {
                 useAppDispatch(setIsAllOptionsVisited(false))
                 resetField('options')
@@ -119,6 +120,18 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         deepCopy({
                             ...formCopy,
                             question: getValues('question'),
+                        })
+                    )
+                )
+            }
+            if (formCopy.context !== getValues('context')) {
+                if (!userExceedsMaxDecisions || user) {
+                    loadSuggestions()
+                }
+                useAppDispatch(
+                    updateFormCopy(
+                        deepCopy({
+                            ...formCopy,
                             context: getValues('context'),
                         })
                     )
@@ -349,10 +362,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             ])
         }
     }, [watchDecision, watchOption, watchCriteria, watchRating])
-
-    useEffect(() => {
-        console.log('------ > ', pointerArray)
-    }, [pointerArray])
 
     return (
         <div

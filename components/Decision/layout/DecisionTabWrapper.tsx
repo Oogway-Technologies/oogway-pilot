@@ -42,8 +42,6 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
         setValue('criteria', orgCriteriaList)
 
         if (decisionRatingUpdate || [2, 3, 4].includes(currentTab)) {
-            console.log('Runnng --- --- ---')
-
             const mapRatingObject: Ratings[] = []
             const reShapeCriteriaList: Rating[] = []
 
