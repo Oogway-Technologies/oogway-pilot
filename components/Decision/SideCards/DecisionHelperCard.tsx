@@ -109,6 +109,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         <br /> decision makers
                     </span>
                     <Button
+                        id="decisionHelper-SignIn"
                         keepText
                         text="Create New Account"
                         onClick={handleSignIn}
