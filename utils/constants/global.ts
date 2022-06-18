@@ -51,6 +51,9 @@ export const decisionInfoParagraph = [
 export const criteriaInfoCacheDays = 21
 export const maxAllowedUnauthenticatedDecisions = 2
 
+/**
+ * Decision Page
+ */
 export const decisionSideBarOptions: TabItem[] = [
     { title: 'Decision', tab: 1 },
     { title: 'Options', tab: 2 },

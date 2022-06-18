@@ -1,6 +1,7 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import React, { FC, useEffect, useState } from 'react'
 import { FormProvider, useWatch } from 'react-hook-form'
 
@@ -29,7 +30,10 @@ import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppSelector } from '../hooks/useRedux'
 import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
-import { decisionTitle } from '../utils/constants/global'
+import {
+    decisionSideBarOptions,
+    decisionTitle,
+} from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
 
 const DecisionEngine: FC = () => {
@@ -44,6 +48,7 @@ const DecisionEngine: FC = () => {
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
+    const router = useRouter()
 
     // Instantiate form
     const methods = useInstantiateDecisionForm({ currentTab, setCurrentTab })
@@ -76,6 +81,13 @@ const DecisionEngine: FC = () => {
                 )
             }
         }
+
+        // Update router
+        router.push(
+            `/#${decisionSideBarOptions[currentTab - 1].title.toLowerCase()}`,
+            undefined,
+            { shallow: true }
+        )
     }, [currentTab])
 
     useSaveDecisionFormState()
