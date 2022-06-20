@@ -21,6 +21,7 @@ import {
     longLimit,
     maxAllowedUnauthenticatedDecisions,
     shortLimit,
+    warningTime,
 } from '../../../utils/constants/global'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import {
@@ -48,8 +49,15 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     matrixStep,
     setMatrixStep,
 }) => {
-    const { register, trigger, clearErrors, getValues, setValue, control } =
-        useFormContext()
+    const {
+        register,
+        trigger,
+        clearErrors,
+        getValues,
+        setValue,
+        control,
+        formState: { errors },
+    } = useFormContext()
     const [isLoading, setLoading] = useState(false)
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
@@ -166,20 +174,24 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     }
 
     const handleAutoMatrix = async () => {
-        setLoading(true)
+        await trigger(['question', 'context'])
+        if (errors?.['question']?.message || errors?.['context']?.message) {
+            setTimeout(() => clearErrors(['question', 'context']), warningTime)
+        } else {
+            setLoading(true)
+            try {
+                const { data } = (await getDecisionMatrix({
+                    decision: question,
+                    context,
+                })) as { data: MatrixObject }
+                convertDataFrameToObject(data)
 
-        try {
-            const { data } = (await getDecisionMatrix({
-                decision: question,
-                context,
-            })) as { data: MatrixObject }
-            convertDataFrameToObject(data)
-
-            setMatrixStep(matrixStep + 1)
-        } catch (error) {
-            console.log(error)
+                setMatrixStep(matrixStep + 1)
+            } catch (error) {
+                console.log(error)
+            }
+            setLoading(false)
         }
-        setLoading(false)
     }
 
     return (
