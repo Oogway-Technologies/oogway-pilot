@@ -1,14 +1,15 @@
 import { useMutation } from 'react-query'
 
 import API from '../lib/axios/axios'
+import { MatrixObject } from '../utils/types/global'
 interface Question {
     decision: string
     context: string
 }
 
-const getDecisionMatrix = async (item: Question) => {
+export const getDecisionMatrix = async (item: Question) => {
     try {
-        const res = await API.post(
+        const res: MatrixObject = await API.post(
             `ai/decisionMatrix?decision=${item.decision}&context=${item.context}`
         )
         return res

@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { body, bodyHeavy, bodySmall, caption } from '../../../styles/typography'
+import { body, bodyHeavy, bodySmall } from '../../../styles/typography'
 import { weightToString } from '../../../utils/helpers/common'
 import {
     Criteria,
@@ -46,37 +46,35 @@ export const ResultTable: FC<ResultTableProps> = ({
             }}
         >
             <thead className="flex items-center w-full">
-                <tr>
-                    <td className={'flex mr-4 w-1/2'}>
-                        <span
-                            className={`text-sm md:text-base leading-6 tracking-normal flex flex-col items-start text-primary dark:text-primaryDark px-2 py-1.5`}
-                        >
-                            <b>CRITERIA</b>
-                            IMPORTANCE
-                        </span>
-                    </td>
-                    <td className={'flex items-center space-x-3 w-1/2 '}>
-                        <span
-                            className={`${bodyHeavy} text-white bg-neutral-700 py-1 px-2 rounded-lg w-full truncate max-w-[8rem]`}
-                        >
-                            {selectedRating.option}
-                        </span>
-                        <DropDownMenu
-                            menuText="Options"
-                            itemArray={rating.map(item => item.option)}
-                            onClickItem={(v?: IV) => {
-                                setSelectedRating(rating[v?.index || 0])
-                            }}
-                            selectedItem={selectedRating.option}
-                            menuEndIcon={<UilAngleDown />}
-                            menuTextClass={`${caption} !font-bold text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150`}
-                            menuItemClass={`${bodySmall} text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 truncate`}
-                            menuItemsClass={
-                                'max-w-full min-w-[2rem] cursor-pointer'
-                            }
-                        />
-                    </td>
-                </tr>
+                <td className={'flex mr-4 w-1/2'}>
+                    <span
+                        className={`text-sm md:text-base leading-6 tracking-normal flex flex-col items-start text-primary dark:text-primaryDark px-2 py-1.5`}
+                    >
+                        <b>CRITERIA</b>
+                        IMPORTANCE
+                    </span>
+                </td>
+                <td className={'flex items-center space-x-3 w-1/2 '}>
+                    <span
+                        className={`${bodyHeavy} text-white bg-neutral-700 py-1 px-2 rounded-lg w-full truncate max-w-[8rem]`}
+                    >
+                        {selectedRating.option}
+                    </span>
+                    <DropDownMenu
+                        menuText="Options"
+                        itemArray={rating.map(item => item.option)}
+                        onClickItem={(v?: IV) => {
+                            setSelectedRating(rating[v?.index || 0])
+                        }}
+                        selectedItem={selectedRating.option}
+                        menuEndIcon={<UilAngleDown />}
+                        menuTextClass={`${bodySmall} !font-bold text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150`}
+                        menuItemClass={`${bodySmall} text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 truncate`}
+                        menuItemsClass={
+                            'max-w-full min-w-[2rem] cursor-pointer'
+                        }
+                    />
+                </td>
             </thead>
             <tbody className="flex flex-col">
                 {criteria.map((item: Criteria, index: number) => (
@@ -108,7 +106,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                 ))}
 
                 {/* Score row */}
-                <div className="flex items-center w-full">
+                <tr className="flex items-center w-full">
                     <td
                         className={`${bodyHeavy} text-primary dark:text-primaryDark w-1/3 py-1.5 px-2 mr-4`}
                     >
@@ -124,7 +122,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                             </td>
                         ) : null
                     )}
-                </div>
+                </tr>
             </tbody>
         </table>
     ) : (

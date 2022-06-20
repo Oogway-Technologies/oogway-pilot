@@ -53,14 +53,16 @@ export const SideNavbar: FC<SideNavbarProps> = ({
                     onClick={() => setSelectedTab(index)}
                     className={`flex ${
                         isMobile
-                            ? 'flex-col items-center'
-                            : 'items-center space-x-3'
+                            ? 'flex-col items-center space-x-3'
+                            : 'items-center '
                     } pl-3 w-full h-12 cursor-pointer `}
                     key={`auto-matrix-${index}`}
                 >
                     {item.icon(selectedTab, index)}
                     <span
-                        className={`${bodyHeavy} truncate ${
+                        className={`${bodyHeavy} ${
+                            isMobile ? '' : 'ml-3'
+                        } truncate ${
                             selectedTab === index
                                 ? 'text-white'
                                 : 'text-[#C2B2EF]'

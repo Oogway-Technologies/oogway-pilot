@@ -100,6 +100,8 @@ const DecisionEngine: FC = () => {
             case 1:
                 return (
                     <DecisionTab
+                        matrixStep={matrixStep}
+                        setMatrixStep={setMatrixStep}
                         currentTab={currentTab}
                         deviceIp={deviceIp || ''}
                     />

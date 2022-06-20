@@ -1,8 +1,7 @@
 import React from 'react'
 
 import { useAppSelector } from '../../../hooks/useRedux'
-import { useDecisionMatrix } from '../../../queries/getDecisionMatrix'
-import { feedToolbarClass } from '../../../styles/feed'
+// import { feedToolbarClass } from '../../../styles/feed'
 import { body } from '../../../styles/typography'
 import { ResultChart } from '../common/ResultChart'
 import { ResultTable } from '../common/ResultTable'
@@ -11,14 +10,11 @@ const MatrixResultTab = () => {
     const { decisionEngineBestOption, isThereATie } = useAppSelector(
         state => state.decisionSlice
     )
-    const { isLoading, data } = useDecisionMatrix()
-
-    console.log(data)
 
     return (
         <div className="flex flex-col mb-3 space-y-3">
-            <ResultTable isLoading={isLoading} />
-            <div className="flex flex-col my-4 space-y-1 text-center">
+            <ResultTable />
+            <div className="flex flex-col my-4 mb-3 space-y-1 text-center">
                 {isThereATie ? (
                     <>
                         <span
@@ -60,14 +56,14 @@ const MatrixResultTab = () => {
             </div>
             <ResultChart />
             <div className="flex items-center py-4 mx-auto space-x-4">
-                <button
+                {/* <button
                     onClick={() => {
                         console.log('')
                     }}
                     className={feedToolbarClass.newPostButton}
                 >
                     New Decision
-                </button>
+                </button> */}
                 {/* <button
             className={feedToolbarClass.newPostButton}
             onClick={() => console.log(getValues())}
