@@ -12,6 +12,7 @@ import {
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import useResetDecisionHelperCard from '../../../hooks/useResetDecisionHelperCard'
+import { useDecisionMatrix } from '../../../queries/getDecisionMatrix'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { inputStyle } from '../../../styles/utils'
 import {
@@ -37,12 +38,14 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     matrixStep,
     setMatrixStep,
 }) => {
+    const { mutateAsync } = useDecisionMatrix()
+
     const { register, trigger, clearErrors, getValues, control } =
         useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
-    const question = useWatch({ name: 'question', control })
-    const context = useWatch({ name: 'context', control })
+    const question: string = useWatch({ name: 'question', control })
+    const context: string = useWatch({ name: 'context', control })
     const userProfile = useAppSelector(state => state.userSlice.user)
     const clickedConnect = useAppSelector(
         state => state.decisionSlice.clickedConnect
@@ -146,9 +149,12 @@ export const DecisionTab: FC<DecisionTabProps> = ({
             ) : null}
             {matrixStep === 0 && currentTab === 0 && (
                 <Button
-                    onClick={() =>
-                        setMatrixStep && setMatrixStep(matrixStep + 1)
-                    }
+                    onClick={() => {
+                        mutateAsync({ decision: question, context })
+                        if (setMatrixStep) {
+                            setMatrixStep(matrixStep + 1)
+                        }
+                    }}
                     addStyle={`rounded-full w-2/6 justify-center py-2 md:py-3 text-white bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive dark:active:bg-primaryActive ml-auto`}
                     text="Show Result"
                     keepText={true}

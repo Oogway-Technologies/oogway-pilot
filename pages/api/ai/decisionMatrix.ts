@@ -20,7 +20,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
             },
             { headers }
         )
-        console.log('response--------------', response)
         res.status(200).json(response.data)
     } catch (error) {
         console.log(error)

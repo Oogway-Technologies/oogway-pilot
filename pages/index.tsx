@@ -18,28 +18,20 @@ import { ScoreCard } from '../components/Decision/SideCards/ScoreCard'
 import { SignInCard } from '../components/Decision/SideCards/SignInCard'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
 import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
+import MatrixResultTab from '../components/Decision/Tabs/MatrixResultTab'
 import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
-import { TableLoader } from '../components/Loaders/TableLoader'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppSelector } from '../hooks/useRedux'
 import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
-import { useDecisionMatrix } from '../queries/getDecisionMatrix'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
 
 const DecisionEngine: FC = () => {
-    const { data, error, isError, isLoading } = useDecisionMatrix(
-        'what is the best game of 2020',
-        'i dont know'
-    )
-
-    console.log(data, error, isError, isLoading)
-
     const {
         decisionCriteriaQueryKey,
         userExceedsMaxDecisions,
@@ -82,12 +74,9 @@ const DecisionEngine: FC = () => {
                 )
             }
         }
-
-        return () => {
-            // On page unmoount, save form state
-            useSaveDecisionFormState()
-        }
     }, [currentTab])
+
+    useSaveDecisionFormState()
 
     const matrixGenerator = () => {
         switch (matrixStep) {
@@ -101,7 +90,7 @@ const DecisionEngine: FC = () => {
                     />
                 )
             case 1:
-                return <TableLoader />
+                return <MatrixResultTab />
             default:
                 return <div />
         }

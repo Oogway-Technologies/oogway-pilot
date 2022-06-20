@@ -1,18 +1,25 @@
-import { useQuery } from 'react-query'
+import { useMutation } from 'react-query'
 
 import API from '../lib/axios/axios'
+interface Question {
+    decision: string
+    context: string
+}
 
-const getDecisionMatrix = async (decision: string, context: string) => {
+const getDecisionMatrix = async (item: Question) => {
     try {
-        const { data } = await API.post(
-            `/decisionMatrix?decision=${decision}&context=${context}`
+        const res = await API.post(
+            `ai/decisionMatrix?decision=${item.decision}&context=${item.context}`
         )
-        return data
+        return res
     } catch (error) {
-        console.log(error)
+        return error
     }
 }
 
 // Custom Query hooks
-export const useDecisionMatrix = (decision: string, context: string) =>
-    useQuery([decision, context], () => getDecisionMatrix(decision, context))
+export const useDecisionMatrix = () => {
+    return useMutation((item: Question) => getDecisionMatrix(item), {
+        retry: 3,
+    })
+}

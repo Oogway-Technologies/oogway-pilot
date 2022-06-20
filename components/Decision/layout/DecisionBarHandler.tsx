@@ -287,7 +287,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 }
             }
         } else {
-            if (isMobile && selectedTab !== 1) {
+            if (isMobile && selectedTab !== 0) {
                 setSelectedTab(selectedTab - 1)
             }
         }
@@ -298,7 +298,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 useAppDispatch(
                     setDecisionEngineOptionTab(decisionEngineOptionTab - 1)
                 )
-            } else if (selectedTab !== 1) {
+            } else if (selectedTab !== 0) {
                 setSelectedTab(selectedTab - 1)
             }
         }
@@ -325,7 +325,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 className ? className : ''
             }`}
         >
-            {selectedTab !== 1 ? (
+            {selectedTab !== 0 ? (
                 <button
                     className={`${squareButton} ml-auto ${
                         selectedTab === 1
