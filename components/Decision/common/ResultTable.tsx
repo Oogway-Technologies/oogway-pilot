@@ -42,7 +42,7 @@ export const ResultTable: FC<ResultTableProps> = ({
             className="mt-3 w-full table-auto"
             style={{
                 borderCollapse: 'separate',
-                borderSpacing: `0px ${isMobile ? '0.5rem' : '1rem'}`,
+                borderSpacing: '0px 0.5rem',
             }}
         >
             <thead className="flex items-center w-full">
@@ -54,9 +54,9 @@ export const ResultTable: FC<ResultTableProps> = ({
                         IMPORTANCE
                     </span>
                 </td>
-                <td className={'flex items-center space-x-3 w-1/2 '}>
+                <td className={'flex items-center space-x-3 w-1/2'}>
                     <span
-                        className={`${bodyHeavy} text-white bg-neutral-700 py-1 px-2 rounded-lg w-full truncate max-w-[8rem]`}
+                        className={`${bodyHeavy} text-white bg-neutral-700 py-1 px-2 rounded-lg w-full truncate max-w-[8rem] min-h-[3.5rem] flex items-center justify-center`}
                     >
                         {selectedRating.option}
                     </span>
@@ -146,7 +146,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                     {rating.map((item: Ratings, index: number) => (
                         <td
                             key={`result-row-header-item-${index}`}
-                            className={`${bodyHeavy} text-white bg-neutral-700 h-10 ${
+                            className={`${bodyHeavy} text-white bg-neutral-700 h-10 px-3 text-center ${
                                 index === 0 ? 'rounded-l-lg' : ''
                             } last:rounded-r-lg truncate max-w-[5rem]`}
                         >
