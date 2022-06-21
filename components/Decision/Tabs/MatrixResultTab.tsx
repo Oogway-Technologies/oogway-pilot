@@ -1,9 +1,10 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import { useAppSelector } from '../../../hooks/useRedux'
 import { feedToolbarClass } from '../../../styles/feed'
 import { body } from '../../../styles/typography'
+import { Criteria, Options } from '../../../utils/types/global'
 import { ResultChart } from '../common/ResultChart'
 import { ResultTable } from '../common/ResultTable'
 
@@ -15,10 +16,26 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     setMatrixStep,
     setCurrentTab,
 }: MatrixResultTabProps) => {
-    const { reset } = useFormContext()
+    const { reset, getValues, setValue } = useFormContext()
     const { decisionEngineBestOption, isThereATie } = useAppSelector(
         state => state.decisionSlice
     )
+    const fixUpStates = () => {
+        const orgOptionsList = getValues('options')
+        const orgCriteriaList = getValues('criteria')
+
+        const criteriaList = orgCriteriaList.filter(
+            (item: Criteria) => item.name
+        )
+        const optionsList = orgOptionsList.filter((item: Options) => item.name)
+
+        setValue('options', optionsList)
+        setValue('criteria', criteriaList)
+    }
+
+    useEffect(() => {
+        fixUpStates()
+    }, [])
 
     return (
         <div className="flex flex-col mb-3 space-y-3">
@@ -80,7 +97,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         setCurrentTab(1)
                     }}
                 >
-                    Customize Decision
+                    Refine decision
                 </button>
             </div>
         </div>

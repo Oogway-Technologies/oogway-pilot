@@ -76,7 +76,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         const data: AISuggestions = await fetcher(
             `/api/getAISuggestions?question=${question}&context=${context}`
         )
-        useAppDispatch(populateSuggestions(data))
+        useAppDispatch(
+            populateSuggestions({
+                data,
+                optionsList: watchOption,
+                criteriaList: watchCriteria,
+            })
+        )
         useAppDispatch(setLoadingAiSuggestions(false))
         if (
             !data.options.length &&

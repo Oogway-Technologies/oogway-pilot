@@ -31,7 +31,7 @@ export const matrixToken = decryptAES(service.oogway_ai).ai_matrix_token
 export const oogwayDecisionFTVersion = 'v1'
 export const bingTopN = 5 // number of results to display from bing API in Oogway Bot comments
 export const decisionTitle = [
-    'Your decision',
+    'Your decision/Your result',
     'Your decision',
     'Your options',
     'Your criteria',

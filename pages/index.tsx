@@ -200,6 +200,7 @@ const DecisionEngine: FC = () => {
                             <DecisionTabWrapper
                                 title={decisionTitle[currentTab]}
                                 currentTab={currentTab}
+                                matrixStep={matrixStep}
                             >
                                 {currentTab > 0
                                     ? tabGenerator()

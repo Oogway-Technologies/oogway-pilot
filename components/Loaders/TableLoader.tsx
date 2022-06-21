@@ -10,20 +10,20 @@ export const TableLoader = () => {
             }}
         >
             <thead className="flex items-center w-full">
-                <td className={'flex mr-4 w-1/4'}>
+                <th className={'flex mr-4 w-1/4'}>
                     <span
                         className={
                             'flex flex-col items-start py-1.5 px-2 text-sm tracking-normal leading-6 text-primary dark:text-primaryDark md:text-base'
                         }
                     />
-                </td>
-                <td className={'flex items-center space-x-3 w-3/4'}>
+                </th>
+                <th className={'flex items-center space-x-3 w-3/4'}>
                     <span
                         className={
                             'py-1 px-2 w-full h-14 text-white bg-neutral-700 rounded-lg animate-pulse'
                         }
                     />
-                </td>
+                </th>
             </thead>
             <tbody className="flex flex-col">
                 {Array(4)

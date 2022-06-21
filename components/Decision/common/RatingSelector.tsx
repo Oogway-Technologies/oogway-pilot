@@ -21,12 +21,14 @@ interface RatingSelectorProps {
     title: string
     registerName: string
     highlight?: boolean
+    value: number
 }
 
 export const RatingSelector: FC<RatingSelectorProps> = ({
     registerName,
     title,
     highlight = false,
+    value,
 }: RatingSelectorProps) => {
     const [selected, setSelected] = useState(1)
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -37,13 +39,14 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
     )
 
     useEffect(() => {
-        setSelected(getValues(registerName))
-    }, [registerName])
+        setSelected(value)
+    }, [value])
 
     const handleChange = (value: number) => {
         setSelected(value)
         setValue(registerName, value)
         useAppDispatch(setIsRatingsModified(true))
+        setSelected(getValues(registerName))
     }
 
     const colorGenerator = (index: number) => {

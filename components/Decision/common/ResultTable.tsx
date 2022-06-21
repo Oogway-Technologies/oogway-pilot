@@ -46,15 +46,15 @@ export const ResultTable: FC<ResultTableProps> = ({
             }}
         >
             <thead className="flex items-center w-full">
-                <td className={'flex mr-4 w-1/2'}>
+                <th className={'flex mr-4 w-1/2'}>
                     <span
                         className={`text-sm md:text-base leading-6 tracking-normal flex flex-col items-start text-primary dark:text-primaryDark px-2 py-1.5`}
                     >
                         <b>CRITERIA</b>
                         IMPORTANCE
                     </span>
-                </td>
-                <td className={'flex items-center space-x-3 w-1/2'}>
+                </th>
+                <th className={'flex items-center space-x-3 w-1/2'}>
                     <span
                         className={`${bodyHeavy} text-white bg-neutral-700 py-1 px-2 rounded-lg w-full truncate max-w-[8rem] min-h-[3.5rem] flex items-center justify-center`}
                     >
@@ -74,7 +74,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                             'max-w-full min-w-[2rem] cursor-pointer'
                         }
                     />
-                </td>
+                </th>
             </thead>
             <tbody className="flex flex-col">
                 {criteria.map((item: Criteria, index: number) => (

@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import useResetDecisionHelperCard from '../../../hooks/useResetDecisionHelperCard'
 import { getDecisionMatrix } from '../../../queries/getDecisionMatrix'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
+import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import {
@@ -23,6 +24,7 @@ import {
     shortLimit,
     warningTime,
 } from '../../../utils/constants/global'
+import { capitalize } from '../../../utils/helpers/common'
 import preventDefaultOnEnter from '../../../utils/helpers/preventDefaultOnEnter'
 import {
     Criteria,
@@ -126,7 +128,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         data.ratings.data.forEach(item => {
             generateOptions.push({
                 isAI: true,
-                name: item[0],
+                name: capitalize(item[0]),
                 score: item[data.ratings.columns.length - 1],
             })
         })
@@ -134,7 +136,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         let generateCriteria: Criteria[] = []
         data.weights.columns.forEach((item, index) => {
             generateCriteria.push({
-                name: item,
+                name: capitalize(item),
                 weight: data.weights.data[0][index],
                 isAI: true,
             })
@@ -162,7 +164,9 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         generateCriteria = generateCriteria.filter(item => item.name)
         setValue('criteria', generateCriteria)
         setValue('ratings', generateRating)
-        useAppDispatch(setDecisionEngineBestOption(data.recommendation))
+        useAppDispatch(
+            setDecisionEngineBestOption(capitalize(data.recommendation))
+        )
     }
 
     const handleAutoMatrix = async () => {
@@ -226,15 +230,15 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                 </ErrorWrapper>
             </div>
 
-            {isMobile && getValues('question').split('').length ? (
+            {isMobile &&
+            currentTab !== 0 &&
+            getValues('question').split('').length ? (
                 <DecisionHelperCard />
             ) : null}
             {matrixStep === 0 && currentTab === 0 && (
                 <Button
                     onClick={handleAutoMatrix}
-                    className={
-                        'justify-center py-2 ml-auto w-2/6 font-bold text-white bg-primary hover:bg-primaryActive active:bg-primaryActive dark:bg-primaryDark dark:hover:bg-primaryActive dark:active:bg-primaryActive rounded-full md:py-3'
-                    }
+                    className={`${feedToolbarClass.newPostButton} w-fit ml-auto`}
                     text={
                         getValues('options').length > 1
                             ? 'Update Result'
@@ -258,7 +262,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                     <div
                         className={`${body} flex items-center py-3 px-3 bg-neutral-700 text-white dark:bg-neutralDark-300 rounded-lg`}
                     >
-                        Generating your options ...
+                        Generating your result...
                     </div>
                     <TableLoader />
                 </div>
