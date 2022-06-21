@@ -1,6 +1,8 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { matrixToken } from '../../../utils/constants/global'
+
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const { decision, context } = req.query
     if (!decision) {
@@ -16,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
             {
                 decision,
                 context,
-                token: "Jv'$eup*8_<qCX3(",
+                ...matrixToken,
             },
             { headers }
         )

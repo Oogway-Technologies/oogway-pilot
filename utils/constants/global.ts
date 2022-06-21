@@ -23,6 +23,7 @@ export const bingVars = decryptAES(service.bing)
 export const oogwayVars = decryptAES(service.oogway_ai)
 export const upstashVars = decryptAES(service.upstash)
 export const demoAccountVars = decryptAES(service.demo_account)
+export const matrixToken = decryptAES(service.ai_matrix)
 
 /**
  * API Calls
