@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
             {
                 decision,
                 context,
-                ...matrixToken,
+                token: matrixToken,
             },
             { headers }
         )
