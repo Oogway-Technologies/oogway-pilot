@@ -7,7 +7,7 @@ import { bodyHeavy } from '../../../styles/typography'
 interface SideNavbarProps {
     className?: string
     selectedTab: number
-    setSelectedTab?: (n: number) => void
+    setSelectedTab: (n: number) => void
 }
 
 const Tabs = [
@@ -36,6 +36,7 @@ const Tabs = [
 export const SideNavbar: FC<SideNavbarProps> = ({
     className,
     selectedTab,
+    setSelectedTab,
 }: SideNavbarProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
@@ -49,12 +50,10 @@ export const SideNavbar: FC<SideNavbarProps> = ({
         >
             {Tabs.map((item, index) => (
                 <div
-                    // onClick={() => setSelectedTab(index)}
+                    onClick={() => setSelectedTab(index)}
                     className={`flex ${
-                        isMobile
-                            ? 'flex-col items-center space-x-3'
-                            : 'items-center '
-                    } pl-3 w-full h-12 cursor-pointer `}
+                        isMobile ? 'flex-col items-center' : 'items-center '
+                    } pl-3 w-full h-12 cursor-pointer`}
                     key={`auto-matrix-${index}`}
                 >
                     {item.icon(selectedTab, index)}

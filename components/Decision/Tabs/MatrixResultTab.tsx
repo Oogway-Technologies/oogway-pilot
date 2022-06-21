@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { FC } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 import { useAppSelector } from '../../../hooks/useRedux'
-// import { feedToolbarClass } from '../../../styles/feed'
+import { feedToolbarClass } from '../../../styles/feed'
 import { body } from '../../../styles/typography'
 import { ResultChart } from '../common/ResultChart'
 import { ResultTable } from '../common/ResultTable'
 
-const MatrixResultTab = () => {
+interface MatrixResultTabProps {
+    setMatrixStep: (n: number) => void
+    setCurrentTab: (n: number) => void
+}
+const MatrixResultTab: FC<MatrixResultTabProps> = ({
+    setMatrixStep,
+    setCurrentTab,
+}: MatrixResultTabProps) => {
+    const { reset } = useFormContext()
     const { decisionEngineBestOption, isThereATie } = useAppSelector(
         state => state.decisionSlice
     )
@@ -56,20 +65,23 @@ const MatrixResultTab = () => {
             </div>
             <ResultChart />
             <div className="flex items-center py-4 mx-auto space-x-4">
-                {/* <button
+                <button
                     onClick={() => {
-                        console.log('')
+                        reset()
+                        setMatrixStep(0)
                     }}
                     className={feedToolbarClass.newPostButton}
                 >
                     New Decision
-                </button> */}
-                {/* <button
-            className={feedToolbarClass.newPostButton}
-            onClick={() => console.log(getValues())}
-        >
-            Get Feedback
-        </button> */}
+                </button>
+                <button
+                    className={feedToolbarClass.newPostButton}
+                    onClick={() => {
+                        setCurrentTab(1)
+                    }}
+                >
+                    Customize Decision
+                </button>
             </div>
         </div>
     )

@@ -1,6 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilArrowDownRight } from '@iconscout/react-unicons'
-import React, { FC, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useQueryClient } from 'react-query'
 
@@ -39,12 +39,14 @@ import { ResultTable } from '../common/ResultTable'
 import { ScoreCard } from '../SideCards/ScoreCard'
 
 interface ResultTabProps {
-    setCurrentTab: React.Dispatch<React.SetStateAction<number>>
+    setCurrentTab: Dispatch<SetStateAction<number>>
+    setMatrixStep: Dispatch<SetStateAction<number>>
     deviceIp: string
 }
 
 export const ResultTab: FC<ResultTabProps> = ({
     setCurrentTab,
+    setMatrixStep,
     deviceIp,
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
@@ -176,7 +178,7 @@ export const ResultTab: FC<ResultTabProps> = ({
         // reset form state
         reset()
         // Return to first tab
-        setCurrentTab(1)
+        setCurrentTab(0)
         // Wipe previous decision question and id
         useAppDispatch(setDecisionQuestion(undefined))
         useAppDispatch(setDecisionActivityId(undefined))
@@ -186,6 +188,7 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setIsDecisionFormUpdating(false))
         useAppDispatch(setIsRatingsModified(false))
         useAppDispatch(setIsDecisionRehydrated(false))
+        setMatrixStep(0)
     }
     const calcScore = (index: number): number => {
         let sumWeights = 0

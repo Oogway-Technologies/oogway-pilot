@@ -328,7 +328,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             {selectedTab !== 0 ? (
                 <button
                     className={`${squareButton} ml-auto ${
-                        selectedTab === 1
+                        selectedTab === 0
                             ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
                             : 'border-primary focus:border-primary active:border-primary'
                     }`}

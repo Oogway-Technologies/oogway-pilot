@@ -90,7 +90,12 @@ const DecisionEngine: FC = () => {
                     />
                 )
             case 1:
-                return <MatrixResultTab />
+                return (
+                    <MatrixResultTab
+                        setMatrixStep={setMatrixStep}
+                        setCurrentTab={setCurrentTab}
+                    />
+                )
             default:
                 return <div />
         }
@@ -115,6 +120,7 @@ const DecisionEngine: FC = () => {
             case 5:
                 return (
                     <ResultTab
+                        setMatrixStep={setMatrixStep}
                         deviceIp={deviceIp || ''}
                         setCurrentTab={setCurrentTab}
                     />

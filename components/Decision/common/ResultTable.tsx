@@ -135,23 +135,23 @@ export const ResultTable: FC<ResultTableProps> = ({
         >
             <thead>
                 <tr>
-                    <th className={isMobile ? 'pr-2' : 'pr-4 w-0'}>
+                    <td className={isMobile ? 'pr-2' : 'pr-4 w-0'}>
                         <span
                             className={`${body} flex flex-col items-start text-primary dark:text-primaryDark px-2 py-1.5`}
                         >
                             <b>CRITERIA</b>
                             IMPORTANCE
                         </span>
-                    </th>
+                    </td>
                     {rating.map((item: Ratings, index: number) => (
-                        <th
+                        <td
                             key={`result-row-header-item-${index}`}
                             className={`${bodyHeavy} text-white bg-neutral-700 h-10 ${
                                 index === 0 ? 'rounded-l-lg' : ''
                             } last:rounded-r-lg truncate max-w-[5rem]`}
                         >
                             {item.option}
-                        </th>
+                        </td>
                     ))}
                 </tr>
             </thead>

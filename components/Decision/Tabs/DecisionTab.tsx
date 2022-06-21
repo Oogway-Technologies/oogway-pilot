@@ -122,54 +122,46 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     }, [isFetched, user])
 
     const convertDataFrameToObject = (data: MatrixObject) => {
-        const genrateOptions: Options[] = []
+        const generateOptions: Options[] = []
         data.ratings.data.forEach(item => {
-            genrateOptions.push({
+            generateOptions.push({
                 isAI: true,
                 name: item[0],
                 score: item[data.ratings.columns.length - 1],
             })
         })
 
-        let genrateCriteria: Criteria[] = []
+        let generateCriteria: Criteria[] = []
         data.weights.columns.forEach((item, index) => {
-            genrateCriteria.push({
+            generateCriteria.push({
                 name: item,
                 weight: data.weights.data[0][index],
                 isAI: true,
             })
         })
 
-        const genrateRating: Ratings[] = []
-        genrateOptions.forEach(({ name }, index) => {
+        const generateRating: Ratings[] = []
+        generateOptions.forEach(({ name }, index) => {
             const rating: Rating[] = []
 
             data.ratings.data[index].forEach((item, idx) => {
                 if (idx !== 0 && idx !== data.ratings.data[index].length - 1) {
-                    console.log(
-                        (idx &&
-                            genrateCriteria[idx] &&
-                            genrateCriteria[idx].name) ||
-                            'idk ',
-                        idx,
-                        genrateCriteria
-                    )
                     rating.push({
                         value: item,
-                        criteria: genrateCriteria[idx].name,
-                        weight: genrateCriteria[idx].weight,
+                        criteria: generateCriteria[idx].name,
+                        weight: generateCriteria[idx].weight,
                     })
                 }
             })
-            genrateRating.push({
+            generateRating.push({
                 option: name,
                 rating,
             })
         })
-        setValue('options', genrateOptions)
-        genrateCriteria = genrateCriteria.filter(item => item.name)
-        setValue('criteria', genrateCriteria)
-        setValue('ratings', genrateRating)
+        setValue('options', generateOptions)
+        generateCriteria = generateCriteria.filter(item => item.name)
+        setValue('criteria', generateCriteria)
+        setValue('ratings', generateRating)
         useAppDispatch(setDecisionEngineBestOption(data.recommendation))
     }
 
@@ -240,8 +232,14 @@ export const DecisionTab: FC<DecisionTabProps> = ({
             {matrixStep === 0 && currentTab === 0 && (
                 <Button
                     onClick={handleAutoMatrix}
-                    addStyle={`rounded-full w-2/6 justify-center py-2 md:py-3 text-white bg-primary dark:bg-primaryDark hover:bg-primaryActive active:bg-primaryActive dark:hover:bg-primaryActive dark:active:bg-primaryActive ml-auto`}
-                    text="Show Result"
+                    className={
+                        'justify-center py-2 ml-auto w-2/6 font-bold text-white bg-primary hover:bg-primaryActive active:bg-primaryActive dark:bg-primaryDark dark:hover:bg-primaryActive dark:active:bg-primaryActive rounded-full md:py-3'
+                    }
+                    text={
+                        getValues('options').length
+                            ? 'Update Result'
+                            : 'Show Result'
+                    }
                     keepText={true}
                     icon={null}
                     type="button"
@@ -258,7 +256,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                         Result
                     </h3>
                     <div
-                        className={`${body} flex items-center py-3 px-3 bg-neutral-700 text-white dark:bg-neutralDark-500 rounded-lg`}
+                        className={`${body} flex items-center py-3 px-3 bg-neutral-700 text-white dark:bg-neutralDark-300 rounded-lg`}
                     >
                         Generating your options ...
                     </div>
