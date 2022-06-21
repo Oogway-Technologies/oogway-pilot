@@ -236,7 +236,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                         'justify-center py-2 ml-auto w-2/6 font-bold text-white bg-primary hover:bg-primaryActive active:bg-primaryActive dark:bg-primaryDark dark:hover:bg-primaryActive dark:active:bg-primaryActive rounded-full md:py-3'
                     }
                     text={
-                        getValues('options').length
+                        getValues('options').length > 1
                             ? 'Update Result'
                             : 'Show Result'
                     }

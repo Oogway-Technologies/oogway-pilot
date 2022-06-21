@@ -1,5 +1,6 @@
 import { UilBalanceScale, UilTrophy } from '@iconscout/react-unicons'
 import React, { FC } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { bodyHeavy } from '../../../styles/typography'
@@ -39,6 +40,7 @@ export const SideNavbar: FC<SideNavbarProps> = ({
     setSelectedTab,
 }: SideNavbarProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const { getValues } = useFormContext()
 
     return (
         <div
@@ -50,10 +52,20 @@ export const SideNavbar: FC<SideNavbarProps> = ({
         >
             {Tabs.map((item, index) => (
                 <div
-                    onClick={() => setSelectedTab(index)}
+                    onClick={() => {
+                        if (getValues('options').length > 1) {
+                            setSelectedTab(index)
+                        }
+                    }}
                     className={`flex ${
                         isMobile ? 'flex-col items-center' : 'items-center '
-                    } pl-3 w-full h-12 cursor-pointer`}
+                    } pl-3 w-full h-12 ${
+                        index === 1 && getValues('options').length > 1
+                            ? 'cursor-pointer'
+                            : index === 0
+                            ? 'cursor-pointer'
+                            : ''
+                    } `}
                     key={`auto-matrix-${index}`}
                 >
                     {item.icon(selectedTab, index)}
