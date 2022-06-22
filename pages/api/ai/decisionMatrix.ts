@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { matrixToken } from '../../../utils/constants/global'
+import { aiMatrixURL, matrixToken } from '../../../utils/constants/global'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const { decision, context } = req.query
@@ -12,9 +12,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         const headers = {
             'Content-Type': 'application/json',
         }
-        const url = 'http://3.130.66.102:5001/api/v1/decision_table'
+
         const response = await axios.post(
-            url,
+            aiMatrixURL,
             {
                 decision,
                 context,

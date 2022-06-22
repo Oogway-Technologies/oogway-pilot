@@ -24,6 +24,7 @@ export const oogwayVars = decryptAES(service.oogway_ai)
 export const upstashVars = decryptAES(service.upstash)
 export const demoAccountVars = decryptAES(service.demo_account)
 export const matrixToken = decryptAES(service.oogway_ai).ai_matrix_token
+export const aiMatrixURL = decryptAES(service.oogway_ai).ai_matrix_url
 
 /**
  * API Calls
