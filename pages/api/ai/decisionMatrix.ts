@@ -4,9 +4,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { aiMatrixURL, matrixToken } from '../../../utils/constants/global'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-    const { decision, context } = req.query
-    if (!decision) {
-        return res.status(400).json({ err: 'Missing decision' })
+    const { question, context } = req.body
+    if (!question) {
+        return res.status(400).json({ err: 'Missing question' })
     }
     try {
         const headers = {
@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         const response = await axios.post(
             aiMatrixURL,
             {
-                decision,
+                decision: question,
                 context,
                 token: matrixToken,
             },
