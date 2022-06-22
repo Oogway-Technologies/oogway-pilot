@@ -115,6 +115,19 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         deepCopy({
                             ...formCopy,
                             question: getValues('question'),
+                        })
+                    )
+                )
+            }
+            if (formCopy.context !== getValues('context')) {
+                useAppDispatch(resetSuggestions())
+                if (!userExceedsMaxDecisions || user) {
+                    loadSuggestions()
+                }
+                useAppDispatch(
+                    updateFormCopy(
+                        deepCopy({
+                            ...formCopy,
                             context: getValues('context'),
                         })
                     )
