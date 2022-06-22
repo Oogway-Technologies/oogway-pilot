@@ -10,6 +10,7 @@ import {
     setDecisionCriteriaQueryKey,
     setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
+    setIsAllOptionsVisited,
     setIsSuggestionsEmpty,
     setIsThereATie,
     setLoadingAiSuggestions,
@@ -23,7 +24,12 @@ import {
     warningTime,
 } from '../../../utils/constants/global'
 import { deepCopy, fetcher, objectsEqual } from '../../../utils/helpers/common'
-import { AISuggestions, Criteria, Options } from '../../../utils/types/global'
+import {
+    AISuggestions,
+    Criteria,
+    Options,
+    Ratings,
+} from '../../../utils/types/global'
 
 interface DecisionBarHandlerProps {
     className?: string
@@ -54,10 +60,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     } = useAppSelector(state => state.decisionSlice)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const formCopy = useAppSelector(state => state.decisionSlice.formCopy)
-    const watchDecision = useWatch({ name: 'question', control })
-    const watchOption = useWatch({ name: 'options', control })
-    const watchCriteria = useWatch({ name: 'criteria', control })
+    const { formCopy, isAllOptionsVisited } = useAppSelector(
+        state => state.decisionSlice
+    )
+    const watchDecision: string = useWatch({ name: 'question', control })
+    const watchOption: Options[] = useWatch({ name: 'options', control })
+    const watchCriteria: Criteria[] = useWatch({ name: 'criteria', control })
+    const watchRating: Ratings[] = useWatch({ name: 'ratings', control })
     const [pointerArray, setPointerArray] = useState([
         false,
         false,
@@ -104,6 +113,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 return false
             }
             if (formCopy.question !== getValues('question')) {
+                useAppDispatch(setIsAllOptionsVisited(false))
                 resetField('options')
                 resetField('criteria')
                 useAppDispatch(resetSuggestions())
@@ -129,6 +139,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             }
             if (!objectsEqual(formCopy.options, getValues('options'))) {
                 useAppDispatch(setIsThereATie(false))
+                useAppDispatch(setIsAllOptionsVisited(false))
                 useAppDispatch(setDecisionEngineOptionTab(0))
                 const optionFilter = getValues('options').filter(
                     (item: Options) => {
@@ -164,6 +175,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             }
             if (!objectsEqual(formCopy.criteria, getValues('criteria'))) {
                 useAppDispatch(setIsThereATie(false))
+                useAppDispatch(setIsAllOptionsVisited(false))
                 useAppDispatch(setDecisionEngineOptionTab(0))
                 if (!decisionRatingUpdate) {
                     useAppDispatch(setDecisionRatingUpdate(true))
@@ -231,6 +243,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     const handleForward = async () => {
         const isValid = await validationHandler(selectedTab)
         if (selectedTab !== decisionSideBarOptions.length && isValid) {
+            if (selectedTab === 4) {
+                useAppDispatch(setIsAllOptionsVisited(true))
+            }
             setSelectedTab(selectedTab + 1)
         }
         useAppDispatch(setDecisionCriteriaQueryKey(undefined))
@@ -265,6 +280,17 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             }
         })
         return check
+    }
+
+    const validateRating = () => {
+        if (
+            watchRating.length === watchOption.length &&
+            watchRating[0].rating.length === watchCriteria.length &&
+            isAllOptionsVisited
+        ) {
+            return true
+        }
+        return false
     }
 
     const handleBackwards = () => {
@@ -312,7 +338,12 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     }
 
     useEffect(() => {
-        if (validateDecision() && validateOption() && validateCriteria()) {
+        if (
+            validateDecision() &&
+            validateOption() &&
+            validateCriteria() &&
+            validateRating()
+        ) {
             setPointerArray([true, true, true, true, true])
         } else {
             setPointerArray([

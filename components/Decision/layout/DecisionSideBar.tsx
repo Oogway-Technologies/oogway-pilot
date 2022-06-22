@@ -6,7 +6,12 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
 import { decisionSideBarOptions } from '../../../utils/constants/global'
-import { Criteria, Options, TabItem } from '../../../utils/types/global'
+import {
+    Criteria,
+    Options,
+    Ratings,
+    TabItem,
+} from '../../../utils/types/global'
 
 interface DecisionSideBarProps {
     className?: string
@@ -21,8 +26,8 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
 }: DecisionSideBarProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
-    const previousIndex = useAppSelector(
-        state => state.decisionSlice.previousIndex
+    const { previousIndex, isAllOptionsVisited } = useAppSelector(
+        state => state.decisionSlice
     )
     const [pointerArray, setPointerArray] = useState([
         false,
@@ -33,9 +38,10 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     ])
 
     const { control } = useFormContext()
-    const watchDecision = useWatch({ name: 'question', control })
-    const watchOption = useWatch({ name: 'options', control })
-    const watchCriteria = useWatch({ name: 'criteria', control })
+    const watchDecision: string = useWatch({ name: 'question', control })
+    const watchOption: Options[] = useWatch({ name: 'options', control })
+    const watchCriteria: Criteria[] = useWatch({ name: 'criteria', control })
+    const watchRating: Ratings[] = useWatch({ name: 'ratings', control })
 
     const validateDecision = () => {
         if (watchOption) {
@@ -64,21 +70,37 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         return check
     }
 
+    const validateRating = () => {
+        if (
+            watchRating.length === watchOption.length &&
+            watchRating[0].rating.length === watchCriteria.length &&
+            isAllOptionsVisited
+        ) {
+            return true
+        }
+        return false
+    }
+
     useEffect(() => {
-        if (validateDecision() && validateOption() && validateCriteria()) {
+        if (
+            validateDecision() &&
+            validateOption() &&
+            validateCriteria() &&
+            validateRating()
+        ) {
             setPointerArray([true, true, true, true, true])
         } else {
             const newArray = [
                 validateDecision(),
                 validateOption(),
                 validateCriteria(),
-                false,
+                validateRating(),
                 false,
             ]
             newArray[previousIndex - 1] = true
             setPointerArray(newArray)
         }
-    }, [watchDecision, watchOption, watchCriteria])
+    }, [watchRating, watchOption, watchCriteria, watchDecision])
 
     return (
         <div

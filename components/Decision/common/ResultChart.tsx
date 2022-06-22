@@ -69,21 +69,23 @@ export const ResultChart = () => {
     })
 
     useEffect(() => {
-        setData({
-            labels: optionList?.map((item: Options) =>
-                item.name.split('').length > 12
-                    ? `${item.name.substring(0, 12)}...`
-                    : item.name
-            ),
-            datasets: [
-                {
-                    label: 'Option',
-                    data: optionList?.map((item: Options) => item.score),
-                    backgroundColor: '#C194FF',
-                    maxBarThickness: 100,
-                },
-            ],
-        })
+        if (optionList.length) {
+            setData({
+                labels: optionList?.map((item: Options) =>
+                    item.name.split('').length > 12
+                        ? `${item.name.substring(0, 12)}...`
+                        : item.name
+                ),
+                datasets: [
+                    {
+                        label: 'Option',
+                        data: optionList?.map((item: Options) => item.score),
+                        backgroundColor: '#C194FF',
+                        maxBarThickness: 100,
+                    },
+                ],
+            })
+        }
     }, [optionList])
 
     return (

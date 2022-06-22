@@ -37,12 +37,19 @@ const initialState: DecisionSliceStates = {
     isDecisionRehydrated: false,
     isRatingsModified: false,
     isThereATie: false,
+    isAllOptionsVisited: false,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setIsAllOptionsVisited: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.isAllOptionsVisited = payload
+        },
         setIsThereATie: (state, { payload }: PayloadAction<boolean>) => {
             state.isThereATie = payload
         },
@@ -273,6 +280,7 @@ export const {
     setIsDecisionRehydrated,
     setIsRatingsModified,
     setIsThereATie,
+    setIsAllOptionsVisited,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer
