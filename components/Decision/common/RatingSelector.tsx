@@ -34,7 +34,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { getValues, setValue } = useFormContext()
     const { user } = useUser()
-    const { decisionCriteriaQueryKey } = useAppSelector(
+    const { decisionCriteriaQueryKey, isQuestionSafeForAI } = useAppSelector(
         state => state.decisionSlice
     )
 
@@ -82,7 +82,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                 >
                     {title}{' '}
                 </span>
-                {user && (
+                {user && isQuestionSafeForAI && (
                     <AskAIButton
                         className="justify-self-end ml-auto"
                         onClick={() =>

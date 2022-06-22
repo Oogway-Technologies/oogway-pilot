@@ -58,4 +58,5 @@ export interface DecisionSliceStates {
     isRatingsModified: boolean
     isThereATie: boolean
     isQuestionSafeForAI: boolean
+    userIgnoredUnsafeWarning: boolean
 }

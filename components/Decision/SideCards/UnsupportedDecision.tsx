@@ -1,18 +1,32 @@
 import React, { FC } from 'react'
+import { useFormContext } from 'react-hook-form'
 
+import {
+    setIsQuestionSafeForAI,
+    setUserIgnoredUnsafeWarning,
+} from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import { bodyHeavy, bodySmall } from '../../../styles/typography'
 import Button from '../../Utils/Button'
 import AISidebar from '../common/AISidebar'
 
 type UnsupportedDecisionProps = {
-    handleReconsider: () => void
+    setCurrentTab: (n: number) => void
 }
 
 const UnsupportedDecision: FC<UnsupportedDecisionProps> = ({
-    handleReconsider,
+    setCurrentTab,
 }) => {
+    const { reset } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
+
+    const handleReconsider = () => {
+        reset() // reset form state
+        useAppDispatch(setIsQuestionSafeForAI(true))
+        useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        setCurrentTab(1)
+    }
 
     return (
         <AISidebar

@@ -38,6 +38,7 @@ const initialState: DecisionSliceStates = {
     isRatingsModified: false,
     isThereATie: false,
     isQuestionSafeForAI: true,
+    userIgnoredUnsafeWarning: false,
 }
 
 export const decisionSlice = createSlice({
@@ -249,6 +250,12 @@ export const decisionSlice = createSlice({
         ) => {
             state.isQuestionSafeForAI = payload
         },
+        setUserIgnoredUnsafeWarning: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.userIgnoredUnsafeWarning = payload
+        },
     },
 })
 
@@ -281,6 +288,7 @@ export const {
     setIsRatingsModified,
     setIsThereATie,
     setIsQuestionSafeForAI,
+    setUserIgnoredUnsafeWarning,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

@@ -17,6 +17,7 @@ import {
     setIsThereATie,
     setPreviousIndex,
     setSideCardStep,
+    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -191,6 +192,7 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setIsRatingsModified(false))
         useAppDispatch(setIsDecisionRehydrated(false))
         useAppDispatch(setIsQuestionSafeForAI(true))
+        useAppDispatch(setUserIgnoredUnsafeWarning(false))
         setMatrixStep(0)
     }
 

@@ -24,10 +24,9 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
-import { setIsQuestionSafeForAI } from '../features/decision/decisionSlice'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
+import { useAppSelector } from '../hooks/useRedux'
 import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
@@ -38,18 +37,17 @@ const DecisionEngine: FC = () => {
         decisionCriteriaQueryKey,
         userExceedsMaxDecisions,
         decisionEngineOptionTab,
+        userIgnoredUnsafeWarning,
     } = useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(0)
     const [matrixStep, setMatrixStep] = useState(0)
-    const [userIgnoredUnsafeWarning, setUserIgnoredUnsafeWarning] =
-        useState(false)
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
 
     // Instantiate form
     const methods = useInstantiateDecisionForm({ currentTab, setCurrentTab })
-    const { control, getValues, setValue, reset } = methods
+    const { control, getValues, setValue } = methods
     const watchQuestion = useWatch({ name: 'question', control })
     const optionList = getValues('options')
     const criteriaList = getValues('criteria')
@@ -81,15 +79,6 @@ const DecisionEngine: FC = () => {
     }, [currentTab])
 
     useSaveDecisionFormState()
-
-    // TODO: change UserIgnoredUnsafeWarning to global state and move into
-    // UnsupportedDecision warning
-    const handleReconsider = () => {
-        reset() // reset form state
-        useAppDispatch(setIsQuestionSafeForAI(true))
-        setUserIgnoredUnsafeWarning(false)
-        setCurrentTab(1)
-    }
 
     const matrixGenerator = () => {
         switch (matrixStep) {
@@ -126,15 +115,7 @@ const DecisionEngine: FC = () => {
                     />
                 )
             case 2:
-                return (
-                    <OptionTab
-                        setUserIgnoredUnsafeWarning={
-                            setUserIgnoredUnsafeWarning
-                        }
-                        userIgnoredUnsafeWarning={userIgnoredUnsafeWarning}
-                        handleReconsider={handleReconsider}
-                    />
-                )
+                return <OptionTab setCurrentTab={setCurrentTab} />
             case 3:
                 return <CriteriaTab />
             case 4:
@@ -290,7 +271,7 @@ const DecisionEngine: FC = () => {
                             {currentTab === 5 ? <ScoreCard /> : null}
                             {userIgnoredUnsafeWarning && (
                                 <UnsupportedDecision
-                                    handleReconsider={handleReconsider}
+                                    setCurrentTab={setCurrentTab}
                                 />
                             )}
                             <GenericSidebar

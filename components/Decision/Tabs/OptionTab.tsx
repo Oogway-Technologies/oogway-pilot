@@ -12,7 +12,9 @@ import {
     setDecisionActivityId,
     setDecisionQuestion,
     setIsDecisionFormUpdating,
+    setIsQuestionSafeForAI,
     setPreviousIndex,
+    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -36,16 +38,10 @@ import { SignInCard } from '../SideCards/SignInCard'
 import UnsupportedDecision from '../SideCards/UnsupportedDecision'
 
 interface OptionTabProps {
-    setUserIgnoredUnsafeWarning: React.Dispatch<React.SetStateAction<boolean>>
-    userIgnoredUnsafeWarning: boolean
-    handleReconsider: () => void
+    setCurrentTab: (n: number) => void
 }
 
-export const OptionTab: FC<OptionTabProps> = ({
-    setUserIgnoredUnsafeWarning,
-    userIgnoredUnsafeWarning,
-    handleReconsider,
-}) => {
+export const OptionTab: FC<OptionTabProps> = ({ setCurrentTab }) => {
     const {
         register,
         control,
@@ -54,6 +50,7 @@ export const OptionTab: FC<OptionTabProps> = ({
         formState: { errors },
         watch,
         setFocus,
+        reset,
     } = useFormContext()
 
     const {
@@ -63,6 +60,7 @@ export const OptionTab: FC<OptionTabProps> = ({
         userExceedsMaxDecisions,
         isDecisionFormUpdating,
         isQuestionSafeForAI,
+        userIgnoredUnsafeWarning,
     } = useAppSelector(state => state.decisionSlice)
 
     const { fields, remove } = useFieldArray({
@@ -119,6 +117,8 @@ export const OptionTab: FC<OptionTabProps> = ({
             )
             let formState: FirebaseDecisionActivity = {
                 id: decisionActivityId,
+                isQuestionSafeForAI: isQuestionSafeForAI,
+                userIgnoredUnsafeWarning: userIgnoredUnsafeWarning,
                 currentTab: 2,
             }
             if (filteredOptions.length)
@@ -129,7 +129,12 @@ export const OptionTab: FC<OptionTabProps> = ({
             useAppDispatch(updateDecisionFormState(formState))
             useAppDispatch(setIsDecisionFormUpdating(false))
         }
-    }, [watchOptions, decisionActivityId])
+    }, [
+        watchOptions,
+        decisionActivityId,
+        isQuestionSafeForAI,
+        userIgnoredUnsafeWarning,
+    ])
 
     useEffect(() => {
         // handle focus on enter
@@ -164,8 +169,14 @@ export const OptionTab: FC<OptionTabProps> = ({
 
     const handleWarningClose = () => {
         setIsAIWarningModalOpen(false)
-        setUserIgnoredUnsafeWarning(true)
-        console.log('set user ignored to true.')
+        useAppDispatch(setUserIgnoredUnsafeWarning(true))
+    }
+
+    const handleReconsider = () => {
+        reset() // reset form state
+        useAppDispatch(setIsQuestionSafeForAI(true))
+        useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        setCurrentTab(1)
     }
 
     return (
@@ -188,7 +199,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                         <SignInCard currentTab={2} />
                     )
                 ) : userIgnoredUnsafeWarning ? (
-                    <UnsupportedDecision handleReconsider={handleReconsider} />
+                    <UnsupportedDecision setCurrentTab={setCurrentTab} />
                 ) : (
                     <OptionSuggestions />
                 )
@@ -374,7 +385,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                         <Button
                             keepText
                             text="Reconsider"
-                            className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-primary bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
                             onClick={handleReconsider}
                         />
                     </div>
