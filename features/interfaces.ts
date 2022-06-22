@@ -59,4 +59,5 @@ export interface DecisionSliceStates {
     isThereATie: boolean
     isQuestionSafeForAI: boolean
     userIgnoredUnsafeWarning: boolean
+    decisionMatrixHasResults: boolean
 }

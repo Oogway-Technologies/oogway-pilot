@@ -1,10 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
     setDecisionEngineBestOption,
     setDecisionFormState,
+    setDecisionMatrixHasResults,
     setIsDecisionFormUpdating,
     setPreviousIndex,
     setUserExceedsMaxDecisions,
@@ -13,7 +14,7 @@ import {
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import useResetDecisionHelperCard from '../../../hooks/useResetDecisionHelperCard'
-import { getDecisionMatrix } from '../../../queries/getDecisionMatrix'
+import { useCreateDecisionMatrix } from '../../../queries/decisionMatrix'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
@@ -60,7 +61,6 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         control,
         formState: { errors },
     } = useFormContext()
-    const [isLoading, setLoading] = useState(false)
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
     const question: string = useWatch({ name: 'question', control })
@@ -69,6 +69,9 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     const clickedConnect = useAppSelector(
         state => state.decisionSlice.clickedConnect
     )
+
+    // Decision Matrixx creation mutator
+    const decisionMatrix = useCreateDecisionMatrix()
 
     // Reset decision helper card when question is changed
     useResetDecisionHelperCard(control)
@@ -107,7 +110,8 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     }, [])
 
     // Track number of decisions made by unauthenticated users
-    const { data, isFetched } = useUnauthenticatedDecisionQuery(deviceIp)
+    const { data: unauthenticatedDecisionData, isFetched } =
+        useUnauthenticatedDecisionQuery(deviceIp)
     useEffect(() => {
         // Await the query to be fetched
         // If the user is unauthenticated, query the database for their
@@ -115,7 +119,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         // turn off AI.
         if (isFetched && !user) {
             if (
-                data?.results?.decisions.length >=
+                unauthenticatedDecisionData?.results?.decisions.length >=
                 maxAllowedUnauthenticatedDecisions
             ) {
                 useAppDispatch(setUserExceedsMaxDecisions(true))
@@ -174,19 +178,24 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         if (errors?.['question']?.message || errors?.['context']?.message) {
             setTimeout(() => clearErrors(['question', 'context']), warningTime)
         } else {
-            setLoading(true)
-            try {
-                const { data } = (await getDecisionMatrix({
-                    decision: question,
+            // Call decision matrix
+            decisionMatrix.mutate(
+                {
+                    question,
                     context,
-                })) as { data: MatrixObject }
-                convertDataFrameToObject(data)
-
-                setMatrixStep(matrixStep + 1)
-            } catch (error) {
-                console.log(error)
-            }
-            setLoading(false)
+                },
+                {
+                    onSuccess: data => {
+                        convertDataFrameToObject(data.data as MatrixObject)
+                        useAppDispatch(setDecisionMatrixHasResults(true))
+                    },
+                    onError: error => {
+                        console.log(error)
+                        useAppDispatch(setDecisionMatrixHasResults(false))
+                    },
+                    onSettled: () => setMatrixStep(matrixStep + 1),
+                }
+            )
         }
     }
 
@@ -252,7 +261,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                     type="button"
                 />
             )}
-            {isLoading && (
+            {decisionMatrix.isLoading && (
                 <div className="flex flex-col space-y-5">
                     <h3
                         className={`${
