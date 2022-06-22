@@ -217,12 +217,12 @@ export const ResultTab: FC<ResultTabProps> = ({
                         <span
                             className={`text-xl font-bold tracking-normal leading-10 text-center text-neutral-800 dark:text-white`}
                         >
-                            It’s a tie!
+                            It’s a tie so we picked one for you
                         </span>
                         <span
                             className={`${body} text-neutral-700 dark:text-neutralDark-150`}
                         >
-                            We’ve randomly picked{' '}
+                            Your best option is
                             <b className="text-primary dark:text-primaryDark">
                                 {decisionEngineBestOption}
                             </b>
