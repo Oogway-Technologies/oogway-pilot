@@ -123,6 +123,25 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         }
     }, [isFetched, user])
 
+    const calcScore = (index: number): number => {
+        let sumWeights = 0
+        let sumWeightedScore = 0
+        // Calculate denominator
+        const criteriaList = getValues('criteria')
+        for (const criteria of criteriaList) {
+            sumWeights += criteria.weight
+        }
+
+        const ratingList = getValues(`ratings.${index}.rating`)
+        // Calculate numerator
+        if (ratingList) {
+            for (const rating of ratingList) {
+                sumWeightedScore += rating.value * rating.weight
+            }
+        }
+        return parseFloat((sumWeightedScore / sumWeights).toFixed(1))
+    }
+
     const convertDataFrameToObject = (data: MatrixObject) => {
         const generateOptions: Options[] = []
         data.ratings.data.forEach(item => {
@@ -167,6 +186,10 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         useAppDispatch(
             setDecisionEngineBestOption(capitalize(data.recommendation))
         )
+
+        generateOptions.forEach((_: Options, index: number) => {
+            setValue(`options.${index}.score`, calcScore(index))
+        })
     }
 
     const handleAutoMatrix = async () => {
