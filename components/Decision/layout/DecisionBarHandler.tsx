@@ -76,7 +76,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         const data: AISuggestions = await fetcher(
             `/api/getAISuggestions?question=${question}&context=${context}`
         )
-        useAppDispatch(populateSuggestions(data))
+        useAppDispatch(
+            populateSuggestions({
+                data,
+                optionsList: watchOption,
+                criteriaList: watchCriteria,
+            })
+        )
         useAppDispatch(setLoadingAiSuggestions(false))
         if (
             !data.options.length &&
@@ -97,10 +103,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 )
                 return false
             }
-            if (
-                formCopy.question !== getValues('question') ||
-                formCopy.context !== getValues('context')
-            ) {
+            if (formCopy.question !== getValues('question')) {
                 resetField('options')
                 resetField('criteria')
                 useAppDispatch(resetSuggestions())
@@ -120,7 +123,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
         if (tab === 2) {
             await trigger(['options'])
-            console.log(errors)
             if (errors?.options && errors?.options.length) {
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false
@@ -291,7 +293,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 }
             }
         } else {
-            if (isMobile && selectedTab !== 1) {
+            if (isMobile && selectedTab !== 0) {
                 setSelectedTab(selectedTab - 1)
             }
         }
@@ -302,7 +304,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 useAppDispatch(
                     setDecisionEngineOptionTab(decisionEngineOptionTab - 1)
                 )
-            } else if (selectedTab !== 1) {
+            } else if (selectedTab !== 0) {
                 setSelectedTab(selectedTab - 1)
             }
         }
@@ -329,10 +331,10 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 className ? className : ''
             }`}
         >
-            {selectedTab !== 1 ? (
+            {selectedTab !== 0 ? (
                 <button
                     className={`${squareButton} ml-auto ${
-                        selectedTab === 1
+                        selectedTab === 0
                             ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
                             : 'border-primary focus:border-primary active:border-primary'
                     }`}

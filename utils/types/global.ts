@@ -96,16 +96,6 @@ export interface Ratings {
     rating: Rating[]
 }
 
-export interface Options {
-    name: string
-    isAI: boolean
-}
-export interface Criteria {
-    name: string
-    weight: number
-    isAI: boolean
-}
-
 export interface TabItem {
     title: string
     tab: number
@@ -115,4 +105,18 @@ export type Tab = { name: string; weight: number }
 export interface IV {
     index: number
     value: string
+}
+
+export interface MatrixRating {
+    columns: string[]
+    index: number[]
+    data: any[][]
+}
+
+export interface MatrixObject {
+    decision: string
+    context: string
+    recommendation: string
+    ratings: MatrixRating
+    weights: MatrixRating
 }

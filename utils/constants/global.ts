@@ -23,6 +23,8 @@ export const bingVars = decryptAES(service.bing)
 export const oogwayVars = decryptAES(service.oogway_ai)
 export const upstashVars = decryptAES(service.upstash)
 export const demoAccountVars = decryptAES(service.demo_account)
+export const matrixToken = decryptAES(service.oogway_ai).ai_matrix_token
+export const aiMatrixURL = decryptAES(service.oogway_ai).ai_matrix_url
 
 /**
  * API Calls
@@ -30,7 +32,7 @@ export const demoAccountVars = decryptAES(service.demo_account)
 export const oogwayDecisionFTVersion = 'v1'
 export const bingTopN = 5 // number of results to display from bing API in Oogway Bot comments
 export const decisionTitle = [
-    '',
+    'Your decision/Your result',
     'Your decision',
     'Your options',
     'Your criteria',
@@ -58,8 +60,8 @@ export const decisionSideBarOptions: TabItem[] = [
 ]
 
 export const criteriaTabs: Tab[] = [
-    { name: 'Not much', weight: 1 },
-    { name: 'Somewhat', weight: 2 },
-    { name: 'Fairly', weight: 3 },
-    { name: 'Super', weight: 4 },
+    { name: 'Somewhat', weight: 1 },
+    { name: 'Moderately', weight: 2 },
+    { name: 'Super', weight: 3 },
+    { name: 'Super duper', weight: 4 },
 ]

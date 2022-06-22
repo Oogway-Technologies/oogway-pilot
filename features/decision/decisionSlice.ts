@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { capitalize } from '../../utils/helpers/common'
 import { FirebaseDecisionActivity } from '../../utils/types/firebase'
-import { AISuggestions } from '../../utils/types/global'
+import { AISuggestions, Criteria, Options } from '../../utils/types/global'
 import { DecisionSliceStates, FormCopy } from '../interfaces'
 
 const initialState: DecisionSliceStates = {
@@ -124,27 +124,48 @@ export const decisionSlice = createSlice({
         },
         populateSuggestions: (
             state,
-            { payload }: PayloadAction<AISuggestions>
+            {
+                payload: { data, optionsList, criteriaList },
+            }: PayloadAction<{
+                data: AISuggestions
+                optionsList: Options[]
+                criteriaList: Criteria[]
+            }>
         ) => {
-            const options = payload.options?.map(item => {
+            const options = data.options?.map(item => {
                 return { name: capitalize(item), isAI: true }
             })
-            state.suggestions.optionsList = options
             state.suggestions.copyOptionsList = options
-            const commonCriteria = payload.common_criteria?.map(item => {
+            if (optionsList.length > 1) {
+                optionsList.forEach(firstObj => {
+                    options.forEach((compareObj, i) => {
+                        if (firstObj.name === compareObj.name) {
+                            options.splice(i, 1)
+                        }
+                    })
+                })
+            }
+            state.suggestions.optionsList = options
+
+            const commonCriteria = data.common_criteria?.map(item => {
                 return { name: capitalize(item), weight: 2, isAI: true }
             })
-            const contextCriteria = payload.context_criteria.map(item => {
+            const contextCriteria = data.context_criteria.map(item => {
                 return { name: capitalize(item), weight: 3, isAI: true }
             })
-            state.suggestions.criteriaList = [
-                ...commonCriteria,
-                ...contextCriteria,
-            ]
-            state.suggestions.copyCriteriaList = [
-                ...commonCriteria,
-                ...contextCriteria,
-            ]
+            const aiCriteria = [...commonCriteria, ...contextCriteria]
+            state.suggestions.copyCriteriaList = aiCriteria
+
+            if (criteriaList.length > 1) {
+                criteriaList.forEach(firstObj => {
+                    aiCriteria.forEach((compareObj, i) => {
+                        if (firstObj.name === compareObj.name) {
+                            aiCriteria.splice(i, 1)
+                        }
+                    })
+                })
+            }
+            state.suggestions.criteriaList = aiCriteria
         },
         setDecisionEngineOptionTab: (
             state,

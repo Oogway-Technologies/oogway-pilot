@@ -170,7 +170,7 @@ export const OptionTab: FC = () => {
                         className="flex flex-col py-5 px-4 mt-4"
                     >
                         <ErrorWrapperField
-                            className="flex items-center"
+                            className="flex flex-col "
                             errorField={
                                 errors?.options &&
                                 errors?.options[index]?.name?.message
@@ -178,65 +178,72 @@ export const OptionTab: FC = () => {
                                     : ''
                             }
                         >
-                            <input
-                                className={inputStyle}
-                                type="text"
-                                placeholder={'Enter your Option'}
-                                onKeyDown={event => {
-                                    if (
-                                        event.key === 'Enter' &&
-                                        event.currentTarget.value
-                                    ) {
-                                        setValue(
-                                            'options',
-                                            insertAtArray(watchOptions, 1, {
-                                                name: event.currentTarget.value,
-                                                isAI: false,
-                                            })
-                                        )
-                                        setValue(`options.[0].name`, '')
+                            <div className="flex items-center w-full">
+                                <input
+                                    className={inputStyle}
+                                    type="text"
+                                    placeholder={'Enter your Option'}
+                                    onKeyDown={event => {
+                                        if (
+                                            event.key === 'Enter' &&
+                                            event.currentTarget.value
+                                        ) {
+                                            setValue(
+                                                'options',
+                                                insertAtArray(watchOptions, 1, {
+                                                    name: event.currentTarget
+                                                        .value,
+                                                    isAI: false,
+                                                })
+                                            )
+                                            setValue(`options.[0].name`, '')
+                                        }
+                                    }}
+                                    disabled={
+                                        watchOptions.length < 6 ? false : true
                                     }
-                                }}
-                                disabled={
-                                    watchOptions.length < 6 ? false : true
-                                }
-                                {...register(`options.${index}.name` as const, {
-                                    required: {
-                                        value:
-                                            watchOptions.length >= 3
-                                                ? false
-                                                : true,
-                                        message:
-                                            'You must enter the required Option.',
-                                    },
-                                    maxLength: {
-                                        value: shortLimit,
-                                        message: `Option length should be less than ${shortLimit}`,
-                                    },
-                                })}
-                            />
-                            <button
-                                disabled={
-                                    watchOptions.length < 6 ? false : true
-                                }
-                                type="button"
-                                onClick={() => {
-                                    const value = getValues('options.[0].name')
-                                    if (value) {
-                                        setValue(
-                                            'options',
-                                            insertAtArray(watchOptions, 1, {
-                                                name: value,
-                                                isAI: false,
-                                            })
-                                        )
-                                        setValue(`options.[0].name`, '')
+                                    {...register(
+                                        `options.${index}.name` as const,
+                                        {
+                                            required: {
+                                                value:
+                                                    watchOptions.length >= 3
+                                                        ? false
+                                                        : true,
+                                                message:
+                                                    'You must enter the required Option.',
+                                            },
+                                            maxLength: {
+                                                value: shortLimit,
+                                                message: `Option length should be less than ${shortLimit}`,
+                                            },
+                                        }
+                                    )}
+                                />
+                                <button
+                                    disabled={
+                                        watchOptions.length < 6 ? false : true
                                     }
-                                }}
-                                className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
-                            >
-                                <UilPlus className={'fill-white'} />
-                            </button>
+                                    type="button"
+                                    onClick={() => {
+                                        const value =
+                                            getValues('options.[0].name')
+                                        if (value) {
+                                            setValue(
+                                                'options',
+                                                insertAtArray(watchOptions, 1, {
+                                                    name: value,
+                                                    isAI: false,
+                                                })
+                                            )
+                                            setValue(`options.[0].name`, '')
+                                        }
+                                    }}
+                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                                >
+                                    <UilPlus className={'fill-white'} />
+                                </button>
+                            </div>
                         </ErrorWrapperField>
                     </BaseCard>
                 ) : (
