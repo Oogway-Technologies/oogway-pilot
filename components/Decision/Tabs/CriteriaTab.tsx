@@ -378,7 +378,7 @@ export const CriteriaTab: FC = () => {
                         </span>
                     </div>
                     <input
-                        className={inputStyle}
+                        className={`${inputStyle} disabled:border-none disabled:font-bold disabled:p-0`}
                         type="text"
                         placeholder={'Enter your Criterion'}
                         value={selectedItem?.name}

@@ -268,7 +268,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                         getValues('options').length > 1 ? 'update' : 'show'
                     }Result`}
                     onClick={handleAutoMatrix}
-                    className={`${feedToolbarClass.newPostButton} w-fit ml-auto`}
+                    className={`${feedToolbarClass.newPostButton} w-fit ml-auto disabled:bg-primary/80`}
                     text={
                         getValues('options').length > 1
                             ? 'Update Result'
@@ -277,6 +277,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                     keepText={true}
                     icon={null}
                     type="button"
+                    disabled={isLoading}
                 />
             )}
             {decisionMatrix.isLoading && (
