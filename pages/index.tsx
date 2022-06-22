@@ -16,6 +16,7 @@ import { DecisionHelperCard } from '../components/Decision/SideCards/DecisionHel
 import { OptionSuggestions } from '../components/Decision/SideCards/OptionSuggestions'
 import { ScoreCard } from '../components/Decision/SideCards/ScoreCard'
 import { SignInCard } from '../components/Decision/SideCards/SignInCard'
+import UnsupportedDecision from '../components/Decision/SideCards/UnsupportedDecision'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
 import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
 import MatrixResultTab from '../components/Decision/Tabs/MatrixResultTab'
@@ -36,6 +37,7 @@ const DecisionEngine: FC = () => {
         decisionCriteriaQueryKey,
         userExceedsMaxDecisions,
         decisionEngineOptionTab,
+        userIgnoredUnsafeWarning,
     } = useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(0)
     const [matrixStep, setMatrixStep] = useState(0)
@@ -100,6 +102,7 @@ const DecisionEngine: FC = () => {
                 return <div />
         }
     }
+
     const tabGenerator = () => {
         switch (currentTab) {
             case 1:
@@ -112,7 +115,7 @@ const DecisionEngine: FC = () => {
                     />
                 )
             case 2:
-                return <OptionTab />
+                return <OptionTab setCurrentTab={setCurrentTab} />
             case 3:
                 return <CriteriaTab />
             case 4:
@@ -137,7 +140,6 @@ const DecisionEngine: FC = () => {
             </Head>
             <FormProvider {...methods}>
                 <form
-                    // onSubmit={methods.handleSubmit(onSubmit)}
                     className={`${decisionContainer} ${
                         isMobile ? `mx-4` : 'my-xl mx-xxl gap-4 h-[78vh]'
                     }`}
@@ -216,12 +218,38 @@ const DecisionEngine: FC = () => {
                         </div>
                     </div>
                     {!isMobile && (
-                        <div className={'col-span-1'}>
+                        <div
+                            className={
+                                'overflow-y-auto col-span-1 ' +
+                                'scrollbar scrollbar-sm scrollbar-rounded scrollbar-thumb-tertiary ' +
+                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300'
+                            }
+                        >
                             {!user ? (
                                 !userExceedsMaxDecisions &&
+                                !userIgnoredUnsafeWarning &&
                                 (currentTab === 2 ||
                                     currentTab === 3 ||
                                     currentTab === 4) ? (
+                                    <>
+                                        {currentTab === 2 &&
+                                            !userIgnoredUnsafeWarning && (
+                                                <OptionSuggestions />
+                                            )}
+                                        {currentTab === 3 &&
+                                            !userIgnoredUnsafeWarning && (
+                                                <CriteriaSuggestions />
+                                            )}
+                                        {currentTab === 4 &&
+                                            decisionCriteriaQueryKey && (
+                                                <CriteriaInfo />
+                                            )}
+                                    </>
+                                ) : (
+                                    <SignInCard currentTab={currentTab} />
+                                )
+                            ) : (
+                                !userIgnoredUnsafeWarning && (
                                     <>
                                         {currentTab === 2 && (
                                             <OptionSuggestions />
@@ -234,26 +262,18 @@ const DecisionEngine: FC = () => {
                                                 <CriteriaInfo />
                                             )}
                                     </>
-                                ) : (
-                                    <SignInCard currentTab={currentTab} />
                                 )
-                            ) : (
-                                <>
-                                    {currentTab === 2 && <OptionSuggestions />}
-                                    {currentTab === 3 && (
-                                        <CriteriaSuggestions />
-                                    )}
-                                    {currentTab === 4 &&
-                                        decisionCriteriaQueryKey && (
-                                            <CriteriaInfo />
-                                        )}
-                                </>
                             )}
                             {currentTab === 1 &&
                             watchQuestion.split('').length ? (
                                 <DecisionHelperCard />
                             ) : null}
                             {currentTab === 5 ? <ScoreCard /> : null}
+                            {userIgnoredUnsafeWarning && (
+                                <UnsupportedDecision
+                                    setCurrentTab={setCurrentTab}
+                                />
+                            )}
                             <GenericSidebar
                                 title="Disclaimer"
                                 titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"

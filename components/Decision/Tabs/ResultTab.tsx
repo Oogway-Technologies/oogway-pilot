@@ -12,10 +12,12 @@ import {
     setDecisionQuestion,
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
+    setIsQuestionSafeForAI,
     setIsRatingsModified,
     setIsThereATie,
     setPreviousIndex,
     setSideCardStep,
+    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -174,6 +176,7 @@ export const ResultTab: FC<ResultTabProps> = ({
             return currentBestOptions[0]
         }
     }
+
     const handleReset = () => {
         // reset form state
         reset()
@@ -188,8 +191,11 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setIsDecisionFormUpdating(false))
         useAppDispatch(setIsRatingsModified(false))
         useAppDispatch(setIsDecisionRehydrated(false))
+        useAppDispatch(setIsQuestionSafeForAI(true))
+        useAppDispatch(setUserIgnoredUnsafeWarning(false))
         setMatrixStep(0)
     }
+
     const calcScore = (index: number): number => {
         let sumWeights = 0
         let sumWeightedScore = 0

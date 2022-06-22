@@ -147,6 +147,8 @@ export interface FirebaseDecisionActivity {
     ratings?: decisionRating[] | Ratings[]
     timestamp?: FieldValue
     isComplete?: boolean
+    isQuestionSafeForAI?: boolean
+    userIgnoredUnsafeWarning?: boolean
     clickedConnect?: boolean
     currentTab?: number
 }

@@ -63,5 +63,5 @@ export const criteriaTabs: Tab[] = [
     { name: 'Somewhat', weight: 1 },
     { name: 'Moderately', weight: 2 },
     { name: 'Super', weight: 3 },
-    { name: 'Super duper', weight: 4 },
+    { name: 'Super Duper', weight: 4 },
 ]
