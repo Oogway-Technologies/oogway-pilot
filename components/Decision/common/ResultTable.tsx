@@ -19,6 +19,7 @@ import {
 } from '../../../utils/types/global'
 import { TableLoader } from '../../Loaders/TableLoader'
 import { DropDownMenu } from '../../Utils/common/DropDownMenu'
+import { Tooltip } from '../../Utils/Tooltip'
 
 interface ResultTableProps {
     isLoading?: boolean
@@ -87,7 +88,28 @@ export const ResultTable: FC<ResultTableProps> = ({
                             className={`${bodySmall} flex flex-col items-start py-1.5 px-2 mr-4 w-1/3 
                         text-primary dark:text-primaryDark bg-primary/20 rounded-lg`}
                         >
-                            <b className="max-w-[7rem] truncate">{item.name}</b>
+                            {item.name.split('').length > 16 ? (
+                                <Tooltip
+                                    toolTipText={item.name}
+                                    classForToolTipBox={
+                                        '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none left-1'
+                                    }
+                                    classForParent={'mb-8'}
+                                    classForBottomArrow="bg-primary dark:bg-primaryDark border-none relative left-3 mr-auto"
+                                >
+                                    <b
+                                        className={
+                                            'max-w-[7rem] underline underline-offset-2 truncate'
+                                        }
+                                    >
+                                        {item.name}
+                                    </b>
+                                </Tooltip>
+                            ) : (
+                                <b className="max-w-[10rem] truncate">
+                                    {item.name}
+                                </b>
+                            )}
                             {weightToString(item.weight)}
                         </td>
 
@@ -109,7 +131,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                 {/* Score row */}
                 <tr className="flex items-center w-full">
                     <td
-                        className={`${bodySmall} text-primary dark:text-primaryDark w-1/3 py-1.5 px-2 mr-4`}
+                        className={`${bodySmallHeavy} text-primary dark:text-primaryDark w-1/3 py-1.5 px-2 mr-4`}
                     >
                         Score
                     </td>
@@ -163,9 +185,25 @@ export const ResultTable: FC<ResultTableProps> = ({
                             <span
                                 className={`${body} flex flex-col items-start text-primary dark:text-primaryDark bg-primary/20 rounded-lg px-2 py-1.5`}
                             >
-                                <b className="max-w-[10rem] truncate">
-                                    {item.name}
-                                </b>
+                                {item.name.split('').length > 18 ? (
+                                    <Tooltip
+                                        toolTipText={item.name}
+                                        classForToolTipBox={
+                                            '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none'
+                                        }
+                                        classForParent={'mb-8'}
+                                        classForBottomArrow="bg-primary dark:bg-primaryDark border-none"
+                                    >
+                                        <b className={'max-w-[10rem] truncate'}>
+                                            {item.name}
+                                        </b>
+                                    </Tooltip>
+                                ) : (
+                                    <b className="max-w-[10rem] truncate">
+                                        {item.name}
+                                    </b>
+                                )}
+
                                 {weightToString(item.weight)}
                             </span>
                         </td>
