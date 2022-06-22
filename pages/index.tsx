@@ -16,6 +16,7 @@ import { DecisionHelperCard } from '../components/Decision/SideCards/DecisionHel
 import { OptionSuggestions } from '../components/Decision/SideCards/OptionSuggestions'
 import { ScoreCard } from '../components/Decision/SideCards/ScoreCard'
 import { SignInCard } from '../components/Decision/SideCards/SignInCard'
+import UnsupportedDecision from '../components/Decision/SideCards/UnsupportedDecision'
 import { CriteriaTab } from '../components/Decision/Tabs/CriteriaTab'
 import { DecisionTab } from '../components/Decision/Tabs/DecisionTab'
 import MatrixResultTab from '../components/Decision/Tabs/MatrixResultTab'
@@ -23,14 +24,12 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
-import Button from '../components/Utils/Button'
 import { setIsQuestionSafeForAI } from '../features/decision/decisionSlice'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
-import { bodyHeavy, bodySmall } from '../styles/typography'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
 
@@ -83,6 +82,8 @@ const DecisionEngine: FC = () => {
 
     useSaveDecisionFormState()
 
+    // TODO: change UserIgnoredUnsafeWarning to global state and move into
+    // UnsupportedDecision warning
     const handleReconsider = () => {
         reset() // reset form state
         useAppDispatch(setIsQuestionSafeForAI(true))
@@ -245,9 +246,29 @@ const DecisionEngine: FC = () => {
                         >
                             {!user ? (
                                 !userExceedsMaxDecisions &&
+                                !userIgnoredUnsafeWarning &&
                                 (currentTab === 2 ||
                                     currentTab === 3 ||
                                     currentTab === 4) ? (
+                                    <>
+                                        {currentTab === 2 &&
+                                            !userIgnoredUnsafeWarning && (
+                                                <OptionSuggestions />
+                                            )}
+                                        {currentTab === 3 &&
+                                            !userIgnoredUnsafeWarning && (
+                                                <CriteriaSuggestions />
+                                            )}
+                                        {currentTab === 4 &&
+                                            decisionCriteriaQueryKey && (
+                                                <CriteriaInfo />
+                                            )}
+                                    </>
+                                ) : (
+                                    <SignInCard currentTab={currentTab} />
+                                )
+                            ) : (
+                                !userIgnoredUnsafeWarning && (
                                     <>
                                         {currentTab === 2 && (
                                             <OptionSuggestions />
@@ -260,20 +281,7 @@ const DecisionEngine: FC = () => {
                                                 <CriteriaInfo />
                                             )}
                                     </>
-                                ) : (
-                                    <SignInCard currentTab={currentTab} />
                                 )
-                            ) : (
-                                <>
-                                    {currentTab === 2 && <OptionSuggestions />}
-                                    {currentTab === 3 && (
-                                        <CriteriaSuggestions />
-                                    )}
-                                    {currentTab === 4 &&
-                                        decisionCriteriaQueryKey && (
-                                            <CriteriaInfo />
-                                        )}
-                                </>
                             )}
                             {currentTab === 1 &&
                             watchQuestion.split('').length ? (
@@ -281,31 +289,9 @@ const DecisionEngine: FC = () => {
                             ) : null}
                             {currentTab === 5 ? <ScoreCard /> : null}
                             {userIgnoredUnsafeWarning && (
-                                <GenericSidebar
-                                    title="Decision Unsupported"
-                                    titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
-                                    extraClass="mt-auto"
-                                >
-                                    <div className="flex flex-col">
-                                        <div
-                                            className={`${bodySmall} text-center text-neutral-800 mt-4 mb-6 dark:text-white`}
-                                        >
-                                            Sorry, this decision violates our
-                                            policies for content safety and AI
-                                            cannot provide any information. We
-                                            recommend you reconsider this
-                                            decision.
-                                        </div>
-                                        <div className="mx-auto">
-                                            <Button
-                                                keepText
-                                                text="Reconsider"
-                                                className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
-                                                onClick={handleReconsider}
-                                            />
-                                        </div>
-                                    </div>
-                                </GenericSidebar>
+                                <UnsupportedDecision
+                                    handleReconsider={handleReconsider}
+                                />
                             )}
                             <GenericSidebar
                                 title="Disclaimer"

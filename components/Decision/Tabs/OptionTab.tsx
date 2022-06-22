@@ -33,6 +33,7 @@ import { OptionCard } from '../BottomCards/OptionCard'
 import { BaseCard } from '../common/BaseCard'
 import { OptionSuggestions } from '../SideCards/OptionSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
+import UnsupportedDecision from '../SideCards/UnsupportedDecision'
 
 interface OptionTabProps {
     setUserIgnoredUnsafeWarning: React.Dispatch<React.SetStateAction<boolean>>
@@ -186,6 +187,8 @@ export const OptionTab: FC<OptionTabProps> = ({
                     ) : (
                         <SignInCard currentTab={2} />
                     )
+                ) : userIgnoredUnsafeWarning ? (
+                    <UnsupportedDecision handleReconsider={handleReconsider} />
                 ) : (
                     <OptionSuggestions />
                 )
@@ -343,7 +346,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                 </div>
             </Modal>
             <Modal show={isAIWarningModalOpen} onClose={handleWarningClose}>
-                <div className="flex flex-col">
+                <div className="flex flex-col sm:w-96">
                     <div className="flex items-center">
                         <UilExclamationTriangle
                             className={'mr-1 fill-alert dark:fill-alert'}
@@ -358,11 +361,10 @@ export const OptionTab: FC<OptionTabProps> = ({
                         className={`${body} text-neutral-800 mt-4 mb-6 dark:text-white`}
                     >
                         Sorry, this decision violates our policies for content
-                        <br />
-                        safety and AI cannot provide any information. We <br />
+                        safety and AI cannot provide any information. We
                         recommend you reconsider this decision.
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex gap-x-sm justify-between items-center">
                         <Button
                             keepText
                             text="Continue"
@@ -372,7 +374,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                         <Button
                             keepText
                             text="Reconsider"
-                            className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-primary bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
                             onClick={handleReconsider}
                         />
                     </div>
