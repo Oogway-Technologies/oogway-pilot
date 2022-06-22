@@ -29,7 +29,6 @@ function MyApp({ Component, pageProps }: AppProps) {
                 strategy="lazyOnload"
                 src={`https://www.googletagmanager.com/gtag/js?id=G-NGML1G074L`}
             />
-
             <Script id="google-analytics" strategy="lazyOnload">
                 {`
                             window.dataLayer = window.dataLayer || [];

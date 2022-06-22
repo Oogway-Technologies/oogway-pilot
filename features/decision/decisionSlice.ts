@@ -151,12 +151,12 @@ export const decisionSlice = createSlice({
             state.suggestions.optionsList = options
 
             const commonCriteria = data.common_criteria?.map(item => {
-                return { name: capitalize(item), weight: 2, isAI: true }
+                return { name: capitalize(item), weight: 1, isAI: true }
             })
             const contextCriteria = data.context_criteria.map(item => {
                 return { name: capitalize(item), weight: 3, isAI: true }
             })
-            const aiCriteria = [...commonCriteria, ...contextCriteria]
+            const aiCriteria = [...contextCriteria, ...commonCriteria]
             state.suggestions.copyCriteriaList = aiCriteria
 
             if (criteriaList.length > 1) {

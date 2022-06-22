@@ -74,12 +74,12 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 <span
                                     className={`text-center font-bold leading-10 text-neutral-800 text-xl tracking-normal dark:text-white`}
                                 >
-                                    It’s a tie!
+                                    It’s a tie so we picked one for you.
                                 </span>
                                 <span
                                     className={`${body} text-neutral-700 dark:text-neutralDark-150`}
                                 >
-                                    We’ve randomly picked{' '}
+                                    Your best option is{' '}
                                     <b className="text-primary dark:text-primaryDark">
                                         {decisionEngineBestOption}
                                     </b>
