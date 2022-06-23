@@ -94,10 +94,10 @@ export const ResultTable: FC<ResultTableProps> = ({
                                 <Tooltip
                                     toolTipText={item.name}
                                     classForToolTipBox={
-                                        '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none left-1'
+                                        '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none left-[16%]'
                                     }
-                                    classForParent={'mb-8 ml-8'}
-                                    classForBottomArrow="bg-primary dark:bg-primaryDark border-none relative left-3 mr-auto"
+                                    classForParent={'mb-8'}
+                                    classForBottomArrow="bg-primary dark:bg-primaryDark border-none relative left-[-20%]"
                                 >
                                     <b
                                         className={
