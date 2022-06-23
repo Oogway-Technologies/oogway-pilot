@@ -98,7 +98,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                         : 'py-4 px-3 mb-4 mr-4 rounded-2xl rounded-bl-none custom-box-shadow-md dark:custom-box-shadow-dark-md bg-white dark:bg-neutralDark-500'
                                 }`}
                         >
-                            <span className="mt-4 text-sm font-normal text-neutral-700 dark:text-neutralDark-150 text-start">
+                            <span className="mt-4 text-sm font-normal text-left text-neutral-700 dark:text-neutralDark-150">
                                 {`Oogway cannot help with an instant result for this
                             decision. It's a work in progress and it's learning
                             to serve better suggestions with each decision you
