@@ -57,4 +57,6 @@ export interface DecisionSliceStates {
     isDecisionRehydrated: boolean
     isRatingsModified: boolean
     isThereATie: boolean
+    isQuestionSafeForAI: boolean
+    userIgnoredUnsafeWarning: boolean
 }

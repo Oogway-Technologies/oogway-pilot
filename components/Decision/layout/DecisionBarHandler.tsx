@@ -10,6 +10,7 @@ import {
     setDecisionCriteriaQueryKey,
     setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
+    setIsQuestionSafeForAI,
     setIsSuggestionsEmpty,
     setIsThereATie,
     setLoadingAiSuggestions,
@@ -76,12 +77,21 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         const data: AISuggestions = await fetcher(
             `/api/getAISuggestions?question=${question}&context=${context}`
         )
-        useAppDispatch(populateSuggestions(data))
+        useAppDispatch(setIsQuestionSafeForAI(data.is_safe))
+        if (data.is_safe)
+            useAppDispatch(
+                populateSuggestions({
+                    data,
+                    optionsList: watchOption,
+                    criteriaList: watchCriteria,
+                })
+            )
         useAppDispatch(setLoadingAiSuggestions(false))
         if (
-            !data.options.length &&
-            !data.context_criteria.length &&
-            !data.common_criteria.length
+            (!data.options.length &&
+                !data.context_criteria.length &&
+                !data.common_criteria.length) ||
+            !data.is_safe
         ) {
             useAppDispatch(setIsSuggestionsEmpty(true))
         }
@@ -97,10 +107,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 )
                 return false
             }
-            if (
-                formCopy.question !== getValues('question') ||
-                formCopy.context !== getValues('context')
-            ) {
+            if (formCopy.question !== getValues('question')) {
                 resetField('options')
                 resetField('criteria')
                 useAppDispatch(resetSuggestions())
@@ -112,6 +119,19 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         deepCopy({
                             ...formCopy,
                             question: getValues('question'),
+                        })
+                    )
+                )
+            }
+            if (formCopy.context !== getValues('context')) {
+                useAppDispatch(resetSuggestions())
+                if (!userExceedsMaxDecisions || user) {
+                    loadSuggestions()
+                }
+                useAppDispatch(
+                    updateFormCopy(
+                        deepCopy({
+                            ...formCopy,
                             context: getValues('context'),
                         })
                     )
@@ -120,7 +140,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
         if (tab === 2) {
             await trigger(['options'])
-            console.log(errors)
             if (errors?.options && errors?.options.length) {
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false
@@ -291,7 +310,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 }
             }
         } else {
-            if (isMobile && selectedTab !== 1) {
+            if (isMobile && selectedTab !== 0) {
                 setSelectedTab(selectedTab - 1)
             }
         }
@@ -302,7 +321,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 useAppDispatch(
                     setDecisionEngineOptionTab(decisionEngineOptionTab - 1)
                 )
-            } else if (selectedTab !== 1) {
+            } else if (selectedTab !== 0) {
                 setSelectedTab(selectedTab - 1)
             }
         }
@@ -329,13 +348,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 className ? className : ''
             }`}
         >
-            {selectedTab !== 1 ? (
+            {selectedTab !== 0 ? (
                 <button
-                    id={`backwards-${
+                    id={`decisionBarHandler-Backwards-${
                         decisionSideBarOptions[selectedTab - 1].title
-                    }`}
+                    }Tab`}
                     className={`${squareButton} ml-auto ${
-                        selectedTab === 1
+                        selectedTab === 0
                             ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
                             : 'border-primary focus:border-primary active:border-primary'
                     }`}
@@ -349,9 +368,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             )}
             {selectedTab !== 5 && (
                 <button
-                    id={`continue-${
+                    id={`decisionBarHandler-Continue-${
                         decisionSideBarOptions[selectedTab - 1].title
-                    }`}
+                    }Tab`}
                     className={`${squareButton} ml-3 ${
                         pointerArray[selectedTab - 1] && selectedTab !== 5
                             ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'

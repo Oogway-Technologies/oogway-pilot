@@ -34,7 +34,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
 
     return (
         <div
-            className={`flex flex-col bg-white rounded-2xl md:px-4 p-3 md:py-5 dark:bg-neutralDark-500 mb-4 custom-box-shadow dark:custom-box-shadow-dark transition-all ${
+            className={`flex flex-col bg-white rounded-2xl mr-4 md:px-4 p-3 md:py-5 dark:bg-neutralDark-500 mb-4 custom-box-shadow dark:custom-box-shadow-dark transition-all ${
                 className ? className : ''
             }`}
         >
@@ -54,6 +54,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                     </span>
                     {!isMobile ? <HappyGuy /> : null}
                     <Button
+                        id={'decisionHelperCard-connectButton'}
                         keepText
                         text="Connect"
                         onClick={() => {
@@ -78,6 +79,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         connecting with other decision makers
                     </span>
                     <Button
+                        id={'decisionHelperCard-becomeDecisionHelperButton'}
                         keepText
                         text="Become a Decision Helper"
                         onClick={() => {

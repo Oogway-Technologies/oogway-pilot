@@ -21,29 +21,32 @@ interface RatingSelectorProps {
     title: string
     registerName: string
     highlight?: boolean
+    value: number
 }
 
 export const RatingSelector: FC<RatingSelectorProps> = ({
     registerName,
     title,
     highlight = false,
+    value,
 }: RatingSelectorProps) => {
     const [selected, setSelected] = useState(1)
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { getValues, setValue } = useFormContext()
     const { user } = useUser()
-    const { decisionCriteriaQueryKey } = useAppSelector(
+    const { decisionCriteriaQueryKey, isQuestionSafeForAI } = useAppSelector(
         state => state.decisionSlice
     )
 
     useEffect(() => {
-        setSelected(getValues(registerName))
-    }, [registerName])
+        setSelected(value)
+    }, [value])
 
     const handleChange = (value: number) => {
         setSelected(value)
         setValue(registerName, value)
         useAppDispatch(setIsRatingsModified(true))
+        setSelected(getValues(registerName))
     }
 
     const colorGenerator = (index: number) => {
@@ -79,7 +82,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                 >
                     {title}{' '}
                 </span>
-                {user && (
+                {user && isQuestionSafeForAI && (
                     <AskAIButton
                         className="justify-self-end ml-auto"
                         onClick={() =>

@@ -130,6 +130,7 @@ const DesktopItem = ({
 }: ItemProps) => (
     <>
         <div
+            id={`decisionSideBar-${item.title}`}
             className={`flex items-center pl-3 w-full ${
                 pointerArray[item.tab - 1] ? 'cursor-pointer' : 'cursor-default'
             }`}

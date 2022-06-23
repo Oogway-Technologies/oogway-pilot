@@ -9,8 +9,10 @@ import {
     setDecisionRatingUpdate,
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
+    setIsQuestionSafeForAI,
     setIsRatingsModified,
     setSideCardStep,
+    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../features/decision/decisionSlice'
 import { useInfiniteDecisionsQuery } from '../queries/decisionActivity'
@@ -99,6 +101,16 @@ const useInstantiateDecisionForm = ({
                 useAppDispatch(
                     setClickedConnect(incompleteDecision.clickedConnect)
                 )
+                useAppDispatch(
+                    setUserIgnoredUnsafeWarning(
+                        incompleteDecision.userIgnoredUnsafeWarning
+                    )
+                )
+                useAppDispatch(
+                    setIsQuestionSafeForAI(
+                        incompleteDecision.isQuestionSafeForAI
+                    )
+                )
                 if (incompleteDecision.clickedConnect)
                     useAppDispatch(setSideCardStep(2))
                 useAppDispatch(updateDecisionFormState(formState))
@@ -134,6 +146,8 @@ const useInstantiateDecisionForm = ({
             useAppDispatch(setIsDecisionFormUpdating(false))
             useAppDispatch(setIsRatingsModified(false))
             useAppDispatch(setIsDecisionRehydrated(false))
+            useAppDispatch(setIsQuestionSafeForAI(true))
+            useAppDispatch(setUserIgnoredUnsafeWarning(false))
         }
     }, [])
 

@@ -1,9 +1,9 @@
 import { UilAngleDown } from '@iconscout/react-unicons'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { body, bodyHeavy, bodySmall, caption } from '../../../styles/typography'
+import { body, bodyHeavy, bodySmall } from '../../../styles/typography'
 import { weightToString } from '../../../utils/helpers/common'
 import {
     Criteria,
@@ -12,9 +12,15 @@ import {
     Rating,
     Ratings,
 } from '../../../utils/types/global'
+import { TableLoader } from '../../Loaders/TableLoader'
 import { DropDownMenu } from '../../Utils/common/DropDownMenu'
 
-export const ResultTable = () => {
+interface ResultTableProps {
+    isLoading?: boolean
+}
+export const ResultTable: FC<ResultTableProps> = ({
+    isLoading = false,
+}: ResultTableProps) => {
     const { control } = useFormContext()
     const rating: Ratings[] = useWatch({ name: 'ratings', control })
     const criteria: Criteria[] = useWatch({ name: 'criteria', control })
@@ -29,12 +35,14 @@ export const ResultTable = () => {
         }
     }, [isMobile])
 
-    return isMobile ? (
+    return isLoading ? (
+        <TableLoader />
+    ) : isMobile ? (
         <table
             className="mt-3 w-full table-auto"
             style={{
                 borderCollapse: 'separate',
-                borderSpacing: `0px ${isMobile ? '0.5rem' : '1rem'}`,
+                borderSpacing: '0px 0.5rem',
             }}
         >
             <thead className="flex items-center w-full">
@@ -46,9 +54,9 @@ export const ResultTable = () => {
                         IMPORTANCE
                     </span>
                 </th>
-                <th className={'flex items-center space-x-3 w-1/2 '}>
+                <th className={'flex items-center space-x-3 w-1/2'}>
                     <span
-                        className={`${bodyHeavy} text-white bg-neutral-700 py-1 px-2 rounded-lg w-full truncate max-w-[8rem]`}
+                        className={`${bodyHeavy} text-white bg-neutral-700 py-1 px-2 rounded-lg w-full truncate max-w-[8rem] min-h-[3.5rem] flex items-center justify-center`}
                     >
                         {selectedRating.option}
                     </span>
@@ -60,7 +68,7 @@ export const ResultTable = () => {
                         }}
                         selectedItem={selectedRating.option}
                         menuEndIcon={<UilAngleDown />}
-                        menuTextClass={`${caption} !font-bold text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150`}
+                        menuTextClass={`${bodySmall} !font-bold text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150`}
                         menuItemClass={`${bodySmall} text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 truncate`}
                         menuItemsClass={
                             'max-w-full min-w-[2rem] cursor-pointer'
@@ -70,7 +78,7 @@ export const ResultTable = () => {
             </thead>
             <tbody className="flex flex-col">
                 {criteria.map((item: Criteria, index: number) => (
-                    <div
+                    <tr
                         className="flex items-center my-2 w-full h-14"
                         key={`result-table-row-ratings-item-${index}`}
                     >
@@ -94,11 +102,11 @@ export const ResultTable = () => {
                                 </td>
                             ) : null
                         )}
-                    </div>
+                    </tr>
                 ))}
 
                 {/* Score row */}
-                <div className="flex items-center w-full">
+                <tr className="flex items-center w-full">
                     <td
                         className={`${bodyHeavy} text-primary dark:text-primaryDark w-1/3 py-1.5 px-2 mr-4`}
                     >
@@ -114,7 +122,7 @@ export const ResultTable = () => {
                             </td>
                         ) : null
                     )}
-                </div>
+                </tr>
             </tbody>
         </table>
     ) : (
@@ -127,23 +135,23 @@ export const ResultTable = () => {
         >
             <thead>
                 <tr>
-                    <th className={isMobile ? 'pr-2' : 'pr-4 w-0'}>
+                    <td className={isMobile ? 'pr-2' : 'pr-4 w-0'}>
                         <span
                             className={`${body} flex flex-col items-start text-primary dark:text-primaryDark px-2 py-1.5`}
                         >
                             <b>CRITERIA</b>
                             IMPORTANCE
                         </span>
-                    </th>
+                    </td>
                     {rating.map((item: Ratings, index: number) => (
-                        <th
+                        <td
                             key={`result-row-header-item-${index}`}
-                            className={`${bodyHeavy} text-white bg-neutral-700 h-10 ${
+                            className={`${bodyHeavy} text-white bg-neutral-700 h-10 px-3 text-center ${
                                 index === 0 ? 'rounded-l-lg' : ''
                             } last:rounded-r-lg truncate max-w-[5rem]`}
                         >
                             {item.option}
-                        </th>
+                        </td>
                     ))}
                 </tr>
             </thead>

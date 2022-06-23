@@ -1,6 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilArrowDownRight } from '@iconscout/react-unicons'
-import React, { FC, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useQueryClient } from 'react-query'
 
@@ -12,10 +12,12 @@ import {
     setDecisionQuestion,
     setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
+    setIsQuestionSafeForAI,
     setIsRatingsModified,
     setIsThereATie,
     setPreviousIndex,
     setSideCardStep,
+    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -39,12 +41,14 @@ import { ResultTable } from '../common/ResultTable'
 import { ScoreCard } from '../SideCards/ScoreCard'
 
 interface ResultTabProps {
-    setCurrentTab: React.Dispatch<React.SetStateAction<number>>
+    setCurrentTab: Dispatch<SetStateAction<number>>
+    setMatrixStep: Dispatch<SetStateAction<number>>
     deviceIp: string
 }
 
 export const ResultTab: FC<ResultTabProps> = ({
     setCurrentTab,
+    setMatrixStep,
     deviceIp,
 }: ResultTabProps) => {
     const { control, setValue, reset, getValues } = useFormContext()
@@ -172,11 +176,12 @@ export const ResultTab: FC<ResultTabProps> = ({
             return currentBestOptions[0]
         }
     }
+
     const handleReset = () => {
         // reset form state
         reset()
         // Return to first tab
-        setCurrentTab(1)
+        setCurrentTab(0)
         // Wipe previous decision question and id
         useAppDispatch(setDecisionQuestion(undefined))
         useAppDispatch(setDecisionActivityId(undefined))
@@ -186,7 +191,11 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setIsDecisionFormUpdating(false))
         useAppDispatch(setIsRatingsModified(false))
         useAppDispatch(setIsDecisionRehydrated(false))
+        useAppDispatch(setIsQuestionSafeForAI(true))
+        useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        setMatrixStep(0)
     }
+
     const calcScore = (index: number): number => {
         let sumWeights = 0
         let sumWeightedScore = 0
@@ -214,12 +223,12 @@ export const ResultTab: FC<ResultTabProps> = ({
                         <span
                             className={`text-xl font-bold tracking-normal leading-10 text-center text-neutral-800 dark:text-white`}
                         >
-                            It’s a tie!
+                            It’s a tie so we picked one for you.
                         </span>
                         <span
                             className={`${body} text-neutral-700 dark:text-neutralDark-150`}
                         >
-                            We’ve randomly picked{' '}
+                            Your best option is{' '}
                             <b className="text-primary dark:text-primaryDark">
                                 {decisionEngineBestOption}
                             </b>
@@ -251,6 +260,7 @@ export const ResultTab: FC<ResultTabProps> = ({
             <ResultChart />
             <div className="flex items-center py-4 mx-auto space-x-4">
                 <button
+                    id={'manualDecision-NewDecision'}
                     onClick={handleReset}
                     className={feedToolbarClass.newPostButton}
                 >

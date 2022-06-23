@@ -196,7 +196,7 @@ export const CriteriaTab: FC = () => {
                         className="flex flex-col py-5 px-4 mt-4"
                     >
                         <ErrorWrapperField
-                            className="flex items-center"
+                            className="flex flex-col"
                             errorField={
                                 errors?.criteria &&
                                 errors?.criteria[index]?.name?.message
@@ -204,71 +204,84 @@ export const CriteriaTab: FC = () => {
                                     : ''
                             }
                         >
-                            <input
-                                key={item.id}
-                                className={inputStyle}
-                                type="text"
-                                placeholder={'Enter your Criterion'}
-                                onKeyDown={event => {
-                                    if (
-                                        event.key === 'Enter' &&
-                                        event.currentTarget.value
-                                    ) {
-                                        setValue(
-                                            'criteria',
-                                            insertAtArray(watchCriteria, 1, {
-                                                name: event.currentTarget.value,
-                                                weight: getValues(
-                                                    'criteria.0.weight'
-                                                ),
-                                                isAI: false,
-                                            })
-                                        )
-                                        setValue('criteria.[0].name', '')
-                                    }
-                                }}
-                                {...register(
-                                    `criteria.${index}.name` as const,
-                                    {
-                                        required: {
-                                            value:
-                                                watchCriteria.length >= 2
-                                                    ? false
-                                                    : true,
-                                            message:
-                                                'You must enter the required criteria.',
-                                        },
-                                        maxLength: {
-                                            value: shortLimit,
-                                            message: `Criteria length should be less than ${shortLimit}`,
-                                        },
-                                    }
-                                )}
-                            />
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const value = getValues('criteria.0.weight')
-                                    if (value) {
-                                        setValue(
-                                            'criteria',
-                                            insertAtArray(watchCriteria, 1, {
-                                                name: getValues(
-                                                    'criteria.[0].name'
-                                                ),
-                                                weight: getValues(
-                                                    'criteria.0.weight'
-                                                ),
-                                                isAI: false,
-                                            })
-                                        )
-                                        setValue('criteria.[0].name', '')
-                                    }
-                                }}
-                                className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
-                            >
-                                <UilPlus className={'fill-white'} />
-                            </button>
+                            <div className="flex items-center w-full">
+                                <input
+                                    key={item.id}
+                                    className={inputStyle}
+                                    type="text"
+                                    placeholder={'Enter your Criterion'}
+                                    onKeyDown={event => {
+                                        if (
+                                            event.key === 'Enter' &&
+                                            event.currentTarget.value
+                                        ) {
+                                            setValue(
+                                                'criteria',
+                                                insertAtArray(
+                                                    watchCriteria,
+                                                    1,
+                                                    {
+                                                        name: event
+                                                            .currentTarget
+                                                            .value,
+                                                        weight: getValues(
+                                                            'criteria.0.weight'
+                                                        ),
+                                                        isAI: false,
+                                                    }
+                                                )
+                                            )
+                                            setValue('criteria.[0].name', '')
+                                        }
+                                    }}
+                                    {...register(
+                                        `criteria.${index}.name` as const,
+                                        {
+                                            required: {
+                                                value:
+                                                    watchCriteria.length >= 2
+                                                        ? false
+                                                        : true,
+                                                message:
+                                                    'You must enter the required criteria.',
+                                            },
+                                            maxLength: {
+                                                value: shortLimit,
+                                                message: `Criteria length should be less than ${shortLimit}`,
+                                            },
+                                        }
+                                    )}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const value =
+                                            getValues('criteria.0.weight')
+                                        if (value) {
+                                            setValue(
+                                                'criteria',
+                                                insertAtArray(
+                                                    watchCriteria,
+                                                    1,
+                                                    {
+                                                        name: getValues(
+                                                            'criteria.[0].name'
+                                                        ),
+                                                        weight: getValues(
+                                                            'criteria.0.weight'
+                                                        ),
+                                                        isAI: false,
+                                                    }
+                                                )
+                                            )
+                                            setValue('criteria.[0].name', '')
+                                        }
+                                    }}
+                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                                >
+                                    <UilPlus className={'fill-white'} />
+                                </button>
+                            </div>
                         </ErrorWrapperField>
                         <span
                             className={`text-neutral-700 dark:text-neutralDark-150 ${bodySmall} mt-5 mb-2`}

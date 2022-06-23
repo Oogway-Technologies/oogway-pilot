@@ -63,6 +63,11 @@ export const RatingTab: FC = () => {
                                     criteriaMobileIndex
                                 ].criteria
                             }
+                            value={
+                                ratingsArray[decisionEngineOptionTab].rating[
+                                    criteriaMobileIndex
+                                ].value
+                            }
                         />
                     </div>
                 </>
@@ -80,6 +85,7 @@ export const RatingTab: FC = () => {
                                         `ratings.${decisionEngineOptionTab}.rating.${index}.value` as const
                                     }
                                     title={item.criteria}
+                                    value={item.value}
                                 />
                             </div>
                         )

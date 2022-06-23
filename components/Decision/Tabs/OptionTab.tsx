@@ -1,5 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
+import {
+    UilExclamationTriangle,
+    UilPlus,
+    UilTrashAlt,
+} from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -8,7 +12,9 @@ import {
     setDecisionActivityId,
     setDecisionQuestion,
     setIsDecisionFormUpdating,
+    setIsQuestionSafeForAI,
     setPreviousIndex,
+    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -29,8 +35,13 @@ import { OptionCard } from '../BottomCards/OptionCard'
 import { BaseCard } from '../common/BaseCard'
 import { OptionSuggestions } from '../SideCards/OptionSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
+import UnsupportedDecision from '../SideCards/UnsupportedDecision'
 
-export const OptionTab: FC = () => {
+interface OptionTabProps {
+    setCurrentTab: (n: number) => void
+}
+
+export const OptionTab: FC<OptionTabProps> = ({ setCurrentTab }) => {
     const {
         register,
         control,
@@ -39,6 +50,7 @@ export const OptionTab: FC = () => {
         formState: { errors },
         watch,
         setFocus,
+        reset,
     } = useFormContext()
 
     const {
@@ -47,6 +59,8 @@ export const OptionTab: FC = () => {
         decisionActivityId,
         userExceedsMaxDecisions,
         isDecisionFormUpdating,
+        isQuestionSafeForAI,
+        userIgnoredUnsafeWarning,
     } = useAppSelector(state => state.decisionSlice)
 
     const { fields, remove } = useFieldArray({
@@ -56,6 +70,7 @@ export const OptionTab: FC = () => {
     const { user: authUser } = useUser()
 
     const [isOpen, setOpen] = useState(false)
+    const [isAIWarningModalOpen, setIsAIWarningModalOpen] = useState(false)
     const [selectedIndex, setIndex] = useState<number>()
     const createDecision = useCreateDecisionActivity()
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -102,6 +117,8 @@ export const OptionTab: FC = () => {
             )
             let formState: FirebaseDecisionActivity = {
                 id: decisionActivityId,
+                isQuestionSafeForAI: isQuestionSafeForAI,
+                userIgnoredUnsafeWarning: userIgnoredUnsafeWarning,
                 currentTab: 2,
             }
             if (filteredOptions.length)
@@ -112,7 +129,12 @@ export const OptionTab: FC = () => {
             useAppDispatch(updateDecisionFormState(formState))
             useAppDispatch(setIsDecisionFormUpdating(false))
         }
-    }, [watchOptions, decisionActivityId])
+    }, [
+        watchOptions,
+        decisionActivityId,
+        isQuestionSafeForAI,
+        userIgnoredUnsafeWarning,
+    ])
 
     useEffect(() => {
         // handle focus on enter
@@ -120,6 +142,12 @@ export const OptionTab: FC = () => {
             setFocus('options.[0].name')
         }
     }, [watchOptions])
+
+    // Trigger warning modal
+    useEffect(() => {
+        if (!isQuestionSafeForAI && !userIgnoredUnsafeWarning)
+            setIsAIWarningModalOpen(true)
+    }, [isQuestionSafeForAI, userIgnoredUnsafeWarning])
 
     const handleModal = (index: number) => {
         setIndex(index)
@@ -137,6 +165,18 @@ export const OptionTab: FC = () => {
     const handleClose = () => {
         setIndex(undefined)
         setOpen(false)
+    }
+
+    const handleWarningClose = () => {
+        setIsAIWarningModalOpen(false)
+        useAppDispatch(setUserIgnoredUnsafeWarning(true))
+    }
+
+    const handleReconsider = () => {
+        reset() // reset form state
+        useAppDispatch(setIsQuestionSafeForAI(true))
+        useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        setCurrentTab(1)
     }
 
     return (
@@ -158,6 +198,8 @@ export const OptionTab: FC = () => {
                     ) : (
                         <SignInCard currentTab={2} />
                     )
+                ) : userIgnoredUnsafeWarning ? (
+                    <UnsupportedDecision setCurrentTab={setCurrentTab} />
                 ) : (
                     <OptionSuggestions />
                 )
@@ -170,7 +212,7 @@ export const OptionTab: FC = () => {
                         className="flex flex-col py-5 px-4 mt-4"
                     >
                         <ErrorWrapperField
-                            className="flex items-center"
+                            className="flex flex-col "
                             errorField={
                                 errors?.options &&
                                 errors?.options[index]?.name?.message
@@ -178,65 +220,72 @@ export const OptionTab: FC = () => {
                                     : ''
                             }
                         >
-                            <input
-                                className={inputStyle}
-                                type="text"
-                                placeholder={'Enter your Option'}
-                                onKeyDown={event => {
-                                    if (
-                                        event.key === 'Enter' &&
-                                        event.currentTarget.value
-                                    ) {
-                                        setValue(
-                                            'options',
-                                            insertAtArray(watchOptions, 1, {
-                                                name: event.currentTarget.value,
-                                                isAI: false,
-                                            })
-                                        )
-                                        setValue(`options.[0].name`, '')
+                            <div className="flex items-center w-full">
+                                <input
+                                    className={inputStyle}
+                                    type="text"
+                                    placeholder={'Enter your Option'}
+                                    onKeyDown={event => {
+                                        if (
+                                            event.key === 'Enter' &&
+                                            event.currentTarget.value
+                                        ) {
+                                            setValue(
+                                                'options',
+                                                insertAtArray(watchOptions, 1, {
+                                                    name: event.currentTarget
+                                                        .value,
+                                                    isAI: false,
+                                                })
+                                            )
+                                            setValue(`options.[0].name`, '')
+                                        }
+                                    }}
+                                    disabled={
+                                        watchOptions.length < 6 ? false : true
                                     }
-                                }}
-                                disabled={
-                                    watchOptions.length < 6 ? false : true
-                                }
-                                {...register(`options.${index}.name` as const, {
-                                    required: {
-                                        value:
-                                            watchOptions.length >= 3
-                                                ? false
-                                                : true,
-                                        message:
-                                            'You must enter the required Option.',
-                                    },
-                                    maxLength: {
-                                        value: shortLimit,
-                                        message: `Option length should be less than ${shortLimit}`,
-                                    },
-                                })}
-                            />
-                            <button
-                                disabled={
-                                    watchOptions.length < 6 ? false : true
-                                }
-                                type="button"
-                                onClick={() => {
-                                    const value = getValues('options.[0].name')
-                                    if (value) {
-                                        setValue(
-                                            'options',
-                                            insertAtArray(watchOptions, 1, {
-                                                name: value,
-                                                isAI: false,
-                                            })
-                                        )
-                                        setValue(`options.[0].name`, '')
+                                    {...register(
+                                        `options.${index}.name` as const,
+                                        {
+                                            required: {
+                                                value:
+                                                    watchOptions.length >= 3
+                                                        ? false
+                                                        : true,
+                                                message:
+                                                    'You must enter the required Option.',
+                                            },
+                                            maxLength: {
+                                                value: shortLimit,
+                                                message: `Option length should be less than ${shortLimit}`,
+                                            },
+                                        }
+                                    )}
+                                />
+                                <button
+                                    disabled={
+                                        watchOptions.length < 6 ? false : true
                                     }
-                                }}
-                                className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
-                            >
-                                <UilPlus className={'fill-white'} />
-                            </button>
+                                    type="button"
+                                    onClick={() => {
+                                        const value =
+                                            getValues('options.[0].name')
+                                        if (value) {
+                                            setValue(
+                                                'options',
+                                                insertAtArray(watchOptions, 1, {
+                                                    name: value,
+                                                    isAI: false,
+                                                })
+                                            )
+                                            setValue(`options.[0].name`, '')
+                                        }
+                                    }}
+                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                                >
+                                    <UilPlus className={'fill-white'} />
+                                </button>
+                            </div>
                         </ErrorWrapperField>
                     </BaseCard>
                 ) : (
@@ -303,6 +352,41 @@ export const OptionTab: FC = () => {
                             text="Delete"
                             className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
                             onClick={handleDelete}
+                        />
+                    </div>
+                </div>
+            </Modal>
+            <Modal show={isAIWarningModalOpen} onClose={handleWarningClose}>
+                <div className="flex flex-col sm:w-96">
+                    <div className="flex items-center">
+                        <UilExclamationTriangle
+                            className={'mr-1 fill-alert dark:fill-alert'}
+                        />
+                        <span
+                            className={`${bodyHeavy} text-alert dark:text-alert`}
+                        >
+                            Warning
+                        </span>
+                    </div>
+                    <div
+                        className={`${body} text-neutral-800 mt-4 mb-6 dark:text-white`}
+                    >
+                        Sorry, this decision violates our policies for content
+                        safety and AI cannot provide any information. We
+                        recommend you reconsider this decision.
+                    </div>
+                    <div className="flex gap-x-sm justify-between items-center">
+                        <Button
+                            keepText
+                            text="Continue"
+                            className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
+                            onClick={handleWarningClose}
+                        />
+                        <Button
+                            keepText
+                            text="Reconsider"
+                            className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            onClick={handleReconsider}
                         />
                     </div>
                 </div>
