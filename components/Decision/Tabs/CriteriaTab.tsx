@@ -44,11 +44,9 @@ export const CriteriaTab: FC = () => {
         getValues,
     } = useFormContext()
 
-    const {
-        userExceedsMaxDecisions,
-        decisionActivityId,
-        isDecisionRehydrated,
-    } = useAppSelector(state => state.decisionSlice)
+    const { userExceedsMaxDecisions, decisionActivityId } = useAppSelector(
+        state => state.decisionSlice
+    )
 
     const { fields, remove } = useFieldArray({
         control,
@@ -104,8 +102,8 @@ export const CriteriaTab: FC = () => {
     }
 
     useEffect(() => {
-        // to focus on input on mount
-        if (!isDecisionRehydrated) setFocus('options.[0].name')
+        // // to focus on input on mount
+        // if (!isDecisionRehydrated) setFocus('options.[0].name')
 
         // On mount, log form state from previous tab
         // if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
@@ -136,7 +134,7 @@ export const CriteriaTab: FC = () => {
 
     useEffect(() => {
         // handle focus on enter
-        if (!watchCriteria[0].name && !isDecisionRehydrated) {
+        if (!watchCriteria[0].name) {
             setFocus('criteria.[0].name')
         }
     }, [watchCriteria])
