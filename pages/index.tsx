@@ -81,6 +81,13 @@ const DecisionEngine: FC = () => {
                 )
             }
         }
+
+        // Update router
+        router.push(
+            `/#${decisionSideBarOptions[currentTab - 1].title.toLowerCase()}`,
+            undefined,
+            { shallow: true }
+        )
     }, [currentTab])
 
     // Update router path for analytics
