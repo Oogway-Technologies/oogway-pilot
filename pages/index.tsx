@@ -26,7 +26,7 @@ import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppSelector } from '../hooks/useRedux'
-import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
+// import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import { decisionTitle } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
@@ -76,7 +76,7 @@ const DecisionEngine: FC = () => {
         }
     }, [currentTab])
 
-    useSaveDecisionFormState()
+    // useSaveDecisionFormState()
 
     const matrixGenerator = () => {
         switch (matrixStep) {
@@ -137,7 +137,6 @@ const DecisionEngine: FC = () => {
             </Head>
             <FormProvider {...methods}>
                 <form
-                    // onSubmit={methods.handleSubmit(onSubmit)}
                     className={`${decisionContainer} ${
                         isMobile ? `mx-4` : 'my-xl mx-xxl gap-4 h-[78vh]'
                     }`}
