@@ -18,7 +18,7 @@ export const ScoreCard = () => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     return (
-        <BaseCard className="flex flex-col p-4 mb-4">
+        <BaseCard className="flex flex-col p-4 mr-4 mb-4">
             <div
                 className="flex items-center cursor-pointer"
                 onClick={() => setOpen(!isOpen)}
