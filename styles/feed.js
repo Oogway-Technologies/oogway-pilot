@@ -49,7 +49,7 @@ export const feedToolbarClass = {
         'hover:text-primary dark:hover:text-primaryDark ',
     leftTabInactive: 'text-neutral-700 dark:text-neutralDark-150 ',
     newPostButton:
-        'rounded-[20px] py-sm px-md space-x-2 ' +
+        'rounded-[20px] md:py-sm md:px-md p-sm space-x-2 ' +
         'bg-primary dark:bg-primaryDark hover:bg-primaryActive' +
         'active:bg-primaryActive dark:hover:bg-primaryActive ' +
         'dark:active:bg-primaryActive text-white font-bold ',

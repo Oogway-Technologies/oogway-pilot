@@ -73,7 +73,9 @@ export const ResultTable: FC<ResultTableProps> = ({
                         menuEndIcon={<UilAngleDown />}
                         menuTextClass={`${bodySmall} !font-bold text-white fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 justify-between w-full`}
                         menuItemClass={`${body} text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 truncate`}
-                        menuItemsClass={'max-w-full w-1/2 cursor-pointer'}
+                        menuItemsClass={
+                            'w-full cursor-pointer items-start mt-4'
+                        }
                         menuClass={'h-full'}
                     />
                 </th>
@@ -88,25 +90,25 @@ export const ResultTable: FC<ResultTableProps> = ({
                             className={`${bodySmall} flex flex-col items-start py-1.5 px-2 mr-4 w-1/3 
                         text-primary dark:text-primaryDark bg-primary/20 rounded-lg`}
                         >
-                            {item.name.split('').length > 16 ? (
+                            {item.name.split('').length > 14 ? (
                                 <Tooltip
                                     toolTipText={item.name}
                                     classForToolTipBox={
                                         '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none left-1'
                                     }
-                                    classForParent={'mb-8'}
+                                    classForParent={'mb-8 ml-8'}
                                     classForBottomArrow="bg-primary dark:bg-primaryDark border-none relative left-3 mr-auto"
                                 >
                                     <b
                                         className={
-                                            'max-w-[7rem] underline underline-offset-2 truncate'
+                                            'w-full max-w-[5rem] underline underline-offset-2 truncate'
                                         }
                                     >
                                         {item.name}
                                     </b>
                                 </Tooltip>
                             ) : (
-                                <b className="max-w-[10rem] truncate">
+                                <b className="w-full max-w-min truncate">
                                     {item.name}
                                 </b>
                             )}
@@ -185,7 +187,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                             <span
                                 className={`${body} flex flex-col items-start text-primary dark:text-primaryDark bg-primary/20 rounded-lg px-2 py-1.5`}
                             >
-                                {item.name.split('').length > 18 ? (
+                                {item.name.split('').length > 16 ? (
                                     <Tooltip
                                         toolTipText={item.name}
                                         classForToolTipBox={

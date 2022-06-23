@@ -28,7 +28,7 @@ import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppSelector } from '../hooks/useRedux'
-import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
+// import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import {
     decisionSideBarOptions,
@@ -96,7 +96,7 @@ const DecisionEngine: FC = () => {
         )
     }, [currentTab, matrixStep])
 
-    useSaveDecisionFormState()
+    // useSaveDecisionFormState()
 
     const matrixGenerator = () => {
         switch (matrixStep) {
