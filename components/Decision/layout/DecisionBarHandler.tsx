@@ -52,6 +52,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         decisionEngineOptionTab,
         criteriaMobileIndex,
         userExceedsMaxDecisions,
+        decisionMatrixHasResults,
     } = useAppSelector(state => state.decisionSlice)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -111,8 +112,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 resetField('options')
                 resetField('criteria')
                 useAppDispatch(resetSuggestions())
-                if (!userExceedsMaxDecisions || user) {
-                    loadSuggestions()
+
+                if (decisionMatrixHasResults) {
+                    if (!userExceedsMaxDecisions || user) {
+                        loadSuggestions()
+                    }
+                } else {
+                    useAppDispatch(setIsSuggestionsEmpty(true))
                 }
                 useAppDispatch(
                     updateFormCopy(
