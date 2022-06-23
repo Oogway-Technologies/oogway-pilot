@@ -81,14 +81,17 @@ const DecisionEngine: FC = () => {
                 )
             }
         }
+    }, [currentTab])
 
-        // Update router
+    // Update router path for analytics
+    useEffect(() => {
+        const idx = currentTab > 0 ? currentTab - 1 : matrixStep * 4
         router.push(
-            `/#${decisionSideBarOptions[currentTab - 1].title.toLowerCase()}`,
+            `/#${decisionSideBarOptions[idx].title.toLowerCase()}`,
             undefined,
             { shallow: true }
         )
-    }, [currentTab])
+    }, [currentTab, matrixStep])
 
     useSaveDecisionFormState()
 

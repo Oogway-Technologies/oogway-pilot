@@ -237,6 +237,9 @@ export const DecisionTab: FC<DecisionTabProps> = ({
             ) : null}
             {matrixStep === 0 && currentTab === 0 && (
                 <Button
+                    id={`automatedDecisionMatrix-${
+                        getValues('options').length > 1 ? 'update' : 'show'
+                    }Result`}
                     onClick={handleAutoMatrix}
                     className={`${feedToolbarClass.newPostButton} w-fit ml-auto`}
                     text={
