@@ -90,6 +90,16 @@ const DecisionEngine: FC = () => {
         )
     }, [currentTab])
 
+    // Update router path for analytics
+    useEffect(() => {
+        const idx = currentTab > 0 ? currentTab - 1 : matrixStep * 4
+        router.push(
+            `/#${decisionSideBarOptions[idx].title.toLowerCase()}`,
+            undefined,
+            { shallow: true }
+        )
+    }, [currentTab, matrixStep])
+
     useSaveDecisionFormState()
 
     const matrixGenerator = () => {

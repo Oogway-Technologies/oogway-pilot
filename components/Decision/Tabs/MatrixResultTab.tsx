@@ -83,6 +83,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
             <ResultChart />
             <div className="flex items-center py-4 mx-auto space-x-4">
                 <button
+                    id={'automatedDecisionMatrix-NewDecision'}
                     onClick={() => {
                         reset()
                         setMatrixStep(0)
@@ -92,6 +93,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     New Decision
                 </button>
                 <button
+                    id={'automatedDecisionMatrix-RefineDecision'}
                     className={feedToolbarClass.newPostButton}
                     onClick={() => {
                         setCurrentTab(1)
