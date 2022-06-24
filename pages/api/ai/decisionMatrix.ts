@@ -24,13 +24,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         )
         res.status(200).json(response.data)
     } catch (error) {
-        console.log(error)
+        console.log()
 
         const err = error as {
             message: string
             status: number
         }
-        res.status(400).json({ message: err.message, error })
+        res.status(404).json({ message: err.message, error })
     }
 }
 
