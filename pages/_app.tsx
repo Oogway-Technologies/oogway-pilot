@@ -3,6 +3,7 @@ import '../styles/globals.css'
 
 import { UserProvider } from '@auth0/nextjs-auth0'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import Script from 'next/script'
 import { ThemeProvider } from 'next-themes'
 import { useState } from 'react'
@@ -18,6 +19,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     return (
         <>
+            <Head>
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1, maximum-scale=1"
+                />
+            </Head>
             <Script
                 strategy="lazyOnload"
                 src={`https://www.googletagmanager.com/gtag/js?id=G-NGML1G074L`}
