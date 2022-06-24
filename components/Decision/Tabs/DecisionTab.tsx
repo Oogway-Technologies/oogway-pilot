@@ -300,7 +300,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                     keepText={true}
                     icon={null}
                     type="button"
-                    disabled={isLoading}
+                    disabled={decisionMatrix.isLoading}
                 />
             )}
             {decisionMatrix.isLoading && (
