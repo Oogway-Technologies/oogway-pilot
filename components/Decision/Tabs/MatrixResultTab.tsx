@@ -1,11 +1,16 @@
 import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import {
+    setIsQuestionSafeForAI,
+    setUserIgnoredUnsafeWarning,
+} from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { feedToolbarClass } from '../../../styles/feed'
-import { body } from '../../../styles/typography'
+import { body, bodyHeavy } from '../../../styles/typography'
 import { Criteria, Options } from '../../../utils/types/global'
+import Button from '../../Utils/Button'
 import { ResultChart } from '../common/ResultChart'
 import { ResultTable } from '../common/ResultTable'
 
@@ -19,8 +24,12 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
 }: MatrixResultTabProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { reset, getValues, setValue } = useFormContext()
-    const { decisionEngineBestOption, isThereATie, decisionMatrixHasResults } =
-        useAppSelector(state => state.decisionSlice)
+    const {
+        decisionEngineBestOption,
+        isThereATie,
+        decisionMatrixHasResults,
+        isQuestionSafeForAI,
+    } = useAppSelector(state => state.decisionSlice)
 
     const fixUpStates = () => {
         const orgOptionsList = getValues('options')
@@ -38,6 +47,21 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     useEffect(() => {
         if (decisionMatrixHasResults) fixUpStates()
     }, [])
+
+    const handleReconsider = () => {
+        reset() // reset form state
+        useAppDispatch(setIsQuestionSafeForAI(true))
+        useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        setCurrentTab(0)
+        setMatrixStep(0)
+    }
+
+    const handleContinue = () => {
+        if (!isQuestionSafeForAI) {
+            useAppDispatch(setUserIgnoredUnsafeWarning(true))
+        }
+        setCurrentTab(1)
+    }
 
     return (
         <div className="flex flex-col mb-3 space-y-3">
@@ -99,20 +123,36 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 }`}
                         >
                             <span className="mt-4 text-sm font-normal text-left text-neutral-700 dark:text-neutralDark-150">
-                                {`Oogway cannot help with an instant result for this
+                                {isQuestionSafeForAI
+                                    ? `Oogway cannot help with an instant result for this
                             decision. It's a work in progress and it's learning
                             to serve better suggestions with each decision you
                             make. You can still continue using our Decision
-                            Engine to get a result.`}
+                            Engine to get a result.`
+                                    : `Sorry, this decision violates our policies for content
+                        safety and AI cannot provide any information. We
+                        recommend you reconsider this decision.`}
                             </span>
-                            <button
-                                className={feedToolbarClass.newPostButton}
-                                onClick={() => {
-                                    setCurrentTab(1)
-                                }}
-                            >
-                                Continue
-                            </button>
+                            <div className="flex gap-x-sm justify-between items-center">
+                                {!isQuestionSafeForAI && (
+                                    <Button
+                                        keepText
+                                        text="Reconsider"
+                                        className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                                        onClick={handleReconsider}
+                                    />
+                                )}
+                                <button
+                                    className={
+                                        isQuestionSafeForAI
+                                            ? feedToolbarClass.newPostButton
+                                            : `border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`
+                                    }
+                                    onClick={handleContinue}
+                                >
+                                    Continue
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

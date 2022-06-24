@@ -7,6 +7,7 @@ import {
     setDecisionFormState,
     setDecisionMatrixHasResults,
     setIsDecisionFormUpdating,
+    setIsQuestionSafeForAI,
     setPreviousIndex,
     setUserExceedsMaxDecisions,
     updateDecisionFormState,
@@ -185,9 +186,26 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                     context,
                 },
                 {
-                    onSuccess: data => {
-                        convertDataFrameToObject(data.data as MatrixObject)
-                        useAppDispatch(setDecisionMatrixHasResults(true))
+                    onSuccess: response => {
+                        if (response.data.is_safe) {
+                            convertDataFrameToObject(
+                                response.data.results as MatrixObject
+                            )
+                            useAppDispatch(
+                                setDecisionMatrixHasResults(
+                                    response.data.has_results
+                                )
+                            )
+                        } else {
+                            useAppDispatch(
+                                setIsQuestionSafeForAI(response.data.is_safe)
+                            )
+                            useAppDispatch(
+                                setDecisionMatrixHasResults(
+                                    response.data.has_results
+                                )
+                            )
+                        }
                     },
                     onError: error => {
                         console.log(error)
