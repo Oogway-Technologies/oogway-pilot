@@ -124,7 +124,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         >
                             <span className="mt-4 text-sm font-normal text-left text-neutral-700 dark:text-neutralDark-150">
                                 {isQuestionSafeForAI
-                                    ? `Oogway cannot help with an instant result for this
+                                    ? `Oogway cannot help with this
                             decision. It's a work in progress and it's learning
                             to serve better suggestions with each decision you
                             make. You can still continue using our Decision
