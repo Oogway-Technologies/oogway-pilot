@@ -30,7 +30,9 @@ const NavLinks = ({ links, listStyle }: NavLinksProps) => {
                                 data-text={link.text}
                                 className={
                                     'buttonText ' +
-                                    (link.href.includes(router.asPath)
+                                    (link.href.includes(
+                                        router.asPath.split('#')[0]
+                                    )
                                         ? 'text-primary font-bold underline underline-offset-4'
                                         : 'text-neutral-700 dark:text-neutralDark-150')
                                 }

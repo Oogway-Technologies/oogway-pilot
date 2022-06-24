@@ -350,6 +350,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         >
             {selectedTab !== 0 ? (
                 <button
+                    id={`decisionBarHandler-Backwards-${
+                        decisionSideBarOptions[selectedTab - 1].title
+                    }Tab`}
                     className={`${squareButton} ml-auto ${
                         selectedTab === 0
                             ? 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
@@ -365,6 +368,9 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
             )}
             {selectedTab !== 5 && (
                 <button
+                    id={`decisionBarHandler-Continue-${
+                        decisionSideBarOptions[selectedTab - 1].title
+                    }Tab`}
                     className={`${squareButton} ml-3 ${
                         pointerArray[selectedTab - 1] && selectedTab !== 5
                             ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'

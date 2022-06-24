@@ -260,6 +260,7 @@ export const ResultTab: FC<ResultTabProps> = ({
             <ResultChart />
             <div className="flex items-center py-4 mx-auto space-x-4">
                 <button
+                    id={'manualDecision-NewDecision'}
                     onClick={handleReset}
                     className={feedToolbarClass.newPostButton}
                 >
@@ -289,7 +290,7 @@ export const ResultTab: FC<ResultTabProps> = ({
                         }`}
                     />
                 </div>
-                <Collapse show={isOpen} className={'overflow-y-scroll'}>
+                <Collapse show={isOpen} className={'overflow-y-auto'}>
                     <ResultTable />
                 </Collapse>
             </BaseCard>

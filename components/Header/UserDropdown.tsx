@@ -84,6 +84,7 @@ const UserDropdown: React.FC<
         <>
             {!isLoading && !user ? (
                 <Button
+                    id="header-signIn"
                     onClick={signIn}
                     addStyle={loginButtons.loginButtonWFullStyle}
                     text="Sign In"

@@ -54,6 +54,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                     </span>
                     {!isMobile ? <HappyGuy /> : null}
                     <Button
+                        id={'decisionHelperCard-connectButton'}
                         keepText
                         text="Connect"
                         onClick={() => {
@@ -78,6 +79,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         connecting with other decision makers
                     </span>
                     <Button
+                        id={'decisionHelperCard-becomeDecisionHelperButton'}
                         keepText
                         text="Become a Decision Helper"
                         onClick={() => {
@@ -109,6 +111,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         <br /> decision makers
                     </span>
                     <Button
+                        id="decisionHelper-SignIn"
                         keepText
                         text="Create New Account"
                         onClick={handleSignIn}
