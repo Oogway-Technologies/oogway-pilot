@@ -46,7 +46,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
     const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter' && event.currentTarget.value) {
             await trigger(`options.${index}.name`)
-            if (errors?.options && errors?.options.length) {
+            if (errors?.options && (errors?.options as any).length) {
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false
             } else {
