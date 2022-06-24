@@ -355,7 +355,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 className ? className : ''
             }`}
         >
-            {selectedTab !== 0 ? (
+            {![0, 1].includes(selectedTab) ? (
                 <button
                     id={`decisionBarHandler-Backwards-${
                         decisionSideBarOptions[selectedTab - 1].title

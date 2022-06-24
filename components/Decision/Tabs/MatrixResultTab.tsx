@@ -133,7 +133,13 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         safety and AI cannot provide any information. We
                         recommend you reconsider this decision.`}
                             </span>
-                            <div className="flex gap-x-sm justify-between items-center">
+                            <div
+                                className={`flex gap-x-sm ${
+                                    !isQuestionSafeForAI
+                                        ? 'justify-between'
+                                        : 'mx-auto'
+                                } items-center`}
+                            >
                                 {!isQuestionSafeForAI && (
                                     <Button
                                         keepText
@@ -143,11 +149,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                     />
                                 )}
                                 <button
-                                    className={
-                                        isQuestionSafeForAI
-                                            ? feedToolbarClass.newPostButton
-                                            : `border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`
-                                    }
+                                    className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
                                     onClick={handleContinue}
                                 >
                                     Continue
