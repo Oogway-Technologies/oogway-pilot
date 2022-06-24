@@ -39,7 +39,7 @@ export const DropDownMenu = ({
                         className={`flex items-center space-x-3 ${menuTextClass}`}
                     >
                         {menuStartIcon}
-                        {menuText}
+                        <span>{menuText}</span>
                         {menuEndIcon}
                     </Menu.Button>
                     <Transition
