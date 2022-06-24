@@ -86,8 +86,11 @@ const DecisionEngine: FC = () => {
     // Update router path for analytics
     useEffect(() => {
         const idx = currentTab > 0 ? currentTab - 1 : matrixStep * 4
+        const flowPrefix = currentTab > 0 ? 'manual' : 'automated'
         router.push(
-            `/#${decisionSideBarOptions[idx].title.toLowerCase()}`,
+            `/#${flowPrefix}-${decisionSideBarOptions[
+                idx
+            ].title.toLowerCase()}`,
             undefined,
             { shallow: true }
         )

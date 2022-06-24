@@ -290,7 +290,7 @@ export const ResultTab: FC<ResultTabProps> = ({
                         }`}
                     />
                 </div>
-                <Collapse show={isOpen} className={'overflow-y-scroll'}>
+                <Collapse show={isOpen} className={'overflow-y-auto'}>
                     <ResultTable />
                 </Collapse>
             </BaseCard>
