@@ -199,8 +199,9 @@ export const CriteriaTab: FC = () => {
                             className="flex flex-col"
                             errorField={
                                 errors?.criteria &&
-                                errors?.criteria[index]?.name?.message
-                                    ? errors?.criteria[index]?.name?.message
+                                (errors?.criteria as any)[index]?.name?.message
+                                    ? (errors?.criteria as any)[index]?.name
+                                          ?.message
                                     : ''
                             }
                         >

@@ -146,7 +146,8 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
         if (tab === 2) {
             await trigger(['options'])
-            if (errors?.options && errors?.options.length) {
+            if (errors?.options) {
+                console.log(errors)
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false
             }
@@ -181,7 +182,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
         if (tab === 3) {
             await trigger(['criteria'])
-            if (errors?.criteria && errors?.criteria.length) {
+            if (errors?.criteria) {
                 setTimeout(() => clearErrors(['criteria']), warningTime)
                 return false
             }

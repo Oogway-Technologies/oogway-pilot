@@ -46,7 +46,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
     const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter' && event.currentTarget.value) {
             await trigger(`options.${index}.name`)
-            if (errors?.options && (errors?.options as any).length) {
+            if (errors?.options) {
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false
             } else {
@@ -69,8 +69,8 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     <ErrorWrapperField
                         errorField={
                             errors?.options &&
-                            errors?.options[index]?.name?.message
-                                ? errors?.options[index]?.name?.message
+                            (errors?.options as any)[index]?.name?.message
+                                ? (errors?.options as any)[index]?.name?.message
                                 : ''
                         }
                         textClass="text-sm"
@@ -134,8 +134,9 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
             {isEdit ? (
                 <ErrorWrapperField
                     errorField={
-                        errors?.options && errors?.options[index]?.name?.message
-                            ? errors?.options[index]?.name?.message
+                        errors?.options &&
+                        (errors?.options as any)[index]?.name?.message
+                            ? (errors?.options as any)[index]?.name?.message
                             : ''
                     }
                     textClass="text-sm"
