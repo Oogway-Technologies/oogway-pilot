@@ -52,6 +52,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         decisionEngineOptionTab,
         criteriaMobileIndex,
         userExceedsMaxDecisions,
+        decisionMatrixHasResults,
     } = useAppSelector(state => state.decisionSlice)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -111,8 +112,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 resetField('options')
                 resetField('criteria')
                 useAppDispatch(resetSuggestions())
-                if (!userExceedsMaxDecisions || user) {
-                    loadSuggestions()
+
+                if (decisionMatrixHasResults) {
+                    if (!userExceedsMaxDecisions || user) {
+                        loadSuggestions()
+                    }
+                } else {
+                    useAppDispatch(setIsSuggestionsEmpty(true))
                 }
                 useAppDispatch(
                     updateFormCopy(
@@ -140,7 +146,8 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
         if (tab === 2) {
             await trigger(['options'])
-            if (errors?.options && errors?.options.length) {
+            if (errors?.options) {
+                console.log(errors)
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false
             }
@@ -175,7 +182,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         }
         if (tab === 3) {
             await trigger(['criteria'])
-            if (errors?.criteria && errors?.criteria.length) {
+            if (errors?.criteria) {
                 setTimeout(() => clearErrors(['criteria']), warningTime)
                 return false
             }

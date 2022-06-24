@@ -215,8 +215,9 @@ export const OptionTab: FC<OptionTabProps> = ({ setCurrentTab }) => {
                             className="flex flex-col "
                             errorField={
                                 errors?.options &&
-                                errors?.options[index]?.name?.message
-                                    ? errors?.options[index]?.name?.message
+                                (errors?.options as any)[index]?.name?.message
+                                    ? (errors?.options as any)[index]?.name
+                                          ?.message
                                     : ''
                             }
                         >

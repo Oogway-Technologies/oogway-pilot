@@ -1,10 +1,15 @@
 import { UilExclamationTriangle } from '@iconscout/react-unicons'
 import React, { useState } from 'react'
+import { FieldError, FieldErrors, Merge } from 'react-hook-form'
 
 import useTimeout from '../../hooks/useTimeout'
 
 export type FlashErrorMessageProps = {
-    message: string
+    message:
+        | string
+        | FieldError
+        | Merge<FieldError, FieldErrors<any>>
+        | undefined
     ms: number
     style: string
     onClose?: (arg?: string | boolean | number) => void
