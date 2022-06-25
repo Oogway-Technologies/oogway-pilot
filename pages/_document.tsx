@@ -58,6 +58,11 @@ class MyDocument extends Document {
                             });`,
                         }}
                     />
+                    <script
+                        async
+                        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7288517538589198"
+                        crossOrigin="anonymous"
+                    />
                 </Head>
                 <body className="antialiased bg-neutral-25 dark:bg-neutralDark-600">
                     <noscript>
