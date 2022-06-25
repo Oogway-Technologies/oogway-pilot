@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { aiMatrixURL, matrixToken } from '../../../utils/constants/global'
+import { oogwayVars } from '../../../utils/constants/global'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const { question, context } = req.body
@@ -12,13 +12,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         const headers = {
             'Content-Type': 'application/json',
         }
-
         const response = await axios.post(
-            aiMatrixURL,
+            `${oogwayVars.ai_matrix_url}api/v1/decision_table`,
             {
                 decision: question,
                 context,
-                token: matrixToken,
+                token: oogwayVars.ai_matrix_token,
             },
             { headers }
         )
