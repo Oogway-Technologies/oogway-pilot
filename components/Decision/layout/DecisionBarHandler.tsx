@@ -76,7 +76,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         const question = getValues('question').replaceAll(' ', '%20')
         const context = getValues('context').replaceAll(' ', '%20')
         const data: AISuggestions = await fetcher(
-            `/api/getAISuggestions?question=${question}&context=${context}`
+            `/api/ai/getAISuggestions?question=${question}&context=${context}`
         )
         useAppDispatch(setIsQuestionSafeForAI(data.is_safe))
         if (data.is_safe)
@@ -147,7 +147,6 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         if (tab === 2) {
             await trigger(['options'])
             if (errors?.options) {
-                console.log(errors)
                 setTimeout(() => clearErrors(['options']), warningTime)
                 return false
             }
