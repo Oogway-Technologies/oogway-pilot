@@ -7,11 +7,12 @@ type ModalProps = {
     show: boolean
     onClose: (value: boolean) => void
     closeIcon?: boolean
+    className?: string
 }
 
 const Modal: React.FC<
     React.PropsWithChildren<React.PropsWithChildren<ModalProps>>
-> = ({ children: content, show, onClose, closeIcon }) => {
+> = ({ children: content, show, onClose, closeIcon, className = '' }) => {
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog
@@ -49,10 +50,7 @@ const Modal: React.FC<
                         leaveTo="opacity-0 scale-95"
                     >
                         <div
-                            className={
-                                'max-h-[80vh] overflow-auto justify-center items-center p-6 my-8 max-w-6xl text-left' +
-                                ' bg-white dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all z-10 sm:w-inherit scrollbar-hide'
-                            }
+                            className={`max-h-[80vh] overflow-auto justify-center items-center p-6 my-8 max-w-6xl text-left bg-white dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all z-10 sm:w-inherit scrollbar-hide ${className}`}
                         >
                             {closeIcon && (
                                 <UilTimesCircle

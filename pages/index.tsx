@@ -1,4 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
+import { UilQuestionCircle } from '@iconscout/react-unicons'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -25,11 +26,14 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
+import Modal from '../components/Utils/Modal'
+import { setInfoModal } from '../features/decision/decisionSlice'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppSelector } from '../hooks/useRedux'
 // import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { bigContainer, decisionContainer } from '../styles/decision'
+import { body } from '../styles/typography'
 import {
     decisionSideBarOptions,
     decisionTitle,
@@ -43,6 +47,8 @@ const DecisionEngine: FC = () => {
         userExceedsMaxDecisions,
         decisionEngineOptionTab,
         userIgnoredUnsafeWarning,
+        isInfoModal,
+        infoModalDetails,
     } = useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(0)
     const [matrixStep, setMatrixStep] = useState(0)
@@ -336,6 +342,27 @@ const DecisionEngine: FC = () => {
                     />
                 )}
             </FormProvider>
+            <Modal
+                show={isInfoModal}
+                onClose={() => useAppDispatch(setInfoModal(!isInfoModal))}
+                className="w-[35%]"
+            >
+                <div className="flex flex-col p-4 space-y-4">
+                    <span
+                        className={`flex items-center space-x-2 ${body} capitalize`}
+                    >
+                        <UilQuestionCircle />
+                        <b>
+                            {currentTab === 0
+                                ? infoModalDetails.title.split('/')[matrixStep]
+                                : infoModalDetails.title}
+                        </b>
+                    </span>
+                    <span className={`${body} text-left`}>
+                        {infoModalDetails.context}
+                    </span>
+                </div>
+            </Modal>
         </div>
     )
 }

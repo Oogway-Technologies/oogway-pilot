@@ -1,13 +1,20 @@
+import { UilQuestionCircle } from '@iconscout/react-unicons'
 import { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { setDecisionRatingUpdate } from '../../../features/decision/decisionSlice'
+import {
+    setDecisionRatingUpdate,
+    setInfoModal,
+    setInfoModalDetails,
+} from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
+import { decisionInfo } from '../../../utils/constants/global'
 import { deepCopy } from '../../../utils/helpers/common'
 import { findInCriteria, findInOption } from '../../../utils/helpers/decision'
 import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
+import { Tooltip } from '../../Utils/Tooltip'
 // import { QuestionCard } from '../SideCards/QuestionCard'
 
 interface DecisionTabWrapperProps {
@@ -136,14 +143,23 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
               }`
     } mt-0 w-full overflow-y-auto ${className ? className : ''}`
 
+    const handleInfoClick = () => {
+        useAppDispatch(
+            setInfoModalDetails({
+                title: title.replace('your ', ''),
+                context: decisionInfo[currentTab],
+            })
+        )
+        useAppDispatch(setInfoModal(true))
+    }
     return (
         <div className={containerClass}>
             {/* {[2, 3].includes(currentTab) && !isMobile ? <QuestionCard /> : ''} */}
             {currentTab !== 5 ? (
                 <h3
                     className={`${
-                        isMobile ? bodyHeavy : 'font-bold text-2xl'
-                    } capitalize text-neutral-800 dark:text-white ${
+                        isMobile ? bodyHeavy : 'text-2xl font-bold'
+                    } text-neutral-800 dark:text-white capitalize flex items-center ${
                         [2, 3].includes(currentTab)
                             ? `sticky top-[-2px] z-50 pb-2 ${
                                   isMobile
@@ -155,6 +171,19 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                     `}
                 >
                     {currentTab === 0 ? title.split('/')[matrixStep] : title}
+                    {isMobile ? (
+                        <UilQuestionCircle onClick={handleInfoClick} />
+                    ) : (
+                        <Tooltip
+                            toolTipText="Explain"
+                            className="ml-auto"
+                            classForParent="mb-5 -bottom-14 -left-7"
+                            classForToolTipBox="!rounded border-none bg-primary text-white shadow-none"
+                            classForBottomArrow="border-none bg-primary text-white mt-0 absolute -top-[4px] left-8"
+                        >
+                            <UilQuestionCircle onClick={handleInfoClick} />
+                        </Tooltip>
+                    )}
                 </h3>
             ) : null}
             {children}
