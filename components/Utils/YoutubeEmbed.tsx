@@ -20,7 +20,7 @@ const YoutubeEmbed: FC<
                 allow="autoplay; encrypted-media"
                 allowFullScreen
                 title="video"
-                className={'h-full w-full'}
+                className={'w-full h-full'}
             />
         </div>
     )

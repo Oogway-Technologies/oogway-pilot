@@ -159,11 +159,11 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     }
 
     return (
-        <div className="mb-3 flex flex-col space-y-3">
+        <div className="flex flex-col mb-3 space-y-3">
             {decisionMatrixHasResults ? (
                 <>
-                    <div className="h-0 w-0" ref={scrollRef} />
-                    <div className="my-4 mb-3 flex flex-col space-y-1 text-center">
+                    <div className="w-0 h-0" ref={scrollRef} />
+                    <div className="flex flex-col my-4 mb-3 space-y-1 text-center">
                         {isThereATie ? (
                             <>
                                 <span
@@ -197,7 +197,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 >
                                     Your best option is
                                 </span>
-                                <span className="text-center font-bold leading-10 text-primary text-3xl tracking-normal dark:text-primaryDark">
+                                <span className="text-3xl font-bold tracking-normal leading-10 text-center text-primary dark:text-primaryDark">
                                     {decisionEngineBestOption}
                                 </span>
                             </>
@@ -234,7 +234,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                         : 'custom-box-shadow-md dark:custom-box-shadow-dark-md mb-4 mr-4 rounded-2xl rounded-bl-none bg-white py-4 px-3 dark:bg-neutralDark-500'
                                 }`}
                         >
-                            <span className="mt-4 text-left font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
+                            <span className="mt-4 text-sm font-normal text-left text-neutral-700 dark:text-neutralDark-150">
                                 {isQuestionSafeForAI
                                     ? `Oogway cannot help with this
                             decision. It's a work in progress and it's learning

@@ -87,7 +87,7 @@ export const ResultChart = () => {
     }, [optionList])
 
     return (
-        <div className="flex w-full items-center justify-center">
+        <div className="flex justify-center items-center w-full">
             <div className="mx-auto w-[80%]">
                 <Bar options={options as any} data={data} />
             </div>

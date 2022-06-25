@@ -59,7 +59,7 @@ const Reply: React.FC<
                                 ) => (
                                     <a
                                         className={
-                                            'ml-0 whitespace-pre-line break-words pr-sm text-neutral-700 text-sm hover:underline dark:text-neutralDark-150'
+                                            'pr-sm ml-0 text-sm text-neutral-700 dark:text-neutralDark-150 hover:underline whitespace-pre-line break-words'
                                         }
                                         target="blank"
                                         href={decoratedHref}

@@ -341,7 +341,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
                         Generating your result...
                     </div>
                     <TableLoader />
-                    <div className="h-0 w-0" ref={scrollRef} />
+                    <div className="w-0 h-0" ref={scrollRef} />
                 </div>
             )}
         </>

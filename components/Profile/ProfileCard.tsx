@@ -69,7 +69,7 @@ export const ProfileCard: FC<
     }
 
     return (
-        <div className={'mx-sm flex flex-col items-center sm:mx-0'}>
+        <div className={'flex flex-col items-center mx-sm sm:mx-0'}>
             <div className={profileCard.mainDiv}>
                 {/* profile image*/}
                 <Avatar
@@ -81,7 +81,7 @@ export const ProfileCard: FC<
                 {/* container for user details*/}
                 <div className={profileCard.userDetailsDiv}>
                     {/* User profile name and buttons list*/}
-                    <div className={'mb-1 flex items-center'}>
+                    <div className={'flex items-center mb-1'}>
                         <div className={profileCard.userProfileName}>
                             {userProfileSnapshot?.name || name}{' '}
                             {userProfileSnapshot?.lastName || lastName}
@@ -89,7 +89,7 @@ export const ProfileCard: FC<
 
                         <div
                             className={
-                                'flex items-center space-x-2 justify-self-end'
+                                'flex justify-self-end items-center space-x-2'
                             }
                         >
                             {uid !== currentUserUid ? (
@@ -118,7 +118,7 @@ export const ProfileCard: FC<
                                             onClick={openPostModal}
                                             icon={
                                                 <UilPen
-                                                    className={'mr-1 h-5 w-5'}
+                                                    className={'mr-1 w-5 h-5'}
                                                 />
                                             }
                                             text={'New Post'}
@@ -147,7 +147,7 @@ export const ProfileCard: FC<
                             {location && (
                                 <>
                                     <UilLocationPoint
-                                        className={'mr-2 h-6 w-6'}
+                                        className={'mr-2 w-6 h-6'}
                                     />{' '}
                                     {userProfileSnapshot?.location || location}
                                 </>

@@ -175,16 +175,16 @@ const PostCard: React.FC<
             </div>
             {/* Media */}
             {postImage ? (
-                <div className={'mx-xl flex p-md'}>
+                <div className={'flex p-md mx-xl'}>
                     <img
                         src={postImage}
                         className={
-                            'block h-auto w-full max-w-full rounded-lg bg-cover bg-center bg-no-repeat align-middle'
+                            'block w-full max-w-full h-auto align-middle bg-center bg-no-repeat bg-cover rounded-lg'
                         }
                     />
                 </div>
             ) : YouTubeURLID && YouTubeURLID.length > 0 ? (
-                <div className="ml-xl flex h-60 justify-center object-contain p-md">
+                <div className="flex object-contain justify-center p-md ml-xl h-60">
                     <iframe
                         src={`https://www.youtube.com/embed/${YouTubeURLID}`}
                         frameBorder="0"
@@ -197,7 +197,7 @@ const PostCard: React.FC<
             ) : (
                 previewImage &&
                 previewImage.length > 2 && (
-                    <div className="mx-xl flex p-md">
+                    <div className="flex p-md mx-xl">
                         <img
                             src={previewImage}
                             alt="banner"

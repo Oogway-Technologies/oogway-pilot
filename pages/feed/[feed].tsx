@@ -24,7 +24,7 @@ const Sidebar: FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = ({
     return (
         <div
             className={
-                'hidden lg:visible lg:flex lg:w-3/12 lg:flex-col lg:align-top'
+                'hidden lg:flex lg:visible lg:flex-col lg:w-3/12 lg:align-top'
             }
         >
             {children}
@@ -38,7 +38,7 @@ const MainContent: FC<
     return (
         <div
             className={
-                'flex w-full flex-col justify-center px-1 lg:w-6/12 lg:px-0'
+                'flex flex-col justify-center px-1 w-full lg:px-0 lg:w-6/12'
             }
         >
             {children}
@@ -70,7 +70,7 @@ export default function Home() {
                         <FeedSelectorMenu />
                     </SidebarWidget>
                     <SidebarWidget title="Disclaimer">
-                        <FeedDisclaimer className="mx-sm mb-sm w-64 px-sm" />
+                        <FeedDisclaimer className="px-sm mx-sm mb-sm w-64" />
                     </SidebarWidget>
                 </Sidebar>
                 <MainContent>

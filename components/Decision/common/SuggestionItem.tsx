@@ -14,12 +14,12 @@ export const SuggestionItem = ({
 }: SuggestionItemProps) => {
     return (
         <div
-            className="group box-border flex w-full cursor-pointer items-center truncate rounded-lg border border-neutral-300 p-2 transition-all md:h-11 md:p-3"
+            className="group box-border flex items-center p-2 w-full truncate rounded-lg border border-neutral-300 transition-all cursor-pointer md:p-3 md:h-11"
             onClick={() => onClick(suggestionItem)}
         >
             <UilPlusCircle
                 className={
-                    'mr-2 min-h-[20px] min-w-[20px] cursor-pointer fill-neutral-700 transition-all group-hover:fill-primary dark:fill-neutralDark-150 md:mr-3'
+                    'mr-2 min-w-[20px] min-h-[20px] transition-all cursor-pointer fill-neutral-700 group-hover:fill-primary dark:fill-neutralDark-150 md:mr-3'
                 }
             />
             <span

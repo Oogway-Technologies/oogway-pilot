@@ -295,7 +295,7 @@ const DecisionEngine: FC = () => {
                 onClose={() => useAppDispatch(setInfoModal(!isInfoModal))}
                 className="md:w-[40%]"
             >
-                <div className="flex flex-col space-y-4 p-2 md:p-4">
+                <div className="flex flex-col p-2 space-y-4 md:p-4">
                     <span
                         className={`flex items-center space-x-2 font-normal capitalize leading-6 text-sm tracking-normal md:text-base`}
                     >

@@ -15,10 +15,10 @@ export const ErrorWrapper: FC<ErrorWrapperProps> = ({
     } = useFormContext()
 
     return (
-        <div className="h-auto w-full">
+        <div className="w-full h-auto">
             {children}
             {errors?.[errorField]?.message && (
-                <div className="mt-2 flex items-center">
+                <div className="flex items-center mt-2">
                     <UilExclamationTriangle className="fill-error dark:fill-errorDark" />
                     <span className="ml-2 text-error dark:text-errorDark">
                         {errors?.[errorField]?.message}

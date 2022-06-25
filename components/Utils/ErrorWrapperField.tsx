@@ -19,7 +19,7 @@ export const ErrorWrapperField: FC<ErrorWrapperFieldProps> = ({
         <div className={`relative h-auto w-full ${className ? className : ''}`}>
             {children}
             {errorField && (
-                <div className="mt-2 flex items-center">
+                <div className="flex items-center mt-2">
                     <UilExclamationTriangle className="fill-error dark:fill-errorDark" />
                     <span
                         className={`${body} ml-2 text-error dark:text-errorDark ${

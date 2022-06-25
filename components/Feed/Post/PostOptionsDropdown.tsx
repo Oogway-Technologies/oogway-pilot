@@ -159,7 +159,7 @@ const PostOptionsDropdown: React.FC<
                 </Dialog.Title>
 
                 {/* Cancel / Submit buttons */}
-                <div className="inline-flex w-full space-x-3 px-2">
+                <div className="inline-flex px-2 space-x-3 w-full">
                     <Button
                         text="No"
                         keepText={true}

@@ -1,6 +1,5 @@
-import { UilExchange } from '@iconscout/react-unicons'
+import { UilSearch } from '@iconscout/react-unicons'
 import React from 'react'
-import { Search } from 'react-feather'
 
 import needsHook from '../../hooks/needsHook'
 import { searchBarButtonClass } from '../../styles/header'
@@ -18,10 +17,10 @@ const SearchBarButton = ({ type }: SearchBarButtonProps) => {
             onClick={needsHook}
         >
             <span className={searchBarButtonClass.magnifyingGlassSpan}>
-                <Search className={searchBarButtonClass.magnifyingGlass} />
+                <UilSearch className={searchBarButtonClass.magnifyingGlass} />
             </span>
             <span className={searchBarButtonClass.switchSpan}>
-                <UilExchange
+                <UilSearch
                     className={searchBarButtonClass.switch}
                     color="currentColor"
                 />

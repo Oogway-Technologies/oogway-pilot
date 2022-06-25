@@ -9,18 +9,18 @@ export const TableLoader = () => {
                 borderSpacing: '0px 1rem',
             }}
         >
-            <thead className="flex w-full items-center">
-                <th className={'mr-4 flex w-1/4'}>
+            <thead className="flex items-center w-full">
+                <th className={'flex mr-4 w-1/4'}>
                     <span
                         className={
-                            'flex flex-col items-start py-1.5 px-2 leading-6 text-primary text-sm tracking-normal dark:text-primaryDark md:text-base'
+                            'flex flex-col items-start py-1.5 px-2 text-sm tracking-normal leading-6 text-primary dark:text-primaryDark md:text-base'
                         }
                     />
                 </th>
-                <th className={'flex w-3/4 items-center space-x-3'}>
+                <th className={'flex items-center space-x-3 w-3/4'}>
                     <span
                         className={
-                            'h-14 w-full animate-pulse rounded-lg bg-neutral-700 py-1 px-2 text-white'
+                            'py-1 px-2 w-full h-14 text-white bg-neutral-700 rounded-lg animate-pulse'
                         }
                     />
                 </th>
@@ -30,13 +30,13 @@ export const TableLoader = () => {
                     .fill(0)
                     .map((_, idx) => (
                         <tr
-                            className="my-2 flex h-14 w-full items-center"
+                            className="flex items-center my-2 w-full h-14"
                             key={`key-loading-${idx + _}`}
                         >
-                            <td className="mr-4 flex h-14 w-1/4 animate-pulse flex-col items-start truncate rounded-lg bg-primary/20 py-1.5 px-2 text-primary dark:text-primaryDark" />
+                            <td className="flex flex-col items-start py-1.5 px-2 mr-4 w-1/4 h-14 text-primary dark:text-primaryDark truncate bg-primary/20 rounded-lg animate-pulse" />
                             <td
                                 className={
-                                    'flex h-full w-3/4 animate-pulse items-center justify-center rounded-lg bg-neutral-50 text-neutral-700 dark:bg-neutralDark-300 dark:text-white'
+                                    'flex justify-center items-center w-3/4 h-full text-neutral-700 dark:text-white bg-neutral-50 dark:bg-neutralDark-300 rounded-lg animate-pulse'
                                 }
                             />
                         </tr>

@@ -58,7 +58,7 @@ export const CriteriaSuggestions = () => {
                     } ${isMobile ? 'pb-2' : ''}`}
                 >
                     {!criteriaList.length && !loadingAiSuggestions && (
-                        <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
+                        <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
                             No more suggestions.
                         </span>
                     )}
@@ -69,7 +69,7 @@ export const CriteriaSuggestions = () => {
                             >
                                 Oogway AI cannot help with this decision.
                             </span>
-                            <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
+                            <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
                                 {`It's a work in progress and it's learning to serve better suggestions with each decision you make.`}
                             </span>
                         </>
@@ -78,7 +78,7 @@ export const CriteriaSuggestions = () => {
                         return (
                             <div
                                 key={`criteria-list-item-${index}`}
-                                className={'mt-4 flex w-full items-center'}
+                                className={'flex items-center mt-4 w-full'}
                             >
                                 <SuggestionItem
                                     suggestionItem={item}

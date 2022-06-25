@@ -297,14 +297,14 @@ const SignUpForm: FC<
                 <b>
                     I have read and accept Oogway’s{' '}
                     <span
-                        className={'mx-1 cursor-pointer text-primary'}
+                        className={'mx-1 text-primary cursor-pointer'}
                         onClick={() => setIsTerm(!isTerm)}
                     >
                         Terms of Use
                     </span>{' '}
                     and{' '}
                     <span
-                        className={'mx-1 cursor-pointer text-primary'}
+                        className={'mx-1 text-primary cursor-pointer'}
                         onClick={() => setIsPrivacyModal(!isPrivacyModal)}
                     >
                         Privacy Policy

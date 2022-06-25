@@ -266,9 +266,9 @@ const PrivacyPolicy = () => {
                     The purposes for which we use Cookies in the Service
                     include:
                 </p>
-                <div className="mb-3 flex flex-col">
+                <div className="flex flex-col mb-3">
                     <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                        <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                        <div className="inline-block py-2 min-w-full sm:px-6 lg:px-8">
                             <div className="overflow-hidden shadow-md sm:rounded-lg">
                                 <table className="min-w-full">
                                     <thead className="bg-gray-50 dark:bg-gray-700">

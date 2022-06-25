@@ -58,7 +58,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
     return isMobile ? (
         <BaseCard
             key={item.id}
-            className="flex items-center bg-white p-3 dark:bg-neutralDark-300"
+            className="flex items-center p-3 bg-white dark:bg-neutralDark-300"
         >
             <div
                 className={`flex w-full items-center  ${
@@ -75,9 +75,9 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                         }
                         textClass="text-sm"
                     >
-                        <div className="m-2 flex items-center justify-center rounded-lg border border-neutral-700 dark:border-white">
+                        <div className="flex justify-center items-center m-2 rounded-lg border border-neutral-700 dark:border-white">
                             <input
-                                className="h-8 w-full rounded-lg px-2 font-bold outline-none"
+                                className="px-2 w-full h-8 font-bold rounded-lg outline-none"
                                 {...register(`options.${index}.name` as const, {
                                     required: {
                                         value: true,
@@ -141,9 +141,9 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     }
                     textClass="text-sm"
                 >
-                    <div className="m-2 flex items-center justify-center rounded-lg border border-neutral-700 dark:border-white">
+                    <div className="flex justify-center items-center m-2 rounded-lg border border-neutral-700 dark:border-white">
                         <input
-                            className="h-8 w-full rounded-lg px-2 font-bold outline-none"
+                            className="px-2 w-full h-8 font-bold rounded-lg outline-none"
                             {...register(`options.${index}.name` as const, {
                                 required: {
                                     value: true,

@@ -80,7 +80,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                 </span>
                 {user && isQuestionSafeForAI && (
                     <AskAIButton
-                        className="ml-auto justify-self-end"
+                        className="justify-self-end ml-auto"
                         onClick={() =>
                             useAppDispatch(setDecisionCriteriaQueryKey(title))
                         }
@@ -141,7 +141,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                 )}
             </div>
             {isMobile && (
-                <div className="mt-3 flex items-center pt-3">
+                <div className="flex items-center pt-3 mt-3">
                     <span
                         className={`${bodySmall} rounded border border-neutral-300 px-2.5 py-1 text-neutral-300`}
                     >

@@ -18,9 +18,9 @@ export const ScoreCard = () => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     return (
-        <BaseCard className="mr-4 mb-4 flex flex-col p-4">
+        <BaseCard className="flex flex-col p-4 mr-4 mb-4">
             <div
-                className="flex cursor-pointer items-center"
+                className="flex items-center cursor-pointer"
                 onClick={() => setOpen(!isOpen)}
             >
                 <span
@@ -47,27 +47,27 @@ export const ScoreCard = () => {
                     of the criteria importance, to get the final score.
                 </span>
                 <div className="py-1" />
-                <BaseCard className="mx-1 flex items-center justify-around py-4 px-2 dark:bg-neutralDark-300">
-                    <div className="flex w-6 flex-col items-center space-y-4 text-center md:w-12">
-                        <UilChartGrowthAlt className="h-8 w-8 fill-primary dark:fill-primaryDark" />
+                <BaseCard className="flex justify-around items-center py-4 px-2 mx-1 dark:bg-neutralDark-300">
+                    <div className="flex flex-col items-center space-y-4 w-6 text-center md:w-12">
+                        <UilChartGrowthAlt className="w-8 h-8 fill-primary dark:fill-primaryDark" />
                         <span
                             className={`${bodySmall} text-primary dark:text-primaryDark`}
                         >
                             Sum of Rating
                         </span>
                     </div>
-                    <UilTimes className="h-6 w-6 fill-primary dark:fill-primaryDark" />
-                    <div className="flex w-6 flex-col items-center space-y-4 text-center md:w-12">
-                        <UilSlidersVAlt className="h-8 w-8 fill-primary dark:fill-primaryDark" />
+                    <UilTimes className="w-6 h-6 fill-primary dark:fill-primaryDark" />
+                    <div className="flex flex-col items-center space-y-4 w-6 text-center md:w-12">
+                        <UilSlidersVAlt className="w-8 h-8 fill-primary dark:fill-primaryDark" />
                         <span
                             className={`${bodySmall} text-primary dark:text-primaryDark`}
                         >
                             Criteria Importance
                         </span>
                     </div>
-                    <EqualIcon className="h-4 w-4 fill-primary dark:fill-primaryDark" />
-                    <div className="flex w-6 flex-col items-center space-y-4 text-center md:w-12">
-                        <UilTrophy className="h-8 w-8 fill-primary dark:fill-primaryDark" />
+                    <EqualIcon className="w-4 h-4 fill-primary dark:fill-primaryDark" />
+                    <div className="flex flex-col items-center space-y-4 w-6 text-center md:w-12">
+                        <UilTrophy className="w-8 h-8 fill-primary dark:fill-primaryDark" />
                         <span
                             className={`${bodySmall} text-primary dark:text-primaryDark`}
                         >

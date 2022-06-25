@@ -47,11 +47,11 @@ const FeedPostbar = ({ openModal }: { openModal: () => void }) => {
     }
 
     return (
-        <div className="mb-5 flex w-full items-center">
+        <div className="flex items-center mb-5 w-full">
             <input
                 placeholder={`What’s your question?`}
                 className={
-                    'w-full rounded-3xl border-2 border-solid border-neutral-300 bg-transparent py-3 px-4 text-sm focus-within:border-primary focus:border-primary focus:outline-none focus-visible:border-primary active:border-neutral-300'
+                    'py-3 px-4 w-full text-sm bg-transparent rounded-3xl border-2 border-neutral-300 focus-within:border-primary focus:border-primary focus-visible:border-primary active:border-neutral-300 border-solid focus:outline-none'
                 }
                 onClick={event => {
                     event.stopPropagation()
@@ -60,7 +60,7 @@ const FeedPostbar = ({ openModal }: { openModal: () => void }) => {
                 value={''}
                 readOnly
             />
-            <div className={'ml-2 flex items-center'}>
+            <div className={'flex items-center ml-2'}>
                 {/* Upload Image */}
                 <button
                     onClick={() => filePickerRef?.current?.click()}

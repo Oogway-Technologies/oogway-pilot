@@ -30,9 +30,9 @@ export const CriteriaCard = ({
     return isMobile ? (
         <BaseCard
             key={item.id}
-            className="flex w-full items-center bg-white p-3 dark:bg-neutralDark-300"
+            className="flex items-center p-3 w-full bg-white dark:bg-neutralDark-300"
         >
-            <div className="flex w-full flex-col">
+            <div className="flex flex-col w-full">
                 <div className="flex items-center">
                     <span
                         className={`${bodyHeavy} mr-2 min-w-[80%] truncate whitespace-nowrap text-neutral-800 dark:text-white`}

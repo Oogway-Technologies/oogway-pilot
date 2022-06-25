@@ -43,7 +43,7 @@ const AISidebar: FC<AISidebarProps> = ({
                 {subtitle && (
                     <span
                         className={
-                            'leading-6 text-neutral-300 text-base dark:text-neutralDark-50 md:text-base'
+                            'text-base leading-6 text-neutral-300 dark:text-neutralDark-50 md:text-base'
                         }
                     >
                         {subtitle}
@@ -52,7 +52,7 @@ const AISidebar: FC<AISidebarProps> = ({
                 {!isMobile && infoCircle && (
                     <UilInfoCircle
                         className={
-                            'ml-auto justify-self-end fill-neutral-700 dark:fill-neutralDark-150'
+                            'justify-self-end ml-auto fill-neutral-700 dark:fill-neutralDark-150'
                         }
                     />
                 )}

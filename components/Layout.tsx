@@ -41,7 +41,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Head>
                 <title>Oogway | Decision Engine</title>
             </Head>
-            <div className="flex max-h-screen min-h-screen flex-col overflow-y-clip">
+            <div className="flex overflow-y-clip flex-col min-h-screen max-h-screen">
                 <div className="sticky z-10">
                     <Header />
                 </div>

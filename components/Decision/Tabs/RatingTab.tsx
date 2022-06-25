@@ -43,7 +43,7 @@ export const RatingTab: FC = () => {
             {isMobile ? (
                 <>
                     <div
-                        className="mt-auto flex w-full flex-col p-1"
+                        className="flex flex-col p-1 mt-auto w-full"
                         key={`rating-tab-slider-${criteriaMobileIndex}`}
                     >
                         <RatingSelector
@@ -69,7 +69,7 @@ export const RatingTab: FC = () => {
                     (item: Rating, index: number) =>
                         item.criteria && (
                             <div
-                                className="mt-8 flex w-full flex-col p-1"
+                                className="flex flex-col p-1 mt-8 w-full"
                                 key={`rating-tab-slider-${index}`}
                             >
                                 <RatingSelector
