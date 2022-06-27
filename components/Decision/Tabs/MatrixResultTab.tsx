@@ -60,7 +60,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
         if (!isQuestionSafeForAI) {
             useAppDispatch(setUserIgnoredUnsafeWarning(true))
         }
-        setCurrentTab(1)
+        setCurrentTab(2)
     }
 
     return (
@@ -111,7 +111,11 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     <ResultChart />
                 </>
             ) : (
-                <div className="grid grid-cols-3">
+                <div
+                    className={
+                        isMobile ? 'flex flex-col-reverse' : 'grid grid-cols-3'
+                    }
+                >
                     <div></div>
                     <div className="flex flex-col col-span-2 col-start-2 mx-auto">
                         <div
@@ -134,12 +138,14 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         recommend you reconsider this decision.`}
                             </span>
                             <div
-                                className={`flex gap-x-sm ${
-                                    !isQuestionSafeForAI
-                                        ? 'justify-between'
-                                        : 'mx-auto'
-                                } items-center`}
+                                className={`flex gap-x-lg mx-auto items-center`}
                             >
+                                <Button
+                                    keepText
+                                    text="Continue"
+                                    className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
+                                    onClick={handleContinue}
+                                />
                                 {!isQuestionSafeForAI && (
                                     <Button
                                         keepText
@@ -148,12 +154,6 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                         onClick={handleReconsider}
                                     />
                                 )}
-                                <button
-                                    className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
-                                    onClick={handleContinue}
-                                >
-                                    Continue
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -175,7 +175,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         id={'automatedDecisionMatrix-RefineDecision'}
                         className={feedToolbarClass.newPostButton}
                         onClick={() => {
-                            setCurrentTab(1)
+                            setCurrentTab(2)
                         }}
                     >
                         Refine decision

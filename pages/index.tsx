@@ -138,7 +138,12 @@ const DecisionEngine: FC = () => {
                     />
                 )
             case 2:
-                return <OptionTab setCurrentTab={setCurrentTab} />
+                return (
+                    <OptionTab
+                        setCurrentTab={setCurrentTab}
+                        setMatrixStep={setMatrixStep}
+                    />
+                )
             case 3:
                 return <CriteriaTab />
             case 4:
@@ -295,6 +300,7 @@ const DecisionEngine: FC = () => {
                             {userIgnoredUnsafeWarning && (
                                 <UnsupportedDecision
                                     setCurrentTab={setCurrentTab}
+                                    setMatrixStep={setMatrixStep}
                                 />
                             )}
                             <GenericSidebar

@@ -13,10 +13,12 @@ import AISidebar from '../common/AISidebar'
 
 type UnsupportedDecisionProps = {
     setCurrentTab: (n: number) => void
+    setMatrixStep: (n: number) => void
 }
 
 const UnsupportedDecision: FC<UnsupportedDecisionProps> = ({
     setCurrentTab,
+    setMatrixStep,
 }) => {
     const { reset } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -25,7 +27,8 @@ const UnsupportedDecision: FC<UnsupportedDecisionProps> = ({
         reset() // reset form state
         useAppDispatch(setIsQuestionSafeForAI(true))
         useAppDispatch(setUserIgnoredUnsafeWarning(false))
-        setCurrentTab(1)
+        setCurrentTab(0)
+        setMatrixStep(0)
     }
 
     return (

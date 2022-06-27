@@ -39,9 +39,13 @@ import UnsupportedDecision from '../SideCards/UnsupportedDecision'
 
 interface OptionTabProps {
     setCurrentTab: (n: number) => void
+    setMatrixStep: (n: number) => void
 }
 
-export const OptionTab: FC<OptionTabProps> = ({ setCurrentTab }) => {
+export const OptionTab: FC<OptionTabProps> = ({
+    setCurrentTab,
+    setMatrixStep,
+}) => {
     const {
         register,
         control,
@@ -176,7 +180,8 @@ export const OptionTab: FC<OptionTabProps> = ({ setCurrentTab }) => {
         reset() // reset form state
         useAppDispatch(setIsQuestionSafeForAI(true))
         useAppDispatch(setUserIgnoredUnsafeWarning(false))
-        setCurrentTab(1)
+        setCurrentTab(0)
+        setMatrixStep(0)
     }
 
     return (
@@ -199,7 +204,10 @@ export const OptionTab: FC<OptionTabProps> = ({ setCurrentTab }) => {
                         <SignInCard currentTab={2} />
                     )
                 ) : userIgnoredUnsafeWarning ? (
-                    <UnsupportedDecision setCurrentTab={setCurrentTab} />
+                    <UnsupportedDecision
+                        setCurrentTab={setCurrentTab}
+                        setMatrixStep={setMatrixStep}
+                    />
                 ) : (
                     <OptionSuggestions />
                 )
@@ -376,18 +384,18 @@ export const OptionTab: FC<OptionTabProps> = ({ setCurrentTab }) => {
                         safety and AI cannot provide any information. We
                         recommend you reconsider this decision.
                     </div>
-                    <div className="flex gap-x-sm justify-between items-center">
-                        <Button
-                            keepText
-                            text="Reconsider"
-                            className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
-                            onClick={handleReconsider}
-                        />
+                    <div className="flex gap-x-lg items-center mx-auto">
                         <Button
                             keepText
                             text="Continue"
                             className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
                             onClick={handleWarningClose}
+                        />
+                        <Button
+                            keepText
+                            text="Reconsider"
+                            className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            onClick={handleReconsider}
                         />
                     </div>
                 </div>
