@@ -33,7 +33,6 @@ import useMediaQuery from '../hooks/useMediaQuery'
 // import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { bigContainer, decisionContainer } from '../styles/decision'
-import { body } from '../styles/typography'
 import {
     decisionSideBarOptions,
     decisionTitle,
@@ -256,7 +255,7 @@ const DecisionEngine: FC = () => {
                             className={
                                 'overflow-y-auto col-span-1 ' +
                                 'scrollbar scrollbar-sm scrollbar-rounded scrollbar-thumb-tertiary ' +
-                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300'
+                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300 px-1'
                             }
                         >
                             {!user ? (
@@ -312,7 +311,7 @@ const DecisionEngine: FC = () => {
                             <GenericSidebar
                                 title="Disclaimer"
                                 titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
-                                extraClass="mt-auto"
+                                extraClass="mt-auto !mx-0"
                             >
                                 <FeedDisclaimer />
                             </GenericSidebar>
@@ -345,11 +344,11 @@ const DecisionEngine: FC = () => {
             <Modal
                 show={isInfoModal}
                 onClose={() => useAppDispatch(setInfoModal(!isInfoModal))}
-                className="w-[35%]"
+                className="md:w-[40%]"
             >
-                <div className="flex flex-col p-4 space-y-4">
+                <div className="flex flex-col p-2 space-y-4 md:p-4">
                     <span
-                        className={`flex items-center space-x-2 ${body} capitalize`}
+                        className={`flex items-center space-x-2 font-normal md:text-base leading-6 tracking-normal capitalize text-sm`}
                     >
                         <UilQuestionCircle />
                         <b>
@@ -358,7 +357,9 @@ const DecisionEngine: FC = () => {
                                 : infoModalDetails.title}
                         </b>
                     </span>
-                    <span className={`${body} text-left`}>
+                    <span
+                        className={`text-left font-normal md:text-base leading-6 tracking-normal capitalize text-sm`}
+                    >
                         {infoModalDetails.context}
                     </span>
                 </div>
