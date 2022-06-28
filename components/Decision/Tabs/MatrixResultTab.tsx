@@ -67,8 +67,8 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
         <div className="mb-3 flex flex-col space-y-3">
             {decisionMatrixHasResults ? (
                 <>
-                    <ResultTable />
-                    <div className="my-4 mb-3 flex flex-col space-y-1 text-center">
+                    <ResultChart />
+                    <div className="flex flex-col my-4 mb-3 space-y-1 text-center">
                         {isThereATie ? (
                             <>
                                 <span
@@ -108,7 +108,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                             </>
                         )}
                     </div>
-                    <ResultChart />
+                    <ResultTable />
                 </>
             ) : (
                 <div

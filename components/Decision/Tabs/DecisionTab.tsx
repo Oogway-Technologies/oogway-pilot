@@ -1,5 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
@@ -64,6 +64,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
+    const scrollRef = useRef<HTMLDivElement>(null)
     const question: string = useWatch({ name: 'question', control })
     const context: string = useWatch({ name: 'context', control })
     const userProfile = useAppSelector(state => state.userSlice.user)
@@ -71,7 +72,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         state => state.decisionSlice.clickedConnect
     )
 
-    // Decision Matrixx creation mutator
+    // Decision Matrix creation mutator
     const decisionMatrix = useCreateDecisionMatrix()
 
     // Reset decision helper card when question is changed
@@ -237,6 +238,14 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                     onSettled: () => setMatrixStep(matrixStep + 1),
                 }
             )
+            setTimeout(
+                () =>
+                    scrollRef.current?.scrollIntoView({
+                        block: 'end',
+                        behavior: 'smooth',
+                    }),
+                0
+            )
         }
     }
 
@@ -295,7 +304,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                     text={
                         getValues('options').length > 1
                             ? 'Update Result'
-                            : 'Show Result'
+                            : 'Get Result'
                     }
                     keepText={true}
                     icon={null}
@@ -319,6 +328,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                         Generating your result...
                     </div>
                     <TableLoader />
+                    <div className="w-0 h-0" ref={scrollRef} />
                 </div>
             )}
         </>
