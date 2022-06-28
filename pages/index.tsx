@@ -30,8 +30,8 @@ import Modal from '../components/Utils/Modal'
 import { setInfoModal } from '../features/decision/decisionSlice'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
-// import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
+import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import {
     decisionSideBarOptions,
@@ -106,7 +106,7 @@ const DecisionEngine: FC = () => {
         )
     }, [currentTab, matrixStep])
 
-    // useSaveDecisionFormState()
+    useSaveDecisionFormState()
 
     const matrixGenerator = () => {
         switch (matrixStep) {
@@ -122,6 +122,7 @@ const DecisionEngine: FC = () => {
             case 1:
                 return (
                     <MatrixResultTab
+                        deviceIp={deviceIp || ''}
                         setMatrixStep={setMatrixStep}
                         setCurrentTab={setCurrentTab}
                     />
@@ -297,8 +298,9 @@ const DecisionEngine: FC = () => {
                                     </>
                                 )
                             )}
-                            {currentTab === 1 &&
-                            watchQuestion.split('').length ? (
+                            {currentTab === 1 ||
+                            (matrixStep === 0 &&
+                                watchQuestion.split('').length) ? (
                                 <DecisionHelperCard />
                             ) : null}
                             {currentTab === 5 ? <ScoreCard /> : null}
@@ -346,9 +348,9 @@ const DecisionEngine: FC = () => {
                 onClose={() => useAppDispatch(setInfoModal(!isInfoModal))}
                 className="md:w-[40%]"
             >
-                <div className="flex flex-col p-2 space-y-4 md:p-4">
+                <div className="flex flex-col space-y-4 p-2 md:p-4">
                     <span
-                        className={`flex items-center space-x-2 font-normal md:text-base leading-6 tracking-normal capitalize text-sm`}
+                        className={`flex items-center space-x-2 font-normal capitalize leading-6 text-sm tracking-normal md:text-base`}
                     >
                         <UilQuestionCircle />
                         <b>
@@ -358,7 +360,7 @@ const DecisionEngine: FC = () => {
                         </b>
                     </span>
                     <span
-                        className={`text-left font-normal md:text-base leading-6 tracking-normal text-sm`}
+                        className={`text-left font-normal leading-6 text-sm tracking-normal md:text-base`}
                     >
                         {infoModalDetails.context}
                     </span>
