@@ -12,6 +12,7 @@ import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHan
 import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
 import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWrapper'
 import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
+import { AISuggestionInfoCard } from '../components/Decision/SideCards/AISuggestionInfoCard'
 import { CriteriaInfo } from '../components/Decision/SideCards/CriteriaInfo'
 import { CriteriaSuggestions } from '../components/Decision/SideCards/CriteriaSuggestions'
 import { DecisionHelperCard } from '../components/Decision/SideCards/DecisionHelperCard'
@@ -310,13 +311,16 @@ const DecisionEngine: FC = () => {
                                     setMatrixStep={setMatrixStep}
                                 />
                             )}
-                            <GenericSidebar
-                                title="Disclaimer"
-                                titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
-                                extraClass="mt-auto !mx-0"
-                            >
-                                <FeedDisclaimer />
-                            </GenericSidebar>
+                            {[1, 4, 5].includes(currentTab) ? (
+                                <GenericSidebar
+                                    title="Disclaimer"
+                                    titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
+                                    extraClass="mt-auto"
+                                >
+                                    <FeedDisclaimer />
+                                </GenericSidebar>
+                            ) : null}
+                            <AISuggestionInfoCard />
                         </div>
                     )}
                 </form>

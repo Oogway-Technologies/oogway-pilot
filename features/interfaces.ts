@@ -29,8 +29,8 @@ export interface Suggestions {
     copyCriteriaList: Criteria[]
 }
 export interface FormCopy {
-    question: ''
-    context: ''
+    question: string
+    context: string
     options: Options[]
     criteria: Criteria[]
 }
@@ -38,6 +38,10 @@ export interface FormCopy {
 export interface InfoModalDetails {
     title: string
     context: string
+}
+export interface InfoCardSection {
+    optionClickedText: string
+    criteriaClickedText: string
 }
 
 export interface DecisionSliceStates {
@@ -65,4 +69,5 @@ export interface DecisionSliceStates {
     isQuestionSafeForAI: boolean
     userIgnoredUnsafeWarning: boolean
     decisionMatrixHasResults: boolean
+    infoCardSection: InfoCardSection
 }

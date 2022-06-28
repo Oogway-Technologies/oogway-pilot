@@ -3,7 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { capitalize } from '../../utils/helpers/common'
 import { FirebaseDecisionActivity } from '../../utils/types/firebase'
 import { AISuggestions, Criteria, Options } from '../../utils/types/global'
-import { DecisionSliceStates, FormCopy, InfoModalDetails } from '../interfaces'
+import {
+    DecisionSliceStates,
+    FormCopy,
+    InfoCardSection,
+    InfoModalDetails,
+} from '../interfaces'
 
 const initialState: DecisionSliceStates = {
     decisionEngineOptionTab: 0,
@@ -43,6 +48,10 @@ const initialState: DecisionSliceStates = {
     isQuestionSafeForAI: true,
     userIgnoredUnsafeWarning: false,
     decisionMatrixHasResults: true,
+    infoCardSection: {
+        optionClickedText: '',
+        criteriaClickedText: '',
+    },
 }
 
 export const decisionSlice = createSlice({
@@ -57,6 +66,12 @@ export const decisionSlice = createSlice({
         },
         setInfoModal: (state, { payload }: PayloadAction<boolean>) => {
             state.isInfoModal = payload
+        },
+        setInfoCardSection: (
+            state,
+            { payload }: PayloadAction<InfoCardSection>
+        ) => {
+            state.infoCardSection = payload
         },
         setIsThereATie: (state, { payload }: PayloadAction<boolean>) => {
             state.isThereATie = payload
@@ -300,6 +315,7 @@ export const {
     setIsQuestionSafeForAI,
     setUserIgnoredUnsafeWarning,
     setDecisionMatrixHasResults,
+    setInfoCardSection,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer
