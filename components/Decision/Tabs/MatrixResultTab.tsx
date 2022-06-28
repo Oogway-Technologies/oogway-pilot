@@ -69,10 +69,11 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     question: getValues('question'),
                     context: getValues('context'),
                     options: getValues('options'), // Only differs from suggestions if user later modifies
-                    suggestedCriteria: getValues('options'),
+                    suggestedOptions: getValues('options'),
                     criteria: getValues('criteria'), // Only differs from suggestions if user later modifies
-                    suggestedOptions: getValues('criteria'),
-                    ratings: getValues('ratings'),
+                    suggestedCriteria: getValues('criteria'),
+                    ratings: getValues('ratings'), // Only differs from suggestions if user later modifies,
+                    suggestedRatings: getValues('ratings'),
                     isComplete: true,
                     currentTab: 5,
                     userIgnoredUnsafeWarning: false,
@@ -116,6 +117,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                 context: getValues('context'),
                 suggestedCriteria: null,
                 suggestedOptions: null,
+                suggestedRatings: null,
                 isComplete: false,
                 currentTab: 2,
                 userIgnoredUnsafeWarning: isQuestionSafeForAI ? false : true,
