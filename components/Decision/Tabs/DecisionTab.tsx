@@ -4,16 +4,13 @@ import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
     setDecisionEngineBestOption,
-    setDecisionFormState,
     setDecisionMatrixHasResults,
-    setIsDecisionFormUpdating,
     setIsQuestionSafeForAI,
     setPreviousIndex,
     setUserExceedsMaxDecisions,
-    updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch } from '../../../hooks/useRedux'
 import useResetDecisionHelperCard from '../../../hooks/useResetDecisionHelperCard'
 import { useCreateDecisionMatrix } from '../../../queries/decisionMatrix'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
@@ -66,39 +63,16 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     const { user } = useUser()
     const question: string = useWatch({ name: 'question', control })
     const context: string = useWatch({ name: 'context', control })
-    const userProfile = useAppSelector(state => state.userSlice.user)
-    const clickedConnect = useAppSelector(
-        state => state.decisionSlice.clickedConnect
-    )
+    // const userProfile = useAppSelector(state => state.userSlice.user)
+    // const clickedConnect = useAppSelector(
+    //     state => state.decisionSlice.clickedConnect
+    // )
 
-    // Decision Matrixx creation mutator
+    // Mutators
     const decisionMatrix = useCreateDecisionMatrix()
 
     // Reset decision helper card when question is changed
     useResetDecisionHelperCard(control)
-
-    // Track decision data
-    useEffect(() => {
-        useAppDispatch(
-            setDecisionFormState({
-                userId: userProfile?.uid,
-                ipAddress: deviceIp,
-                question: question,
-                isComplete: false,
-                currentTab: 2,
-            })
-        )
-        useAppDispatch(setIsDecisionFormUpdating(false))
-    }, [question, userProfile])
-    useEffect(() => {
-        useAppDispatch(
-            updateDecisionFormState({
-                context: context,
-                clickedConnect: clickedConnect,
-            })
-        )
-        useAppDispatch(setIsDecisionFormUpdating(false))
-    }, [context, clickedConnect, userProfile])
 
     useEffect(() => {
         // to fix error not working on first step.
@@ -249,7 +223,9 @@ export const DecisionTab: FC<DecisionTabProps> = ({
             >
                 <ErrorWrapper errorField="question">
                     <input
-                        className={inputStyle}
+                        className={
+                            inputStyle + `${currentTab === 1 && ' opacity-60'}`
+                        }
                         type="text"
                         onKeyPress={preventDefaultOnEnter}
                         placeholder="Where should I move to?"
@@ -264,11 +240,14 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                                 message: `Question length should be less than ${shortLimit}`,
                             },
                         })}
+                        disabled={currentTab === 1 ? true : false}
                     />
                 </ErrorWrapper>
                 <ErrorWrapper errorField="context">
                     <textarea
-                        className={`${inputStyle} h-40 resize-none mb-3 md:mb-6`}
+                        className={`${inputStyle} h-40 resize-none mb-3 md:mb-6 ${
+                            currentTab === 1 && ' opacity-60'
+                        }`}
                         placeholder="Context for your decision (optional)"
                         {...register('context', {
                             maxLength: {
@@ -276,6 +255,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                                 message: `Context length should be less than ${longLimit}`,
                             },
                         })}
+                        disabled={currentTab === 1 ? true : false}
                     />
                 </ErrorWrapper>
             </div>

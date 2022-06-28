@@ -5,21 +5,23 @@ import {
     UilTrashAlt,
 } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import {
     addSelectedOption,
+    setClickedConnect,
     setDecisionActivityId,
+    setDecisionFormState,
     setDecisionQuestion,
-    setIsDecisionFormUpdating,
+    setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
     setPreviousIndex,
+    setSideCardStep,
     setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
@@ -52,17 +54,13 @@ export const OptionTab: FC<OptionTabProps> = ({
         setValue,
         getValues,
         formState: { errors },
-        watch,
         setFocus,
         reset,
     } = useFormContext()
 
     const {
-        decisionQuestion: prevQuestion,
-        decisionFormState,
         decisionActivityId,
         userExceedsMaxDecisions,
-        isDecisionFormUpdating,
         isQuestionSafeForAI,
         userIgnoredUnsafeWarning,
     } = useAppSelector(state => state.decisionSlice)
@@ -76,30 +74,10 @@ export const OptionTab: FC<OptionTabProps> = ({
     const [isOpen, setOpen] = useState(false)
     const [isAIWarningModalOpen, setIsAIWarningModalOpen] = useState(false)
     const [selectedIndex, setIndex] = useState<number>()
-    const createDecision = useCreateDecisionActivity()
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const question = getValues('question')
-    const watchOptions = watch('options')
+    const watchOptions = useWatch({ name: 'options', control })
 
     useEffect(() => {
-        // On mount, check if new question matches previous question
-        // If not, update state to new question and instantiate new
-        // decision log
-        if (question !== prevQuestion && !isDecisionFormUpdating) {
-            // Update previous question
-            useAppDispatch(setDecisionQuestion(question))
-
-            // Instantiate new decision
-            createDecision.mutate(decisionFormState, {
-                onSuccess: newDecision => {
-                    useAppDispatch(setDecisionActivityId(newDecision.data.id))
-                },
-            })
-        }
-
-        // to focus on input on mount
-        setFocus('options.[0].name')
-
         return () => {
             useAppDispatch(setPreviousIndex(2))
             setOpen(false)
@@ -121,8 +99,6 @@ export const OptionTab: FC<OptionTabProps> = ({
             )
             let formState: FirebaseDecisionActivity = {
                 id: decisionActivityId,
-                isQuestionSafeForAI: isQuestionSafeForAI,
-                userIgnoredUnsafeWarning: userIgnoredUnsafeWarning,
                 currentTab: 2,
             }
             if (filteredOptions.length)
@@ -131,14 +107,8 @@ export const OptionTab: FC<OptionTabProps> = ({
                     options: filteredOptions,
                 }
             useAppDispatch(updateDecisionFormState(formState))
-            useAppDispatch(setIsDecisionFormUpdating(false))
         }
-    }, [
-        watchOptions,
-        decisionActivityId,
-        isQuestionSafeForAI,
-        userIgnoredUnsafeWarning,
-    ])
+    }, [watchOptions, decisionActivityId])
 
     useEffect(() => {
         // handle focus on enter
@@ -180,6 +150,12 @@ export const OptionTab: FC<OptionTabProps> = ({
         reset() // reset form state
         useAppDispatch(setIsQuestionSafeForAI(true))
         useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        useAppDispatch(setDecisionActivityId(undefined))
+        useAppDispatch(setDecisionQuestion(undefined))
+        useAppDispatch(setSideCardStep(1))
+        useAppDispatch(setClickedConnect(false))
+        useAppDispatch(setDecisionFormState({}))
+        useAppDispatch(setIsDecisionRehydrated(false))
         setCurrentTab(0)
         setMatrixStep(0)
     }

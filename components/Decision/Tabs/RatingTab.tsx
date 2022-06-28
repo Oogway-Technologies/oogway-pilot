@@ -1,8 +1,7 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import {
-    setIsDecisionFormUpdating,
     setPreviousIndex,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
@@ -15,17 +14,11 @@ import { RatingSelector } from '../common/RatingSelector'
 
 export const RatingTab: FC = () => {
     const { control } = useFormContext()
-    const { decisionEngineOptionTab, criteriaMobileIndex, isRatingsModified } =
-        useAppSelector(state => state.decisionSlice)
-
+    const { decisionEngineOptionTab, criteriaMobileIndex } = useAppSelector(
+        state => state.decisionSlice
+    )
     const ratingsArray = useWatch({ name: 'ratings', control })
-
     const isMobile = useMediaQuery('(max-width: 965px)')
-
-    const isRatingsModifiedRef = useRef(isRatingsModified)
-    useEffect(() => {
-        isRatingsModifiedRef.current = isRatingsModified
-    }, [isRatingsModified])
 
     useEffect(() => {
         // Track form state
@@ -39,7 +32,6 @@ export const RatingTab: FC = () => {
             }
         }
         useAppDispatch(updateDecisionFormState(formState))
-        useAppDispatch(setIsDecisionFormUpdating(false))
 
         return () => {
             useAppDispatch(setPreviousIndex(4))

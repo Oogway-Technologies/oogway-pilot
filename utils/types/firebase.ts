@@ -135,6 +135,7 @@ export interface FirebaseDecisionActivity {
         | boolean
         | number
         | undefined
+        | null
     id?: string
     userId?: string
     ipAddress?: string
@@ -142,8 +143,8 @@ export interface FirebaseDecisionActivity {
     context?: string
     criteria?: decisionCriteria[]
     options?: decisionOption[]
-    suggestedOptions?: Options[]
-    suggestedCriteria?: Criteria[]
+    suggestedOptions?: Options[] | null
+    suggestedCriteria?: Criteria[] | null
     ratings?: decisionRating[] | Ratings[]
     timestamp?: FieldValue
     isComplete?: boolean

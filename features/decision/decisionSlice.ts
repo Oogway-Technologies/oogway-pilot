@@ -33,9 +33,7 @@ const initialState: DecisionSliceStates = {
     sideCardStep: 1,
     clickedConnect: false,
     decisionFormState: {},
-    isDecisionFormUpdating: false,
     isDecisionRehydrated: false,
-    isRatingsModified: false,
     isThereATie: false,
     isQuestionSafeForAI: true,
     userIgnoredUnsafeWarning: false,
@@ -230,20 +228,11 @@ export const decisionSlice = createSlice({
         ) => {
             state.decisionFormState = payload
         },
-        setIsDecisionFormUpdating: (
-            state,
-            { payload }: PayloadAction<boolean>
-        ) => {
-            state.isDecisionFormUpdating = payload
-        },
         setIsDecisionRehydrated: (
             state,
             { payload }: PayloadAction<boolean>
         ) => {
             state.isDecisionRehydrated = payload
-        },
-        setIsRatingsModified: (state, { payload }: PayloadAction<boolean>) => {
-            state.isRatingsModified = payload
         },
         setIsQuestionSafeForAI: (
             state,
@@ -290,9 +279,7 @@ export const {
     setClickedConnect,
     setDecisionFormState,
     updateDecisionFormState,
-    setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
-    setIsRatingsModified,
     setIsThereATie,
     setIsQuestionSafeForAI,
     setUserIgnoredUnsafeWarning,

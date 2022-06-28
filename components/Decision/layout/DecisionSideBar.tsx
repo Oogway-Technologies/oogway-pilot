@@ -133,7 +133,7 @@ const DesktopItem = ({
             id={`decisionSideBar-${item.title}`}
             className={`flex items-center pl-3 w-full ${
                 pointerArray[item.tab - 1] ? 'cursor-pointer' : 'cursor-default'
-            } ${index < 1 && 'pointer-events-none opacity-75'}`}
+            }`}
             onClick={() => {
                 if (item.tab !== selectedTab && pointerArray[item.tab - 1]) {
                     setSelectedTab(item.tab)
@@ -199,7 +199,7 @@ const MobileItem = ({
         <div
             className={`flex flex-col justify-center items-center w-fit ${
                 pointerArray[item.tab - 1] ? 'cursor-pointer' : 'cursor-default'
-            } ${index < 1 && 'pointer-events-none opacity-75'}`}
+            }`}
             onClick={() => {
                 if (item.tab !== selectedTab && pointerArray[item.tab - 1]) {
                     setSelectedTab(item.tab)

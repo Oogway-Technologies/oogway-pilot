@@ -2,11 +2,18 @@ import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
+    setClickedConnect,
+    setDecisionActivityId,
+    setDecisionFormState,
+    setDecisionQuestion,
+    setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
+    setSideCardStep,
     setUserIgnoredUnsafeWarning,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { Criteria, Options } from '../../../utils/types/global'
@@ -15,21 +22,28 @@ import { ResultChart } from '../common/ResultChart'
 import { ResultTable } from '../common/ResultTable'
 
 interface MatrixResultTabProps {
+    deviceIp: string
     setMatrixStep: (n: number) => void
     setCurrentTab: (n: number) => void
 }
 const MatrixResultTab: FC<MatrixResultTabProps> = ({
+    deviceIp,
     setMatrixStep,
     setCurrentTab,
 }: MatrixResultTabProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { reset, getValues, setValue } = useFormContext()
+    const userProfile = useAppSelector(state => state.userSlice.user)
     const {
         decisionEngineBestOption,
         isThereATie,
         decisionMatrixHasResults,
         isQuestionSafeForAI,
+        clickedConnect,
+        decisionActivityId,
     } = useAppSelector(state => state.decisionSlice)
+
+    const createOrUpdateDecision = useCreateDecisionActivity()
 
     const fixUpStates = () => {
         const orgOptionsList = getValues('options')
@@ -45,21 +59,84 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     }
 
     useEffect(() => {
-        if (decisionMatrixHasResults) fixUpStates()
+        if (decisionMatrixHasResults) {
+            fixUpStates()
+            createOrUpdateDecision.mutate(
+                {
+                    clickedConnect: clickedConnect,
+                    userId: userProfile.uid,
+                    ipAddress: deviceIp,
+                    question: getValues('question'),
+                    context: getValues('context'),
+                    options: getValues('options'), // Only differs from suggestions if user later modifies
+                    suggestedCriteria: getValues('options'),
+                    criteria: getValues('criteria'), // Only differs from suggestions if user later modifies
+                    suggestedOptions: getValues('criteria'),
+                    ratings: getValues('ratings'),
+                    isComplete: true,
+                    currentTab: 5,
+                    userIgnoredUnsafeWarning: false,
+                    isQuestionSafeForAI: true,
+                },
+                {
+                    onSuccess: newDecision => {
+                        useAppDispatch(
+                            setDecisionActivityId(newDecision.data.id)
+                        )
+                    },
+                }
+            )
+        }
     }, [])
 
-    const handleReconsider = () => {
+    const handleReconsiderOrNewDecision = () => {
         reset() // reset form state
         useAppDispatch(setIsQuestionSafeForAI(true))
         useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        useAppDispatch(setDecisionActivityId(undefined))
+        useAppDispatch(setDecisionQuestion(undefined))
+        useAppDispatch(setSideCardStep(1))
+        useAppDispatch(setClickedConnect(false))
+        useAppDispatch(setDecisionFormState({}))
+        useAppDispatch(setIsDecisionRehydrated(false))
         setCurrentTab(0)
         setMatrixStep(0)
     }
 
-    const handleContinue = () => {
-        if (!isQuestionSafeForAI) {
+    const handleContinueWithUnsupportedDecision = () => {
+        if (!isQuestionSafeForAI)
             useAppDispatch(setUserIgnoredUnsafeWarning(true))
-        }
+        // Log new decision
+        createOrUpdateDecision.mutate(
+            {
+                clickedConnect: clickedConnect,
+                userId: userProfile.uid,
+                ipAddress: deviceIp,
+                question: getValues('question'),
+                context: getValues('context'),
+                suggestedCriteria: null,
+                suggestedOptions: null,
+                isComplete: false,
+                currentTab: 2,
+                userIgnoredUnsafeWarning: isQuestionSafeForAI ? false : true,
+                isQuestionSafeForAI: isQuestionSafeForAI,
+            },
+            {
+                onSuccess: newDecision => {
+                    useAppDispatch(setDecisionActivityId(newDecision.data.id))
+                    setCurrentTab(2)
+                },
+            }
+        )
+    }
+
+    const handleRefineDecision = () => {
+        // update previous decision
+        createOrUpdateDecision.mutate({
+            id: decisionActivityId,
+            isComplete: false,
+            currentTab: 2,
+        })
         setCurrentTab(2)
     }
 
@@ -144,14 +221,16 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                     keepText
                                     text="Continue"
                                     className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
-                                    onClick={handleContinue}
+                                    onClick={
+                                        handleContinueWithUnsupportedDecision
+                                    }
                                 />
                                 {!isQuestionSafeForAI && (
                                     <Button
                                         keepText
                                         text="Reconsider"
                                         className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
-                                        onClick={handleReconsider}
+                                        onClick={handleReconsiderOrNewDecision}
                                     />
                                 )}
                             </div>
@@ -163,10 +242,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                 <div className="flex items-center py-4 mx-auto space-x-4">
                     <button
                         id={'automatedDecisionMatrix-NewDecision'}
-                        onClick={() => {
-                            reset()
-                            setMatrixStep(0)
-                        }}
+                        onClick={handleReconsiderOrNewDecision}
                         className={feedToolbarClass.newPostButton}
                     >
                         New Decision
@@ -174,9 +250,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     <button
                         id={'automatedDecisionMatrix-RefineDecision'}
                         className={feedToolbarClass.newPostButton}
-                        onClick={() => {
-                            setCurrentTab(2)
-                        }}
+                        onClick={handleRefineDecision}
                     >
                         Refine decision
                     </button>
