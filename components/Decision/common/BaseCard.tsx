@@ -7,7 +7,7 @@ interface BaseCardProps {
 export const BaseCard = ({ children, className }: BaseCardProps) => {
     return (
         <div
-            className={`bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark ${
+            className={`custom-box-shadow dark:custom-box-shadow-dark rounded-2xl bg-white dark:bg-neutralDark-500 ${
                 className ? className : ''
             }`}
         >

@@ -84,8 +84,8 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         <div
             className={`flex bg-primary dark:bg-neutralDark-300 ${
                 isMobile
-                    ? 'p-2 justify-evenly mt-3 self-end w-full'
-                    : 'flex-col justify-center items-center h-full'
+                    ? 'mt-3 w-full justify-evenly self-end p-2'
+                    : 'h-full flex-col items-center justify-center'
             } ${className ? className : ''}`}
         >
             {decisionSideBarOptions.map((item, index) =>
@@ -131,7 +131,7 @@ const DesktopItem = ({
     <>
         <div
             id={`decisionSideBar-${item.title}`}
-            className={`flex items-center pl-3 w-full ${
+            className={`flex w-full items-center pl-3 ${
                 pointerArray[item.tab - 1] ? 'cursor-pointer' : 'cursor-default'
             } ${index < 1 && 'pointer-events-none opacity-75'}`}
             onClick={() => {
@@ -143,14 +143,14 @@ const DesktopItem = ({
             <div
                 className={`${bodyHeavy} ${
                     selectedTab === index + 1 || index + 1 < selectedTab
-                        ? 'text-primary dark:text-white bg-white dark:bg-primaryDark border-primary/50'
-                        : 'bg-[#E2D9FC] dark:bg-neutralDark-150 text-neutral-700 dark:text-neutralDark-300 font-normal border-transparent'
-                } flex items-center justify-center w-7 h-7 rounded-full border`}
+                        ? 'border-primary/50 bg-white text-primary dark:bg-primaryDark dark:text-white'
+                        : 'border-transparent bg-[#E2D9FC] font-normal text-neutral-700 dark:bg-neutralDark-150 dark:text-neutralDark-300'
+                } flex h-7 w-7 items-center justify-center rounded-full border`}
             >
                 {index + 1 < selectedTab ? (
                     <UilCheck
                         className={
-                            'fill-primary dark:fill-white stroke-primary dark:stroke-white stroke-2'
+                            'fill-primary stroke-primary stroke-2 dark:fill-white dark:stroke-white'
                         }
                     />
                 ) : (
@@ -162,21 +162,21 @@ const DesktopItem = ({
                     selectedTab === index + 1
                         ? 'text-white'
                         : index + 1 < selectedTab
-                        ? 'text-white dark:text-neutralDark-50 font-normal'
-                        : 'text-neutral-300 font-normal dark:text-neutralDark-150'
+                        ? 'font-normal text-white dark:text-neutralDark-50'
+                        : 'font-normal text-neutral-300 dark:text-neutralDark-150'
                 }  mx-2 truncate`}
             >
                 {item.title}
             </span>
             {selectedTab === index + 1 ? (
-                <div className="justify-self-end ml-auto w-1.5 h-full bg-[#E2D9FC] dark:bg-primaryDark rounded" />
+                <div className="ml-auto h-full w-1.5 justify-self-end rounded bg-[#E2D9FC] dark:bg-primaryDark" />
             ) : (
                 ''
             )}
         </div>
         {item.tab !== 5 ? (
             <div
-                className={`relative justify-self-start mr-auto ml-6 w-[2px] h-16  ${
+                className={`relative mr-auto ml-6 h-16 w-[2px] justify-self-start  ${
                     index < selectedTab
                         ? 'bg-[#E2D9FC] dark:bg-white'
                         : 'bg-neutral-300 '
@@ -197,7 +197,7 @@ const MobileItem = ({
 }: ItemProps) => (
     <>
         <div
-            className={`flex flex-col justify-center items-center w-fit ${
+            className={`flex w-fit flex-col items-center justify-center ${
                 pointerArray[item.tab - 1] ? 'cursor-pointer' : 'cursor-default'
             } ${index < 1 && 'pointer-events-none opacity-75'}`}
             onClick={() => {
@@ -209,14 +209,14 @@ const MobileItem = ({
             <div
                 className={`${bodyHeavy} ${
                     selectedTab === index + 1 || index + 1 < selectedTab
-                        ? 'text-primary dark:text-white bg-white dark:bg-primaryDark border-primary/50'
-                        : 'bg-[#E2D9FC] dark:bg-neutralDark-150 text-neutral-700 dark:text-neutralDark-300 font-normal border-transparent'
-                } flex items-center justify-center w-7 h-7 rounded-full border mb-3 `}
+                        ? 'border-primary/50 bg-white text-primary dark:bg-primaryDark dark:text-white'
+                        : 'border-transparent bg-[#E2D9FC] font-normal text-neutral-700 dark:bg-neutralDark-150 dark:text-neutralDark-300'
+                } mb-3 flex h-7 w-7 items-center justify-center rounded-full border `}
             >
                 {index + 1 < selectedTab ? (
                     <UilCheck
                         className={
-                            'fill-primary dark:fill-white stroke-primary dark:stroke-white stroke-2'
+                            'fill-primary stroke-primary stroke-2 dark:fill-white dark:stroke-white'
                         }
                     />
                 ) : (
@@ -228,8 +228,8 @@ const MobileItem = ({
                     selectedTab === index + 1
                         ? 'text-white'
                         : index + 1 < selectedTab
-                        ? 'text-white dark:text-neutralDark-50 font-normal'
-                        : 'text-neutral-300 font-normal'
+                        ? 'font-normal text-white dark:text-neutralDark-50'
+                        : 'font-normal text-neutral-300'
                 } truncate`}
             >
                 {item.title}

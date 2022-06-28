@@ -150,7 +150,7 @@ export interface FirebaseDecisionActivity {
     isQuestionSafeForAI?: boolean
     userIgnoredUnsafeWarning?: boolean
     clickedConnect?: boolean
-    currentTab?: number
+    currentTab?: 0 | 1 | 2 | 3 | 4 | 5
 }
 
 export interface FirebaseDecisionContext {

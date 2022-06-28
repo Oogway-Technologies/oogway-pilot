@@ -142,13 +142,13 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             {currentTab !== 5 ? (
                 <h3
                     className={`${
-                        isMobile ? bodyHeavy : 'text-2xl font-bold'
-                    } text-neutral-800 dark:text-white capitalize ${
+                        isMobile ? bodyHeavy : 'font-bold text-2xl'
+                    } capitalize text-neutral-800 dark:text-white ${
                         [2, 3].includes(currentTab)
                             ? `sticky top-[-2px] z-50 pb-2 ${
                                   isMobile
-                                      ? 'dark:bg-neutralDark-600 bg-neutral-25'
-                                      : 'dark:bg-neutralDark-500 bg-white'
+                                      ? 'bg-neutral-25 dark:bg-neutralDark-600'
+                                      : 'bg-white dark:bg-neutralDark-500'
                               }`
                             : ''
                     } ${currentTab === 0 ? 'mt-7' : ''}

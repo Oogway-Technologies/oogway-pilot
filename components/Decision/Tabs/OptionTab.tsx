@@ -185,13 +185,13 @@ export const OptionTab: FC<OptionTabProps> = ({
     }
 
     return (
-        <div className="flex flex-col mx-1">
+        <div className="mx-1 flex flex-col">
             <span
                 className={`${
                     isMobile
-                        ? 'sticky top-4 pt-1 z-50 dark:bg-neutralDark-600 bg-neutral-25 -mx-1'
+                        ? 'sticky top-4 z-50 -mx-1 bg-neutral-25 pt-1 dark:bg-neutralDark-600'
                         : ''
-                } md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
+                } -mt-5 font-normal leading-6 text-neutral-800 text-sm tracking-normal dark:text-neutral-150 md:ml-0 md:text-base`}
             >
                 Add at least two
             </span>
@@ -217,7 +217,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                 index === 0 ? (
                     <BaseCard
                         key={item.id}
-                        className="flex flex-col py-5 px-4 mt-4"
+                        className="mt-4 flex flex-col py-5 px-4"
                     >
                         <ErrorWrapperField
                             className="flex flex-col "
@@ -229,7 +229,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                                     : ''
                             }
                         >
-                            <div className="flex items-center w-full">
+                            <div className="flex w-full items-center">
                                 <input
                                     className={inputStyle}
                                     type="text"
@@ -290,7 +290,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                                             setValue(`options.[0].name`, '')
                                         }
                                     }}
-                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                                    className="ml-3 flex items-center justify-center rounded-full bg-primary p-2 disabled:bg-primary/50"
                                 >
                                     <UilPlus className={'fill-white'} />
                                 </button>
@@ -301,14 +301,14 @@ export const OptionTab: FC<OptionTabProps> = ({
                     ''
                 )
             )}
-            <BaseCard className="flex flex-col p-5 mt-xl mb-1">
+            <BaseCard className="mt-xl mb-1 flex flex-col p-5">
                 <span
                     className={`${bodyHeavy} text-neutral-800 dark:text-white`}
                 >
                     Added options
                 </span>
                 {fields.length === 1 ? (
-                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                    <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
                         No option added yet
                     </span>
                 ) : (
@@ -316,7 +316,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                         className={
                             isMobile
                                 ? 'mt-4 flex flex-col space-y-3'
-                                : 'grid grid-cols-2 gap-4 mt-5'
+                                : 'mt-5 grid grid-cols-2 gap-4'
                         }
                     >
                         {fields.map((item, index) =>
@@ -345,21 +345,21 @@ export const OptionTab: FC<OptionTabProps> = ({
                         </span>
                     </div>
                     <span
-                        className={`${body} text-neutral-800 mt-4 mb-6 dark:text-white`}
+                        className={`${body} mt-4 mb-6 text-neutral-800 dark:text-white`}
                     >
                         Are you sure you want to delete this option?
                     </span>
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                         <Button
                             keepText
                             text="Cancel"
-                            className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
+                            className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 ${bodyHeavy} justify-center rounded dark:border-neutral-150 dark:text-neutral-150`}
                             onClick={handleClose}
                         />
                         <Button
                             keepText
                             text="Delete"
-                            className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            className={`w-36 border border-primary bg-primary py-2 text-white dark:border-primaryDark dark:bg-primaryDark ${bodyHeavy} justify-center rounded`}
                             onClick={handleDelete}
                         />
                     </div>
@@ -378,23 +378,23 @@ export const OptionTab: FC<OptionTabProps> = ({
                         </span>
                     </div>
                     <div
-                        className={`${body} text-neutral-800 mt-4 mb-6 dark:text-white`}
+                        className={`${body} mt-4 mb-6 text-neutral-800 dark:text-white`}
                     >
                         Sorry, this decision violates our policies for content
                         safety and AI cannot provide any information. We
                         recommend you reconsider this decision.
                     </div>
-                    <div className="flex gap-x-lg items-center mx-auto">
+                    <div className="mx-auto flex items-center gap-x-lg">
                         <Button
                             keepText
                             text="Continue"
-                            className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
+                            className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 ${bodyHeavy} justify-center rounded dark:border-neutral-150 dark:text-neutral-150`}
                             onClick={handleWarningClose}
                         />
                         <Button
                             keepText
                             text="Reconsider"
-                            className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            className={`w-36 border border-primary bg-transparent py-2 text-primary dark:border-primaryDark dark:bg-primaryDark dark:text-neutral-150 ${bodyHeavy} justify-center rounded`}
                             onClick={handleReconsider}
                         />
                     </div>

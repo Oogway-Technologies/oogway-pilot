@@ -165,13 +165,13 @@ export const CriteriaTab: FC = () => {
     }, [decisionActivityId, watchCriteria])
 
     return (
-        <div className="flex flex-col mx-1">
+        <div className="mx-1 flex flex-col">
             <span
                 className={`${
                     isMobile
-                        ? 'sticky top-4 pt-1 z-50 dark:bg-neutralDark-600 bg-neutral-25 -mx-1'
+                        ? 'sticky top-4 z-50 -mx-1 bg-neutral-25 pt-1 dark:bg-neutralDark-600'
                         : ''
-                } md:ml-0 -mt-5 font-normal md:text-base leading-6 tracking-normal text-neutral-800 dark:text-neutral-150 text-sm`}
+                } -mt-5 font-normal leading-6 text-neutral-800 text-sm tracking-normal dark:text-neutral-150 md:ml-0 md:text-base`}
             >
                 Add what you want to consider
             </span>
@@ -191,7 +191,7 @@ export const CriteriaTab: FC = () => {
                 index === 0 ? (
                     <BaseCard
                         key={item.id}
-                        className="flex flex-col py-5 px-4 mt-4"
+                        className="mt-4 flex flex-col py-5 px-4"
                     >
                         <ErrorWrapperField
                             className="flex flex-col"
@@ -203,7 +203,7 @@ export const CriteriaTab: FC = () => {
                                     : ''
                             }
                         >
-                            <div className="flex items-center w-full">
+                            <div className="flex w-full items-center">
                                 <input
                                     key={item.id}
                                     className={inputStyle}
@@ -276,7 +276,7 @@ export const CriteriaTab: FC = () => {
                                             setValue('criteria.[0].name', '')
                                         }
                                     }}
-                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                                    className="ml-3 flex items-center justify-center rounded-full bg-primary p-2 disabled:bg-primary/50"
                                 >
                                     <UilPlus className={'fill-white'} />
                                 </button>
@@ -295,14 +295,14 @@ export const CriteriaTab: FC = () => {
                     </BaseCard>
                 ) : null
             )}
-            <BaseCard className="flex flex-col p-5 mt-xl mb-1">
+            <BaseCard className="mt-xl mb-1 flex flex-col p-5">
                 <span
                     className={`${bodyHeavy} text-neutral-800 dark:text-white`}
                 >
                     Added criteria
                 </span>
                 {fields.length === 1 ? (
-                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                    <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
                         No criteria added yet
                     </span>
                 ) : (
@@ -310,7 +310,7 @@ export const CriteriaTab: FC = () => {
                         className={
                             isMobile
                                 ? 'mt-4 flex flex-col space-y-3'
-                                : 'grid grid-cols-2 gap-4 mt-5'
+                                : 'mt-5 grid grid-cols-2 gap-4'
                         }
                     >
                         {watchCriteria.map((item, index) =>
@@ -342,21 +342,21 @@ export const CriteriaTab: FC = () => {
                         </span>
                     </div>
                     <span
-                        className={`${body} text-neutral-800 mt-4 mb-6 dark:text-white`}
+                        className={`${body} mt-4 mb-6 text-neutral-800 dark:text-white`}
                     >
                         Are you sure you want to delete this criteria?
                     </span>
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                         <Button
                             keepText
                             text="Cancel"
-                            className={`border border-neutral-700 dark:border-neutral-150 text-neutral-700 dark:text-neutral-150 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 dark:border-neutral-150 dark:text-neutral-150 ${bodyHeavy} justify-center rounded`}
                             onClick={handleClose}
                         />
                         <Button
                             keepText
                             text="Delete"
-                            className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            className={`w-36 border border-primary bg-primary py-2 text-white dark:border-primaryDark dark:bg-primaryDark ${bodyHeavy} justify-center rounded`}
                             onClick={handleDelete}
                         />
                     </div>
@@ -364,8 +364,8 @@ export const CriteriaTab: FC = () => {
             </Modal>
 
             <Modal show={isEdit} onClose={handleCloseEdit}>
-                <div className="flex flex-col w-full">
-                    <div className="flex items-center mb-4">
+                <div className="flex w-full flex-col">
+                    <div className="mb-4 flex items-center">
                         <UilPen
                             className={'mr-1 fill-neutral-800 dark:fill-white'}
                         />
@@ -376,7 +376,7 @@ export const CriteriaTab: FC = () => {
                         </span>
                     </div>
                     <input
-                        className={`${inputStyle} disabled:border-none disabled:font-bold disabled:p-0`}
+                        className={`${inputStyle} disabled:border-none disabled:p-0 disabled:font-bold`}
                         type="text"
                         placeholder={'Enter your Criterion'}
                         value={selectedItem?.name}
@@ -389,20 +389,20 @@ export const CriteriaTab: FC = () => {
                         disabled={selectedItem.isAI}
                     />
                     <span
-                        className={`${bodySmall} text-primary dark:text-primaryDark mt-1`}
+                        className={`${bodySmall} mt-1 text-primary dark:text-primaryDark`}
                     >
                         {weightToString(selectedItem.weight)}
                     </span>
                     <div
-                        className={`flex flex-col items-center p-3 space-y-2 overflow-scroll w-full bg-white dark:bg-neutralDark-500 rounded-2xl my-1`}
+                        className={`my-1 flex w-full flex-col items-center space-y-2 overflow-scroll rounded-2xl bg-white p-3 dark:bg-neutralDark-500`}
                     >
                         {criteriaTabs.map(item => (
                             <div
                                 key={`criteria-select-tabs-${item.name}`}
-                                className={`md:text-base text-sm not-italic font-bold tracking-normal whitespace-nowrap w-full flex items-center justify-center py-4 text-center cursor-pointer rounded-lg ${
+                                className={`flex w-full cursor-pointer items-center justify-center whitespace-nowrap rounded-lg py-4 text-center font-bold not-italic text-sm tracking-normal md:text-base ${
                                     selectedItem?.weight === item.weight
-                                        ? 'text-primary dark:text-primaryDark bg-primary/20 dark:bg-primaryDark/20'
-                                        : 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutralDark-300 custom-box-shadow dark:custom-box-shadow-dark'
+                                        ? 'bg-primary/20 text-primary dark:bg-primaryDark/20 dark:text-primaryDark'
+                                        : 'custom-box-shadow dark:custom-box-shadow-dark bg-white text-neutral-700 dark:bg-neutralDark-300 dark:text-neutral-300'
                                 }`}
                                 onClick={() =>
                                     setItem({
@@ -419,13 +419,13 @@ export const CriteriaTab: FC = () => {
                         <Button
                             keepText
                             text="Cancel"
-                            className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
+                            className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 ${bodyHeavy} justify-center rounded dark:border-neutral-150 dark:text-neutral-150`}
                             onClick={handleCloseEdit}
                         />
                         <Button
                             keepText
                             text="Update"
-                            className={`border border-primary dark:border-primaryDark bg-primary dark:bg-primaryDark text-white bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                            className={`w-36 border border-primary bg-primary py-2 text-white dark:border-primaryDark dark:bg-primaryDark ${bodyHeavy} justify-center rounded`}
                             onClick={() => handleUpdate()}
                         />
                     </div>

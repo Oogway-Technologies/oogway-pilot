@@ -64,7 +64,7 @@ class MyDocument extends Document {
                         crossOrigin="anonymous"
                     />
                 </Head>
-                <body className="antialiased bg-neutral-25 dark:bg-neutralDark-600">
+                <body className="bg-neutral-25 antialiased dark:bg-neutralDark-600">
                     <noscript>
                         <iframe
                             src="https://www.googletagmanager.com/ns.html?id=GTM-TCRRCW8"

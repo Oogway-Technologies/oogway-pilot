@@ -165,10 +165,10 @@ const PostVotingMechanism = ({
                 return (
                     <div key={idx} className={postCardClass.voteContainer}>
                         {obj.image && obj.image.length > 1 ? (
-                            <div className="w-full h-fit">
+                            <div className="h-fit w-full">
                                 {/* Image of compare */}
                                 <div
-                                    className="flex justify-center items-center"
+                                    className="flex items-center justify-center"
                                     style={{
                                         height: isMobile ? '11rem' : '16rem',
                                     }}
@@ -188,7 +188,7 @@ const PostVotingMechanism = ({
                                     >
                                         <div
                                             className={
-                                                'inline-flex justify-center p-sm w-full'
+                                                'inline-flex w-full justify-center p-sm'
                                             }
                                         >
                                             {obj.label}

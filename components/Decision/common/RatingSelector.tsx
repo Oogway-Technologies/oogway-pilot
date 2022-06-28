@@ -68,9 +68,9 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
 
     return (
         <div
-            className={`flex relative flex-col ${
+            className={`relative flex flex-col ${
                 isMobile ? 'p-3' : 'p-5'
-            } space-y-2 w-full bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
+            } custom-box-shadow dark:custom-box-shadow-dark w-full space-y-2 rounded-2xl bg-white dark:bg-neutralDark-500`}
         >
             <div className="flex items-center">
                 <span
@@ -84,7 +84,7 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                 </span>
                 {user && isQuestionSafeForAI && (
                     <AskAIButton
-                        className="justify-self-end ml-auto"
+                        className="ml-auto justify-self-end"
                         onClick={() =>
                             useAppDispatch(setDecisionCriteriaQueryKey(title))
                         }
@@ -94,11 +94,11 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
             <div
                 className={`flex ${
                     isMobile ? 'justify-evenly p-2' : 'justify-between p-4'
-                } items-center bg-white dark:bg-neutralDark-300 mt-12 w-full rounded-2xl custom-box-shadow dark:custom-box-shadow-dark`}
+                } custom-box-shadow dark:custom-box-shadow-dark mt-12 w-full items-center rounded-2xl bg-white dark:bg-neutralDark-300`}
             >
                 {!isMobile && (
                     <span
-                        className={`${bodySmall} text-neutral-300 px-2.5 py-1 rounded border border-neutral-300`}
+                        className={`${bodySmall} rounded border border-neutral-300 px-2.5 py-1 text-neutral-300`}
                     >
                         Not good
                     </span>
@@ -138,21 +138,21 @@ export const RatingSelector: FC<RatingSelectorProps> = ({
                     })}
                 {!isMobile && (
                     <span
-                        className={`${bodySmall} text-neutral-300 px-2.5 py-1 rounded border border-neutral-300`}
+                        className={`${bodySmall} rounded border border-neutral-300 px-2.5 py-1 text-neutral-300`}
                     >
                         Excellent
                     </span>
                 )}
             </div>
             {isMobile && (
-                <div className="flex items-center pt-3 mt-3">
+                <div className="mt-3 flex items-center pt-3">
                     <span
-                        className={`${bodySmall} text-neutral-300 px-2.5 py-1 rounded border border-neutral-300`}
+                        className={`${bodySmall} rounded border border-neutral-300 px-2.5 py-1 text-neutral-300`}
                     >
                         Not good
                     </span>
                     <span
-                        className={`${bodySmall} text-neutral-300 px-2.5 py-1 rounded border border-neutral-300 ml-auto`}
+                        className={`${bodySmall} ml-auto rounded border border-neutral-300 px-2.5 py-1 text-neutral-300`}
                     >
                         Excellent
                     </span>

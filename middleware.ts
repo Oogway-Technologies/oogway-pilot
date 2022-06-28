@@ -1,5 +1,13 @@
-// import { NextRequest } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 
+// import { upstashRest } from './lib/upstash/upstash'
+import getIP from './utils/helpers/getIP'
+
+/**
+ * Temporarily house rateLimit type and function definitions here
+ * until NextJS pushes patch for next/server imports outside of pages
+ */
 // export interface RateLimitContextBase {
 //     id: string
 //     limit: number
@@ -126,4 +134,69 @@
 //         })
 //     }
 
-export {}
+// export default function getForwardedFor(req: Request) {
+//     // Fetch forwarded for value and class type
+//     let xff = req.headers.get('x-forwarded-for')
+//     const xffClass = req.headers.get('x-forwarded-for-class')
+
+//     // Ensure xffClass is specified
+//     if (!xffClass) {
+//         throw new Error('X-Forwarded-For-Class header is missing.')
+//     }
+
+//     // Set default xff for ip
+//     xff = xff && xffClass === 'ip' ? xff.split(',')[0] : xff
+
+//     return [xffClass, xff] as const
+// }
+
+// export const idRateLimit = initRateLimit(request => ({
+//     id: `${getForwardedFor(request)[0]}:${getForwardedFor(request)[1]}`,
+//     count: increment,
+//     limit: 1, // # requests
+//     timeframe: 1, // seconds
+// }))
+
+// const increment: CountFn = async ({ key, timeframe }) => {
+//     const results = await upstashRest(
+//         [
+//             ['INCR', key],
+//             ['EXPIRE', key, timeframe],
+//         ],
+//         { pipeline: true }
+//     )
+//     return results[0].result
+// }
+
+/**
+ * Main Middleware Function
+ */
+
+export async function middleware(req: NextRequest) {
+    // Can abstract to handle multiple routes and configs
+    // if (req.nextUrl.pathname.startsWith('/api/ai/adviceBot')) {
+    //     const res = await idRateLimit(req)
+    //     // If the call fails, log the rate limiting response
+    //     // and redirect user to referrer without encountering and error
+    //     // If we intend to call API from other services, not just through
+    //     // new post form, may want to account for those calls as well.
+    //     if (res.status !== 200) {
+    //         // Get referer page and redirect
+    //         const referer = req.headers.get('referer')
+
+    //         // if no referrer or not coming from new post form
+    //         // return response
+    //         if (!referer || !referer.includes('/?feed')) return res
+
+    //         // Otherwise reroute the user to the feed
+    //         return NextResponse.redirect(referer)
+    //     }
+    // }
+
+    // Add IP addresses to cookies
+    const response = NextResponse.next()
+    // Set custom header
+    response.cookies.set('userIp', getIP(req))
+    // Return response
+    return response
+}

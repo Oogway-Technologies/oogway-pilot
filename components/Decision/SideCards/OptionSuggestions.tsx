@@ -37,7 +37,7 @@ export const OptionSuggestions = () => {
             infoCircle
             className={
                 isMobile
-                    ? 'sticky -mx-1 top-11 pt-1 dark:bg-neutralDark-600 bg-neutral-25 z-50'
+                    ? 'sticky top-11 z-50 -mx-1 bg-neutral-25 pt-1 dark:bg-neutralDark-600'
                     : ''
             }
         >
@@ -52,7 +52,7 @@ export const OptionSuggestions = () => {
                       )
                     : null}
                 <div
-                    className={`flex w-full max-h-[320px] overflow-auto ${
+                    className={`flex max-h-[320px] w-full overflow-auto ${
                         isMobile && optionsList.length && !loadingAiSuggestions
                             ? 'items-center space-x-5'
                             : 'flex-col space-y-2'
@@ -62,18 +62,18 @@ export const OptionSuggestions = () => {
                         <UilSpinner className={'my-3 mx-auto animate-spin'} />
                     )}
                     {!optionsList.length && !loadingAiSuggestions && (
-                        <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                        <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
                             No more suggestions.
                         </span>
                     )}
                     {isSuggestionsEmpty && (
                         <>
                             <span
-                                className={`${bodyHeavy} text-center mx-auto mt-4`}
+                                className={`${bodyHeavy} mx-auto mt-4 text-center`}
                             >
                                 Oogway AI cannot help with this decision.
                             </span>
-                            <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                            <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
                                 {`It’s a work in progress and it’s learning to serve better suggestions with each decision you make.`}
                             </span>
                         </>
@@ -82,7 +82,7 @@ export const OptionSuggestions = () => {
                         return (
                             <div
                                 key={`option-list-item-${index}`}
-                                className={'flex items-center mt-4 w-full'}
+                                className={'mt-4 flex w-full items-center'}
                             >
                                 <SuggestionItem
                                     suggestionItem={item}

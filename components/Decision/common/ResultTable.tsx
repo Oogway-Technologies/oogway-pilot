@@ -51,17 +51,17 @@ export const ResultTable: FC<ResultTableProps> = ({
                 borderSpacing: '0px 0.5rem',
             }}
         >
-            <thead className="flex items-center w-full">
-                <th className={'flex mr-4 w-1/3'}>
+            <thead className="flex w-full items-center">
+                <th className={'mr-4 flex w-1/3'}>
                     <span
-                        className={`text-sm md:text-base leading-6 tracking-normal flex flex-col items-start text-primary dark:text-primaryDark px-2 py-1.5`}
+                        className={`flex flex-col items-start px-2 py-1.5 leading-6 text-primary text-sm tracking-normal dark:text-primaryDark md:text-base`}
                     >
                         <b>CRITERIA</b>
                         IMPORTANCE
                     </span>
                 </th>
                 <th
-                    className={`flex items-center space-x-3 w-2/3 ${bodyHeavy} text-white bg-neutral-700 rounded-lg  py-1 px-2  min-h-[3.5rem]`}
+                    className={`flex w-2/3 items-center space-x-3 ${bodyHeavy} min-h-[3.5rem] rounded-lg bg-neutral-700  py-1 px-2  text-white`}
                 >
                     <DropDownMenu
                         menuText={selectedRating.option}
@@ -83,12 +83,12 @@ export const ResultTable: FC<ResultTableProps> = ({
             <tbody className="flex flex-col">
                 {criteria.map((item: Criteria, index: number) => (
                     <tr
-                        className="flex items-center my-2 w-full h-14"
+                        className="my-2 flex h-14 w-full items-center"
                         key={`result-table-row-ratings-item-${index}`}
                     >
                         <td
-                            className={`${bodySmall} flex flex-col items-start py-1.5 px-2 mr-4 w-1/3 
-                        text-primary dark:text-primaryDark bg-primary/20 rounded-lg`}
+                            className={`${bodySmall} mr-4 flex w-1/3 flex-col items-start rounded-lg bg-primary/20 
+                        py-1.5 px-2 text-primary dark:text-primaryDark`}
                         >
                             {item.name.split('').length > 14 ? (
                                 <Tooltip
@@ -101,7 +101,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                                 >
                                     <b
                                         className={
-                                            'w-full max-w-[5rem] underline underline-offset-2 truncate'
+                                            'w-full max-w-[5rem] truncate underline underline-offset-2'
                                         }
                                     >
                                         {item.name}
@@ -119,9 +119,9 @@ export const ResultTable: FC<ResultTableProps> = ({
                             item.name === val.criteria ? (
                                 <td
                                     key={`result-item-criteria-${key}`}
-                                    className={`${bodySmall} text-neutral-700 bg-neutral-50 
-                                    dark:bg-neutralDark-300 dark:text-white flex items-center 
-                                    justify-center rounded-lg w-2/3 h-full`}
+                                    className={`${bodySmall} flex h-full 
+                                    w-2/3 items-center justify-center rounded-lg 
+                                    bg-neutral-50 text-neutral-700 dark:bg-neutralDark-300 dark:text-white`}
                                 >
                                     {val.value}
                                 </td>
@@ -131,9 +131,9 @@ export const ResultTable: FC<ResultTableProps> = ({
                 ))}
 
                 {/* Score row */}
-                <tr className="flex items-center w-full">
+                <tr className="flex w-full items-center">
                     <td
-                        className={`${bodySmallHeavy} text-primary dark:text-primaryDark w-1/3 py-1.5 px-2 mr-4`}
+                        className={`${bodySmallHeavy} mr-4 w-1/3 py-1.5 px-2 text-primary dark:text-primaryDark`}
                     >
                         Score
                     </td>
@@ -141,7 +141,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                         item.name === selectedRating.option ? (
                             <td
                                 key={`option-item-score-${index}`}
-                                className={`${bodySmall} text-center text-neutral-700 dark:text-white w-2/3`}
+                                className={`${bodySmall} w-2/3 text-center text-neutral-700 dark:text-white`}
                             >
                                 {item.score}
                             </td>
@@ -160,9 +160,9 @@ export const ResultTable: FC<ResultTableProps> = ({
         >
             <thead>
                 <tr>
-                    <td className={isMobile ? 'pr-2' : 'pr-4 w-0'}>
+                    <td className={isMobile ? 'pr-2' : 'w-0 pr-4'}>
                         <span
-                            className={`${body} flex flex-col items-start text-primary dark:text-primaryDark px-2 py-1.5`}
+                            className={`${body} flex flex-col items-start px-2 py-1.5 text-primary dark:text-primaryDark`}
                         >
                             <b>CRITERIA</b>
                             IMPORTANCE
@@ -171,9 +171,9 @@ export const ResultTable: FC<ResultTableProps> = ({
                     {rating.map((item: Ratings, index: number) => (
                         <td
                             key={`result-row-header-item-${index}`}
-                            className={`${bodyHeavy} text-white bg-neutral-700 h-10 px-3 text-center ${
+                            className={`${bodyHeavy} h-10 bg-neutral-700 px-3 text-center text-white ${
                                 index === 0 ? 'rounded-l-lg' : ''
-                            } last:rounded-r-lg truncate max-w-[5rem]`}
+                            } max-w-[5rem] truncate last:rounded-r-lg`}
                         >
                             {item.option}
                         </td>
@@ -185,7 +185,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                     <tr key={`result-table-row-ratings-item-${index}`}>
                         <td className="pr-4">
                             <span
-                                className={`${body} flex flex-col items-start text-primary dark:text-primaryDark bg-primary/20 rounded-lg px-2 py-1.5`}
+                                className={`${body} flex flex-col items-start rounded-lg bg-primary/20 px-2 py-1.5 text-primary dark:text-primaryDark`}
                             >
                                 {item.name.split('').length > 16 ? (
                                     <Tooltip
@@ -215,7 +215,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                                 item.name === val.criteria ? (
                                     <td
                                         key={`result-item-criteria-${key}`}
-                                        className={`${body} text-neutral-700 bg-neutral-50 dark:bg-neutralDark-300 dark:text-white text-center ${
+                                        className={`${body} bg-neutral-50 text-center text-neutral-700 dark:bg-neutralDark-300 dark:text-white ${
                                             idx === 0 ? 'rounded-l-lg' : ''
                                         } last:rounded-r-lg`}
                                     >
@@ -229,14 +229,14 @@ export const ResultTable: FC<ResultTableProps> = ({
                 {/* Score row */}
                 <tr>
                     <td
-                        className={`${bodySmallHeavy} text-primary dark:text-primaryDark text-left`}
+                        className={`${bodySmallHeavy} text-left text-primary dark:text-primaryDark`}
                     >
                         Score
                     </td>
                     {options?.map((item: Options, index: number) => (
                         <td
                             key={`option-item-score-${index}`}
-                            className={`${body} text-neutral-700 dark:text-white border-none text-center`}
+                            className={`${body} border-none text-center text-neutral-700 dark:text-white`}
                         >
                             {item.score}
                         </td>

@@ -38,7 +38,7 @@ const OptionRatingTabWrapper: FC = () => {
     }
     return (
         <>
-            <div className={`flex items-center mb-4 space-x-3 w-full`}>
+            <div className={`mb-4 flex w-full items-center space-x-3`}>
                 <ProgressBar
                     totalSteps={
                         getValues('options').filter(
@@ -52,7 +52,7 @@ const OptionRatingTabWrapper: FC = () => {
             </div>
             <div
                 className={
-                    'flex overflow-x-auto justify-self-start items-center mr-auto w-full'
+                    'mr-auto flex w-full items-center justify-self-start overflow-x-auto'
                 }
             >
                 {fields.map((item, index) => {
@@ -62,8 +62,8 @@ const OptionRatingTabWrapper: FC = () => {
                             onClick={() => handleClick(index)}
                             className={`${optionRatingTab.itemContainer} ${
                                 selectedTab === index
-                                    ? 'text-neutral-800 bg-neutral-50 border border-neutral-800'
-                                    : 'text-neutralDark-150 border border-neutralDark-150 first:border-r-transparent last:border-l-transparent'
+                                    ? 'border border-neutral-800 bg-neutral-50 text-neutral-800'
+                                    : 'border border-neutralDark-150 text-neutralDark-150 first:border-r-transparent last:border-l-transparent'
                             } ${isMobile ? 'px-2 py-1.5' : 'px-4 py-2.5'}`}
                         >
                             {watchOptions[index].name}

@@ -21,19 +21,19 @@ export const Tooltip: FC<
 }: TooltipProps) => {
     return (
         <div
-            className={`group flex relative flex-col items-center ${className}`}
+            className={`group relative flex flex-col items-center ${className}`}
         >
             {children}
             <div
-                className={`hidden group-hover:flex absolute bottom-0 flex-col items-center mb-11 ${classForParent}`}
+                className={`absolute bottom-0 mb-11 hidden flex-col items-center group-hover:flex ${classForParent}`}
             >
                 <span
-                    className={`relative z-10 p-1 w-max text-xs text-primary bg-white dark:bg-neutralDark-500 rounded-[8px] border-[1px] border-neutral-300 border-solid shadow-lg ${classForToolTipBox}`}
+                    className={`relative z-10 w-max rounded-[8px] border-[1px] border-solid border-neutral-300 bg-white p-1 text-primary shadow-lg text-xs dark:bg-neutralDark-500 ${classForToolTipBox}`}
                 >
                     {toolTipText}
                 </span>
                 <div
-                    className={`-mt-2 w-3 h-3 bg-white dark:bg-neutralDark-500 border-[1px] border-neutral-300 border-solid rotate-45 ${classForBottomArrow}`}
+                    className={`-mt-2 h-3 w-3 rotate-45 border-[1px] border-solid border-neutral-300 bg-white dark:bg-neutralDark-500 ${classForBottomArrow}`}
                 />
             </div>
         </div>

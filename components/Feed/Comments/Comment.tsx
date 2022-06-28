@@ -101,7 +101,7 @@ const Comment: FC<
                                 ) => (
                                     <a
                                         className={
-                                            'pr-sm ml-0 text-sm text-neutral-700 dark:text-neutralDark-150 hover:underline whitespace-pre-line break-words'
+                                            'ml-0 whitespace-pre-line break-words pr-sm text-neutral-700 text-sm hover:underline dark:text-neutralDark-150'
                                         }
                                         target="blank"
                                         href={decoratedHref}
@@ -208,7 +208,7 @@ const Comment: FC<
                 />
             </Modal>
             <Modal show={isMoreInfoOpen} onClose={closeMoreInfo}>
-                <div className={'flex-col w-60 max-w-max sm:w-96'}>
+                <div className={'w-60 max-w-max flex-col sm:w-96'}>
                     <div className={commentClass.bodyDescription}>
                         You are seeing this message because Oogway AI Bot either
                         failed to generate useful advice for you or the content

@@ -35,7 +35,7 @@ const _ComparePreview: FC<
                             className={
                                 // compareFormClass.previewText +
                                 text.split('').length > calcTruncate()
-                                    ? ' text-center truncate p-sm'
+                                    ? ' truncate p-sm text-center'
                                     : ' inline-flex w-full justify-center p-sm'
                             }
                         >

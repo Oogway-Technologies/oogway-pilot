@@ -15,7 +15,7 @@ const Reddit: FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = ({
         alt="Reddit logo"
         width={width}
         height={height}
-        className="bg-clip-content bg-transparent dark:bg-white/90 rounded-md"
+        className="rounded-md bg-transparent bg-clip-content dark:bg-white/90"
     />
 )
 

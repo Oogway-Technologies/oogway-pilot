@@ -216,12 +216,12 @@ export const ResultTab: FC<ResultTabProps> = ({
     }
 
     return (
-        <div className="flex flex-col mb-3 space-y-3">
-            <div className="flex flex-col my-4 space-y-1 text-center">
+        <div className="mb-3 flex flex-col space-y-3">
+            <div className="my-4 flex flex-col space-y-1 text-center">
                 {isThereATie ? (
                     <>
                         <span
-                            className={`text-xl font-bold tracking-normal leading-10 text-center text-neutral-800 dark:text-white`}
+                            className={`text-center font-bold leading-10 text-neutral-800 text-xl tracking-normal dark:text-white`}
                         >
                             It’s a tie so we picked one for you.
                         </span>
@@ -251,14 +251,14 @@ export const ResultTab: FC<ResultTabProps> = ({
                         >
                             Your best option is
                         </span>
-                        <span className="text-3xl font-bold tracking-normal leading-10 text-center text-primary dark:text-primaryDark">
+                        <span className="text-center font-bold leading-10 text-primary text-3xl tracking-normal dark:text-primaryDark">
                             {decisionEngineBestOption}
                         </span>
                     </>
                 )}
             </div>
             <ResultChart />
-            <div className="flex items-center py-4 mx-auto space-x-4">
+            <div className="mx-auto flex items-center space-x-4 py-4">
                 <button
                     id={'manualDecision-NewDecision'}
                     onClick={handleReset}
@@ -274,18 +274,18 @@ export const ResultTab: FC<ResultTabProps> = ({
                 </button> */}
             </div>
             {isMobile ? <ScoreCard /> : ''}
-            <BaseCard className="p-3  my-2 md:p-5 md:mx-1">
+            <BaseCard className="my-2  p-3 md:mx-1 md:p-5">
                 <div
                     onClick={() => setOpen(!isOpen)}
-                    className={'flex items-center cursor-pointer'}
+                    className={'flex cursor-pointer items-center'}
                 >
                     <span
-                        className={`${bodyHeavy} text-neutral-700 dark:text-white w-full`}
+                        className={`${bodyHeavy} w-full text-neutral-700 dark:text-white`}
                     >
                         Score Breakdown
                     </span>
                     <UilArrowDownRight
-                        className={`fill-neutral-700 dark:fill-neutral-150 transition-all ${
+                        className={`fill-neutral-700 transition-all dark:fill-neutral-150 ${
                             isOpen ? 'rotate-180' : 'rotate-0'
                         }`}
                     />
