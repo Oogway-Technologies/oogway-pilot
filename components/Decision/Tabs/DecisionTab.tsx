@@ -245,7 +245,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                 </ErrorWrapper>
                 <ErrorWrapper errorField="context">
                     <textarea
-                        className={`${inputStyle} h-40 resize-none mb-3 md:mb-6 ${
+                        className={`${inputStyle} mb-3 h-40 resize-none md:mb-6 ${
                             currentTab === 1 && ' opacity-60'
                         }`}
                         placeholder="Context for your decision (optional)"
