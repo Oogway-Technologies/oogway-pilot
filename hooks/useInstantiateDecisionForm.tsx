@@ -7,10 +7,8 @@ import {
     setDecisionFormState,
     setDecisionQuestion,
     setDecisionRatingUpdate,
-    setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
-    setIsRatingsModified,
     setSideCardStep,
     setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
@@ -60,7 +58,6 @@ const useInstantiateDecisionForm = ({
             retrievedData => {
                 if (!retrievedData.pages[0].decisions[0].isComplete) {
                     // Set rehydration flags
-                    useAppDispatch(setIsDecisionFormUpdating(true))
                     useAppDispatch(setIsDecisionRehydrated(true))
 
                     // Create copies
@@ -150,8 +147,6 @@ const useInstantiateDecisionForm = ({
             useAppDispatch(setSideCardStep(1))
             useAppDispatch(setClickedConnect(false))
             useAppDispatch(setDecisionFormState({}))
-            useAppDispatch(setIsDecisionFormUpdating(false))
-            useAppDispatch(setIsRatingsModified(false))
             useAppDispatch(setIsDecisionRehydrated(false))
             useAppDispatch(setIsQuestionSafeForAI(true))
             useAppDispatch(setUserIgnoredUnsafeWarning(false))

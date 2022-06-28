@@ -28,6 +28,7 @@ import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
 import { useAppSelector } from '../hooks/useRedux'
+import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 // import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import {
@@ -101,7 +102,7 @@ const DecisionEngine: FC = () => {
         )
     }, [currentTab, matrixStep])
 
-    // useSaveDecisionFormState()
+    useSaveDecisionFormState()
 
     const matrixGenerator = () => {
         switch (matrixStep) {
@@ -117,6 +118,7 @@ const DecisionEngine: FC = () => {
             case 1:
                 return (
                     <MatrixResultTab
+                        deviceIp={deviceIp || ''}
                         setMatrixStep={setMatrixStep}
                         setCurrentTab={setCurrentTab}
                     />
@@ -292,8 +294,9 @@ const DecisionEngine: FC = () => {
                                     </>
                                 )
                             )}
-                            {currentTab === 1 &&
-                            watchQuestion.split('').length ? (
+                            {currentTab === 1 ||
+                            (matrixStep === 0 &&
+                                watchQuestion.split('').length) ? (
                                 <DecisionHelperCard />
                             ) : null}
                             {currentTab === 5 ? <ScoreCard /> : null}

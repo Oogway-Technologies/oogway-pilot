@@ -5,7 +5,6 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
     addSelectedCriteria,
-    setIsDecisionFormUpdating,
     setPreviousIndex,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
@@ -102,11 +101,11 @@ export const CriteriaTab: FC = () => {
     }
 
     useEffect(() => {
-        // // to focus on input on mount
-        // if (!isDecisionRehydrated) setFocus('options.[0].name')
+        // to focus on input on mount
+        setFocus('options.[0].name')
 
         // On mount, log form state from previous tab
-        // if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
+        // updateDecision.mutate(decisionFormState)
 
         return () => {
             useAppDispatch(setPreviousIndex(3))
@@ -160,7 +159,6 @@ export const CriteriaTab: FC = () => {
                     criteria: filteredCriteria,
                 }
             useAppDispatch(updateDecisionFormState(formState))
-            useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [decisionActivityId, watchCriteria])
 

@@ -2,11 +2,18 @@ import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
+    setClickedConnect,
+    setDecisionActivityId,
+    setDecisionFormState,
+    setDecisionQuestion,
+    setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
+    setSideCardStep,
     setUserIgnoredUnsafeWarning,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { Criteria, Options } from '../../../utils/types/global'
@@ -15,21 +22,28 @@ import { ResultChart } from '../common/ResultChart'
 import { ResultTable } from '../common/ResultTable'
 
 interface MatrixResultTabProps {
+    deviceIp: string
     setMatrixStep: (n: number) => void
     setCurrentTab: (n: number) => void
 }
 const MatrixResultTab: FC<MatrixResultTabProps> = ({
+    deviceIp,
     setMatrixStep,
     setCurrentTab,
 }: MatrixResultTabProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { reset, getValues, setValue } = useFormContext()
+    const userProfile = useAppSelector(state => state.userSlice.user)
     const {
         decisionEngineBestOption,
         isThereATie,
         decisionMatrixHasResults,
         isQuestionSafeForAI,
+        clickedConnect,
+        decisionActivityId,
     } = useAppSelector(state => state.decisionSlice)
+
+    const createOrUpdateDecision = useCreateDecisionActivity()
 
     const fixUpStates = () => {
         const orgOptionsList = getValues('options')
@@ -45,30 +59,93 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     }
 
     useEffect(() => {
-        if (decisionMatrixHasResults) fixUpStates()
+        if (decisionMatrixHasResults) {
+            fixUpStates()
+            createOrUpdateDecision.mutate(
+                {
+                    clickedConnect: clickedConnect,
+                    userId: userProfile.uid,
+                    ipAddress: deviceIp,
+                    question: getValues('question'),
+                    context: getValues('context'),
+                    options: getValues('options'), // Only differs from suggestions if user later modifies
+                    suggestedCriteria: getValues('options'),
+                    criteria: getValues('criteria'), // Only differs from suggestions if user later modifies
+                    suggestedOptions: getValues('criteria'),
+                    ratings: getValues('ratings'),
+                    isComplete: true,
+                    currentTab: 5,
+                    userIgnoredUnsafeWarning: false,
+                    isQuestionSafeForAI: true,
+                },
+                {
+                    onSuccess: newDecision => {
+                        useAppDispatch(
+                            setDecisionActivityId(newDecision.data.id)
+                        )
+                    },
+                }
+            )
+        }
     }, [])
 
-    const handleReconsider = () => {
+    const handleReconsiderOrNewDecision = () => {
         reset() // reset form state
         useAppDispatch(setIsQuestionSafeForAI(true))
         useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        useAppDispatch(setDecisionActivityId(undefined))
+        useAppDispatch(setDecisionQuestion(undefined))
+        useAppDispatch(setSideCardStep(1))
+        useAppDispatch(setClickedConnect(false))
+        useAppDispatch(setDecisionFormState({}))
+        useAppDispatch(setIsDecisionRehydrated(false))
         setCurrentTab(0)
         setMatrixStep(0)
     }
 
-    const handleContinue = () => {
-        if (!isQuestionSafeForAI) {
+    const handleContinueWithUnsupportedDecision = () => {
+        if (!isQuestionSafeForAI)
             useAppDispatch(setUserIgnoredUnsafeWarning(true))
-        }
+        // Log new decision
+        createOrUpdateDecision.mutate(
+            {
+                clickedConnect: clickedConnect,
+                userId: userProfile.uid,
+                ipAddress: deviceIp,
+                question: getValues('question'),
+                context: getValues('context'),
+                suggestedCriteria: null,
+                suggestedOptions: null,
+                isComplete: false,
+                currentTab: 2,
+                userIgnoredUnsafeWarning: isQuestionSafeForAI ? false : true,
+                isQuestionSafeForAI: isQuestionSafeForAI,
+            },
+            {
+                onSuccess: newDecision => {
+                    useAppDispatch(setDecisionActivityId(newDecision.data.id))
+                    setCurrentTab(2)
+                },
+            }
+        )
+    }
+
+    const handleRefineDecision = () => {
+        // update previous decision
+        createOrUpdateDecision.mutate({
+            id: decisionActivityId,
+            isComplete: false,
+            currentTab: 2,
+        })
         setCurrentTab(2)
     }
 
     return (
-        <div className="mb-3 flex flex-col space-y-3">
+        <div className="flex flex-col mb-3 space-y-3">
             {decisionMatrixHasResults ? (
                 <>
                     <ResultTable />
-                    <div className="my-4 mb-3 flex flex-col space-y-1 text-center">
+                    <div className="flex flex-col my-4 mb-3 space-y-1 text-center">
                         {isThereATie ? (
                             <>
                                 <span
@@ -102,7 +179,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 >
                                     Your best option is
                                 </span>
-                                <span className="text-center font-bold leading-10 text-primary text-3xl tracking-normal dark:text-primaryDark">
+                                <span className="text-3xl font-bold tracking-normal leading-10 text-center text-primary dark:text-primaryDark">
                                     {decisionEngineBestOption}
                                 </span>
                             </>
@@ -117,7 +194,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     }
                 >
                     <div></div>
-                    <div className="col-span-2 col-start-2 mx-auto flex flex-col">
+                    <div className="flex flex-col col-span-2 col-start-2 mx-auto">
                         <div
                             className={`flex flex-col gap-y-md
                                 ${
@@ -126,7 +203,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                         : 'custom-box-shadow-md dark:custom-box-shadow-dark-md mb-4 mr-4 rounded-2xl rounded-bl-none bg-white py-4 px-3 dark:bg-neutralDark-500'
                                 }`}
                         >
-                            <span className="mt-4 text-left font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
+                            <span className="mt-4 text-sm font-normal text-left text-neutral-700 dark:text-neutralDark-150">
                                 {isQuestionSafeForAI
                                     ? `Oogway cannot help with this
                             decision. It's a work in progress and it's learning
@@ -143,15 +220,17 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 <Button
                                     keepText
                                     text="Continue"
-                                    className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 ${bodyHeavy} justify-center rounded dark:border-neutral-150 dark:text-neutral-150`}
-                                    onClick={handleContinue}
+                                    className={`border border-neutral-700 text-neutral-700 bg-transparent w-36 py-2 ${bodyHeavy} rounded justify-center dark:text-neutral-150 dark:border-neutral-150`}
+                                    onClick={
+                                        handleContinueWithUnsupportedDecision
+                                    }
                                 />
                                 {!isQuestionSafeForAI && (
                                     <Button
                                         keepText
                                         text="Reconsider"
-                                        className={`w-36 border border-primary bg-transparent py-2 text-primary dark:border-primaryDark dark:bg-primaryDark dark:text-neutral-150 ${bodyHeavy} justify-center rounded`}
-                                        onClick={handleReconsider}
+                                        className={`border border-primary dark:border-primaryDark bg-transparent dark:bg-primaryDark text-primary dark:text-neutral-150 w-36 py-2 ${bodyHeavy} rounded justify-center`}
+                                        onClick={handleReconsiderOrNewDecision}
                                     />
                                 )}
                             </div>
@@ -160,13 +239,10 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                 </div>
             )}
             {decisionMatrixHasResults && (
-                <div className="mx-auto flex items-center space-x-4 py-4">
+                <div className="flex items-center py-4 mx-auto space-x-4">
                     <button
                         id={'automatedDecisionMatrix-NewDecision'}
-                        onClick={() => {
-                            reset()
-                            setMatrixStep(0)
-                        }}
+                        onClick={handleReconsiderOrNewDecision}
                         className={feedToolbarClass.newPostButton}
                     >
                         New Decision
@@ -174,9 +250,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     <button
                         id={'automatedDecisionMatrix-RefineDecision'}
                         className={feedToolbarClass.newPostButton}
-                        onClick={() => {
-                            setCurrentTab(2)
-                        }}
+                        onClick={handleRefineDecision}
                     >
                         Refine decision
                     </button>
