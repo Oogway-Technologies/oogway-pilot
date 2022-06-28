@@ -79,5 +79,6 @@ module.exports = {
         'tailwindcss/no-custom-classname': 'warn',
         'tailwindcss/no-contradicting-classname': 'error',
         '@next/next/no-img-element': 'off',
+        '@next/next/no-server-import-in-page': 'off',
     },
 }

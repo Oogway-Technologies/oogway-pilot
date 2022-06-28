@@ -14,7 +14,7 @@ export const Card: FC<
     return (
         <div
             id={id}
-            className={`shadow rounded overflow-auto ${
+            className={`overflow-auto rounded shadow ${
                 className ? className : ''
             }`}
             ref={ref}

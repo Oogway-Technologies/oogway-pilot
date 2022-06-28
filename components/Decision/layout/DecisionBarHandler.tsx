@@ -351,7 +351,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
 
     return (
         <div
-            className={`flex items-center justify-between relative ${
+            className={`relative flex items-center justify-between ${
                 className ? className : ''
             }`}
         >
@@ -380,7 +380,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     }Tab`}
                     className={`${squareButton} ml-3 ${
                         pointerArray[selectedTab - 1] && selectedTab !== 5
-                            ? 'border-primary focus:border-primary active:border-primary text-primary dark:text-primaryDark uppercase'
+                            ? 'border-primary uppercase text-primary focus:border-primary active:border-primary dark:text-primaryDark'
                             : 'border-neutral-300 focus:border-neutral-300 active:border-neutral-300'
                     }`}
                     type="button"

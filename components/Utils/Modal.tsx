@@ -15,11 +15,11 @@ const Modal: React.FC<
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog
-                className="flex overflow-y-auto fixed inset-0 z-10 justify-center items-center"
+                className="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto"
                 as="div"
                 onClose={onClose}
             >
-                <div className="flex justify-center px-4 w-11/12 text-center sm:w-full">
+                <div className="flex w-11/12 justify-center px-4 text-center sm:w-full">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"

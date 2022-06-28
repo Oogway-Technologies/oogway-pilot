@@ -35,9 +35,9 @@ export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
         <div
             className={`flex ${
                 isMobile
-                    ? 'flex-col items-center p-3 space-y-4'
-                    : 'items-center p-4 space-x-4 justify-between'
-            } overflow-auto w-full bg-white dark:bg-neutralDark-500 rounded-2xl ${
+                    ? 'flex-col items-center space-y-4 p-3'
+                    : 'items-center justify-between space-x-4 p-4'
+            } w-full overflow-auto rounded-2xl bg-white dark:bg-neutralDark-500 ${
                 removeShadow
                     ? ''
                     : 'custom-box-shadow dark:custom-box-shadow-dark'
@@ -46,12 +46,12 @@ export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
             {criteriaTabs.map(item => (
                 <div
                     key={`criteria-select-tabs-${item.name}`}
-                    className={`md:text-base text-sm not-italic font-bold tracking-normal whitespace-nowrap ${
+                    className={`whitespace-nowrap font-bold not-italic text-sm tracking-normal md:text-base ${
                         isMobile ? 'w-full' : ''
-                    } flex items-center justify-center py-2 px-4 text-center cursor-pointer rounded-lg ${
+                    } flex cursor-pointer items-center justify-center rounded-lg py-2 px-4 text-center ${
                         selected?.name === item.name
-                            ? 'text-primary dark:text-primaryDark bg-primary/20 dark:bg-primaryDark/20'
-                            : 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutralDark-300'
+                            ? 'bg-primary/20 text-primary dark:bg-primaryDark/20 dark:text-primaryDark'
+                            : 'bg-white text-neutral-700 dark:bg-neutralDark-300 dark:text-neutral-300'
                     }`}
                     onClick={() => handleClick(item)}
                 >

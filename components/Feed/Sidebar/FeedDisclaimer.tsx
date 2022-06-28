@@ -12,7 +12,7 @@ const FeedDisclaimer = ({ className }: FeedDisclaimerProps) => {
                 target="_blank"
                 href="https://www.oogway.ai/terms-of-use"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline hover:cursor-pointer"
+                className="text-primary hover:cursor-pointer hover:underline"
             >
                 {' '}
                 Terms of Use,
@@ -21,7 +21,7 @@ const FeedDisclaimer = ({ className }: FeedDisclaimerProps) => {
                 target="_blank"
                 href="https://www.oogway.ai/privacy-policy"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline hover:cursor-pointer"
+                className="text-primary hover:cursor-pointer hover:underline"
             >
                 Privacy Policy
             </a>{' '}
@@ -30,7 +30,7 @@ const FeedDisclaimer = ({ className }: FeedDisclaimerProps) => {
                 target="_blank"
                 href="https://www.oogway.ai/privacy-policy"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline hover:cursor-pointer"
+                className="text-primary hover:cursor-pointer hover:underline"
             >
                 {' '}
                 Cookie Policy.

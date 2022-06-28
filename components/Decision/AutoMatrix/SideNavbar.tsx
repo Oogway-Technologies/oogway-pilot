@@ -46,8 +46,8 @@ export const SideNavbar: FC<SideNavbarProps> = ({
         <div
             className={`flex bg-primary dark:bg-neutralDark-300 ${
                 isMobile
-                    ? 'p-2 justify-evenly mt-3 self-end w-full'
-                    : 'flex-col justify-center items-center h-full'
+                    ? 'mt-3 w-full justify-evenly self-end p-2'
+                    : 'h-full flex-col items-center justify-center'
             } ${className ? className : ''}`}
         >
             {Tabs.map((item, index) => (
@@ -59,7 +59,7 @@ export const SideNavbar: FC<SideNavbarProps> = ({
                     }}
                     className={`flex ${
                         isMobile ? 'flex-col items-center' : 'items-center '
-                    } pl-3 w-full h-12 ${
+                    } h-12 w-full pl-3 ${
                         index === 1 && getValues('options').length > 1
                             ? 'cursor-pointer'
                             : index === 0
@@ -82,7 +82,7 @@ export const SideNavbar: FC<SideNavbarProps> = ({
                     </span>
                     {!isMobile && (
                         <div
-                            className={`ml-auto w-[4px] h-full ${
+                            className={`ml-auto h-full w-[4px] ${
                                 selectedTab === index
                                     ? 'bg-[#E2D9FC] dark:bg-white'
                                     : ''

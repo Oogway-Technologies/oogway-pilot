@@ -21,7 +21,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({
         <div
             className={`flex ${
                 alignVertical ? '' : 'flex-col justify-center '
-            } items-center w-full ${className ? className : ''}`}
+            } w-full items-center ${className ? className : ''}`}
         >
             {!alignVertical && (
                 <span
@@ -30,9 +30,9 @@ export const ProgressBar: FC<ProgressBarProps> = ({
                     {currentStep} of {totalSteps}
                 </span>
             )}
-            <div className={`w-full h-2 bg-gray-200  rounded-full`}>
+            <div className={`h-2 w-full rounded-full  bg-gray-200`}>
                 <div
-                    className="h-2 bg-primary dark:bg-primaryDark rounded-full transition-all"
+                    className="h-2 rounded-full bg-primary transition-all dark:bg-primaryDark"
                     style={{
                         width: `${
                             ((currentStep - 1) / (totalSteps - 1)) * 100
@@ -42,7 +42,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({
             </div>
             {alignVertical && (
                 <span
-                    className={`${bodySmall} text-neutral-700 dark:text-neutralDark-150 whitespace-nowrap ml-3`}
+                    className={`${bodySmall} ml-3 whitespace-nowrap text-neutral-700 dark:text-neutralDark-150`}
                 >
                     {currentStep} {separator} {totalSteps}
                 </span>

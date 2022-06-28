@@ -18,18 +18,18 @@ export const ScoreCard = () => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
     return (
-        <BaseCard className="flex flex-col p-4 mr-4 mb-4">
+        <BaseCard className="mr-4 mb-4 flex flex-col p-4">
             <div
-                className="flex items-center cursor-pointer"
+                className="flex cursor-pointer items-center"
                 onClick={() => setOpen(!isOpen)}
             >
                 <span
-                    className={`${bodyHeavy} text-neutral-700 dark:text-neutral-150 w-full`}
+                    className={`${bodyHeavy} w-full text-neutral-700 dark:text-neutral-150`}
                 >
                     How did we get these scores?
                 </span>
                 <UilArrowDownRight
-                    className={`fill-neutral-700 dark:fill-neutral-150 transition-all ${
+                    className={`fill-neutral-700 transition-all dark:fill-neutral-150 ${
                         isOpen ? 'rotate-180' : 'rotate-0'
                     }`}
                 />
@@ -41,33 +41,33 @@ export const ScoreCard = () => {
             >
                 <div className="py-2" />
                 <span
-                    className={`${body} text-neutral-700 text-justify dark:text-white`}
+                    className={`${body} text-justify text-neutral-700 dark:text-white`}
                 >
                     We multiplied each option’s criteria rating with the weight
                     of the criteria importance, to get the final score.
                 </span>
                 <div className="py-1" />
-                <BaseCard className="flex justify-around items-center py-4 px-2 mx-1 dark:bg-neutralDark-300">
-                    <div className="flex flex-col items-center space-y-4 w-6 text-center md:w-12">
-                        <UilChartGrowthAlt className="w-8 h-8 fill-primary dark:fill-primaryDark" />
+                <BaseCard className="mx-1 flex items-center justify-around py-4 px-2 dark:bg-neutralDark-300">
+                    <div className="flex w-6 flex-col items-center space-y-4 text-center md:w-12">
+                        <UilChartGrowthAlt className="h-8 w-8 fill-primary dark:fill-primaryDark" />
                         <span
                             className={`${bodySmall} text-primary dark:text-primaryDark`}
                         >
                             Sum of Rating
                         </span>
                     </div>
-                    <UilTimes className="w-6 h-6 fill-primary dark:fill-primaryDark" />
-                    <div className="flex flex-col items-center space-y-4 w-6 text-center md:w-12">
-                        <UilSlidersVAlt className="w-8 h-8 fill-primary dark:fill-primaryDark" />
+                    <UilTimes className="h-6 w-6 fill-primary dark:fill-primaryDark" />
+                    <div className="flex w-6 flex-col items-center space-y-4 text-center md:w-12">
+                        <UilSlidersVAlt className="h-8 w-8 fill-primary dark:fill-primaryDark" />
                         <span
                             className={`${bodySmall} text-primary dark:text-primaryDark`}
                         >
                             Criteria Importance
                         </span>
                     </div>
-                    <EqualIcon className="w-4 h-4 fill-primary dark:fill-primaryDark" />
-                    <div className="flex flex-col items-center space-y-4 w-6 text-center md:w-12">
-                        <UilTrophy className="w-8 h-8 fill-primary dark:fill-primaryDark" />
+                    <EqualIcon className="h-4 w-4 fill-primary dark:fill-primaryDark" />
+                    <div className="flex w-6 flex-col items-center space-y-4 text-center md:w-12">
+                        <UilTrophy className="h-8 w-8 fill-primary dark:fill-primaryDark" />
                         <span
                             className={`${bodySmall} text-primary dark:text-primaryDark`}
                         >

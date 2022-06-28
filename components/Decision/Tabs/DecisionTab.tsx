@@ -243,7 +243,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
     return (
         <>
             <div
-                className={`flex flex-col rounded-2xl custom-box-shadow dark:custom-box-shadow-dark bg-white dark:bg-neutralDark-300 py-4 px-3 ${
+                className={`custom-box-shadow dark:custom-box-shadow-dark flex flex-col rounded-2xl bg-white py-4 px-3 dark:bg-neutralDark-300 ${
                     isMobile ? 'space-y-3' : 'mx-1  space-y-4'
                 }`}
             >
@@ -268,7 +268,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                 </ErrorWrapper>
                 <ErrorWrapper errorField="context">
                     <textarea
-                        className={`${inputStyle} h-40 resize-none mb-3 md:mb-6`}
+                        className={`${inputStyle} mb-3 h-40 resize-none md:mb-6`}
                         placeholder="Context for your decision (optional)"
                         {...register('context', {
                             maxLength: {
@@ -291,7 +291,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                         getValues('options').length > 1 ? 'update' : 'show'
                     }Result`}
                     onClick={handleAutoMatrix}
-                    className={`${feedToolbarClass.newPostButton} w-fit ml-auto disabled:bg-primary/80`}
+                    className={`${feedToolbarClass.newPostButton} ml-auto w-fit disabled:bg-primary/80`}
                     text={
                         getValues('options').length > 1
                             ? 'Update Result'
@@ -307,14 +307,14 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                 <div className="flex flex-col space-y-5">
                     <h3
                         className={`${
-                            isMobile ? bodyHeavy : 'text-2xl font-bold'
-                        } text-neutral-800 dark:text-white capitalize dark:bg-neutralDark-500 bg-white
+                            isMobile ? bodyHeavy : 'font-bold text-2xl'
+                        } bg-white capitalize text-neutral-800 dark:bg-neutralDark-500 dark:text-white
                     `}
                     >
                         Result
                     </h3>
                     <div
-                        className={`${body} flex items-center py-3 px-3 bg-neutral-700 text-white dark:bg-neutralDark-300 rounded-lg`}
+                        className={`${body} flex items-center rounded-lg bg-neutral-700 p-3 text-white dark:bg-neutralDark-300`}
                     >
                         Generating your result...
                     </div>

@@ -26,7 +26,7 @@ const GenericSidebar: FC<GenericSidebarProps> = ({
                         className={
                             titleClass
                                 ? titleClass
-                                : 'text-base font-bold leading-6 text-primary dark:text-primaryDark  md:text-2xl '
+                                : 'font-bold leading-6 text-primary text-base dark:text-primaryDark  md:text-2xl '
                         }
                     >
                         {title}

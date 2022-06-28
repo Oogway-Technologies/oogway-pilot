@@ -39,7 +39,7 @@ export const Avatar: FC<
             loading={'lazy'}
             className={`${selectedSize} ${avatarStyle} ${
                 isHoverEffect
-                    ? 'hover:opacity-80 hover:scale-125 cursor-pointer '
+                    ? 'cursor-pointer hover:scale-125 hover:opacity-80 '
                     : ''
             } ${className ? className : ''}`}
             onClick={onClick}

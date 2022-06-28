@@ -31,7 +31,7 @@ export const DropDownMenu = ({
     return (
         <Menu
             as="div"
-            className={`flex relative justify-end items-start ml-auto w-full ${menuClass}`}
+            className={`relative ml-auto flex w-full items-start justify-end ${menuClass}`}
         >
             {({ open }) => (
                 <>
@@ -53,7 +53,7 @@ export const DropDownMenu = ({
                         leaveTo="transform scale-95 opacity-0"
                     >
                         <Menu.Items
-                            className={`flex top-6 flex-col absolute bg-white dark:bg-neutralDark-500 rounded-lg custom-box-shadow dark:custom-box-shadow-dark px-2 py-1.5 md:px-4 md:py-3 ${menuItemsClass}`}
+                            className={`custom-box-shadow dark:custom-box-shadow-dark absolute top-6 flex flex-col rounded-lg bg-white px-2 py-1.5 dark:bg-neutralDark-500 md:px-4 md:py-3 ${menuItemsClass}`}
                         >
                             {itemArray.map((item, index) => (
                                 <Menu.Item

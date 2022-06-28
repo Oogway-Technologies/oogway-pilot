@@ -58,10 +58,10 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
     return isMobile ? (
         <BaseCard
             key={item.id}
-            className="flex items-center p-3 bg-white dark:bg-neutralDark-300"
+            className="flex items-center bg-white p-3 dark:bg-neutralDark-300"
         >
             <div
-                className={`flex items-center w-full  ${
+                className={`flex w-full items-center  ${
                     isEdit ? 'w-full' : 'max-w-[80%]'
                 }`}
             >
@@ -75,9 +75,9 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                         }
                         textClass="text-sm"
                     >
-                        <div className="flex justify-center items-center m-2 rounded-lg border border-neutral-700 dark:border-white">
+                        <div className="m-2 flex items-center justify-center rounded-lg border border-neutral-700 dark:border-white">
                             <input
-                                className="px-2 w-full h-8 font-bold rounded-lg outline-none"
+                                className="h-8 w-full rounded-lg px-2 font-bold outline-none"
                                 {...register(`options.${index}.name` as const, {
                                     required: {
                                         value: true,
@@ -101,14 +101,14 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     </ErrorWrapperField>
                 ) : (
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap mr-2 truncate`}
+                        className={`${bodyHeavy} mr-2 truncate whitespace-nowrap text-neutral-800 dark:text-white`}
                     >
                         {getValues(`options.${index}.name`)}
                     </span>
                 )}
                 {item.isAI ? (
                     <span
-                        className={`${caption} text-primary px-2 border-l border-l-neutral-700`}
+                        className={`${caption} border-l border-l-neutral-700 px-2 text-primary`}
                     >
                         AI
                     </span>
@@ -141,9 +141,9 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     }
                     textClass="text-sm"
                 >
-                    <div className="flex justify-center items-center m-2 rounded-lg border border-neutral-700 dark:border-white">
+                    <div className="m-2 flex items-center justify-center rounded-lg border border-neutral-700 dark:border-white">
                         <input
-                            className="px-2 w-full h-8 font-bold rounded-lg outline-none"
+                            className="h-8 w-full rounded-lg px-2 font-bold outline-none"
                             {...register(`options.${index}.name` as const, {
                                 required: {
                                     value: true,
@@ -172,7 +172,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
                     }`}
                 >
                     <span
-                        className={`${bodyHeavy} text-neutral-800 dark:text-white whitespace-nowrap truncate min-w-[80%]`}
+                        className={`${bodyHeavy} min-w-[80%] truncate whitespace-nowrap text-neutral-800 dark:text-white`}
                     >
                         {getValues(`options.${index}.name`)}
                     </span>
@@ -189,7 +189,7 @@ export const OptionCard = ({ item, index, onClickRemove }: OptionCardProps) => {
             )}
             {item.isAI ? (
                 <span
-                    className={`${bodyXSmall} text-primary dark:text-primaryDark text-center py-3`}
+                    className={`${bodyXSmall} py-3 text-center text-primary dark:text-primaryDark`}
                 >
                     AI Suggestion
                 </span>

@@ -25,19 +25,19 @@ export const SignInCard: FC<SignInCardProps> = ({
             className={`flex flex-col ${
                 isMobile
                     ? 'my-4'
-                    : 'p-3 mb-4 bg-white dark:bg-neutralDark-500 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark'
+                    : 'custom-box-shadow dark:custom-box-shadow-dark mb-4 rounded-2xl bg-white p-3 dark:bg-neutralDark-500'
             } ${className ? className : ''}`}
         >
             <span
                 className={
-                    'text-base font-bold leading-6 text-primary dark:text-primaryDark md:text-2xl'
+                    'font-bold leading-6 text-primary text-base dark:text-primaryDark md:text-2xl'
                 }
             >
                 {currentTab === 1 ? 'Decision Progress' : 'AI suggestions'}
             </span>
 
             <span
-                className={`${bodyHeavy} my-3 text-neutral-700 dark:text-neutralDark-150 font-normal text-center`}
+                className={`${bodyHeavy} my-3 text-center font-normal text-neutral-700 dark:text-neutralDark-150`}
             >
                 {currentTab === 1
                     ? 'Sign in to save progress and track your decisions.'

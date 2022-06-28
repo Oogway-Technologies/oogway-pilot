@@ -218,7 +218,7 @@ const NewCommentForm: React.FC<
         <div className={commentFormClass.form}>
             <div className={commentFormClass.body}>
                 <div className={commentFormClass.commentBar}>
-                    <form className={'flex items-center w-full'}>
+                    <form className={'flex w-full items-center'}>
                         {isMobile ? (
                             <textarea
                                 ref={inputRef}

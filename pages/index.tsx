@@ -162,14 +162,14 @@ const DecisionEngine: FC = () => {
     }
 
     return (
-        <div className={isMobile ? 'flex flex-col h-[calc(100vh-121px)]' : ''}>
+        <div className={isMobile ? 'flex h-[calc(100vh-121px)] flex-col' : ''}>
             <Head>
                 <title>Oogway | Decision Engine</title>
             </Head>
             <FormProvider {...methods}>
                 <form
                     className={`${decisionContainer} ${
-                        isMobile ? `mx-4` : 'my-xl mx-xxl gap-4 h-[78vh]'
+                        isMobile ? `mx-4` : 'my-xl mx-xxl h-[78vh] gap-4'
                     }`}
                     autoComplete="off"
                     onKeyDown={event => {
@@ -187,7 +187,7 @@ const DecisionEngine: FC = () => {
                                           ? 'h-[calc(100vh-12.25rem)]'
                                           : 'h-[calc(100vh-15.5rem)]'
                                   }`
-                                : 'col-span-3 h-max bg-white rounded-2xl shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
+                                : 'col-span-3 h-max rounded-2xl bg-white shadow-md dark:bg-neutralDark-500 dark:shadow-black/60'
                         }`}
                     >
                         {!isMobile && currentTab > 0 && (
@@ -212,7 +212,7 @@ const DecisionEngine: FC = () => {
                                               ? 'h-[calc(100vh-12.25rem)]'
                                               : 'h-[calc(100vh-16rem)]'
                                       }`
-                                    : 'col-span-6 px-5 py-4 h-full'
+                                    : 'col-span-6 h-full px-5 py-4'
                             }`}
                         >
                             {currentTab === 4 && <OptionRatingTabWrapper />}
@@ -238,7 +238,7 @@ const DecisionEngine: FC = () => {
                             </DecisionTabWrapper>
                             {!isMobile && currentTab > 0 && (
                                 <DecisionBarHandler
-                                    className="justify-self-end mt-auto w-full"
+                                    className="mt-auto w-full justify-self-end"
                                     selectedTab={currentTab}
                                     setSelectedTab={setCurrentTab}
                                 />
@@ -315,7 +315,7 @@ const DecisionEngine: FC = () => {
                 </form>
                 {isMobile && currentTab > 0 && (
                     <DecisionBarHandler
-                        className="justify-self-end pr-3 mt-auto w-full"
+                        className="mt-auto w-full justify-self-end pr-3"
                         selectedTab={currentTab}
                         setSelectedTab={setCurrentTab}
                     />

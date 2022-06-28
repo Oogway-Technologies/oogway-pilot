@@ -34,7 +34,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
 
     return (
         <div
-            className={`flex flex-col bg-white rounded-2xl mr-4 md:px-4 p-3 md:py-5 dark:bg-neutralDark-500 mb-4 custom-box-shadow dark:custom-box-shadow-dark transition-all ${
+            className={`custom-box-shadow dark:custom-box-shadow-dark mr-4 mb-4 flex flex-col rounded-2xl bg-white p-3 transition-all dark:bg-neutralDark-500 md:px-4 md:py-5 ${
                 className ? className : ''
             }`}
         >
@@ -46,7 +46,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         Oogway Connect
                     </span>
                     <span
-                        className={`${body} text-neutral-700 dark:text-neutralDark-150 mt-2`}
+                        className={`${body} mt-2 text-neutral-700 dark:text-neutralDark-150`}
                     >
                         Find a match that dealt with a similar decision and
                         wants to connect and share their insights and journey
@@ -73,7 +73,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         No matches found yet
                     </span>
                     <span
-                        className={`${body} text-center text-neutral-700 dark:text-neutralDark-150 mt-4 mb-6`}
+                        className={`${body} mt-4 mb-6 text-center text-neutral-700 dark:text-neutralDark-150`}
                     >
                         Become a decision helper by sharing your experiences and
                         connecting with other decision makers
@@ -104,7 +104,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         Oogway Connect
                     </span>
                     <span
-                        className={`${body} text-center text-neutral-700 dark:text-neutralDark-150 mt-4 mb-6`}
+                        className={`${body} mt-4 mb-6 text-center text-neutral-700 dark:text-neutralDark-150`}
                     >
                         Sign in or Create an Account <br /> to connect with
                         other
@@ -121,11 +121,11 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                         }
                     />
                     <span
-                        className={`${body} text-neutral-800 dark:text-neutralDark-50 mt-3 text-center mx-auto`}
+                        className={`${body} mx-auto mt-3 text-center text-neutral-800 dark:text-neutralDark-50`}
                     >
                         Already have an account?{' '}
                         <b
-                            className="hover:text-primary hover:dark:text-primaryDark transition-all cursor-pointer"
+                            className="cursor-pointer transition-all hover:text-primary hover:dark:text-primaryDark"
                             onClick={handleSignIn}
                         >
                             Sign in
@@ -137,7 +137,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                 <>
                     <FileSVG />
                     <span
-                        className={`${body} text-center text-neutral-700 dark:text-neutralDark-150 mt-4 mb-6`}
+                        className={`${body} mt-4 mb-6 text-center text-neutral-700 dark:text-neutralDark-150`}
                     >
                         You’ve opted to become a decision <br /> helper. We will
                         notify you when you <br />

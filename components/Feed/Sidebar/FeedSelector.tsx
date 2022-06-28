@@ -201,7 +201,7 @@ export const FeedSelectorMenu: FC<
     const feed = useAppSelector(state => state.utilsSlice.feedState)
 
     return (
-        <div className="flex flex-col m-sm w-64">
+        <div className="m-sm flex w-64 flex-col">
             {/* Home Button */}
             <Button
                 text="Home"
@@ -244,7 +244,7 @@ export const FeedSelectorMenu: FC<
                 >
                     {feed}
                     <UilTimes
-                        className="text-neutral-700 dark:text-neutralDark-150 cursor-pointer"
+                        className="cursor-pointer text-neutral-700 dark:text-neutralDark-150"
                         onClick={() => {
                             useAppDispatch(setFeedState('All'))
                             router.push(`/feed`)

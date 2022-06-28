@@ -25,7 +25,7 @@ const AISidebar: FC<AISidebarProps> = ({
             className={`flex flex-col ${
                 isMobile
                     ? 'my-4'
-                    : 'py-4 px-3 mb-4 mr-4 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark bg-white dark:bg-neutralDark-500'
+                    : 'custom-box-shadow dark:custom-box-shadow-dark mb-4 mr-4 rounded-2xl bg-white py-4 px-3 dark:bg-neutralDark-500'
             } ${className}`}
         >
             <div className="flex items-center md:mb-2">
@@ -43,7 +43,7 @@ const AISidebar: FC<AISidebarProps> = ({
                 {subtitle && (
                     <span
                         className={
-                            'text-base leading-6 text-neutral-300 dark:text-neutralDark-50 md:text-base'
+                            'leading-6 text-neutral-300 text-base dark:text-neutralDark-50 md:text-base'
                         }
                     >
                         {subtitle}
@@ -52,7 +52,7 @@ const AISidebar: FC<AISidebarProps> = ({
                 {!isMobile && infoCircle && (
                     <UilInfoCircle
                         className={
-                            'justify-self-end ml-auto fill-neutral-700 dark:fill-neutralDark-150'
+                            'ml-auto justify-self-end fill-neutral-700 dark:fill-neutralDark-150'
                         }
                     />
                 )}

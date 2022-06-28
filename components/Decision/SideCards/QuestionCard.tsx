@@ -12,13 +12,13 @@ export const QuestionCard = () => {
 
     return (
         <BaseCard
-            className={`flex flex-col py-4 px-3 my-1 mx-auto ${
+            className={`my-1 mx-auto flex flex-col py-4 px-3 ${
                 isMobile ? 'w-[99%]' : 'w-[98%]'
             }`}
         >
             <div className="flex items-center">
                 <span
-                    className={`${bodyHeavy} text-neutral-800 dark:text-white truncate`}
+                    className={`${bodyHeavy} truncate text-neutral-800 dark:text-white`}
                 >
                     {getValues('question')}
                 </span>
@@ -29,7 +29,7 @@ export const QuestionCard = () => {
             </div>
 
             <span
-                className={`${body} text-neutral-700 dark:text-neutral-150 truncate`}
+                className={`${body} truncate text-neutral-700 dark:text-neutral-150`}
             >
                 {getValues('context')}
             </span>
