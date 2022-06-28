@@ -121,7 +121,6 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                 isComplete: false,
                 currentTab: 2,
                 userIgnoredUnsafeWarning: isQuestionSafeForAI ? false : true,
-                isQuestionSafeForAI: isQuestionSafeForAI,
             },
             {
                 onSuccess: newDecision => {
