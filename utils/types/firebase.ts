@@ -146,6 +146,7 @@ export interface FirebaseDecisionActivity {
     suggestedOptions?: Options[] | null
     suggestedCriteria?: Criteria[] | null
     ratings?: decisionRating[] | Ratings[]
+    suggestedRatings?: decisionRating[] | Ratings[] | null
     timestamp?: FieldValue
     isComplete?: boolean
     isQuestionSafeForAI?: boolean
