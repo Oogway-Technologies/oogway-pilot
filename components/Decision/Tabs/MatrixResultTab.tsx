@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
@@ -23,6 +23,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     setCurrentTab,
 }: MatrixResultTabProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const scrollRef = useRef<HTMLDivElement>(null)
     const { reset, getValues, setValue } = useFormContext()
     const {
         decisionEngineBestOption,
@@ -46,6 +47,15 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
 
     useEffect(() => {
         if (decisionMatrixHasResults) fixUpStates()
+
+        setTimeout(
+            () =>
+                scrollRef.current?.scrollIntoView({
+                    block: 'start',
+                    behavior: 'smooth',
+                }),
+            0
+        )
     }, [])
 
     const handleReconsider = () => {
@@ -64,9 +74,10 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     }
 
     return (
-        <div className="mb-3 flex flex-col space-y-3">
+        <div className="flex flex-col mb-3 space-y-3">
             {decisionMatrixHasResults ? (
                 <>
+                    <div className="w-0 h-0" ref={scrollRef} />
                     <ResultChart />
                     <div className="flex flex-col my-4 mb-3 space-y-1 text-center">
                         {isThereATie ? (
@@ -102,7 +113,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 >
                                     Your best option is
                                 </span>
-                                <span className="text-center font-bold leading-10 text-primary text-3xl tracking-normal dark:text-primaryDark">
+                                <span className="text-3xl font-bold tracking-normal leading-10 text-center text-primary dark:text-primaryDark">
                                     {decisionEngineBestOption}
                                 </span>
                             </>
@@ -117,7 +128,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     }
                 >
                     <div></div>
-                    <div className="col-span-2 col-start-2 mx-auto flex flex-col">
+                    <div className="flex flex-col col-span-2 col-start-2 mx-auto">
                         <div
                             className={`flex flex-col gap-y-md
                                 ${
@@ -126,7 +137,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                         : 'custom-box-shadow-md dark:custom-box-shadow-dark-md mb-4 mr-4 rounded-2xl rounded-bl-none bg-white py-4 px-3 dark:bg-neutralDark-500'
                                 }`}
                         >
-                            <span className="mt-4 text-left font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
+                            <span className="mt-4 text-sm font-normal text-left text-neutral-700 dark:text-neutralDark-150">
                                 {isQuestionSafeForAI
                                     ? `Oogway cannot help with this
                             decision. It's a work in progress and it's learning
@@ -160,7 +171,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                 </div>
             )}
             {decisionMatrixHasResults && (
-                <div className="mx-auto flex items-center space-x-4 py-4">
+                <div className="flex items-center py-4 mx-auto space-x-4">
                     <button
                         id={'automatedDecisionMatrix-NewDecision'}
                         onClick={() => {
