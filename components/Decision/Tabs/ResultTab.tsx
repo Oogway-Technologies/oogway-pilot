@@ -266,12 +266,6 @@ export const ResultTab: FC<ResultTabProps> = ({
                 >
                     New Decision
                 </button>
-                {/* <button
-                    className={feedToolbarClass.newPostButton}
-                    onClick={() => console.log(getValues())}
-                >
-                    Get Feedback
-                </button> */}
             </div>
             {isMobile ? <ScoreCard /> : ''}
             <BaseCard className="my-2  p-3 md:mx-1 md:p-5">
