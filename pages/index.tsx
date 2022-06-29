@@ -358,7 +358,7 @@ const DecisionEngine: FC = () => {
                         </b>
                     </span>
                     <span
-                        className={`text-left font-normal md:text-base leading-6 tracking-normal capitalize text-sm`}
+                        className={`text-left font-normal md:text-base leading-6 tracking-normal text-sm`}
                     >
                         {infoModalDetails.context}
                     </span>

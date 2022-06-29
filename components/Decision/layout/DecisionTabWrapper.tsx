@@ -171,24 +171,22 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                     `}
                 >
                     {currentTab === 0 ? title.split('/')[matrixStep] : title}
-                    {matrixStep !== 1 ? (
-                        isMobile ? (
-                            <UilQuestionCircle
-                                onClick={handleInfoClick}
-                                className={'ml-2'}
-                            />
-                        ) : (
-                            <Tooltip
-                                toolTipText="Explain"
-                                className="ml-auto"
-                                classForParent="mb-5 -bottom-14 -left-7"
-                                classForToolTipBox="!rounded border-none bg-primary text-white shadow-none"
-                                classForBottomArrow="border-none bg-primary text-white mt-0 absolute -top-[4px] left-8"
-                            >
-                                <UilQuestionCircle onClick={handleInfoClick} />
-                            </Tooltip>
-                        )
-                    ) : null}
+                    {matrixStep === 1 && currentTab === 0 ? null : isMobile ? (
+                        <UilQuestionCircle
+                            onClick={handleInfoClick}
+                            className={'ml-2'}
+                        />
+                    ) : (
+                        <Tooltip
+                            toolTipText="Explain"
+                            className="ml-auto"
+                            classForParent="mb-5 -bottom-14 -left-7"
+                            classForToolTipBox="!rounded border-none bg-primary text-white shadow-none"
+                            classForBottomArrow="border-none bg-primary text-white mt-0 absolute -top-[4px] left-8"
+                        >
+                            <UilQuestionCircle onClick={handleInfoClick} />
+                        </Tooltip>
+                    )}
                 </h3>
             ) : null}
             {children}
