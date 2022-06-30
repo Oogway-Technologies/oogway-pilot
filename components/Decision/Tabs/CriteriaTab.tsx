@@ -1,6 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0'
 import { UilPen, UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, KeyboardEvent, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
@@ -70,11 +70,13 @@ export const CriteriaTab: FC = () => {
         setItem(item)
         setEdit(true)
     }
+
     const handleCloseEdit = () => {
         setIndex(undefined)
         setItem({ isAI: false, name: '', weight: 1 })
         setEdit(false)
     }
+
     const handleUpdate = () => {
         if (selectedItem.isAI) {
             setValue(`criteria.${selectedIndex}.weight`, selectedItem.weight)
@@ -85,10 +87,12 @@ export const CriteriaTab: FC = () => {
 
         setEdit(false)
     }
+
     const handleModal = (index: number) => {
         setIndex(index)
         setOpen(true)
     }
+
     const handleDelete = () => {
         if (selectedIndex && watchCriteria[selectedIndex].isAI) {
             useAppDispatch(addSelectedCriteria(watchCriteria[selectedIndex]))
@@ -96,9 +100,39 @@ export const CriteriaTab: FC = () => {
         remove(selectedIndex)
         setOpen(false)
     }
+
     const handleClose = () => {
         setIndex(undefined)
         setOpen(false)
+    }
+
+    const handleAdd = () => {
+        const value = getValues('criteria.0.weight')
+        if (value) {
+            setValue(
+                'criteria',
+                insertAtArray(watchCriteria, 1, {
+                    name: getValues('criteria.[0].name'),
+                    weight: getValues('criteria.0.weight'),
+                    isAI: false,
+                })
+            )
+            setValue('criteria.[0].name', '')
+        }
+    }
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter' && event.currentTarget.value) {
+            setValue(
+                'criteria',
+                insertAtArray(watchCriteria, 1, {
+                    name: event.currentTarget.value,
+                    weight: getValues('criteria.0.weight'),
+                    isAI: false,
+                })
+            )
+            setValue('criteria.[0].name', '')
+        }
     }
 
     useEffect(() => {
@@ -209,30 +243,7 @@ export const CriteriaTab: FC = () => {
                                     className={inputStyle}
                                     type="text"
                                     placeholder={'Enter your Criterion'}
-                                    onKeyDown={event => {
-                                        if (
-                                            event.key === 'Enter' &&
-                                            event.currentTarget.value
-                                        ) {
-                                            setValue(
-                                                'criteria',
-                                                insertAtArray(
-                                                    watchCriteria,
-                                                    1,
-                                                    {
-                                                        name: event
-                                                            .currentTarget
-                                                            .value,
-                                                        weight: getValues(
-                                                            'criteria.0.weight'
-                                                        ),
-                                                        isAI: false,
-                                                    }
-                                                )
-                                            )
-                                            setValue('criteria.[0].name', '')
-                                        }
-                                    }}
+                                    onKeyDown={event => handleKeyDown(event)}
                                     {...register(
                                         `criteria.${index}.name` as const,
                                         {
@@ -252,31 +263,12 @@ export const CriteriaTab: FC = () => {
                                     )}
                                 />
                                 <button
+                                    disabled={
+                                        !getValues(`criteria.${index}.name`)
+                                    }
                                     type="button"
-                                    onClick={() => {
-                                        const value =
-                                            getValues('criteria.0.weight')
-                                        if (value) {
-                                            setValue(
-                                                'criteria',
-                                                insertAtArray(
-                                                    watchCriteria,
-                                                    1,
-                                                    {
-                                                        name: getValues(
-                                                            'criteria.[0].name'
-                                                        ),
-                                                        weight: getValues(
-                                                            'criteria.0.weight'
-                                                        ),
-                                                        isAI: false,
-                                                    }
-                                                )
-                                            )
-                                            setValue('criteria.[0].name', '')
-                                        }
-                                    }}
-                                    className="ml-3 flex items-center justify-center rounded-full bg-primary p-2 disabled:bg-primary/50"
+                                    onClick={handleAdd}
+                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
                                 >
                                     <UilPlus className={'fill-white'} />
                                 </button>
@@ -291,6 +283,7 @@ export const CriteriaTab: FC = () => {
                             key={item.id}
                             registerName={'criteria.0.weight' as const}
                             isMobile={isMobile}
+                            isDisable={getValues(`criteria.${index}.name`)}
                         />
                     </BaseCard>
                 ) : null

@@ -8,11 +8,13 @@ interface CriteriaSelectTabsProps {
     registerName: string
     isMobile: boolean
     removeShadow?: boolean
+    isDisable?: boolean
 }
 export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
     registerName,
     isMobile,
     removeShadow = false,
+    isDisable = false,
 }: CriteriaSelectTabsProps) => {
     const { getValues, setValue } = useFormContext()
     const [selected, setSelected] = useState<Tab>()
@@ -44,19 +46,21 @@ export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
             } `}
         >
             {criteriaTabs.map(item => (
-                <div
+                <button
+                    disabled={!isDisable}
+                    type="button"
                     key={`criteria-select-tabs-${item.name}`}
-                    className={`whitespace-nowrap font-bold not-italic text-sm tracking-normal md:text-base ${
-                        isMobile ? 'w-full' : ''
-                    } flex cursor-pointer items-center justify-center rounded-lg py-2 px-4 text-center ${
+                    className={`md:text-base text-sm not-italic font-bold tracking-normal whitespace-nowrap ${
+                        isMobile ? 'w-full' : 'w-1/4'
+                    } flex items-center justify-center p-2 text-center cursor-pointer rounded-lg ${
                         selected?.name === item.name
-                            ? 'bg-primary/20 text-primary dark:bg-primaryDark/20 dark:text-primaryDark'
-                            : 'bg-white text-neutral-700 dark:bg-neutralDark-300 dark:text-neutral-300'
+                            ? 'text-primary dark:text-primaryDark bg-primary/20 disable:dark:bg-primaryDark/50 disable:text-primary/50 disable:dark:text-primaryDark/50 disable:bg-primary/50 disable:dark:bg-primaryDark/50'
+                            : 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutralDark-300 disabled:dark:bg-neutralDark-300/50 disabled:text-neutral-700/50 disabled:dark:text-neutral-300/50'
                     }`}
                     onClick={() => handleClick(item)}
                 >
                     {item.name}
-                </div>
+                </button>
             ))}
         </div>
     )
