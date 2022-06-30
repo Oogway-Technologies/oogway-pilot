@@ -2,7 +2,13 @@ import React, { FC } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
+    setClickedConnect,
+    setDecisionActivityId,
+    setDecisionFormState,
+    setDecisionQuestion,
+    setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
+    setSideCardStep,
     setUserIgnoredUnsafeWarning,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -27,6 +33,12 @@ const UnsupportedDecision: FC<UnsupportedDecisionProps> = ({
         reset() // reset form state
         useAppDispatch(setIsQuestionSafeForAI(true))
         useAppDispatch(setUserIgnoredUnsafeWarning(false))
+        useAppDispatch(setDecisionActivityId(undefined))
+        useAppDispatch(setDecisionQuestion(undefined))
+        useAppDispatch(setSideCardStep(1))
+        useAppDispatch(setClickedConnect(false))
+        useAppDispatch(setDecisionFormState({}))
+        useAppDispatch(setIsDecisionRehydrated(false))
         setCurrentTab(0)
         setMatrixStep(0)
     }
