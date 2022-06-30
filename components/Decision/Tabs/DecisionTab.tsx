@@ -8,6 +8,7 @@ import {
     setDecisionMatrixHasResults,
     setIsDecisionFormUpdating,
     setIsQuestionSafeForAI,
+    setIsThereATie,
     setPreviousIndex,
     setUserExceedsMaxDecisions,
     updateDecisionFormState,
@@ -99,7 +100,6 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         )
         useAppDispatch(setIsDecisionFormUpdating(false))
     }, [context, clickedConnect, userProfile])
-
     useEffect(() => {
         // to fix error not working on first step.
         trigger('question').then(() => {
@@ -147,6 +147,43 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         return parseFloat((sumWeightedScore / sumWeights).toFixed(1))
     }
 
+    const calcBestOption = (optionList: Options[]) => {
+        let currentBestScore = 0
+        let currentBestOptions: string[] = []
+        for (const option of optionList) {
+            if (option.score && option.score > currentBestScore) {
+                // If there's only one or zero current best option(s),
+                // replace with new best
+                if (currentBestOptions.length < 2) {
+                    currentBestOptions[0] = option.name
+                } else {
+                    // If there's a current tie, but current option
+                    // dominates both, replace the array
+                    currentBestOptions = [option.name]
+                }
+
+                // Update new new best score
+                currentBestScore = option.score
+            }
+
+            // If there's a tie, push to stack
+            if (option.score === currentBestScore) {
+                currentBestOptions.push(option.name)
+            }
+        }
+
+        // In case of ties, randomly choose best option
+        if ([...new Set(currentBestOptions)].length > 1) {
+            useAppDispatch(setIsThereATie(true))
+            return currentBestOptions[
+                (Math.random() * currentBestOptions.length) | 0
+            ]
+        } else {
+            useAppDispatch(setIsThereATie(false))
+            return currentBestOptions[0]
+        }
+    }
+
     const convertDataFrameToObject = (data: MatrixObject) => {
         const generateOptions: Options[] = []
         data.ratings.data.forEach(item => {
@@ -169,7 +206,6 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         const generateRating: Ratings[] = []
         generateOptions.forEach(({ name }, index) => {
             const rating: Rating[] = []
-
             data.ratings.data[index].forEach((item, idx) => {
                 if (idx !== 0 && idx !== data.ratings.data[index].length - 1) {
                     rating.push({
@@ -188,13 +224,15 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         generateCriteria = generateCriteria.filter(item => item.name)
         setValue('criteria', generateCriteria)
         setValue('ratings', generateRating)
-        useAppDispatch(
-            setDecisionEngineBestOption(capitalize(data.recommendation))
-        )
-
         generateOptions.forEach((_: Options, index: number) => {
             setValue(`options.${index}.score`, calcScore(index))
         })
+
+        useAppDispatch(
+            setDecisionEngineBestOption(
+                capitalize(calcBestOption(getValues('options')))
+            )
+        )
     }
 
     const handleAutoMatrix = async () => {
