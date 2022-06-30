@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
@@ -23,6 +23,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     setCurrentTab,
 }: MatrixResultTabProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const scrollRef = useRef<HTMLDivElement>(null)
     const { reset, getValues, setValue } = useFormContext()
     const {
         decisionEngineBestOption,
@@ -46,6 +47,15 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
 
     useEffect(() => {
         if (decisionMatrixHasResults) fixUpStates()
+
+        setTimeout(
+            () =>
+                scrollRef.current?.scrollIntoView({
+                    block: 'start',
+                    behavior: 'smooth',
+                }),
+            0
+        )
     }, [])
 
     const handleReconsider = () => {
@@ -67,7 +77,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
         <div className="mb-3 flex flex-col space-y-3">
             {decisionMatrixHasResults ? (
                 <>
-                    <ResultTable />
+                    <div className="h-0 w-0" ref={scrollRef} />
                     <div className="my-4 mb-3 flex flex-col space-y-1 text-center">
                         {isThereATie ? (
                             <>
@@ -108,7 +118,10 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                             </>
                         )}
                     </div>
+                    <div className="my-3" />
                     <ResultChart />
+                    <div className="my-3" />
+                    <ResultTable />
                 </>
             ) : (
                 <div
