@@ -35,6 +35,11 @@ export interface FormCopy {
     criteria: Criteria[]
 }
 
+export interface InfoModalDetails {
+    title: string
+    context: string
+}
+
 export interface DecisionSliceStates {
     decisionEngineOptionTab: number
     decisionEngineBestOption: string | undefined
@@ -45,6 +50,8 @@ export interface DecisionSliceStates {
     previousIndex: number
     suggestions: Suggestions
     formCopy: FormCopy
+    isInfoModal: boolean
+    infoModalDetails: InfoModalDetails
     decisionCriteriaQueryKey: string | undefined
     decisionActivityId: string | undefined
     decisionQuestion: string | undefined

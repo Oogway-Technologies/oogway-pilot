@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { capitalize } from '../../utils/helpers/common'
 import { FirebaseDecisionActivity } from '../../utils/types/firebase'
 import { AISuggestions, Criteria, Options } from '../../utils/types/global'
-import { DecisionSliceStates, FormCopy } from '../interfaces'
+import { DecisionSliceStates, FormCopy, InfoModalDetails } from '../interfaces'
 
 const initialState: DecisionSliceStates = {
     decisionEngineOptionTab: 0,
@@ -24,6 +24,11 @@ const initialState: DecisionSliceStates = {
         context: '',
         options: [],
         criteria: [],
+    },
+    isInfoModal: false,
+    infoModalDetails: {
+        title: '',
+        context: '',
     },
     decisionCriteriaQueryKey: undefined,
     decisionActivityId: undefined,
@@ -46,6 +51,15 @@ export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setInfoModalDetails: (
+            state,
+            { payload }: PayloadAction<InfoModalDetails>
+        ) => {
+            state.infoModalDetails = payload
+        },
+        setInfoModal: (state, { payload }: PayloadAction<boolean>) => {
+            state.isInfoModal = payload
+        },
         setIsThereATie: (state, { payload }: PayloadAction<boolean>) => {
             state.isThereATie = payload
         },
@@ -267,6 +281,8 @@ export const decisionSlice = createSlice({
 })
 
 export const {
+    setInfoModal,
+    setInfoModalDetails,
     setDecisionEngineOptionTab,
     setDecisionEngineBestOption,
     setDecisionRatingUpdate,

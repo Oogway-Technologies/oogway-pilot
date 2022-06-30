@@ -36,9 +36,19 @@ export const decisionTitle = [
     'Your decision',
     'Your options',
     'Your criteria',
-    '',
+    'Your ratings',
     '',
 ]
+
+export const decisionInfo = [
+    'Define your decision and add more information about it (this will help our AI understand your decision, and provide suggestions for options and criteria in the next steps)',
+    'Define your decision and add more information about it (this will help our AI understand your decision, and provide suggestions for options and criteria in the next steps)',
+    'Add your decision options, pick from the AI Suggestions or do both! Up to 5 options can be added.',
+    'Add the things you want to consider about your decision, pick from the AI Suggestions, or both! Then pick how important each of these are to you, in regard to your decision.',
+    'To help provide you with the winning option for your decision, give each criteria a rating between 1 to 5. \nClick the Ask AI button if you don’t have enough information on each criteria. It will give you all the information so you can confidently rate it.',
+    '',
+]
+
 export const decisionInfoParagraph = [
     'Oogway helps you when making a decision. All you have to do is put in your decision, and let Oogway help you come up with the best answer.',
     'Oogway reads through different web sources , and combines all the information together to give you the best answer.',

@@ -1,4 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
+import { UilQuestionCircle } from '@iconscout/react-unicons'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -25,10 +26,12 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
+import Modal from '../components/Utils/Modal'
+import { setInfoModal } from '../features/decision/decisionSlice'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppSelector } from '../hooks/useRedux'
 // import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import {
     decisionSideBarOptions,
@@ -43,6 +46,8 @@ const DecisionEngine: FC = () => {
         userExceedsMaxDecisions,
         decisionEngineOptionTab,
         userIgnoredUnsafeWarning,
+        isInfoModal,
+        infoModalDetails,
     } = useAppSelector(state => state.decisionSlice)
     const [currentTab, setCurrentTab] = useState(0)
     const [matrixStep, setMatrixStep] = useState(0)
@@ -250,7 +255,7 @@ const DecisionEngine: FC = () => {
                             className={
                                 'overflow-y-auto col-span-1 ' +
                                 'scrollbar scrollbar-sm scrollbar-rounded scrollbar-thumb-tertiary ' +
-                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300'
+                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300 px-1'
                             }
                         >
                             {!user ? (
@@ -306,7 +311,7 @@ const DecisionEngine: FC = () => {
                             <GenericSidebar
                                 title="Disclaimer"
                                 titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
-                                extraClass="mt-auto"
+                                extraClass="mt-auto !mx-0"
                             >
                                 <FeedDisclaimer />
                             </GenericSidebar>
@@ -336,6 +341,29 @@ const DecisionEngine: FC = () => {
                     />
                 )}
             </FormProvider>
+            <Modal
+                show={isInfoModal}
+                onClose={() => useAppDispatch(setInfoModal(!isInfoModal))}
+                className="md:w-[40%]"
+            >
+                <div className="flex flex-col p-2 space-y-4 md:p-4">
+                    <span
+                        className={`flex items-center space-x-2 font-normal md:text-base leading-6 tracking-normal capitalize text-sm`}
+                    >
+                        <UilQuestionCircle />
+                        <b>
+                            {currentTab === 0
+                                ? infoModalDetails.title.split('/')[matrixStep]
+                                : infoModalDetails.title}
+                        </b>
+                    </span>
+                    <span
+                        className={`text-left font-normal md:text-base leading-6 tracking-normal text-sm`}
+                    >
+                        {infoModalDetails.context}
+                    </span>
+                </div>
+            </Modal>
         </div>
     )
 }
