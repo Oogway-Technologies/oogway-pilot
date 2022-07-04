@@ -12,7 +12,8 @@ import {
     setUserIgnoredUnsafeWarning,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useDeleteDecisionActivity } from '../../../queries/decisionActivity'
 import { bodyHeavy, bodySmall } from '../../../styles/typography'
 import Button from '../../Utils/Button'
 import AISidebar from '../common/AISidebar'
@@ -28,8 +29,14 @@ const UnsupportedDecision: FC<UnsupportedDecisionProps> = ({
 }) => {
     const { reset } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
+    const decisionActivityId = useAppSelector(
+        state => state.decisionSlice.decisionActivityId
+    )
+    const deleteDecisionActivity = useDeleteDecisionActivity()
 
     const handleReconsider = () => {
+        if (decisionActivityId)
+            deleteDecisionActivity.mutate(decisionActivityId)
         reset() // reset form state
         useAppDispatch(setIsQuestionSafeForAI(true))
         useAppDispatch(setUserIgnoredUnsafeWarning(false))

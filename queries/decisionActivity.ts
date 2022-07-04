@@ -94,3 +94,16 @@ export const useInfiniteDecisionsQuery = (
             enabled: enabled ?? true,
         }
     )
+
+/**
+ * Delete hooks
+ */
+
+export const deleteDecisionActivity = (id: string) =>
+    API.delete(`decisionActivity/${id}`)
+
+export const useDeleteDecisionActivity = () => {
+    return useMutation((id: string) => deleteDecisionActivity(id), {
+        retry: 3,
+    })
+}
