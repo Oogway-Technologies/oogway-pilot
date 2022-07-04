@@ -109,7 +109,7 @@ const LoginForm: FC<
                     />
                 </div>
                 {/* Warning message on email */}
-                {errors.email && errors.email.type === 'required' && (
+                {errors.email && (errors?.email as any).type === 'required' && (
                     <FlashErrorMessage
                         message={errors.email.message}
                         ms={warningTime}
@@ -143,13 +143,14 @@ const LoginForm: FC<
                     </div>
                 </div>
                 {/* Warning message on password */}
-                {errors.password && errors.password.type === 'required' && (
-                    <FlashErrorMessage
-                        message={errors.password.message}
-                        ms={warningTime}
-                        style={loginInputs.formAlert}
-                    />
-                )}
+                {errors.password &&
+                    (errors?.password as any).type === 'required' && (
+                        <FlashErrorMessage
+                            message={errors.password.message}
+                            ms={warningTime}
+                            style={loginInputs.formAlert}
+                        />
+                    )}
                 <div className={loginDivs.customLink} onClick={goToResetPW}>
                     Forgot your password?
                 </div>
@@ -175,7 +176,7 @@ const LoginForm: FC<
                 />
             </div>
             {/* Warning message on email */}
-            {errors.form && errors.form.type === 'required' && (
+            {errors.form && (errors?.form as any).type === 'required' && (
                 <FlashErrorMessage
                     message={errors.form.message}
                     ms={warningTime}

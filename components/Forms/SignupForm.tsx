@@ -199,7 +199,7 @@ const SignUpForm: FC<
                     />
                 </div>
                 {/* Warning message on email */}
-                {errors.email && errors.email.type === 'required' && (
+                {errors.email && (errors?.email as any).type === 'required' && (
                     <FlashErrorMessage
                         message={errors.email.message}
                         ms={warningTime}
@@ -237,13 +237,14 @@ const SignUpForm: FC<
                 </div>
 
                 {/* Warning message on password */}
-                {errors.password && errors.password.type === 'required' && (
-                    <FlashErrorMessage
-                        message={errors.password.message}
-                        ms={warningTime}
-                        style={loginInputs.formAlert}
-                    />
-                )}
+                {errors.password &&
+                    (errors?.password as any).type === 'required' && (
+                        <FlashErrorMessage
+                            message={errors.password.message}
+                            ms={warningTime}
+                            style={loginInputs.formAlert}
+                        />
+                    )}
             </div>
 
             <div className={loginInputs.inputHeader}>Repeat Password</div>
@@ -275,7 +276,7 @@ const SignUpForm: FC<
                 </div>
                 {/* Warning message on password repeat */}
                 {errors.passwordRep &&
-                    errors.passwordRep.type === 'required' && (
+                    (errors?.passwordRep as any).type === 'required' && (
                         <FlashErrorMessage
                             message={errors.passwordRep.message}
                             ms={warningTime}
@@ -283,7 +284,7 @@ const SignUpForm: FC<
                         />
                     )}
                 {/* Warning message on password repeat */}
-                {errors.match && errors.match.type === 'required' && (
+                {errors.match && (errors?.match as any).type === 'required' && (
                     <FlashErrorMessage
                         message={errors.match.message}
                         ms={warningTime}

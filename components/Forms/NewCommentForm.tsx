@@ -279,13 +279,14 @@ const NewCommentForm: React.FC<
             </div>
             {/* Warning message on missing question */}
             <div>
-                {errors.comment && errors.comment.type === 'required' && (
-                    <FlashErrorMessage
-                        message={errors.comment.message}
-                        ms={warningTime}
-                        style={commentFormClass.formAlert}
-                    />
-                )}
+                {errors.comment &&
+                    (errors?.comment as any).type === 'required' && (
+                        <FlashErrorMessage
+                            message={errors.comment.message}
+                            ms={warningTime}
+                            style={commentFormClass.formAlert}
+                        />
+                    )}
             </div>
             {isMobile && (
                 <div className={commentFormClass.mobileSubmitDiv}>
