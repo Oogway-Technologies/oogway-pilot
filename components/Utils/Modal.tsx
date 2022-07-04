@@ -50,7 +50,7 @@ const Modal: React.FC<
                         leaveTo="opacity-0 scale-95"
                     >
                         <div
-                            className={`max-h-[80vh] overflow-auto justify-center items-center p-6 my-8 max-w-6xl text-left bg-white dark:bg-neutralDark-500 rounded-2xl shadow-xl transition-all z-10 sm:w-inherit scrollbar-hide ${className}`}
+                            className={`sm:w-inherit z-10 my-8 max-h-[80vh] max-w-6xl items-center justify-center overflow-auto rounded-2xl bg-white p-6 text-left shadow-xl transition-all scrollbar-hide dark:bg-neutralDark-500 ${className}`}
                         >
                             {closeIcon && (
                                 <UilTimesCircle

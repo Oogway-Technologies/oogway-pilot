@@ -266,7 +266,7 @@ export const CriteriaTab: FC = () => {
                                     }
                                     type="button"
                                     onClick={handleAdd}
-                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                                    className="ml-3 flex items-center justify-center rounded-full bg-primary p-2 disabled:bg-primary/50"
                                 >
                                     <UilPlus className={'fill-white'} />
                                 </button>
