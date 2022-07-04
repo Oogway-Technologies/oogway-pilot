@@ -1,23 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import {
-    UilExclamationTriangle,
-    UilPlus,
-    UilTrashAlt,
-} from '@iconscout/react-unicons'
+import { UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import {
     addSelectedOption,
-    setClickedConnect,
-    setDecisionActivityId,
-    setDecisionFormState,
-    setDecisionQuestion,
-    setIsDecisionRehydrated,
-    setIsQuestionSafeForAI,
     setPreviousIndex,
-    setSideCardStep,
-    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -55,13 +43,11 @@ export const OptionTab: FC<OptionTabProps> = ({
         getValues,
         formState: { errors },
         setFocus,
-        reset,
     } = useFormContext()
 
     const {
         decisionActivityId,
         userExceedsMaxDecisions,
-        isQuestionSafeForAI,
         userIgnoredUnsafeWarning,
     } = useAppSelector(state => state.decisionSlice)
 
@@ -72,7 +58,6 @@ export const OptionTab: FC<OptionTabProps> = ({
     const { user: authUser } = useUser()
 
     const [isOpen, setOpen] = useState(false)
-    const [isAIWarningModalOpen, setIsAIWarningModalOpen] = useState(false)
     const [selectedIndex, setIndex] = useState<number>()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const watchOptions = useWatch({ name: 'options', control })
@@ -117,12 +102,6 @@ export const OptionTab: FC<OptionTabProps> = ({
         }
     }, [watchOptions])
 
-    // Trigger warning modal
-    useEffect(() => {
-        if (!isQuestionSafeForAI && !userIgnoredUnsafeWarning)
-            setIsAIWarningModalOpen(true)
-    }, [isQuestionSafeForAI, userIgnoredUnsafeWarning])
-
     const handleModal = (index: number) => {
         setIndex(index)
         setOpen(true)
@@ -139,25 +118,6 @@ export const OptionTab: FC<OptionTabProps> = ({
     const handleClose = () => {
         setIndex(undefined)
         setOpen(false)
-    }
-
-    const handleWarningClose = () => {
-        setIsAIWarningModalOpen(false)
-        useAppDispatch(setUserIgnoredUnsafeWarning(true))
-    }
-
-    const handleReconsider = () => {
-        reset() // reset form state
-        useAppDispatch(setIsQuestionSafeForAI(true))
-        useAppDispatch(setUserIgnoredUnsafeWarning(false))
-        useAppDispatch(setDecisionActivityId(undefined))
-        useAppDispatch(setDecisionQuestion(undefined))
-        useAppDispatch(setSideCardStep(1))
-        useAppDispatch(setClickedConnect(false))
-        useAppDispatch(setDecisionFormState({}))
-        useAppDispatch(setIsDecisionRehydrated(false))
-        setCurrentTab(0)
-        setMatrixStep(0)
     }
 
     return (
@@ -337,41 +297,6 @@ export const OptionTab: FC<OptionTabProps> = ({
                             text="Delete"
                             className={`w-36 border border-primary bg-primary py-2 text-white dark:border-primaryDark dark:bg-primaryDark ${bodyHeavy} justify-center rounded`}
                             onClick={handleDelete}
-                        />
-                    </div>
-                </div>
-            </Modal>
-            <Modal show={isAIWarningModalOpen} onClose={handleWarningClose}>
-                <div className="flex flex-col sm:w-96">
-                    <div className="flex items-center">
-                        <UilExclamationTriangle
-                            className={'mr-1 fill-alert dark:fill-alert'}
-                        />
-                        <span
-                            className={`${bodyHeavy} text-alert dark:text-alert`}
-                        >
-                            Warning
-                        </span>
-                    </div>
-                    <div
-                        className={`${body} mt-4 mb-6 text-neutral-800 dark:text-white`}
-                    >
-                        Sorry, this decision violates our policies for content
-                        safety and AI cannot provide any information. We
-                        recommend you reconsider this decision.
-                    </div>
-                    <div className="mx-auto flex items-center gap-x-lg">
-                        <Button
-                            keepText
-                            text="Continue"
-                            className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 ${bodyHeavy} justify-center rounded dark:border-neutral-150 dark:text-neutral-150`}
-                            onClick={handleWarningClose}
-                        />
-                        <Button
-                            keepText
-                            text="Reconsider"
-                            className={`w-36 border border-primary bg-transparent py-2 text-primary dark:border-primaryDark dark:bg-primaryDark dark:text-neutral-150 ${bodyHeavy} justify-center rounded`}
-                            onClick={handleReconsider}
                         />
                     </div>
                 </div>
