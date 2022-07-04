@@ -1,6 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilArrowDownRight } from '@iconscout/react-unicons'
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useQueryClient } from 'react-query'
 
@@ -29,7 +28,6 @@ import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { FirebaseUnauthenticatedDecision } from '../../../utils/types/firebase'
 import { Criteria, Options } from '../../../utils/types/global'
-import { Collapse } from '../../Utils/common/Collapse'
 import { BaseCard } from '../common/BaseCard'
 import { ResultChart } from '../common/ResultChart'
 import { ResultTable } from '../common/ResultTable'
@@ -57,7 +55,6 @@ export const ResultTab: FC<ResultTabProps> = ({
         isThereATie,
     } = useAppSelector(state => state.decisionSlice)
 
-    const [isOpen, setOpen] = useState(false)
     const createUnauthenticatedDecisions = usePutUnauthenticatedDecision()
     const queryClient = useQueryClient()
     const updateDecision = useCreateDecisionActivity()
@@ -252,25 +249,13 @@ export const ResultTab: FC<ResultTabProps> = ({
                 </button>
             </div>
             {isMobile ? <ScoreCard /> : ''}
-            <BaseCard className="my-2  p-3 md:mx-1 md:p-5">
-                <div
-                    onClick={() => setOpen(!isOpen)}
-                    className={'flex cursor-pointer items-center'}
+            <BaseCard className="my-2 p-3 md:mx-1 md:p-5">
+                <span
+                    className={`${bodyHeavy} w-full text-neutral-700 dark:text-white`}
                 >
-                    <span
-                        className={`${bodyHeavy} w-full text-neutral-700 dark:text-white`}
-                    >
-                        Score Breakdown
-                    </span>
-                    <UilArrowDownRight
-                        className={`fill-neutral-700 transition-all dark:fill-neutral-150 ${
-                            isOpen ? 'rotate-180' : 'rotate-0'
-                        }`}
-                    />
-                </div>
-                <Collapse show={isOpen} className={'overflow-y-auto'}>
-                    <ResultTable />
-                </Collapse>
+                    Score Breakdown
+                </span>
+                <ResultTable />
             </BaseCard>
         </div>
     )

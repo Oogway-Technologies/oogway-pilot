@@ -222,7 +222,29 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     </div>
                     <div className="my-3" />
                     <ResultChart />
-                    <div className="my-3" />
+                    {decisionMatrixHasResults && (
+                        <div className="mx-auto flex items-center space-x-4 py-4">
+                            <button
+                                id={'automatedDecisionMatrix-NewDecision'}
+                                onClick={() => {
+                                    reset()
+                                    setMatrixStep(0)
+                                }}
+                                className={feedToolbarClass.newPostButton}
+                            >
+                                New Decision
+                            </button>
+                            <button
+                                id={'automatedDecisionMatrix-RefineDecision'}
+                                className={feedToolbarClass.newPostButton}
+                                onClick={() => {
+                                    setCurrentTab(2)
+                                }}
+                            >
+                                Refine decision
+                            </button>
+                        </div>
+                    )}
                     <ResultTable />
                 </>
             ) : (
@@ -231,7 +253,6 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         isMobile ? 'flex flex-col-reverse' : 'grid grid-cols-3'
                     }
                 >
-                    <div></div>
                     <div className="col-span-2 col-start-2 mx-auto flex flex-col">
                         <div
                             className={`flex flex-col gap-y-md
