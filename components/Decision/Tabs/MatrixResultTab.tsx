@@ -10,12 +10,14 @@ import {
     setIsQuestionSafeForAI,
     setSideCardStep,
     setUserIgnoredUnsafeWarning,
+    updateFormCopy,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
+import { deepCopy } from '../../../utils/helpers/common'
 import { Criteria, Options } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
 import { ResultChart } from '../common/ResultChart'
@@ -42,6 +44,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
         isQuestionSafeForAI,
         clickedConnect,
         decisionActivityId,
+        formCopy,
     } = useAppSelector(state => state.decisionSlice)
 
     const createOrUpdateDecision = useCreateDecisionActivity()
@@ -87,6 +90,16 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         )
                     },
                 }
+            )
+            useAppDispatch(
+                updateFormCopy(
+                    deepCopy({
+                        question: getValues('question'),
+                        context: getValues('context'),
+                        options: getValues('options'),
+                        criteria: getValues('criteria'),
+                    })
+                )
             )
         }
 
@@ -139,6 +152,16 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     setCurrentTab(2)
                 },
             }
+        )
+        // Set form copy
+        useAppDispatch(
+            updateFormCopy(
+                deepCopy({
+                    ...formCopy,
+                    question: getValues('question'),
+                    context: getValues('context'),
+                })
+            )
         )
     }
 
