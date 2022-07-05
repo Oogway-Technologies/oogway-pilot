@@ -182,7 +182,7 @@ const NewReplyForm: React.FC<
             </div>
             {/* Warning message on missing question */}
             <div>
-                {errors.reply && errors.reply.type === 'required' && (
+                {errors.reply && (errors?.reply as any).type === 'required' && (
                     <FlashErrorMessage
                         message={errors.reply.message}
                         ms={warningTime}

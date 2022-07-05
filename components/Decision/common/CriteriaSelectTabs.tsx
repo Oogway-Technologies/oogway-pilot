@@ -50,12 +50,12 @@ export const CriteriaSelectTabs: FC<CriteriaSelectTabsProps> = ({
                     disabled={!isDisable}
                     type="button"
                     key={`criteria-select-tabs-${item.name}`}
-                    className={`md:text-base text-sm not-italic font-bold tracking-normal whitespace-nowrap ${
+                    className={`whitespace-nowrap font-bold not-italic text-sm tracking-normal md:text-base ${
                         isMobile ? 'w-full' : 'w-1/4'
-                    } flex items-center justify-center p-2 text-center cursor-pointer rounded-lg ${
+                    } flex cursor-pointer items-center justify-center rounded-lg p-2 text-center ${
                         selected?.name === item.name
-                            ? 'text-primary dark:text-primaryDark bg-primary/20 disable:dark:bg-primaryDark/50 disable:text-primary/50 disable:dark:text-primaryDark/50 disable:bg-primary/50 disable:dark:bg-primaryDark/50'
-                            : 'text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutralDark-300 disabled:dark:bg-neutralDark-300/50 disabled:text-neutral-700/50 disabled:dark:text-neutral-300/50'
+                            ? 'disable:dark:bg-primaryDark/50 disable:text-primary/50 disable:dark:text-primaryDark/50 disable:bg-primary/50 disable:dark:bg-primaryDark/50 bg-primary/20 text-primary dark:text-primaryDark'
+                            : 'bg-white text-neutral-700 disabled:text-neutral-700/50 dark:bg-neutralDark-300 dark:text-neutral-300 disabled:dark:bg-neutralDark-300/50 disabled:dark:text-neutral-300/50'
                     }`}
                     onClick={() => handleClick(item)}
                 >

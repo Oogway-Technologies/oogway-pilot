@@ -158,8 +158,8 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             {currentTab !== 5 ? (
                 <h3
                     className={`${
-                        isMobile ? bodyHeavy : 'text-2xl font-bold'
-                    } text-neutral-800 dark:text-white capitalize flex items-center ${
+                        isMobile ? bodyHeavy : 'font-bold text-2xl'
+                    } flex items-center capitalize text-neutral-800 dark:text-white ${
                         [2, 3].includes(currentTab)
                             ? `sticky top-[-2px] z-50 pb-2 ${
                                   isMobile

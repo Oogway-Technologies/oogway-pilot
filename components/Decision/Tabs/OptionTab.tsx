@@ -1,25 +1,15 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import {
-    UilExclamationTriangle,
-    UilPlus,
-    UilTrashAlt,
-} from '@iconscout/react-unicons'
+import { UilPlus, UilTrashAlt } from '@iconscout/react-unicons'
 import React, { FC, useEffect, useState } from 'react'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 
 import {
     addSelectedOption,
-    setDecisionActivityId,
-    setDecisionQuestion,
-    setIsDecisionFormUpdating,
-    setIsQuestionSafeForAI,
     setPreviousIndex,
-    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { inputStyle } from '../../../styles/utils'
 import { shortLimit } from '../../../utils/constants/global'
@@ -52,18 +42,12 @@ export const OptionTab: FC<OptionTabProps> = ({
         setValue,
         getValues,
         formState: { errors },
-        watch,
         setFocus,
-        reset,
     } = useFormContext()
 
     const {
-        decisionQuestion: prevQuestion,
-        decisionFormState,
         decisionActivityId,
         userExceedsMaxDecisions,
-        isDecisionFormUpdating,
-        isQuestionSafeForAI,
         userIgnoredUnsafeWarning,
     } = useAppSelector(state => state.decisionSlice)
 
@@ -74,32 +58,11 @@ export const OptionTab: FC<OptionTabProps> = ({
     const { user: authUser } = useUser()
 
     const [isOpen, setOpen] = useState(false)
-    const [isAIWarningModalOpen, setIsAIWarningModalOpen] = useState(false)
     const [selectedIndex, setIndex] = useState<number>()
-    const createDecision = useCreateDecisionActivity()
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const question = getValues('question')
-    const watchOptions = watch('options')
+    const watchOptions = useWatch({ name: 'options', control })
 
     useEffect(() => {
-        // On mount, check if new question matches previous question
-        // If not, update state to new question and instantiate new
-        // decision log
-        if (question !== prevQuestion && !isDecisionFormUpdating) {
-            // Update previous question
-            useAppDispatch(setDecisionQuestion(question))
-
-            // Instantiate new decision
-            createDecision.mutate(decisionFormState, {
-                onSuccess: newDecision => {
-                    useAppDispatch(setDecisionActivityId(newDecision.data.id))
-                },
-            })
-        }
-
-        // to focus on input on mount
-        setFocus('options.[0].name')
-
         return () => {
             useAppDispatch(setPreviousIndex(2))
             setOpen(false)
@@ -121,8 +84,6 @@ export const OptionTab: FC<OptionTabProps> = ({
             )
             let formState: FirebaseDecisionActivity = {
                 id: decisionActivityId,
-                isQuestionSafeForAI: isQuestionSafeForAI,
-                userIgnoredUnsafeWarning: userIgnoredUnsafeWarning,
                 currentTab: 2,
             }
             if (filteredOptions.length)
@@ -131,14 +92,8 @@ export const OptionTab: FC<OptionTabProps> = ({
                     options: filteredOptions,
                 }
             useAppDispatch(updateDecisionFormState(formState))
-            useAppDispatch(setIsDecisionFormUpdating(false))
         }
-    }, [
-        watchOptions,
-        decisionActivityId,
-        isQuestionSafeForAI,
-        userIgnoredUnsafeWarning,
-    ])
+    }, [watchOptions, decisionActivityId])
 
     useEffect(() => {
         // handle focus on enter
@@ -146,12 +101,6 @@ export const OptionTab: FC<OptionTabProps> = ({
             setFocus('options.[0].name')
         }
     }, [watchOptions])
-
-    // Trigger warning modal
-    useEffect(() => {
-        if (!isQuestionSafeForAI && !userIgnoredUnsafeWarning)
-            setIsAIWarningModalOpen(true)
-    }, [isQuestionSafeForAI, userIgnoredUnsafeWarning])
 
     const handleModal = (index: number) => {
         setIndex(index)
@@ -169,19 +118,6 @@ export const OptionTab: FC<OptionTabProps> = ({
     const handleClose = () => {
         setIndex(undefined)
         setOpen(false)
-    }
-
-    const handleWarningClose = () => {
-        setIsAIWarningModalOpen(false)
-        useAppDispatch(setUserIgnoredUnsafeWarning(true))
-    }
-
-    const handleReconsider = () => {
-        reset() // reset form state
-        useAppDispatch(setIsQuestionSafeForAI(true))
-        useAppDispatch(setUserIgnoredUnsafeWarning(false))
-        setCurrentTab(0)
-        setMatrixStep(0)
     }
 
     return (
@@ -361,41 +297,6 @@ export const OptionTab: FC<OptionTabProps> = ({
                             text="Delete"
                             className={`w-36 border border-primary bg-primary py-2 text-white dark:border-primaryDark dark:bg-primaryDark ${bodyHeavy} justify-center rounded`}
                             onClick={handleDelete}
-                        />
-                    </div>
-                </div>
-            </Modal>
-            <Modal show={isAIWarningModalOpen} onClose={handleWarningClose}>
-                <div className="flex flex-col sm:w-96">
-                    <div className="flex items-center">
-                        <UilExclamationTriangle
-                            className={'mr-1 fill-alert dark:fill-alert'}
-                        />
-                        <span
-                            className={`${bodyHeavy} text-alert dark:text-alert`}
-                        >
-                            Warning
-                        </span>
-                    </div>
-                    <div
-                        className={`${body} mt-4 mb-6 text-neutral-800 dark:text-white`}
-                    >
-                        Sorry, this decision violates our policies for content
-                        safety and AI cannot provide any information. We
-                        recommend you reconsider this decision.
-                    </div>
-                    <div className="mx-auto flex items-center gap-x-lg">
-                        <Button
-                            keepText
-                            text="Continue"
-                            className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 ${bodyHeavy} justify-center rounded dark:border-neutral-150 dark:text-neutral-150`}
-                            onClick={handleWarningClose}
-                        />
-                        <Button
-                            keepText
-                            text="Reconsider"
-                            className={`w-36 border border-primary bg-transparent py-2 text-primary dark:border-primaryDark dark:bg-primaryDark dark:text-neutral-150 ${bodyHeavy} justify-center rounded`}
-                            onClick={handleReconsider}
                         />
                     </div>
                 </div>

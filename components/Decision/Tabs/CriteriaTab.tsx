@@ -5,7 +5,6 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import {
     addSelectedCriteria,
-    setIsDecisionFormUpdating,
     setPreviousIndex,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
@@ -136,11 +135,11 @@ export const CriteriaTab: FC = () => {
     }
 
     useEffect(() => {
-        // // to focus on input on mount
-        // if (!isDecisionRehydrated) setFocus('options.[0].name')
+        // to focus on input on mount
+        setFocus('options.[0].name')
 
         // On mount, log form state from previous tab
-        // if (!isDecisionFormUpdating) updateDecision.mutate(decisionFormState)
+        // updateDecision.mutate(decisionFormState)
 
         return () => {
             useAppDispatch(setPreviousIndex(3))
@@ -194,7 +193,6 @@ export const CriteriaTab: FC = () => {
                     criteria: filteredCriteria,
                 }
             useAppDispatch(updateDecisionFormState(formState))
-            useAppDispatch(setIsDecisionFormUpdating(false))
         }
     }, [decisionActivityId, watchCriteria])
 
@@ -268,7 +266,7 @@ export const CriteriaTab: FC = () => {
                                     }
                                     type="button"
                                     onClick={handleAdd}
-                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                                    className="ml-3 flex items-center justify-center rounded-full bg-primary p-2 disabled:bg-primary/50"
                                 >
                                     <UilPlus className={'fill-white'} />
                                 </button>

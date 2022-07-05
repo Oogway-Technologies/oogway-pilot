@@ -744,13 +744,14 @@ const NewPostForm: FC<
                 )}
 
                 {/* Warning message on missing question */}
-                {errors.question && errors.question.type === 'required' && (
-                    <FlashErrorMessage
-                        message={errors.question.message}
-                        ms={warningTime}
-                        style={postFormClass.formAlert}
-                    />
-                )}
+                {errors.question &&
+                    (errors?.question as any).type === 'required' && (
+                        <FlashErrorMessage
+                            message={errors.question.message}
+                            ms={warningTime}
+                            style={postFormClass.formAlert}
+                        />
+                    )}
 
                 {/* Description: not required */}
                 <div className={postFormClass.formDescription}>
@@ -821,7 +822,7 @@ const NewPostForm: FC<
                         },
                     })}
                 />
-                {errors.feed && errors.feed.type === 'required' && (
+                {errors.feed && (errors?.feed as any).type === 'required' && (
                     <FlashErrorMessage
                         message={errors.feed.message}
                         ms={warningTime}

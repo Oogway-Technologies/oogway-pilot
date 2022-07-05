@@ -127,13 +127,14 @@ const PWForm: FC<
                         />
                     </div>
                     {/* Warning message on password */}
-                    {errors.email && errors.email.type === 'required' && (
-                        <FlashErrorMessage
-                            message={errors.email.message}
-                            ms={warningTime}
-                            style={loginInputs.formAlert}
-                        />
-                    )}
+                    {errors.email &&
+                        (errors?.email as any).type === 'required' && (
+                            <FlashErrorMessage
+                                message={errors.email.message}
+                                ms={warningTime}
+                                style={loginInputs.formAlert}
+                            />
+                        )}
                 </div>
                 <div className={loginDivs.customSignIn}>
                     <Button

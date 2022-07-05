@@ -10,10 +10,8 @@ import {
     setDecisionEngineBestOption,
     setDecisionFormState,
     setDecisionQuestion,
-    setIsDecisionFormUpdating,
     setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
-    setIsRatingsModified,
     setIsThereATie,
     setPreviousIndex,
     setSideCardStep,
@@ -29,10 +27,7 @@ import {
 } from '../../../queries/unauthenticatedDecisions'
 import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
-import {
-    FirebaseDecisionActivity,
-    FirebaseUnauthenticatedDecision,
-} from '../../../utils/types/firebase'
+import { FirebaseUnauthenticatedDecision } from '../../../utils/types/firebase'
 import { Criteria, Options } from '../../../utils/types/global'
 import { Collapse } from '../../Utils/common/Collapse'
 import { BaseCard } from '../common/BaseCard'
@@ -57,10 +52,9 @@ export const ResultTab: FC<ResultTabProps> = ({
 
     const {
         decisionActivityId,
-        suggestions: aiSuggestions,
         decisionEngineBestOption,
-        isThereATie,
         decisionFormState,
+        isThereATie,
     } = useAppSelector(state => state.decisionSlice)
 
     const [isOpen, setOpen] = useState(false)
@@ -73,7 +67,15 @@ export const ResultTab: FC<ResultTabProps> = ({
     useEffect(() => {
         useAppDispatch(setDecisionEngineBestOption(calcBestOption()))
         if (getValues('question') && decisionActivityId) {
-            saveResult(decisionActivityId)
+            useAppDispatch(
+                updateDecisionFormState({ currentTab: 5, isComplete: true })
+            )
+            updateDecision.mutate({
+                ...decisionFormState,
+                id: decisionActivityId,
+                isComplete: true,
+                currentTab: 5,
+            })
         }
 
         return () => {
@@ -88,6 +90,7 @@ export const ResultTab: FC<ResultTabProps> = ({
         })
     }, [])
 
+    // TODO: Turn into custom hook
     useEffect(() => {
         if (!user && decisionActivityId) {
             const data: getUnauthenticatedDecisionPayload | undefined =
@@ -121,23 +124,6 @@ export const ResultTab: FC<ResultTabProps> = ({
         const optionsList = orgOptionsList.filter((item: Options) => item.name)
         setValue('options', optionsList)
         setValue('criteria', criteriaList)
-    }
-
-    const saveResult = (id: string) => {
-        // Update decision form state
-        useAppDispatch(
-            updateDecisionFormState({ currentTab: 5, isComplete: true })
-        )
-        // Result object for firebase.
-        const result: FirebaseDecisionActivity = {
-            id: id,
-            ratings: getValues('ratings'),
-            suggestedOptions: aiSuggestions.copyOptionsList,
-            suggestedCriteria: aiSuggestions.copyCriteriaList,
-            isComplete: true,
-            currentTab: 5,
-        }
-        updateDecision.mutate({ ...decisionFormState, ...result })
     }
 
     const calcBestOption = () => {
@@ -188,8 +174,6 @@ export const ResultTab: FC<ResultTabProps> = ({
         useAppDispatch(setSideCardStep(1))
         useAppDispatch(setClickedConnect(false))
         useAppDispatch(setDecisionFormState({}))
-        useAppDispatch(setIsDecisionFormUpdating(false))
-        useAppDispatch(setIsRatingsModified(false))
         useAppDispatch(setIsDecisionRehydrated(false))
         useAppDispatch(setIsQuestionSafeForAI(true))
         useAppDispatch(setUserIgnoredUnsafeWarning(false))
