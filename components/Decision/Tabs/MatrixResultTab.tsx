@@ -279,7 +279,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 <Button
                                     keepText
                                     text="Continue"
-                                    className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 ${bodyHeavy} justify-center rounded dark:border-neutral-150 dark:text-neutral-150`}
+                                    className={`${feedToolbarClass.newPostButton} !text-neutral-700 !border-neutral-700 !bg-transparent`}
                                     onClick={
                                         handleContinueWithUnsupportedDecision
                                     }
