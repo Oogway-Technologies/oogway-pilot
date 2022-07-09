@@ -16,7 +16,7 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { feedToolbarClass } from '../../../styles/feed'
-import { body, bodyHeavy } from '../../../styles/typography'
+import { body } from '../../../styles/typography'
 import { deepCopy } from '../../../utils/helpers/common'
 import { Criteria, Options } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
@@ -279,7 +279,13 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 <Button
                                     keepText
                                     text="Continue"
-                                    className={`${feedToolbarClass.newPostButton} !text-neutral-700 !border-neutral-700 !bg-transparent`}
+                                    className={`${
+                                        feedToolbarClass.newPostButton
+                                    } ${
+                                        !isQuestionSafeForAI
+                                            ? 'border !border-neutral-700 !bg-transparent !text-neutral-700'
+                                            : ''
+                                    }`}
                                     onClick={
                                         handleContinueWithUnsupportedDecision
                                     }
@@ -288,13 +294,20 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                     <Button
                                         keepText
                                         text="Reconsider"
-                                        className={`w-36 border border-primary bg-transparent py-2 text-primary dark:border-primaryDark dark:bg-primaryDark dark:text-neutral-150 ${bodyHeavy} justify-center rounded`}
+                                        className={
+                                            feedToolbarClass.newPostButton
+                                        }
                                         onClick={handleReconsiderOrNewDecision}
                                     />
                                 )}
                             </div>
                         </div>
                     </div>
+                    <img
+                        src={'/images/Shiny Happy Standing.png'}
+                        alt="Shiny-Happy-Standing"
+                        className={`absolute  bottom-0 z-20 h-auto max-w-[40%]`}
+                    />
                 </div>
             )}
             {decisionMatrixHasResults && (
