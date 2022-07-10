@@ -1,20 +1,12 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import React, { Dispatch, FC, SetStateAction, useEffect } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useQueryClient } from 'react-query'
 
 import {
-    setClickedConnect,
-    setDecisionActivityId,
     setDecisionEngineBestOption,
-    setDecisionFormState,
-    setDecisionQuestion,
-    setIsDecisionRehydrated,
-    setIsQuestionSafeForAI,
     setIsThereATie,
     setPreviousIndex,
-    setSideCardStep,
-    setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
@@ -24,7 +16,6 @@ import {
     getUnauthenticatedDecisionPayload,
     usePutUnauthenticatedDecision,
 } from '../../../queries/unauthenticatedDecisions'
-import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { FirebaseUnauthenticatedDecision } from '../../../utils/types/firebase'
 import { Criteria, Options } from '../../../utils/types/global'
@@ -34,17 +25,11 @@ import { ResultTable } from '../common/ResultTable'
 import { ScoreCard } from '../SideCards/ScoreCard'
 
 interface ResultTabProps {
-    setCurrentTab: Dispatch<SetStateAction<number>>
-    setMatrixStep: Dispatch<SetStateAction<number>>
     deviceIp: string
 }
 
-export const ResultTab: FC<ResultTabProps> = ({
-    setCurrentTab,
-    setMatrixStep,
-    deviceIp,
-}: ResultTabProps) => {
-    const { control, setValue, reset, getValues } = useFormContext()
+export const ResultTab: FC<ResultTabProps> = ({ deviceIp }: ResultTabProps) => {
+    const { control, setValue, getValues } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const optionList: Options[] = useWatch({ name: 'options', control })
 
@@ -160,23 +145,6 @@ export const ResultTab: FC<ResultTabProps> = ({
         }
     }
 
-    const handleReset = () => {
-        // reset form state
-        reset()
-        // Return to first tab
-        setCurrentTab(0)
-        // Wipe previous decision question and id
-        useAppDispatch(setDecisionQuestion(undefined))
-        useAppDispatch(setDecisionActivityId(undefined))
-        useAppDispatch(setSideCardStep(1))
-        useAppDispatch(setClickedConnect(false))
-        useAppDispatch(setDecisionFormState({}))
-        useAppDispatch(setIsDecisionRehydrated(false))
-        useAppDispatch(setIsQuestionSafeForAI(true))
-        useAppDispatch(setUserIgnoredUnsafeWarning(false))
-        setMatrixStep(0)
-    }
-
     const calcScore = (index: number): number => {
         let sumWeights = 0
         let sumWeightedScore = 0
@@ -239,15 +207,6 @@ export const ResultTab: FC<ResultTabProps> = ({
                 )}
             </div>
             <ResultChart />
-            <div className="mx-auto flex items-center space-x-4 py-4">
-                <button
-                    id={'manualDecision-NewDecision'}
-                    onClick={handleReset}
-                    className={feedToolbarClass.newPostButton}
-                >
-                    New Decision
-                </button>
-            </div>
             {isMobile ? <ScoreCard /> : ''}
             <BaseCard className="my-2 p-3 md:mx-1 md:p-5">
                 <span

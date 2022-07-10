@@ -41,6 +41,8 @@ export interface InfoModalDetails {
 }
 
 export interface DecisionSliceStates {
+    currentTab: number
+    matrixStep: number
     decisionEngineOptionTab: number
     decisionEngineBestOption: string | undefined
     decisionRatingUpdate: boolean

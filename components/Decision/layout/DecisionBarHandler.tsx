@@ -7,6 +7,7 @@ import {
     populateSuggestions,
     resetSuggestions,
     setCriteriaMobileIndex,
+    setCurrentTab,
     setDecisionCriteriaQueryKey,
     setDecisionEngineOptionTab,
     setDecisionRatingUpdate,
@@ -28,14 +29,10 @@ import { AISuggestions, Criteria, Options } from '../../../utils/types/global'
 
 interface DecisionBarHandlerProps {
     className?: string
-    selectedTab: number
-    setSelectedTab: (v: number) => void
 }
 
 export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     className,
-    selectedTab,
-    setSelectedTab,
 }: DecisionBarHandlerProps) => {
     const {
         trigger,
@@ -53,6 +50,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         criteriaMobileIndex,
         userExceedsMaxDecisions,
         decisionMatrixHasResults,
+        currentTab: selectedTab,
     } = useAppSelector(state => state.decisionSlice)
 
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -254,7 +252,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
     const handleForward = async () => {
         const isValid = await validationHandler(selectedTab)
         if (selectedTab !== decisionSideBarOptions.length && isValid) {
-            setSelectedTab(selectedTab + 1)
+            useAppDispatch(setCurrentTab(selectedTab + 1))
         }
         useAppDispatch(setDecisionCriteriaQueryKey(undefined))
     }
@@ -311,13 +309,13 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                         setCriteriaMobileIndex(criteriaFilter.length - 1)
                     )
                 } else {
-                    setSelectedTab(selectedTab - 1)
+                    useAppDispatch(setCurrentTab(selectedTab - 1))
                     useAppDispatch(setCriteriaMobileIndex(0))
                 }
             }
         } else {
             if (isMobile && selectedTab !== 0) {
-                setSelectedTab(selectedTab - 1)
+                useAppDispatch(setCurrentTab(selectedTab - 1))
             }
         }
 
@@ -328,7 +326,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                     setDecisionEngineOptionTab(decisionEngineOptionTab - 1)
                 )
             } else if (selectedTab !== 0) {
-                setSelectedTab(selectedTab - 1)
+                useAppDispatch(setCurrentTab(selectedTab - 1))
             }
         }
         useAppDispatch(setDecisionCriteriaQueryKey(undefined))

@@ -6,7 +6,6 @@ import {
     setDecisionEngineOptionTab,
     setRatingTabChecker,
 } from '../../../features/decision/decisionSlice'
-import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { optionRatingTab } from '../../../styles/decision'
 import { Options } from '../../../utils/types/global'
@@ -25,7 +24,6 @@ const OptionRatingTabWrapper: FC = () => {
         name: 'options',
     })
     const watchOptions = watch('options')
-    const isMobile = useMediaQuery('(max-width: 965px)')
 
     const handleClick = (index: number) => {
         useAppDispatch(setDecisionEngineOptionTab(index))
@@ -38,7 +36,7 @@ const OptionRatingTabWrapper: FC = () => {
     }
     return (
         <>
-            <div className={`mb-4 flex w-full items-center space-x-3`}>
+            <div className={'flex w-full items-center space-x-3'}>
                 <ProgressBar
                     totalSteps={
                         getValues('options').filter(
@@ -64,7 +62,7 @@ const OptionRatingTabWrapper: FC = () => {
                                 selectedTab === index
                                     ? 'border border-neutral-800 bg-neutral-50 text-neutral-800'
                                     : 'border border-neutralDark-150 text-neutralDark-150 first:border-r-transparent last:border-l-transparent'
-                            } ${isMobile ? 'px-2 py-1.5' : 'px-4 py-2.5'}`}
+                            } px-2 py-1.5`}
                         >
                             {watchOptions[index].name}
                         </span>

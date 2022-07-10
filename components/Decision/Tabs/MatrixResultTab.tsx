@@ -2,13 +2,9 @@ import React, { FC, useEffect, useRef } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
-    setClickedConnect,
+    handleResetState,
+    setCurrentTab,
     setDecisionActivityId,
-    setDecisionFormState,
-    setDecisionQuestion,
-    setIsDecisionRehydrated,
-    setIsQuestionSafeForAI,
-    setSideCardStep,
     setUserIgnoredUnsafeWarning,
     updateFormCopy,
 } from '../../../features/decision/decisionSlice'
@@ -16,7 +12,7 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { feedToolbarClass } from '../../../styles/feed'
-import { body } from '../../../styles/typography'
+import { body, bodyHeavy } from '../../../styles/typography'
 import { deepCopy } from '../../../utils/helpers/common'
 import { Criteria, Options } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
@@ -25,13 +21,9 @@ import { ResultTable } from '../common/ResultTable'
 
 interface MatrixResultTabProps {
     deviceIp: string
-    setMatrixStep: (n: number) => void
-    setCurrentTab: (n: number) => void
 }
 const MatrixResultTab: FC<MatrixResultTabProps> = ({
     deviceIp,
-    setMatrixStep,
-    setCurrentTab,
 }: MatrixResultTabProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
     const scrollRef = useRef<HTMLDivElement>(null)
@@ -113,18 +105,9 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
         )
     }, [])
 
-    const handleReconsiderOrNewDecision = () => {
-        reset() // reset form state
-        useAppDispatch(setIsQuestionSafeForAI(true))
-        useAppDispatch(setUserIgnoredUnsafeWarning(false))
-        useAppDispatch(setDecisionActivityId(undefined))
-        useAppDispatch(setDecisionQuestion(undefined))
-        useAppDispatch(setSideCardStep(1))
-        useAppDispatch(setClickedConnect(false))
-        useAppDispatch(setDecisionFormState({}))
-        useAppDispatch(setIsDecisionRehydrated(false))
-        setCurrentTab(0)
-        setMatrixStep(0)
+    const handleReset = () => {
+        reset()
+        useAppDispatch(handleResetState())
     }
 
     const handleContinueWithUnsupportedDecision = () => {
@@ -149,7 +132,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
             {
                 onSuccess: newDecision => {
                     useAppDispatch(setDecisionActivityId(newDecision.data.id))
-                    setCurrentTab(2)
+                    useAppDispatch(setCurrentTab(2))
                 },
             }
         )
@@ -172,7 +155,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
             isComplete: false,
             currentTab: 2,
         })
-        setCurrentTab(2)
+        useAppDispatch(setCurrentTab(2))
     }
 
     return (
@@ -222,29 +205,18 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     </div>
                     <div className="my-3" />
                     <ResultChart />
-                    {decisionMatrixHasResults && (
-                        <div className="mx-auto flex items-center space-x-4 py-4">
-                            <button
-                                id={'automatedDecisionMatrix-NewDecision'}
-                                onClick={() => {
-                                    reset()
-                                    setMatrixStep(0)
-                                }}
-                                className={feedToolbarClass.newPostButton}
-                            >
-                                New Decision
-                            </button>
+                    {decisionMatrixHasResults && isMobile && (
+                        <div className="my-2 mx-auto flex items-center py-4">
                             <button
                                 id={'automatedDecisionMatrix-RefineDecision'}
                                 className={feedToolbarClass.newPostButton}
-                                onClick={() => {
-                                    setCurrentTab(2)
-                                }}
+                                onClick={handleRefineDecision}
                             >
                                 Refine decision
                             </button>
                         </div>
                     )}
+                    <div className="my-3" />
                     <ResultTable />
                 </>
             ) : (
@@ -294,10 +266,8 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                     <Button
                                         keepText
                                         text="Reconsider"
-                                        className={
-                                            feedToolbarClass.newPostButton
-                                        }
-                                        onClick={handleReconsiderOrNewDecision}
+                                        className={`w-36 border border-primary bg-transparent py-2 text-primary dark:border-primaryDark dark:bg-primaryDark dark:text-neutral-150 ${bodyHeavy} justify-center rounded`}
+                                        onClick={handleReset}
                                     />
                                 )}
                             </div>
@@ -308,24 +278,6 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         alt="Shiny-Happy-Standing"
                         className={`absolute  bottom-0 z-20 h-auto max-w-[40%]`}
                     />
-                </div>
-            )}
-            {decisionMatrixHasResults && (
-                <div className="mx-auto flex items-center space-x-4 py-4">
-                    <button
-                        id={'automatedDecisionMatrix-NewDecision'}
-                        onClick={handleReconsiderOrNewDecision}
-                        className={feedToolbarClass.newPostButton}
-                    >
-                        New Decision
-                    </button>
-                    <button
-                        id={'automatedDecisionMatrix-RefineDecision'}
-                        className={feedToolbarClass.newPostButton}
-                        onClick={handleRefineDecision}
-                    >
-                        Refine decision
-                    </button>
                 </div>
             )}
         </div>

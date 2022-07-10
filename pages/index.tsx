@@ -3,7 +3,7 @@ import { UilQuestionCircle } from '@iconscout/react-unicons'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect } from 'react'
 import { FormProvider, useWatch } from 'react-hook-form'
 
 import { SideNavbar } from '../components/Decision/AutoMatrix/SideNavbar'
@@ -16,6 +16,7 @@ import { CriteriaInfo } from '../components/Decision/SideCards/CriteriaInfo'
 import { CriteriaSuggestions } from '../components/Decision/SideCards/CriteriaSuggestions'
 import { DecisionHelperCard } from '../components/Decision/SideCards/DecisionHelperCard'
 import { OptionSuggestions } from '../components/Decision/SideCards/OptionSuggestions'
+import { QuestionHelperCard } from '../components/Decision/SideCards/QuestionHelperCard'
 import { ScoreCard } from '../components/Decision/SideCards/ScoreCard'
 import { SignInCard } from '../components/Decision/SideCards/SignInCard'
 import UnsupportedDecision from '../components/Decision/SideCards/UnsupportedDecision'
@@ -48,9 +49,10 @@ const DecisionEngine: FC = () => {
         userIgnoredUnsafeWarning,
         isInfoModal,
         infoModalDetails,
+        currentTab,
+        matrixStep,
     } = useAppSelector(state => state.decisionSlice)
-    const [currentTab, setCurrentTab] = useState(0)
-    const [matrixStep, setMatrixStep] = useState(0)
+
     const deviceIp = Cookies.get('userIp')
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
@@ -58,8 +60,6 @@ const DecisionEngine: FC = () => {
 
     // Instantiate form
     const methods = useInstantiateDecisionForm({
-        currentTab,
-        setCurrentTab,
         rehydrate: rehydrateDecisionForm,
     })
     const { control, getValues, setValue } = methods
@@ -111,22 +111,9 @@ const DecisionEngine: FC = () => {
     const matrixGenerator = () => {
         switch (matrixStep) {
             case 0:
-                return (
-                    <DecisionTab
-                        currentTab={currentTab}
-                        matrixStep={matrixStep}
-                        setMatrixStep={setMatrixStep}
-                        deviceIp={deviceIp || ''}
-                    />
-                )
+                return <DecisionTab deviceIp={deviceIp || ''} />
             case 1:
-                return (
-                    <MatrixResultTab
-                        deviceIp={deviceIp || ''}
-                        setMatrixStep={setMatrixStep}
-                        setCurrentTab={setCurrentTab}
-                    />
-                )
+                return <MatrixResultTab deviceIp={deviceIp || ''} />
             default:
                 return <div />
         }
@@ -135,33 +122,15 @@ const DecisionEngine: FC = () => {
     const tabGenerator = () => {
         switch (currentTab) {
             case 1:
-                return (
-                    <DecisionTab
-                        matrixStep={matrixStep}
-                        setMatrixStep={setMatrixStep}
-                        currentTab={currentTab}
-                        deviceIp={deviceIp || ''}
-                    />
-                )
+                return <DecisionTab deviceIp={deviceIp || ''} />
             case 2:
-                return (
-                    <OptionTab
-                        setCurrentTab={setCurrentTab}
-                        setMatrixStep={setMatrixStep}
-                    />
-                )
+                return <OptionTab />
             case 3:
                 return <CriteriaTab />
             case 4:
                 return <RatingTab />
             case 5:
-                return (
-                    <ResultTab
-                        setMatrixStep={setMatrixStep}
-                        deviceIp={deviceIp || ''}
-                        setCurrentTab={setCurrentTab}
-                    />
-                )
+                return <ResultTab deviceIp={deviceIp || ''} />
             default:
                 return <div />
         }
@@ -197,18 +166,10 @@ const DecisionEngine: FC = () => {
                         }`}
                     >
                         {!isMobile && currentTab > 0 && (
-                            <DecisionSideBar
-                                selectedTab={currentTab}
-                                className="col-span-1"
-                                setSelectedTab={setCurrentTab}
-                            />
+                            <DecisionSideBar className="col-span-1" />
                         )}
                         {!isMobile && currentTab === 0 && (
-                            <SideNavbar
-                                selectedTab={matrixStep}
-                                className="col-span-1"
-                                setSelectedTab={setMatrixStep}
-                            />
+                            <SideNavbar className="col-span-1" />
                         )}
                         <div
                             className={`relative flex flex-col gap-y-md ${
@@ -221,6 +182,11 @@ const DecisionEngine: FC = () => {
                                     : 'col-span-6 h-full px-5 py-4'
                             }`}
                         >
+                            {!isMobile && currentTab === 4 && (
+                                <QuestionHelperCard
+                                    title={decisionTitle[currentTab]}
+                                />
+                            )}
                             {currentTab === 4 && <OptionRatingTabWrapper />}
                             {currentTab === 4 && (
                                 <span className="text-neutral-700 dark:text-neutralDark-150">
@@ -243,11 +209,7 @@ const DecisionEngine: FC = () => {
                                     : matrixGenerator()}
                             </DecisionTabWrapper>
                             {!isMobile && currentTab > 0 && (
-                                <DecisionBarHandler
-                                    className="mt-auto w-full justify-self-end"
-                                    selectedTab={currentTab}
-                                    setSelectedTab={setCurrentTab}
-                                />
+                                <DecisionBarHandler className="mt-auto w-full justify-self-end" />
                             )}
                         </div>
                     </div>
@@ -305,10 +267,7 @@ const DecisionEngine: FC = () => {
                             ) : null}
                             {currentTab === 5 ? <ScoreCard /> : null}
                             {userIgnoredUnsafeWarning && (
-                                <UnsupportedDecision
-                                    setCurrentTab={setCurrentTab}
-                                    setMatrixStep={setMatrixStep}
-                                />
+                                <UnsupportedDecision />
                             )}
                             <GenericSidebar
                                 title="Disclaimer"
@@ -321,26 +280,14 @@ const DecisionEngine: FC = () => {
                     )}
                 </form>
                 {isMobile && currentTab > 0 && (
-                    <DecisionBarHandler
-                        className="mt-auto w-full justify-self-end pr-3"
-                        selectedTab={currentTab}
-                        setSelectedTab={setCurrentTab}
-                    />
+                    <DecisionBarHandler className="mt-auto w-full justify-self-end pr-3" />
                 )}
                 {/* step bar for mobile */}
                 {isMobile && currentTab > 0 && (
-                    <DecisionSideBar
-                        selectedTab={currentTab}
-                        className="col-span-1"
-                        setSelectedTab={setCurrentTab}
-                    />
+                    <DecisionSideBar className="col-span-1" />
                 )}
                 {isMobile && currentTab === 0 && (
-                    <SideNavbar
-                        selectedTab={matrixStep}
-                        className="col-span-1"
-                        setSelectedTab={setMatrixStep}
-                    />
+                    <SideNavbar className="col-span-1" />
                 )}
             </FormProvider>
             <Modal
