@@ -320,8 +320,9 @@ const DecisionEngine: FC = () => {
                                     <FeedDisclaimer />
                                 </GenericSidebar>
                             ) : null}
-                            {currentTab > 1 ||
-                                (matrixStep === 1 && <AISuggestionInfoCard />)}
+                            {(currentTab > 1 || matrixStep === 1) && (
+                                <AISuggestionInfoCard />
+                            )}
                         </div>
                     )}
                 </form>
