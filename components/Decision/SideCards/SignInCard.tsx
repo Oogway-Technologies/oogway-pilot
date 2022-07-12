@@ -19,7 +19,7 @@ export const SignInCard: FC<SignInCardProps> = ({
             className={`flex flex-col ${
                 isMobile
                     ? 'my-4'
-                    : 'custom-box-shadow dark:custom-box-shadow-dark mb-4 rounded-2xl bg-white p-3 dark:bg-neutralDark-500'
+                    : 'custom-box-shadow dark:custom-box-shadow-dark mb-4 mr-4 rounded-2xl bg-white p-3 dark:bg-neutralDark-500'
             } ${className ? className : ''}`}
         >
             <span

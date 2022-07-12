@@ -100,20 +100,20 @@ export const CriteriaSuggestions = () => {
                                 />
                                 <div
                                     onClick={() => infoClick(item.name)}
-                                    className={`group flex justify-center items-center p-2 ml-2 h-full custom-box-shadow dark:custom-box-shadow-dark
+                                    className={`group custom-box-shadow dark:custom-box-shadow-dark ml-2 flex h-full items-center justify-center p-2
                                   ${
                                       infoCardSection.criteriaClickedText ===
                                       item.name
                                           ? 'bg-primary dark:bg-primaryDark'
                                           : 'hover:bg-primary hover:dark:bg-primaryDark'
-                                  } rounded-lg border border-neutral-300 transition-all cursor-pointer`}
+                                  } cursor-pointer rounded-lg border border-neutral-300 transition-all`}
                                 >
                                     <UilQuestionCircle
-                                        className={`min-w-[20px] min-h-[20px] ${
+                                        className={`min-h-[20px] min-w-[20px] ${
                                             infoCardSection.criteriaClickedText ===
                                             item.name
                                                 ? 'fill-white'
-                                                : 'group-hover:fill-white fill-neutral-300'
+                                                : 'fill-neutral-300 group-hover:fill-white'
                                         } `}
                                     />
                                 </div>
