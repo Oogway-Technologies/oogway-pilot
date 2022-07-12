@@ -6,6 +6,7 @@ import {
     setDecisionActivityId,
     setDecisionFormState,
     setDecisionQuestion,
+    setInfoCards,
     setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
     setSideCardStep,
@@ -123,6 +124,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
         useAppDispatch(setClickedConnect(false))
         useAppDispatch(setDecisionFormState({}))
         useAppDispatch(setIsDecisionRehydrated(false))
+        useAppDispatch(setInfoCards(undefined))
         setCurrentTab(0)
         setMatrixStep(0)
     }

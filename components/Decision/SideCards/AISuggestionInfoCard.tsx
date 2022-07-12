@@ -1,6 +1,7 @@
 import { UilPlusCircle } from '@iconscout/react-unicons'
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 
+import { useAppSelector } from '../../../hooks/useRedux'
 import { body, bodyHeavy } from '../../../styles/typography'
 import { BaseCard } from '../common/BaseCard'
 
@@ -10,53 +11,52 @@ interface AISuggestionInfoCardProps {
 export const AISuggestionInfoCard: FC<AISuggestionInfoCardProps> = ({
     className = '',
 }: AISuggestionInfoCardProps) => {
-    return (
-        <BaseCard className={`flex flex-col py-2.5 px-3  ${className}`}>
-            <div className="flex overflow-scroll space-x-3 snap-x snap-mandatory scrollbar-hide">
-                <div className="flex flex-col space-y-4 min-w-full snap-center">
-                    <div className="flex items-center space-x-2">
-                        <UilPlusCircle />
-                        <span className={bodyHeavy}>Nightlife</span>
-                    </div>
-                    <span className={`${body} text-neutral-700`}>
-                        Nightlife is a collective term for entertainment that is
-                        available and generally more popular from the late
-                        evening into the early hours of the morning. It includes
-                        pubs, bars, nightclubs.
-                    </span>
-                    <img
-                        className="object-fill w-full h-36 rounded-lg"
-                        src={
-                            'https://media.cntraveler.com/photos/5b96b33ecdf9990ad19a02c2/4:5/w_2132,h_2665,c_limit/Salon-zur-Wilden-Renat_0421.jpg'
-                        }
-                        alt={'hero-suggestion-image'}
-                    />
-                </div>
-                <div className="flex flex-col  space-y-4 min-w-full snap-center">
-                    <div className="flex items-center space-x-2">
-                        <UilPlusCircle />
-                        <span className={bodyHeavy}>Nightlife</span>
-                    </div>
-                    <span className={`${body} text-neutral-700`}>
-                        Nightlife is a collective term for entertainment that is
-                        available and generally more popular from the late
-                        evening into the early hours of the morning. It includes
-                        pubs, bars, nightclubs.
-                    </span>
-                    <img
-                        className="object-fill w-full h-36 rounded-lg"
-                        src={
-                            'https://media.cntraveler.com/photos/5b96b33ecdf9990ad19a02c2/4:5/w_2132,h_2665,c_limit/Salon-zur-Wilden-Renat_0421.jpg'
-                        }
-                        alt={'hero-suggestion-image'}
-                    />
-                </div>
-            </div>
+    const infoCards = useAppSelector(state => state.decisionSlice.infoCards)
+    const [cardIdx, setCardIdx] = useState<number>(0)
 
-            <div className="flex justify-center items-center mt-3 space-x-3 w-full h-fit">
-                <span className="w-3 h-3 bg-white rounded-full border-2 border-primary" />
-                <span className="w-3 h-3 bg-[#D9D9D9] rounded-full border-2 border-transparent" />
-            </div>
-        </BaseCard>
-    )
+    if (infoCards && infoCards.length > 0) {
+        return (
+            <BaseCard className={`mr-4 flex flex-col py-2.5 px-3 ${className}`}>
+                <div className="flex snap-x snap-mandatory space-x-3 overflow-scroll scrollbar-hide">
+                    <div className="flex min-w-full snap-center flex-col space-y-4">
+                        <div className="flex items-center space-x-2">
+                            <UilPlusCircle />
+                            <span className={bodyHeavy}>
+                                {infoCards[cardIdx].title}
+                            </span>
+                        </div>
+                        <span className={`${body} text-neutral-700`}>
+                            {infoCards[cardIdx].text}
+                        </span>
+                        {infoCards[cardIdx].media &&
+                            infoCards[cardIdx].mediaType === 'img' && (
+                                <img
+                                    className="h-36 w-full rounded-lg object-fill"
+                                    src={infoCards[cardIdx].media}
+                                    alt={'hero-suggestion-image'} // Add alt field to infoCards
+                                />
+                            )}
+                    </div>
+                </div>
+
+                <div className="mt-3 flex h-fit w-full items-center justify-center space-x-3">
+                    {infoCards.map((_card, idx) => {
+                        return (
+                            <span
+                                key={idx}
+                                onClick={() => setCardIdx(idx)}
+                                className={`h-3 w-3 rounded-full border-2 ${
+                                    idx === cardIdx
+                                        ? 'border-primary bg-white'
+                                        : 'border-transparent bg-[#D9D9D9]'
+                                }`}
+                            />
+                        )
+                    })}
+                </div>
+            </BaseCard>
+        )
+    } else {
+        return null
+    }
 }

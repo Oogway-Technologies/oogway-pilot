@@ -6,6 +6,7 @@ import {
     setDecisionActivityId,
     setDecisionFormState,
     setDecisionQuestion,
+    setInfoCards,
     setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
     setSideCardStep,
@@ -46,6 +47,7 @@ const UnsupportedDecision: FC<UnsupportedDecisionProps> = ({
         useAppDispatch(setClickedConnect(false))
         useAppDispatch(setDecisionFormState({}))
         useAppDispatch(setIsDecisionRehydrated(false))
+        useAppDispatch(setInfoCards(undefined))
         setCurrentTab(0)
         setMatrixStep(0)
     }

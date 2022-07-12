@@ -5,6 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import {
     setDecisionEngineBestOption,
     setDecisionMatrixHasResults,
+    setInfoCards,
     setIsQuestionSafeForAI,
     setIsThereATie,
     setPreviousIndex,
@@ -14,6 +15,7 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import useResetDecisionHelperCard from '../../../hooks/useResetDecisionHelperCard'
 import { useCreateDecisionMatrix } from '../../../queries/decisionMatrix'
+import { useCreateInfoCard } from '../../../queries/infoCard'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
 import { feedToolbarClass } from '../../../styles/feed'
 import { body, bodyHeavy } from '../../../styles/typography'
@@ -72,6 +74,7 @@ export const DecisionTab: FC<DecisionTabProps> = ({
 
     // Mutators
     const decisionMatrix = useCreateDecisionMatrix()
+    const infoCards = useCreateInfoCard()
 
     // Reset decision helper card when question is changed
     useResetDecisionHelperCard(control)
@@ -249,6 +252,20 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                         useAppDispatch(setDecisionMatrixHasResults(false))
                     },
                     onSettled: () => setMatrixStep(matrixStep + 1),
+                }
+            )
+            infoCards.mutate(
+                {
+                    decision: question,
+                    context,
+                },
+                {
+                    onSuccess: response => {
+                        useAppDispatch(setInfoCards(response.data.cards))
+                    },
+                    onError: error => {
+                        console.log(error)
+                    },
                 }
             )
             setTimeout(

@@ -6,6 +6,7 @@ import { AISuggestions, Criteria, Options } from '../../utils/types/global'
 import {
     DecisionSliceStates,
     FormCopy,
+    InfoCard,
     InfoCardSection,
     InfoModalDetails,
 } from '../interfaces'
@@ -52,12 +53,19 @@ const initialState: DecisionSliceStates = {
         optionClickedText: '',
         criteriaClickedText: '',
     },
+    infoCards: undefined,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setInfoCards: (
+            state,
+            { payload }: PayloadAction<InfoCard[] | undefined>
+        ) => {
+            state.infoCards = payload
+        },
         setInfoModalDetails: (
             state,
             { payload }: PayloadAction<InfoModalDetails>
@@ -285,6 +293,7 @@ export const decisionSlice = createSlice({
 })
 
 export const {
+    setInfoCards,
     setInfoModal,
     setInfoModalDetails,
     setDecisionEngineOptionTab,

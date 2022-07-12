@@ -1,5 +1,11 @@
 import service from '../../env/serviceAccount.enc'
 import decryptAES from '../helpers/decryptAES'
+import {
+    BingVars,
+    DemoAccountVars,
+    OogwayVars,
+    UpstashVars,
+} from '../types/envVars'
 import { Tab, TabItem } from '../types/global'
 
 /**
@@ -19,10 +25,10 @@ export const authorLabel = '(Author)' // Label displayed next to username in pos
 /**
  * Environment variables
  */
-export const bingVars = decryptAES(service.bing)
-export const oogwayVars = decryptAES(service.oogway_ai)
-export const upstashVars = decryptAES(service.upstash)
-export const demoAccountVars = decryptAES(service.demo_account)
+export const bingVars: BingVars = decryptAES(service.bing)
+export const oogwayVars: OogwayVars = decryptAES(service.oogway_ai)
+export const upstashVars: UpstashVars = decryptAES(service.upstash)
+export const demoAccountVars: DemoAccountVars = decryptAES(service.demo_account)
 
 /**
  * API Calls

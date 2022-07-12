@@ -176,7 +176,7 @@ const DecisionEngine: FC = () => {
             <FormProvider {...methods}>
                 <form
                     className={`${decisionContainer} ${
-                        isMobile ? `mx-4` : 'my-xl mx-xxl h-[78vh] gap-4'
+                        isMobile ? `mx-4` : 'my-xl mx-xxl h-[80vh] gap-4'
                     }`}
                     autoComplete="off"
                     onKeyDown={event => {
@@ -257,7 +257,7 @@ const DecisionEngine: FC = () => {
                             className={
                                 'overflow-y-auto col-span-1 ' +
                                 'scrollbar scrollbar-sm scrollbar-rounded scrollbar-thumb-tertiary ' +
-                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300 px-1'
+                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300 p-1'
                             }
                         >
                             {!user ? (
@@ -320,7 +320,8 @@ const DecisionEngine: FC = () => {
                                     <FeedDisclaimer />
                                 </GenericSidebar>
                             ) : null}
-                            <AISuggestionInfoCard />
+                            {currentTab > 1 ||
+                                (matrixStep === 1 && <AISuggestionInfoCard />)}
                         </div>
                     )}
                 </form>

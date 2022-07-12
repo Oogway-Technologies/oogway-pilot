@@ -39,9 +39,17 @@ export interface InfoModalDetails {
     title: string
     context: string
 }
+
 export interface InfoCardSection {
     optionClickedText: string
     criteriaClickedText: string
+}
+
+export interface InfoCard {
+    title: string
+    text: string
+    media?: string
+    mediaType?: string
 }
 
 export interface DecisionSliceStates {
@@ -70,4 +78,5 @@ export interface DecisionSliceStates {
     userIgnoredUnsafeWarning: boolean
     decisionMatrixHasResults: boolean
     infoCardSection: InfoCardSection
+    infoCards: InfoCard[] | undefined
 }
