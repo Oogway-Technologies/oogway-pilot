@@ -52,33 +52,35 @@ export const ResultTable: FC<ResultTableProps> = ({
             }}
         >
             <thead className="flex w-full items-center">
-                <th className={'mr-4 flex w-1/3'}>
-                    <span
-                        className={`flex flex-col items-start px-2 py-1.5 leading-6 text-primary text-sm tracking-normal dark:text-primaryDark md:text-base`}
+                <tr>
+                    <th className={'mr-4 flex w-1/3'}>
+                        <span
+                            className={`flex flex-col items-start px-2 py-1.5 leading-6 text-primary text-sm tracking-normal dark:text-primaryDark md:text-base`}
+                        >
+                            <b>CRITERIA</b>
+                            IMPORTANCE
+                        </span>
+                    </th>
+                    <th
+                        className={`flex w-2/3 items-center space-x-3 ${bodyHeavy} min-h-[3.5rem] rounded-lg bg-neutral-700  py-1 px-2  text-white`}
                     >
-                        <b>CRITERIA</b>
-                        IMPORTANCE
-                    </span>
-                </th>
-                <th
-                    className={`flex w-2/3 items-center space-x-3 ${bodyHeavy} min-h-[3.5rem] rounded-lg bg-neutral-700  py-1 px-2  text-white`}
-                >
-                    <DropDownMenu
-                        menuText={selectedRating.option}
-                        itemArray={rating.map(item => item.option)}
-                        onClickItem={(v?: IV) => {
-                            setSelectedRating(rating[v?.index || 0])
-                        }}
-                        selectedItem={selectedRating.option}
-                        menuEndIcon={<UilAngleDown />}
-                        menuTextClass={`${bodySmall} !font-bold text-white fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 justify-between w-full`}
-                        menuItemClass={`${body} text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 truncate`}
-                        menuItemsClass={
-                            'w-full cursor-pointer items-start mt-4'
-                        }
-                        menuClass={'h-full'}
-                    />
-                </th>
+                        <DropDownMenu
+                            menuText={selectedRating.option}
+                            itemArray={rating.map(item => item.option)}
+                            onClickItem={(v?: IV) => {
+                                setSelectedRating(rating[v?.index || 0])
+                            }}
+                            selectedItem={selectedRating.option}
+                            menuEndIcon={<UilAngleDown />}
+                            menuTextClass={`${bodySmall} !font-bold text-white fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 justify-between w-full`}
+                            menuItemClass={`${body} text-neutral-700 fill-neutral-700 dark:text-neutral-150 dark:fill-neutral-150 truncate`}
+                            menuItemsClass={
+                                'w-full cursor-pointer items-start mt-4'
+                            }
+                            menuClass={'h-full'}
+                        />
+                    </th>
+                </tr>
             </thead>
             <tbody className="flex flex-col">
                 {criteria.map((item: Criteria, index: number) => (

@@ -1,8 +1,12 @@
+import { UilQuestionCircle } from '@iconscout/react-unicons'
 import { UilSpinner } from '@iconscout/react-unicons'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
-import { removeSelectedOption } from '../../../features/decision/decisionSlice'
+import {
+    removeSelectedOption,
+    setInfoCardSection,
+} from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { body, bodyHeavy } from '../../../styles/typography'
@@ -15,6 +19,7 @@ export const OptionSuggestions = () => {
         loadingAiSuggestions,
         isSuggestionsEmpty,
         suggestions: { optionsList },
+        infoCardSection,
     } = useAppSelector(state => state.decisionSlice)
     const { getValues, setValue } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
@@ -29,6 +34,16 @@ export const OptionSuggestions = () => {
             useAppDispatch(removeSelectedOption(item))
             setValue('options', deepCopy(insertAtArray(optionArray, 1, item)))
         }
+    }
+
+    const infoClick = (name: string) => {
+        useAppDispatch(
+            setInfoCardSection({
+                ...infoCardSection,
+                optionClickedText:
+                    infoCardSection.optionClickedText === name ? '' : name,
+            })
+        )
     }
 
     return (
@@ -88,9 +103,25 @@ export const OptionSuggestions = () => {
                                     suggestionItem={item}
                                     onClick={handleItemAdd}
                                 />
-                                {/* <div className=" group flex justify-center items-center p-2 ml-2 h-full hover:bg-primary hover:dark:bg-primaryDark rounded-lg border border-neutral-300 transition-all cursor-pointer">
-                                    <UilQuestionCircle className=" min-w-[20px] min-h-[20px] fill-neutral-300 group-hover:fill-white" />
-                                </div> */}
+                                <div
+                                    onClick={() => infoClick(item.name)}
+                                    className={`group custom-box-shadow dark:custom-box-shadow-dark ml-2 flex h-full items-center justify-center p-2
+                                  ${
+                                      infoCardSection.optionClickedText ===
+                                      item.name
+                                          ? 'bg-primary dark:bg-primaryDark'
+                                          : 'hover:bg-primary hover:dark:bg-primaryDark'
+                                  } cursor-pointer rounded-lg border border-neutral-300 transition-all`}
+                                >
+                                    <UilQuestionCircle
+                                        className={`min-h-[20px] min-w-[20px] ${
+                                            infoCardSection.optionClickedText ===
+                                            item.name
+                                                ? 'fill-white'
+                                                : 'fill-neutral-300 group-hover:fill-white'
+                                        } `}
+                                    />
+                                </div>
                             </div>
                         )
                     })}

@@ -3,7 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { capitalize } from '../../utils/helpers/common'
 import { FirebaseDecisionActivity } from '../../utils/types/firebase'
 import { AISuggestions, Criteria, Options } from '../../utils/types/global'
-import { DecisionSliceStates, FormCopy, InfoModalDetails } from '../interfaces'
+import {
+    DecisionSliceStates,
+    FormCopy,
+    InfoCard,
+    InfoCardSection,
+    InfoModalDetails,
+} from '../interfaces'
 
 const initialState: DecisionSliceStates = {
     decisionEngineOptionTab: 0,
@@ -43,12 +49,23 @@ const initialState: DecisionSliceStates = {
     isQuestionSafeForAI: true,
     userIgnoredUnsafeWarning: false,
     decisionMatrixHasResults: true,
+    infoCardSection: {
+        optionClickedText: '',
+        criteriaClickedText: '',
+    },
+    infoCards: undefined,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setInfoCards: (
+            state,
+            { payload }: PayloadAction<InfoCard[] | undefined>
+        ) => {
+            state.infoCards = payload
+        },
         setInfoModalDetails: (
             state,
             { payload }: PayloadAction<InfoModalDetails>
@@ -57,6 +74,12 @@ export const decisionSlice = createSlice({
         },
         setInfoModal: (state, { payload }: PayloadAction<boolean>) => {
             state.isInfoModal = payload
+        },
+        setInfoCardSection: (
+            state,
+            { payload }: PayloadAction<InfoCardSection>
+        ) => {
+            state.infoCardSection = payload
         },
         setIsThereATie: (state, { payload }: PayloadAction<boolean>) => {
             state.isThereATie = payload
@@ -270,6 +293,7 @@ export const decisionSlice = createSlice({
 })
 
 export const {
+    setInfoCards,
     setInfoModal,
     setInfoModalDetails,
     setDecisionEngineOptionTab,
@@ -300,6 +324,7 @@ export const {
     setIsQuestionSafeForAI,
     setUserIgnoredUnsafeWarning,
     setDecisionMatrixHasResults,
+    setInfoCardSection,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

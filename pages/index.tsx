@@ -12,6 +12,7 @@ import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHan
 import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
 import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWrapper'
 import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
+import { AISuggestionInfoCard } from '../components/Decision/SideCards/AISuggestionInfoCard'
 import { CriteriaInfo } from '../components/Decision/SideCards/CriteriaInfo'
 import { CriteriaSuggestions } from '../components/Decision/SideCards/CriteriaSuggestions'
 import { DecisionHelperCard } from '../components/Decision/SideCards/DecisionHelperCard'
@@ -175,7 +176,7 @@ const DecisionEngine: FC = () => {
             <FormProvider {...methods}>
                 <form
                     className={`${decisionContainer} ${
-                        isMobile ? `mx-4` : 'my-xl mx-xxl h-[78vh] gap-4'
+                        isMobile ? `mx-4` : 'my-xl mx-xxl h-[80vh] gap-4'
                     }`}
                     autoComplete="off"
                     onKeyDown={event => {
@@ -256,7 +257,7 @@ const DecisionEngine: FC = () => {
                             className={
                                 'overflow-y-auto col-span-1 ' +
                                 'scrollbar scrollbar-sm scrollbar-rounded scrollbar-thumb-tertiary ' +
-                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300 px-1'
+                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300 p-1'
                             }
                         >
                             {!user ? (
@@ -310,13 +311,18 @@ const DecisionEngine: FC = () => {
                                     setMatrixStep={setMatrixStep}
                                 />
                             )}
-                            <GenericSidebar
-                                title="Disclaimer"
-                                titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
-                                extraClass="mt-auto !mx-0"
-                            >
-                                <FeedDisclaimer />
-                            </GenericSidebar>
+                            {[1, 4, 5].includes(currentTab) ? (
+                                <GenericSidebar
+                                    title="Disclaimer"
+                                    titleClass="text-md font-bold leading-6 text-neutral-700 dark:text-neutralDark-150"
+                                    extraClass="mt-auto"
+                                >
+                                    <FeedDisclaimer />
+                                </GenericSidebar>
+                            ) : null}
+                            {(currentTab > 1 || matrixStep === 1) && (
+                                <AISuggestionInfoCard />
+                            )}
                         </div>
                     )}
                 </form>

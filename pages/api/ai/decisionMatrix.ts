@@ -23,8 +23,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         )
         res.status(200).json(response.data)
     } catch (error) {
-        console.log()
-
         const err = error as {
             message: string
             status: number
