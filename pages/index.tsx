@@ -211,7 +211,7 @@ const DecisionEngine: FC = () => {
                             />
                         )}
                         <div
-                            className={`flex flex-col gap-y-md ${
+                            className={`relative flex flex-col gap-y-md ${
                                 isMobile
                                     ? `col-span-7 pt-4 ${
                                           currentTab === 0

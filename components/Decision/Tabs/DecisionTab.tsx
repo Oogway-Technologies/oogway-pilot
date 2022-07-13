@@ -313,24 +313,20 @@ export const DecisionTab: FC<DecisionTabProps> = ({
             getValues('question').split('').length ? (
                 <DecisionHelperCard />
             ) : null}
-            {matrixStep === 0 && currentTab === 0 && (
-                <Button
-                    id={`automatedDecisionMatrix-${
-                        getValues('options').length > 1 ? 'update' : 'show'
-                    }Result`}
-                    onClick={handleAutoMatrix}
-                    className={`${feedToolbarClass.newPostButton} ml-auto w-fit disabled:bg-primary/80`}
-                    text={
-                        getValues('options').length > 1
-                            ? 'Update Result'
-                            : 'Get Result'
-                    }
-                    keepText={true}
-                    icon={null}
-                    type="button"
-                    disabled={decisionMatrix.isLoading}
-                />
-            )}
+            {matrixStep === 0 &&
+                currentTab === 0 &&
+                getValues('options').length === 1 && (
+                    <Button
+                        id={`automatedDecisionMatrix-showResult`}
+                        onClick={handleAutoMatrix}
+                        className={`${feedToolbarClass.newPostButton} ml-auto w-fit disabled:bg-primary/80`}
+                        text={'Get Result'}
+                        keepText={true}
+                        icon={null}
+                        type="button"
+                        disabled={decisionMatrix.isLoading}
+                    />
+                )}
             {decisionMatrix.isLoading && (
                 <div className="flex flex-col space-y-5">
                     <h3

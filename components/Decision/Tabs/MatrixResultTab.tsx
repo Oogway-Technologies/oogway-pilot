@@ -16,7 +16,7 @@ import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
 import { feedToolbarClass } from '../../../styles/feed'
-import { body, bodyHeavy } from '../../../styles/typography'
+import { body } from '../../../styles/typography'
 import { deepCopy } from '../../../utils/helpers/common'
 import { Criteria, Options } from '../../../utils/types/global'
 import Button from '../../Utils/Button'
@@ -222,7 +222,29 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                     </div>
                     <div className="my-3" />
                     <ResultChart />
-                    <div className="my-3" />
+                    {decisionMatrixHasResults && (
+                        <div className="mx-auto flex items-center space-x-4 py-4">
+                            <button
+                                id={'automatedDecisionMatrix-NewDecision'}
+                                onClick={() => {
+                                    reset()
+                                    setMatrixStep(0)
+                                }}
+                                className={feedToolbarClass.newPostButton}
+                            >
+                                New Decision
+                            </button>
+                            <button
+                                id={'automatedDecisionMatrix-RefineDecision'}
+                                className={feedToolbarClass.newPostButton}
+                                onClick={() => {
+                                    setCurrentTab(2)
+                                }}
+                            >
+                                Refine decision
+                            </button>
+                        </div>
+                    )}
                     <ResultTable />
                 </>
             ) : (
@@ -231,7 +253,6 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                         isMobile ? 'flex flex-col-reverse' : 'grid grid-cols-3'
                     }
                 >
-                    <div></div>
                     <div className="col-span-2 col-start-2 mx-auto flex flex-col">
                         <div
                             className={`flex flex-col gap-y-md
@@ -258,7 +279,13 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                 <Button
                                     keepText
                                     text="Continue"
-                                    className={`w-36 border border-neutral-700 bg-transparent py-2 text-neutral-700 ${bodyHeavy} justify-center rounded dark:border-neutral-150 dark:text-neutral-150`}
+                                    className={`${
+                                        feedToolbarClass.newPostButton
+                                    } ${
+                                        !isQuestionSafeForAI
+                                            ? 'border !border-neutral-700 !bg-transparent !text-neutral-700'
+                                            : ''
+                                    }`}
                                     onClick={
                                         handleContinueWithUnsupportedDecision
                                     }
@@ -267,13 +294,20 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
                                     <Button
                                         keepText
                                         text="Reconsider"
-                                        className={`w-36 border border-primary bg-transparent py-2 text-primary dark:border-primaryDark dark:bg-primaryDark dark:text-neutral-150 ${bodyHeavy} justify-center rounded`}
+                                        className={
+                                            feedToolbarClass.newPostButton
+                                        }
                                         onClick={handleReconsiderOrNewDecision}
                                     />
                                 )}
                             </div>
                         </div>
                     </div>
+                    <img
+                        src={'/images/Shiny Happy Standing.png'}
+                        alt="Shiny-Happy-Standing"
+                        className={`absolute  bottom-0 z-20 h-auto max-w-[40%]`}
+                    />
                 </div>
             )}
             {decisionMatrixHasResults && (
