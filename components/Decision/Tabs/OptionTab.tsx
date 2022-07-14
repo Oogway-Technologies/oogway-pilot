@@ -27,15 +27,7 @@ import { OptionSuggestions } from '../SideCards/OptionSuggestions'
 import { SignInCard } from '../SideCards/SignInCard'
 import UnsupportedDecision from '../SideCards/UnsupportedDecision'
 
-interface OptionTabProps {
-    setCurrentTab: (n: number) => void
-    setMatrixStep: (n: number) => void
-}
-
-export const OptionTab: FC<OptionTabProps> = ({
-    setCurrentTab,
-    setMatrixStep,
-}) => {
+export const OptionTab: FC = () => {
     const {
         register,
         control,
@@ -140,10 +132,7 @@ export const OptionTab: FC<OptionTabProps> = ({
                         <SignInCard currentTab={2} />
                     )
                 ) : userIgnoredUnsafeWarning ? (
-                    <UnsupportedDecision
-                        setCurrentTab={setCurrentTab}
-                        setMatrixStep={setMatrixStep}
-                    />
+                    <UnsupportedDecision />
                 ) : (
                     <OptionSuggestions />
                 )

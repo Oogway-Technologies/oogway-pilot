@@ -6,6 +6,8 @@ import { AISuggestions, Criteria, Options } from '../../utils/types/global'
 import { DecisionSliceStates, FormCopy, InfoModalDetails } from '../interfaces'
 
 const initialState: DecisionSliceStates = {
+    currentTab: 0,
+    matrixStep: 0,
     decisionEngineOptionTab: 0,
     decisionEngineBestOption: undefined,
     decisionRatingUpdate: true,
@@ -49,6 +51,18 @@ export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        handleResetState: state => {
+            state.currentTab = 0
+            state.matrixStep = 0
+            state.decisionQuestion = undefined
+            state.decisionActivityId = undefined
+            state.sideCardStep = 1
+            state.clickedConnect = false
+            state.decisionFormState = {}
+            state.isDecisionRehydrated = false
+            state.isQuestionSafeForAI = true
+            state.userIgnoredUnsafeWarning = false
+        },
         setInfoModalDetails: (
             state,
             { payload }: PayloadAction<InfoModalDetails>
@@ -266,10 +280,19 @@ export const decisionSlice = createSlice({
         ) => {
             state.decisionMatrixHasResults = payload
         },
+        setCurrentTab: (state, { payload }: PayloadAction<number>) => {
+            state.currentTab = payload
+        },
+        setMatrixStep: (state, { payload }: PayloadAction<number>) => {
+            state.matrixStep = payload
+        },
     },
 })
 
 export const {
+    handleResetState,
+    setCurrentTab,
+    setMatrixStep,
     setInfoModal,
     setInfoModalDetails,
     setDecisionEngineOptionTab,

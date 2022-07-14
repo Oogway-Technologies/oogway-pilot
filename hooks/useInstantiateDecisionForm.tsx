@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
     setClickedConnect,
+    setCurrentTab,
     setDecisionActivityId,
     setDecisionFormState,
     setDecisionQuestion,
@@ -20,16 +21,13 @@ import { DecisionForm } from '../utils/types/global'
 import { useAppDispatch, useAppSelector } from './useRedux'
 
 interface UseInstantiateDecisionFormProps {
-    currentTab: number
-    setCurrentTab: React.Dispatch<React.SetStateAction<number>>
     rehydrate: boolean
 }
 
 const useInstantiateDecisionForm = ({
-    currentTab,
-    setCurrentTab,
     rehydrate,
 }: UseInstantiateDecisionFormProps) => {
+    const currentTab = useAppSelector(state => state.decisionSlice.currentTab)
     const userProfile = useAppSelector(state => state.userSlice.user)
 
     // Rehydrate form state from stored values
@@ -120,8 +118,10 @@ const useInstantiateDecisionForm = ({
 
                     // update current tab
                     if (retrievedData.pages[0].decisions[0].currentTab) {
-                        setCurrentTab(
-                            retrievedData.pages[0].decisions[0].currentTab
+                        useAppDispatch(
+                            setCurrentTab(
+                                retrievedData.pages[0].decisions[0].currentTab
+                            )
                         )
                         if (currentTab === 4)
                             useAppDispatch(setDecisionRatingUpdate(true))

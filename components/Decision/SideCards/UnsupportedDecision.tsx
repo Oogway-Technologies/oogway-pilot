@@ -3,11 +3,13 @@ import { useFormContext } from 'react-hook-form'
 
 import {
     setClickedConnect,
+    setCurrentTab,
     setDecisionActivityId,
     setDecisionFormState,
     setDecisionQuestion,
     setIsDecisionRehydrated,
     setIsQuestionSafeForAI,
+    setMatrixStep,
     setSideCardStep,
     setUserIgnoredUnsafeWarning,
 } from '../../../features/decision/decisionSlice'
@@ -18,15 +20,7 @@ import { bodyHeavy, bodySmall } from '../../../styles/typography'
 import Button from '../../Utils/Button'
 import AISidebar from '../common/AISidebar'
 
-type UnsupportedDecisionProps = {
-    setCurrentTab: (n: number) => void
-    setMatrixStep: (n: number) => void
-}
-
-const UnsupportedDecision: FC<UnsupportedDecisionProps> = ({
-    setCurrentTab,
-    setMatrixStep,
-}) => {
+const UnsupportedDecision: FC = () => {
     const { reset } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
     const decisionActivityId = useAppSelector(
@@ -46,8 +40,8 @@ const UnsupportedDecision: FC<UnsupportedDecisionProps> = ({
         useAppDispatch(setClickedConnect(false))
         useAppDispatch(setDecisionFormState({}))
         useAppDispatch(setIsDecisionRehydrated(false))
-        setCurrentTab(0)
-        setMatrixStep(0)
+        useAppDispatch(setCurrentTab(0))
+        useAppDispatch(setMatrixStep(0))
     }
 
     return (

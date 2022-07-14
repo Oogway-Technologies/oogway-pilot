@@ -1,21 +1,20 @@
-import { UilQuestionCircle } from '@iconscout/react-unicons'
 import { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
+    setCurrentTab,
     setDecisionRatingUpdate,
-    setInfoModal,
-    setInfoModalDetails,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
+import { useCreateDecisionActivity } from '../../../queries/decisionActivity'
+import { feedToolbarClass } from '../../../styles/feed'
 import { bodyHeavy } from '../../../styles/typography'
-import { decisionInfo } from '../../../utils/constants/global'
 import { deepCopy } from '../../../utils/helpers/common'
 import { findInCriteria, findInOption } from '../../../utils/helpers/decision'
 import { Criteria, Options, Rating, Ratings } from '../../../utils/types/global'
-import { Tooltip } from '../../Utils/Tooltip'
-// import { QuestionCard } from '../SideCards/QuestionCard'
+import { WrapperTabMenu } from '../common/WrapperTabMenu'
+import { QuestionHelperCard } from '../SideCards/QuestionHelperCard'
 
 interface DecisionTabWrapperProps {
     className?: string
@@ -33,9 +32,13 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
     children,
 }: DecisionTabWrapperProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const { decisionCriteriaQueryKey, decisionRatingUpdate } = useAppSelector(
-        state => state.decisionSlice
-    )
+    const {
+        decisionCriteriaQueryKey,
+        decisionRatingUpdate,
+        decisionActivityId,
+        decisionMatrixHasResults,
+    } = useAppSelector(state => state.decisionSlice)
+    const createOrUpdateDecision = useCreateDecisionActivity()
     const { getValues, setValue } = useFormContext()
 
     useEffect(() => {
@@ -136,30 +139,33 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
               } ${heightDecider(currentTab)} `
             : `space-y-lg ${
                   currentTab === 4
-                      ? 'h-[calc(100vh-27.15rem)]'
+                      ? 'h-[calc(100vh-31.15rem)]'
                       : currentTab === 0
                       ? 'h-[calc(100vh-13.75rem)]'
                       : 'h-[calc(100vh-17.5rem)]'
               }`
     } mt-0 w-full overflow-y-auto ${className ? className : ''}`
 
-    const handleInfoClick = () => {
-        useAppDispatch(
-            setInfoModalDetails({
-                title: title.replace('your ', ''),
-                context: decisionInfo[currentTab],
-            })
-        )
-        useAppDispatch(setInfoModal(true))
+    const handleRefineDecision = () => {
+        // update previous decision
+        createOrUpdateDecision.mutate({
+            id: decisionActivityId,
+            isComplete: false,
+            currentTab: 2,
+        })
+        useAppDispatch(setCurrentTab(2))
     }
+
     return (
         <div className={containerClass}>
-            {/* {[2, 3].includes(currentTab) && !isMobile ? <QuestionCard /> : ''} */}
+            {!isMobile && currentTab !== 4 && (
+                <QuestionHelperCard title={title} />
+            )}
             {currentTab !== 5 ? (
                 <h3
                     className={`${
                         isMobile ? bodyHeavy : 'font-bold text-2xl'
-                    } flex items-center capitalize text-neutral-800 dark:text-white ${
+                    } flex items-center whitespace-nowrap capitalize text-neutral-800 dark:text-white ${
                         [2, 3].includes(currentTab)
                             ? `sticky top-[-2px] z-50 pb-2 ${
                                   isMobile
@@ -167,26 +173,22 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
                                       : 'bg-white dark:bg-neutralDark-500'
                               }`
                             : ''
-                    } ${currentTab === 0 ? 'mt-7' : ''}
-                    `}
+                    } ${currentTab === 0 ? '!mt-6' : ''}`}
                 >
                     {currentTab === 0 ? title.split('/')[matrixStep] : title}
-                    {matrixStep === 1 && currentTab === 0 ? null : isMobile ? (
-                        <UilQuestionCircle
-                            onClick={handleInfoClick}
-                            className={'ml-2'}
-                        />
-                    ) : (
-                        <Tooltip
-                            toolTipText="Explain"
-                            className="ml-auto"
-                            classForParent="mb-5 -bottom-14 -left-7"
-                            classForToolTipBox="!rounded border-none bg-primary text-white shadow-none"
-                            classForBottomArrow="border-none bg-primary text-white mt-0 absolute -top-[4px] left-8"
-                        >
-                            <UilQuestionCircle onClick={handleInfoClick} />
-                        </Tooltip>
-                    )}
+                    {isMobile && <WrapperTabMenu title={title} />}
+                    {!isMobile &&
+                        decisionMatrixHasResults &&
+                        currentTab === 0 &&
+                        matrixStep === 1 && (
+                            <button
+                                id={'automatedDecisionMatrix-RefineDecision'}
+                                className={`${feedToolbarClass.newPostButton} ml-auto !text-base`}
+                                onClick={handleRefineDecision}
+                            >
+                                Refine decision
+                            </button>
+                        )}
                 </h3>
             ) : null}
             {children}

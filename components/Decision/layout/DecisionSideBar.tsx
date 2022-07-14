@@ -2,27 +2,24 @@ import { UilArrowRight, UilCheck } from '@iconscout/react-unicons'
 import { FC, useEffect, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
+import { setCurrentTab } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppSelector } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { bodyHeavy } from '../../../styles/typography'
 import { decisionSideBarOptions } from '../../../utils/constants/global'
 import { Criteria, Options, TabItem } from '../../../utils/types/global'
 
 interface DecisionSideBarProps {
     className?: string
-    selectedTab: number
-    setSelectedTab: (n: number) => void
 }
 
 export const DecisionSideBar: FC<DecisionSideBarProps> = ({
     className,
-    selectedTab,
-    setSelectedTab,
 }: DecisionSideBarProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
 
-    const previousIndex = useAppSelector(
-        state => state.decisionSlice.previousIndex
+    const { previousIndex, currentTab } = useAppSelector(
+        state => state.decisionSlice
     )
     const [pointerArray, setPointerArray] = useState([
         false,
@@ -94,8 +91,10 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                         key={`side-bar-title-${item.title}-mobile`}
                         index={index}
                         item={item}
-                        selectedTab={selectedTab}
-                        setSelectedTab={setSelectedTab}
+                        selectedTab={currentTab}
+                        setSelectedTab={(n: number) =>
+                            useAppDispatch(setCurrentTab(n))
+                        }
                         pointerArray={pointerArray}
                     />
                 ) : (
@@ -103,8 +102,10 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
                         key={`side-bar-title-${item.title}-desktop`}
                         index={index}
                         item={item}
-                        selectedTab={selectedTab}
-                        setSelectedTab={setSelectedTab}
+                        selectedTab={currentTab}
+                        setSelectedTab={(n: number) =>
+                            useAppDispatch(setCurrentTab(n))
+                        }
                         pointerArray={pointerArray}
                     />
                 )

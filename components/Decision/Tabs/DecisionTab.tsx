@@ -7,11 +7,12 @@ import {
     setDecisionMatrixHasResults,
     setIsQuestionSafeForAI,
     setIsThereATie,
+    setMatrixStep,
     setPreviousIndex,
     setUserExceedsMaxDecisions,
 } from '../../../features/decision/decisionSlice'
 import useMediaQuery from '../../../hooks/useMediaQuery'
-import { useAppDispatch } from '../../../hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import useResetDecisionHelperCard from '../../../hooks/useResetDecisionHelperCard'
 import { useCreateDecisionMatrix } from '../../../queries/decisionMatrix'
 import { useUnauthenticatedDecisionQuery } from '../../../queries/unauthenticatedDecisions'
@@ -40,17 +41,9 @@ import { DecisionHelperCard } from '../SideCards/DecisionHelperCard'
 
 interface DecisionTabProps {
     deviceIp: string
-    matrixStep: number
-    currentTab: number
-    setMatrixStep: (n: number) => void
 }
 
-export const DecisionTab: FC<DecisionTabProps> = ({
-    deviceIp,
-    currentTab,
-    matrixStep,
-    setMatrixStep,
-}) => {
+export const DecisionTab: FC<DecisionTabProps> = ({ deviceIp }) => {
     const {
         register,
         trigger,
@@ -60,6 +53,9 @@ export const DecisionTab: FC<DecisionTabProps> = ({
         control,
         formState: { errors },
     } = useFormContext()
+    const { currentTab, matrixStep } = useAppSelector(
+        state => state.decisionSlice
+    )
     const isMobile = useMediaQuery('(max-width: 965px)')
     const { user } = useUser()
     const scrollRef = useRef<HTMLDivElement>(null)
@@ -248,7 +244,9 @@ export const DecisionTab: FC<DecisionTabProps> = ({
                         console.log(error)
                         useAppDispatch(setDecisionMatrixHasResults(false))
                     },
-                    onSettled: () => setMatrixStep(matrixStep + 1),
+                    onSettled: () => {
+                        useAppDispatch(setMatrixStep(matrixStep + 1))
+                    },
                 }
             )
             setTimeout(
