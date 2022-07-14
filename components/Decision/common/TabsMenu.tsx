@@ -22,7 +22,7 @@ export const TabsMenu = ({
     return (
         <Menu
             as="div"
-            className={'flex relative justify-end items-start ml-auto w-full'}
+            className={'relative ml-auto flex w-full items-start justify-end'}
         >
             {({ open }) => (
                 <>
@@ -49,7 +49,7 @@ export const TabsMenu = ({
                     >
                         <Menu.Items
                             className={
-                                'absolute top-9 z-10 p-2 space-y-1 w-48 bg-white dark:bg-neutralDark-300 rounded-2xl custom-box-shadow dark:custom-box-shadow-dark'
+                                'custom-box-shadow dark:custom-box-shadow-dark absolute top-9 z-10 w-48 space-y-1 rounded-2xl bg-white p-2 dark:bg-neutralDark-300'
                             }
                         >
                             {!isAI && (
@@ -60,7 +60,7 @@ export const TabsMenu = ({
                                 >
                                     <UilPen
                                         className={
-                                            'mx-1 w-4 h-4 fill-neutral-700 dark:fill-white'
+                                            'mx-1 h-4 w-4 fill-neutral-700 dark:fill-white'
                                         }
                                     />
                                     <span
@@ -77,7 +77,7 @@ export const TabsMenu = ({
                             >
                                 <UilTrashAlt
                                     className={
-                                        'mx-1 w-4 h-4 fill-neutral-700 dark:fill-white'
+                                        'mx-1 h-4 w-4 fill-neutral-700 dark:fill-white'
                                     }
                                 />
                                 <span

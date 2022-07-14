@@ -125,7 +125,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
                     >
                         Already have an account?{' '}
                         <b
-                            className="hover:text-primary hover:dark:text-primaryDark transition-all cursor-pointer"
+                            className="cursor-pointer transition-all hover:text-primary hover:dark:text-primaryDark"
                             onClick={handleSignIn}
                         >
                             Sign in

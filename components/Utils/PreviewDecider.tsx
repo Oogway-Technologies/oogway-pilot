@@ -30,7 +30,7 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
     }, [])
 
     return isUrlPreviewImage || isYoutubeLink ? (
-        <div className={'flex justify-start ml-xl'}>
+        <div className={'ml-xl flex justify-start'}>
             {isYoutubeLink && isYoutubeLink.length > 0 ? (
                 <iframe
                     src={`https://www.youtube.com/embed/${isYoutubeLink}`}
@@ -44,7 +44,7 @@ export const PreviewDecider = ({ textToDetect }: PreviewDeciderProps) => {
                 <img
                     src={isUrlPreviewImage}
                     alt="no-image-found"
-                    className={'m-md max-w-full h-full'}
+                    className={'m-md h-full max-w-full'}
                     onError={e => {
                         e.currentTarget.style.display = 'none'
                         e.currentTarget.src = defaultProfileImage

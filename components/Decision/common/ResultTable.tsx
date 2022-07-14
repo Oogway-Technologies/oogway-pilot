@@ -51,8 +51,8 @@ export const ResultTable: FC<ResultTableProps> = ({
                 borderSpacing: '0px 0.5rem',
             }}
         >
-            <thead className="flex items-center w-full">
-                <th className={'flex mr-4 w-1/3'}>
+            <thead className="flex w-full items-center">
+                <th className={'mr-4 flex w-1/3'}>
                     <span
                         className={`flex flex-col items-start px-2 py-1.5 leading-6 text-primary text-sm tracking-normal dark:text-primaryDark md:text-base`}
                     >
@@ -83,7 +83,7 @@ export const ResultTable: FC<ResultTableProps> = ({
             <tbody className="flex flex-col">
                 {criteria.map((item: Criteria, index: number) => (
                     <tr
-                        className="flex items-center my-2 w-full h-14"
+                        className="my-2 flex h-14 w-full items-center"
                         key={`result-table-row-ratings-item-${index}`}
                     >
                         <td
@@ -101,7 +101,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                                 >
                                     <b
                                         className={
-                                            'w-full max-w-[5rem] underline underline-offset-2 truncate'
+                                            'w-full max-w-[5rem] truncate underline underline-offset-2'
                                         }
                                     >
                                         {item.name}
@@ -131,7 +131,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                 ))}
 
                 {/* Score row */}
-                <tr className="flex items-center w-full">
+                <tr className="flex w-full items-center">
                     <td
                         className={`${bodySmallHeavy} mr-4 w-1/3 py-1.5 px-2 text-primary dark:text-primaryDark`}
                     >

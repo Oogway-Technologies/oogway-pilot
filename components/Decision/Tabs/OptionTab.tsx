@@ -113,7 +113,7 @@ export const OptionTab: FC = () => {
     }
 
     return (
-        <div className="flex flex-col mx-1">
+        <div className="mx-1 flex flex-col">
             <span
                 className={`${
                     isMobile
@@ -142,7 +142,7 @@ export const OptionTab: FC = () => {
                 index === 0 ? (
                     <BaseCard
                         key={item.id}
-                        className="flex flex-col py-5 px-4 mt-4"
+                        className="mt-4 flex flex-col py-5 px-4"
                     >
                         <ErrorWrapperField
                             className="flex flex-col "
@@ -154,7 +154,7 @@ export const OptionTab: FC = () => {
                                     : ''
                             }
                         >
-                            <div className="flex items-center w-full">
+                            <div className="flex w-full items-center">
                                 <input
                                     className={inputStyle}
                                     type="text"
@@ -215,7 +215,7 @@ export const OptionTab: FC = () => {
                                             setValue(`options.[0].name`, '')
                                         }
                                     }}
-                                    className="flex justify-center items-center p-2 ml-3 bg-primary disabled:bg-primary/50 rounded-full"
+                                    className="ml-3 flex items-center justify-center rounded-full bg-primary p-2 disabled:bg-primary/50"
                                 >
                                     <UilPlus className={'fill-white'} />
                                 </button>
@@ -226,14 +226,14 @@ export const OptionTab: FC = () => {
                     ''
                 )
             )}
-            <BaseCard className="flex flex-col p-5 mt-xl mb-1">
+            <BaseCard className="mt-xl mb-1 flex flex-col p-5">
                 <span
                     className={`${bodyHeavy} text-neutral-800 dark:text-white`}
                 >
                     Added options
                 </span>
                 {fields.length === 1 ? (
-                    <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                    <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
                         No option added yet
                     </span>
                 ) : (
@@ -274,7 +274,7 @@ export const OptionTab: FC = () => {
                     >
                         Are you sure you want to delete this option?
                     </span>
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                         <Button
                             keepText
                             text="Cancel"

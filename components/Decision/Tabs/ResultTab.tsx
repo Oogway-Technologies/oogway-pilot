@@ -168,8 +168,8 @@ export const ResultTab: FC<ResultTabProps> = ({ deviceIp }: ResultTabProps) => {
     }
 
     return (
-        <div className="flex flex-col mb-3 space-y-3">
-            <div className="flex flex-col my-4 space-y-1 text-center">
+        <div className="mb-3 flex flex-col space-y-3">
+            <div className="my-4 flex flex-col space-y-1 text-center">
                 {isThereATie ? (
                     <>
                         <span
@@ -203,7 +203,7 @@ export const ResultTab: FC<ResultTabProps> = ({ deviceIp }: ResultTabProps) => {
                         >
                             Your best option is
                         </span>
-                        <span className="text-3xl font-bold tracking-normal leading-10 text-center text-primary dark:text-primaryDark">
+                        <span className="text-center font-bold leading-10 text-primary text-3xl tracking-normal dark:text-primaryDark">
                             {decisionEngineBestOption}
                         </span>
                     </>

@@ -27,11 +27,11 @@ interface CriteriaFactProps {
 
 const CriteriaFact: FC<CriteriaFactProps> = ({ criterion, fact }) => (
     <div className="flex flex-col p-2">
-        <span className="text-base font-bold text-primary dark:text-primaryDark">
+        <span className="font-bold text-primary text-base dark:text-primaryDark">
             {titleCase(criterion)}
         </span>
         {fact && (
-            <span className="mx-2 text-sm text-neutral-700 dark:text-neutralDark-50 break-normal">
+            <span className="mx-2 break-normal text-neutral-700 text-sm dark:text-neutralDark-50">
                 {fact}
             </span>
         )}
@@ -46,20 +46,20 @@ interface CriteriaLinksProps {
 
 const CriteriaLinks: FC<CriteriaLinksProps> = ({ links, topN, query }) => (
     <div className="flex flex-col p-2">
-        <span className="text-sm text-primary dark:text-primaryDark">
+        <span className="text-primary text-sm dark:text-primaryDark">
             Question
         </span>
-        <span className="mb-2 ml-2 text-xs text-neutral-700 dark:text-neutralDark-50">
+        <span className="mb-2 ml-2 text-neutral-700 text-xs dark:text-neutralDark-50">
             {query}
         </span>
-        <span className="text-sm text-primary dark:text-primaryDark">
+        <span className="text-primary text-sm dark:text-primaryDark">
             Links
         </span>
-        <div className="flex flex-col mx-2 space-y-1 text-xs text-neutral-700 dark:text-neutralDark-50">
+        <div className="mx-2 flex flex-col space-y-1 text-neutral-700 text-xs dark:text-neutralDark-50">
             {links.slice(0, topN).map((elem, idx) => (
                 <Link key={idx} href={elem.url} passHref={true}>
                     <a
-                        className="underline truncate"
+                        className="truncate underline"
                         key={idx}
                         target={'_blank'}
                         rel="noopener noreferrer"
@@ -175,7 +175,7 @@ export const CriteriaInfo: FC = () => {
                 ) : (
                     <div
                         className={
-                            'flex flex-col w-full bg-white dark:bg-neutralDark-300 rounded-xl md:p-sm custom-box-shadow dark:custom-box-shadow-dark'
+                            'custom-box-shadow dark:custom-box-shadow-dark flex w-full flex-col rounded-xl bg-white dark:bg-neutralDark-300 md:p-sm'
                         }
                     >
                         {isError ? (

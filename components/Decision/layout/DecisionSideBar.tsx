@@ -151,7 +151,7 @@ const DesktopItem = ({
                 {index + 1 < selectedTab ? (
                     <UilCheck
                         className={
-                            'fill-primary dark:fill-white stroke-primary dark:stroke-white stroke-2'
+                            'fill-primary stroke-primary stroke-2 dark:fill-white dark:stroke-white'
                         }
                     />
                 ) : (
@@ -170,7 +170,7 @@ const DesktopItem = ({
                 {item.title}
             </span>
             {selectedTab === index + 1 ? (
-                <div className="justify-self-end ml-auto w-1.5 h-full bg-[#E2D9FC] dark:bg-primaryDark rounded" />
+                <div className="ml-auto h-full w-1.5 justify-self-end rounded bg-[#E2D9FC] dark:bg-primaryDark" />
             ) : (
                 ''
             )}
@@ -217,7 +217,7 @@ const MobileItem = ({
                 {index + 1 < selectedTab ? (
                     <UilCheck
                         className={
-                            'fill-primary dark:fill-white stroke-primary dark:stroke-white stroke-2'
+                            'fill-primary stroke-primary stroke-2 dark:fill-white dark:stroke-white'
                         }
                     />
                 ) : (

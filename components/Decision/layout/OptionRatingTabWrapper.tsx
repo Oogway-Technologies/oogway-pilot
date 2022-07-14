@@ -50,7 +50,7 @@ const OptionRatingTabWrapper: FC = () => {
             </div>
             <div
                 className={
-                    'flex overflow-x-auto justify-self-start items-center mr-auto w-full'
+                    'mr-auto flex w-full items-center justify-self-start overflow-x-auto'
                 }
             >
                 {fields.map((item, index) => {

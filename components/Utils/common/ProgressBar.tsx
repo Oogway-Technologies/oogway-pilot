@@ -32,7 +32,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({
             )}
             <div className={`h-2 w-full rounded-full  bg-gray-200`}>
                 <div
-                    className="h-2 bg-primary dark:bg-primaryDark rounded-full transition-all"
+                    className="h-2 rounded-full bg-primary transition-all dark:bg-primaryDark"
                     style={{
                         width: `${
                             ((currentStep - 1) / (totalSteps - 1)) * 100

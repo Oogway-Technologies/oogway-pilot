@@ -24,7 +24,7 @@ export const SignInCard: FC<SignInCardProps> = ({
         >
             <span
                 className={
-                    'text-base font-bold leading-6 text-primary dark:text-primaryDark md:text-2xl'
+                    'font-bold leading-6 text-primary text-base dark:text-primaryDark md:text-2xl'
                 }
             >
                 {currentTab === 1 ? 'Decision Progress' : 'AI suggestions'}

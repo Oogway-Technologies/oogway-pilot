@@ -62,7 +62,7 @@ export const OptionSuggestions = () => {
                         <UilSpinner className={'my-3 mx-auto animate-spin'} />
                     )}
                     {!optionsList.length && !loadingAiSuggestions && (
-                        <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                        <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
                             No more suggestions.
                         </span>
                     )}
@@ -73,7 +73,7 @@ export const OptionSuggestions = () => {
                             >
                                 Oogway AI cannot help with this decision.
                             </span>
-                            <span className="mt-4 text-sm font-normal text-center text-neutral-700 dark:text-neutralDark-150">
+                            <span className="mt-4 text-center font-normal text-neutral-700 text-sm dark:text-neutralDark-150">
                                 {`It’s a work in progress and it’s learning to serve better suggestions with each decision you make.`}
                             </span>
                         </>
@@ -82,7 +82,7 @@ export const OptionSuggestions = () => {
                         return (
                             <div
                                 key={`option-list-item-${index}`}
-                                className={'flex items-center mt-4 w-full'}
+                                className={'mt-4 flex w-full items-center'}
                             >
                                 <SuggestionItem
                                     suggestionItem={item}
