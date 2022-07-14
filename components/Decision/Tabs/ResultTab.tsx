@@ -38,6 +38,7 @@ export const ResultTab: FC<ResultTabProps> = ({ deviceIp }: ResultTabProps) => {
         decisionEngineBestOption,
         decisionFormState,
         isThereATie,
+        previousIndex,
     } = useAppSelector(state => state.decisionSlice)
 
     const createUnauthenticatedDecisions = usePutUnauthenticatedDecision()
@@ -67,9 +68,11 @@ export const ResultTab: FC<ResultTabProps> = ({ deviceIp }: ResultTabProps) => {
 
     useEffect(() => {
         fixUpStates()
-        optionList.forEach((_: Options, index: number) => {
-            setValue(`options.${index}.score`, calcScore(index))
-        })
+        if (previousIndex === 4) {
+            optionList.forEach((_: Options, index: number) => {
+                setValue(`options.${index}.score`, calcScore(index))
+            })
+        }
     }, [])
 
     // TODO: Turn into custom hook

@@ -41,7 +41,7 @@ envVars.json
 
 # packages
 package-lock.json
-yarn.lock
+# yarn.lock
 
 # Firebase functions
 firebase-key.json

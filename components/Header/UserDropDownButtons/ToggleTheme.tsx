@@ -1,7 +1,7 @@
 import { Switch } from '@headlessui/react'
+import { UilMoon } from '@iconscout/react-unicons'
 import { useTheme } from 'next-themes'
 import { FC, useEffect, useState } from 'react'
-import { Moon } from 'react-feather'
 
 import {
     toggleThemeClass,
@@ -41,7 +41,7 @@ const ToggleTheme: FC<
         <a className={userDropDownButtonClass.a} onClick={handleChangeTheme}>
             {hasText && (
                 <>
-                    <Moon className="mx-1" /> Night Mode
+                    <UilMoon className="mx-1" /> Night Mode
                 </>
             )}
             <Switch
