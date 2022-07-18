@@ -124,9 +124,9 @@ const DecisionEngine: FC = () => {
             case 1:
                 return <DecisionTab deviceIp={deviceIp || ''} />
             case 2:
-                return <OptionTab />
-            case 3:
                 return <CriteriaTab />
+            case 3:
+                return <OptionTab />
             case 4:
                 return <RatingTab />
             case 5:
@@ -224,15 +224,13 @@ const DecisionEngine: FC = () => {
                             {!user ? (
                                 !userExceedsMaxDecisions &&
                                 !userIgnoredUnsafeWarning &&
-                                (currentTab === 2 ||
-                                    currentTab === 3 ||
-                                    currentTab === 4) ? (
+                                [2, 3, 4].includes(currentTab) ? (
                                     <>
-                                        {currentTab === 2 &&
+                                        {currentTab === 3 &&
                                             !userIgnoredUnsafeWarning && (
                                                 <OptionSuggestions />
                                             )}
-                                        {currentTab === 3 &&
+                                        {currentTab === 2 &&
                                             !userIgnoredUnsafeWarning && (
                                                 <CriteriaSuggestions />
                                             )}
@@ -247,10 +245,10 @@ const DecisionEngine: FC = () => {
                             ) : (
                                 !userIgnoredUnsafeWarning && (
                                     <>
-                                        {currentTab === 2 && (
+                                        {currentTab === 3 && (
                                             <OptionSuggestions />
                                         )}
-                                        {currentTab === 3 && (
+                                        {currentTab === 2 && (
                                             <CriteriaSuggestions />
                                         )}
                                         {currentTab === 4 &&

@@ -136,7 +136,7 @@ export const CriteriaTab: FC = () => {
 
     useEffect(() => {
         // to focus on input on mount
-        setFocus('options.[0].name')
+        setFocus('criteria.[0].name')
 
         // On mount, log form state from previous tab
         // updateDecision.mutate(decisionFormState)

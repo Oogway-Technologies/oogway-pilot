@@ -67,8 +67,8 @@ export const DecisionSideBar: FC<DecisionSideBarProps> = ({
         } else {
             const newArray = [
                 validateDecision(),
-                validateOption(),
                 validateCriteria(),
+                validateOption(),
                 false,
                 false,
             ]

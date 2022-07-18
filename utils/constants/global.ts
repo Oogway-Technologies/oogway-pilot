@@ -32,8 +32,8 @@ export const bingTopN = 5 // number of results to display from bing API in Oogwa
 export const decisionTitle = [
     'Your decision/Your result',
     'Your decision',
-    'Your options',
     'Your criteria',
+    'Your options',
     'Your ratings',
     '',
 ]
@@ -41,8 +41,8 @@ export const decisionTitle = [
 export const decisionInfo = [
     'Define your decision and add more information about it (this will help our AI understand your decision, and provide suggestions for options and criteria in the next steps)',
     'Define your decision and add more information about it (this will help our AI understand your decision, and provide suggestions for options and criteria in the next steps)',
-    'Add your decision options, pick from the AI Suggestions or do both! Up to 5 options can be added.',
     'Add the things you want to consider about your decision, pick from the AI Suggestions, or both! Then pick how important each of these are to you, in regard to your decision.',
+    'Add your decision options, pick from the AI Suggestions or do both! Up to 5 options can be added.',
     'To help provide you with the winning option for your decision, give each criteria a rating between 1 to 5. \nClick the Ask AI button if you don’t have enough information on each criteria. It will give you all the information so you can confidently rate it.',
     '',
 ]
@@ -65,8 +65,8 @@ export const rehydrateDecisionForm = false
  */
 export const decisionSideBarOptions: TabItem[] = [
     { title: 'Decision', tab: 1 },
-    { title: 'Options', tab: 2 },
-    { title: 'Criteria', tab: 3 },
+    { title: 'Criteria', tab: 2 },
+    { title: 'Options', tab: 3 },
     { title: 'Rating', tab: 4 },
     { title: 'Result', tab: 5 },
 ]
