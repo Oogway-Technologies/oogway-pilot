@@ -40,7 +40,7 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
     }
     return (
         <BaseCard
-            className={`my-1 mx-auto flex items-center rounded-lg p-4 ${
+            className={`my-1 mx-auto flex items-center rounded-lg p-4 dark:bg-neutralDark-300  ${
                 isMobile ? 'w-[99%]' : 'w-[98%]'
             }`}
         >
@@ -49,8 +49,10 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
                 className="ml-auto flex cursor-pointer items-center space-x-2"
                 onClick={handleReset}
             >
-                <UilPlusCircle className={'fill-neutral-700'} />
-                <span className={`${bodySmall} text-neutral-700`}>
+                <UilPlusCircle className={'fill-neutral-700 dark:fill-white'} />
+                <span
+                    className={`${bodySmall} text-neutral-700 dark:text-white`}
+                >
                     New Decision
                 </span>
             </div>
@@ -58,8 +60,14 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
                 className="ml-3 flex cursor-pointer items-center space-x-2"
                 onClick={handleInfoClick}
             >
-                <UilQuestionCircle className={'fill-neutral-700'} />
-                <span className={`${bodySmall} text-neutral-700`}>Explain</span>
+                <UilQuestionCircle
+                    className={'fill-neutral-700 dark:fill-white'}
+                />
+                <span
+                    className={`${bodySmall} text-neutral-700 dark:text-white`}
+                >
+                    Explain
+                </span>
             </div>
         </BaseCard>
     )
