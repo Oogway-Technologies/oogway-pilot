@@ -142,7 +142,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 )
             }
         }
-        if (tab === 2) {
+        if (tab === 3) {
             await trigger(['options'])
             if (errors?.options) {
                 setTimeout(() => clearErrors(['options']), warningTime)
@@ -177,7 +177,7 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
                 )
             }
         }
-        if (tab === 3) {
+        if (tab === 2) {
             await trigger(['criteria'])
             if (errors?.criteria) {
                 setTimeout(() => clearErrors(['criteria']), warningTime)
@@ -338,8 +338,8 @@ export const DecisionBarHandler: FC<DecisionBarHandlerProps> = ({
         } else {
             setPointerArray([
                 validateDecision(),
-                validateOption(),
                 validateCriteria(),
+                validateOption(),
                 false,
                 false,
             ])
