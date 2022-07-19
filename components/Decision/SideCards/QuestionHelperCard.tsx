@@ -45,6 +45,7 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
             }`}
         >
             <div
+                id={'question-bar-id'}
                 className="ml-auto flex cursor-pointer items-center space-x-2"
                 onClick={handleReset}
             >

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
@@ -26,7 +26,6 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
     deviceIp,
 }: MatrixResultTabProps) => {
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const scrollRef = useRef<HTMLDivElement>(null)
     const { reset, getValues, setValue } = useFormContext()
     const userProfile = useAppSelector(state => state.userSlice.user)
     const {
@@ -97,7 +96,7 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
 
         setTimeout(
             () =>
-                scrollRef.current?.scrollIntoView({
+                document.getElementById('question-bar-id')?.scrollIntoView({
                     block: 'start',
                     behavior: 'smooth',
                 }),
@@ -162,7 +161,6 @@ const MatrixResultTab: FC<MatrixResultTabProps> = ({
         <div className="mb-3 flex flex-col space-y-3">
             {decisionMatrixHasResults ? (
                 <>
-                    <div className="h-0 w-0" ref={scrollRef} />
                     <div className="my-4 mb-3 flex flex-col space-y-1 text-center">
                         {isThereATie ? (
                             <>
