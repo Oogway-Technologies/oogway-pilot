@@ -1,5 +1,4 @@
 import { useUser } from '@auth0/nextjs-auth0'
-import { UilQuestionCircle } from '@iconscout/react-unicons'
 import Cookies from 'js-cookie'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -12,6 +11,8 @@ import { DecisionBarHandler } from '../components/Decision/layout/DecisionBarHan
 import { DecisionSideBar } from '../components/Decision/layout/DecisionSideBar'
 import { DecisionTabWrapper } from '../components/Decision/layout/DecisionTabWrapper'
 import OptionRatingTabWrapper from '../components/Decision/layout/OptionRatingTabWrapper'
+import { DecisionHistoryModal } from '../components/Decision/Modals/DecisionHistoryModal'
+import { TabInfoModal } from '../components/Decision/Modals/TabInfoModal'
 import { CriteriaInfo } from '../components/Decision/SideCards/CriteriaInfo'
 import { CriteriaSuggestions } from '../components/Decision/SideCards/CriteriaSuggestions'
 import { DecisionHelperCard } from '../components/Decision/SideCards/DecisionHelperCard'
@@ -27,11 +28,9 @@ import { OptionTab } from '../components/Decision/Tabs/OptionTab'
 import { RatingTab } from '../components/Decision/Tabs/RatingTab'
 import { ResultTab } from '../components/Decision/Tabs/ResultTab'
 import FeedDisclaimer from '../components/Feed/Sidebar/FeedDisclaimer'
-import Modal from '../components/Utils/Modal'
-import { setInfoModal } from '../features/decision/decisionSlice'
 import useInstantiateDecisionForm from '../hooks/useInstantiateDecisionForm'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { useAppDispatch, useAppSelector } from '../hooks/useRedux'
+import { useAppSelector } from '../hooks/useRedux'
 import useSaveDecisionFormState from '../hooks/useSaveDecisionFormState'
 import { bigContainer, decisionContainer } from '../styles/decision'
 import {
@@ -47,8 +46,6 @@ const DecisionEngine: FC = () => {
         userExceedsMaxDecisions,
         decisionEngineOptionTab,
         userIgnoredUnsafeWarning,
-        isInfoModal,
-        infoModalDetails,
         currentTab,
         matrixStep,
     } = useAppSelector(state => state.decisionSlice)
@@ -287,30 +284,9 @@ const DecisionEngine: FC = () => {
                 {isMobile && currentTab === 0 && (
                     <SideNavbar className="col-span-1" />
                 )}
+                <DecisionHistoryModal deviceIp={deviceIp || ''} />
             </FormProvider>
-            <Modal
-                show={isInfoModal}
-                onClose={() => useAppDispatch(setInfoModal(!isInfoModal))}
-                className="md:w-[40%]"
-            >
-                <div className="flex flex-col space-y-4 p-2 md:p-4">
-                    <span
-                        className={`flex items-center space-x-2 font-normal capitalize leading-6 text-sm tracking-normal md:text-base`}
-                    >
-                        <UilQuestionCircle />
-                        <b>
-                            {currentTab === 0
-                                ? infoModalDetails.title.split('/')[matrixStep]
-                                : infoModalDetails.title}
-                        </b>
-                    </span>
-                    <span
-                        className={`text-left font-normal leading-6 text-sm tracking-normal md:text-base`}
-                    >
-                        {infoModalDetails.context}
-                    </span>
-                </div>
-            </Modal>
+            <TabInfoModal />
         </div>
     )
 }

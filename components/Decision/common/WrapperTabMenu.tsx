@@ -1,6 +1,7 @@
 import { Menu, Transition } from '@headlessui/react'
 import {
     UilEllipsisH,
+    UilHistory,
     UilInfoCircle,
     UilPlusCircle,
 } from '@iconscout/react-unicons'
@@ -9,6 +10,7 @@ import { useFormContext } from 'react-hook-form'
 
 import {
     handleResetState,
+    setDecisionHistoryModal,
     setInfoModal,
     setInfoModalDetails,
 } from '../../../features/decision/decisionSlice'
@@ -24,7 +26,9 @@ export const WrapperTabMenu: FC<WrapperTabMenuProps> = ({
     title,
 }: WrapperTabMenuProps) => {
     const { reset } = useFormContext()
-    const { currentTab } = useAppSelector(state => state.decisionSlice)
+    const { currentTab, decisionHistoryModal } = useAppSelector(
+        state => state.decisionSlice
+    )
 
     const handleReset = () => {
         reset()
@@ -40,6 +44,10 @@ export const WrapperTabMenu: FC<WrapperTabMenuProps> = ({
         )
         useAppDispatch(setInfoModal(true))
     }
+    const handleHistory = () => {
+        useAppDispatch(setDecisionHistoryModal(!decisionHistoryModal))
+    }
+
     return (
         <Menu
             as="div"
@@ -73,6 +81,23 @@ export const WrapperTabMenu: FC<WrapperTabMenuProps> = ({
                                 'custom-box-shadow dark:custom-box-shadow-dark absolute top-9 z-10 w-48 space-y-1 rounded-2xl bg-white p-2 dark:bg-neutralDark-300'
                             }
                         >
+                            <Menu.Item
+                                onClick={() => handleHistory()}
+                                as="section"
+                                className={`flex cursor-pointer items-center rounded-lg py-2 pr-1 hover:bg-neutral-50 dark:hover:bg-primaryDark/80`}
+                            >
+                                <UilHistory
+                                    className={
+                                        'mx-1 h-4 w-4 fill-neutral-700 dark:fill-white'
+                                    }
+                                />
+                                <span
+                                    className={`${bodySmallHeavy} font-normal text-neutral-700 dark:text-white`}
+                                >
+                                    Decision History
+                                </span>
+                            </Menu.Item>
+
                             <Menu.Item
                                 onClick={() => handleReset()}
                                 as="section"

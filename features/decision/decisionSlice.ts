@@ -45,12 +45,19 @@ const initialState: DecisionSliceStates = {
     isQuestionSafeForAI: true,
     userIgnoredUnsafeWarning: false,
     decisionMatrixHasResults: true,
+    decisionHistoryModal: false,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setDecisionHistoryModal: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.decisionHistoryModal = payload
+        },
         handleResetState: state => {
             state.currentTab = 0
             state.matrixStep = 0
@@ -323,6 +330,7 @@ export const {
     setIsQuestionSafeForAI,
     setUserIgnoredUnsafeWarning,
     setDecisionMatrixHasResults,
+    setDecisionHistoryModal,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer
