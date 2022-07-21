@@ -20,7 +20,6 @@ import {
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { getDecisionHistory } from '../../../queries/getDecisionHistory'
-import { body, bodyHeavy } from '../../../styles/typography'
 import { deepCopy } from '../../../utils/helpers/common'
 import {
     DecisionFirebase,
@@ -129,9 +128,9 @@ export const DecisionHistoryModal = () => {
             onClose={() =>
                 useAppDispatch(setDecisionHistoryModal(!decisionHistoryModal))
             }
-            className="md:w-[60%]"
+            className="!p-3 md:w-[60%] md:!p-5"
         >
-            <div className="flex flex-col space-y-4 p-2 md:p-4">
+            <div className="flex flex-col space-y-2 p-2 md:space-y-4 md:p-4">
                 <span
                     className={`flex items-center space-x-2 font-normal capitalize leading-6 text-sm tracking-normal md:text-base`}
                 >
@@ -139,28 +138,30 @@ export const DecisionHistoryModal = () => {
                     <b>Decision History</b>
                 </span>
                 <span
-                    className={`flex items-center ${body} text-neutral-700 dark:text-neutralDark-150`}
+                    className={`flex items-center text-neutral-700 text-sm dark:text-neutralDark-150 md:text-base`}
                 >
                     You can view the results of a past decision or return to an
                     incomplete decision.
                 </span>
-                <div className="flex w-full items-center space-x-4">
-                    <BaseCard className="flex w-1/2 flex-col space-y-4 p-5 dark:bg-neutralDark-300">
+                <div className="flex w-full items-center space-x-2 md:space-x-4">
+                    <BaseCard className="flex w-1/2 flex-col space-y-4 p-2.5 dark:bg-neutralDark-300 md:p-5">
                         <span
-                            className={`${bodyHeavy} text-primary dark:text-primaryDark`}
+                            className={`font-bold text-primary text-sm dark:text-primaryDark md:text-base`}
                         >
                             Complete
                         </span>
-                        <div className="flex h-[14rem] w-full flex-col space-y-4 overflow-y-scroll p-1.5">
+                        <div className="flex h-[23rem] w-full flex-col space-y-4 overflow-y-scroll p-1.5">
                             {completed.length ? (
                                 completed.map((item, idx) => (
                                     <BaseCard
                                         onClick={() => onHandleSelect(item)}
-                                        className="cursor-pointer !rounded-lg p-4"
+                                        className="cursor-pointer !rounded-lg p-2 md:p-4"
                                         key={`${item.id}-complete-item${idx}`}
                                     >
                                         <span
-                                            className={`${bodyHeavy} text-neutral-700 dark:text-neutralDark-150`}
+                                            className={
+                                                'break-words font-bold text-neutral-700 text-sm dark:text-neutralDark-150 md:text-base'
+                                            }
                                         >
                                             {item.question}
                                         </span>
@@ -173,22 +174,26 @@ export const DecisionHistoryModal = () => {
                             )}
                         </div>
                     </BaseCard>
-                    <BaseCard className="flex w-1/2 flex-col space-y-4 p-5 dark:bg-neutralDark-300">
+                    <BaseCard className="flex w-1/2 flex-col space-y-4 p-2.5 dark:bg-neutralDark-300 md:p-5">
                         <span
-                            className={`${bodyHeavy} text-primary dark:text-primaryDark`}
+                            className={
+                                'font-bold text-primary text-sm dark:text-primaryDark md:text-base'
+                            }
                         >
                             Incomplete
                         </span>
-                        <div className="flex h-[14rem] w-full flex-col space-y-4 overflow-y-scroll p-1.5">
+                        <div className="flex h-[23rem] w-full flex-col space-y-4 overflow-y-scroll p-1.5">
                             {inComplete.length ? (
                                 inComplete.map((item, idx) => (
                                     <BaseCard
                                         onClick={() => onHandleSelect(item)}
-                                        className="cursor-pointer !rounded-lg p-4"
+                                        className="cursor-pointer !rounded-lg p-2 md:p-4"
                                         key={`${item.id}-incomplete-item${idx}`}
                                     >
                                         <span
-                                            className={`${bodyHeavy} text-neutral-700 dark:text-neutralDark-150`}
+                                            className={
+                                                'text-clip break-words font-bold text-neutral-700 text-sm dark:text-neutralDark-150 md:text-base'
+                                            }
                                         >
                                             {item.question}
                                         </span>

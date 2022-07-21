@@ -14,16 +14,11 @@ export const getDecisionHistory = async (uid: string) => {
 
     decisionActivity.forEach(doc => {
         const decisionActivityItem = doc.data() as DecisionFirebase
-        if (
-            decisionActivityItem.isComplete &&
-            complete.length < 5 &&
-            decisionActivityItem?.question
-        ) {
+        if (decisionActivityItem.isComplete && decisionActivityItem?.question) {
             complete.push(decisionActivityItem)
         }
         if (
             !decisionActivityItem.isComplete &&
-            inComplete.length < 5 &&
             decisionActivityItem?.question
         ) {
             inComplete.push(decisionActivityItem)

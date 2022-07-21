@@ -78,7 +78,7 @@ export const WrapperTabMenu: FC<WrapperTabMenuProps> = ({
                     >
                         <Menu.Items
                             className={
-                                'custom-box-shadow dark:custom-box-shadow-dark absolute top-9 z-10 w-48 space-y-1 rounded-2xl bg-white p-2 dark:bg-neutralDark-300'
+                                'custom-box-shadow dark:custom-box-shadow-dark absolute top-9 z-50 w-48 space-y-1 rounded-2xl bg-white p-2 dark:bg-neutralDark-300'
                             }
                         >
                             <Menu.Item
