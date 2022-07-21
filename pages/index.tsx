@@ -284,7 +284,7 @@ const DecisionEngine: FC = () => {
                 {isMobile && currentTab === 0 && (
                     <SideNavbar className="col-span-1" />
                 )}
-                <DecisionHistoryModal deviceIp={deviceIp || ''} />
+                {user && <DecisionHistoryModal />}
             </FormProvider>
             <TabInfoModal />
         </div>

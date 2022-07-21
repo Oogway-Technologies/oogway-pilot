@@ -1,5 +1,5 @@
 import { UilHistory } from '@iconscout/react-unicons'
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
@@ -16,6 +16,7 @@ import {
     setSideCardStep,
     setUserIgnoredUnsafeWarning,
     updateDecisionFormState,
+    updateFormCopy,
 } from '../../../features/decision/decisionSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
 import { getDecisionHistory } from '../../../queries/getDecisionHistory'
@@ -28,28 +29,25 @@ import {
 import Modal from '../../Utils/Modal'
 import { BaseCard } from '../common/BaseCard'
 
-interface DecisionHistoryModalProps {
-    deviceIp: string
-}
-export const DecisionHistoryModal: FC<DecisionHistoryModalProps> = ({
-    deviceIp,
-}: DecisionHistoryModalProps) => {
+export const DecisionHistoryModal = () => {
     const { decisionHistoryModal, currentTab } = useAppSelector(
         state => state.decisionSlice
     )
-    const { setValue } = useFormContext()
+    const {
+        user: { uid },
+    } = useAppSelector(state => state.userSlice)
+    const { setValue, getValues } = useFormContext()
     const [completed, setCompleted] = useState<DecisionFirebase[]>([])
     const [inComplete, setInComplete] = useState<DecisionFirebase[]>([])
 
     useEffect(() => {
-        getDecisionHistory(deviceIp).then(({ complete, inComplete }) => {
+        getDecisionHistory(uid).then(({ complete, inComplete }) => {
             setCompleted(complete)
             setInComplete(inComplete)
         })
     }, [])
 
     const onHandleSelect = (decision: DecisionFirebase) => {
-        console.log(decision)
         // Create copies
         const decisionCopy = deepCopy(decision)
         // Set rehydration flags
@@ -100,6 +98,9 @@ export const DecisionHistoryModal: FC<DecisionHistoryModalProps> = ({
         }
         // update current tab
         if (decision.currentTab && !decision.isComplete) {
+            if (!decision.currentTab) {
+                setCurrentTab(1)
+            }
             useAppDispatch(setCurrentTab(decision.currentTab))
             if (currentTab === 4) useAppDispatch(setDecisionRatingUpdate(true))
         }
@@ -108,6 +109,17 @@ export const DecisionHistoryModal: FC<DecisionHistoryModalProps> = ({
             useAppDispatch(setCurrentTab(5))
             useAppDispatch(setDecisionEngineOptionTab(0))
         }
+
+        useAppDispatch(
+            updateFormCopy(
+                deepCopy({
+                    question: getValues('question'),
+                    context: getValues('context'),
+                    options: getValues('options'),
+                    criteria: getValues('criteria'),
+                })
+            )
+        )
         useAppDispatch(setDecisionHistoryModal(false))
     }
 
@@ -140,19 +152,25 @@ export const DecisionHistoryModal: FC<DecisionHistoryModalProps> = ({
                             Complete
                         </span>
                         <div className="flex h-[14rem] w-full flex-col space-y-4 overflow-y-scroll p-1.5">
-                            {completed.map((item, idx) => (
-                                <BaseCard
-                                    onClick={() => onHandleSelect(item)}
-                                    className="cursor-pointer !rounded-lg p-4"
-                                    key={`${item.id}-complete-item${idx}`}
-                                >
-                                    <span
-                                        className={`${bodyHeavy} text-neutral-700 dark:text-neutralDark-150`}
+                            {completed.length ? (
+                                completed.map((item, idx) => (
+                                    <BaseCard
+                                        onClick={() => onHandleSelect(item)}
+                                        className="cursor-pointer !rounded-lg p-4"
+                                        key={`${item.id}-complete-item${idx}`}
                                     >
-                                        {item.question}
-                                    </span>
-                                </BaseCard>
-                            ))}
+                                        <span
+                                            className={`${bodyHeavy} text-neutral-700 dark:text-neutralDark-150`}
+                                        >
+                                            {item.question}
+                                        </span>
+                                    </BaseCard>
+                                ))
+                            ) : (
+                                <span className="mx-auto text-center text-neutral-700 text-base dark:text-neutral-100">
+                                    No Complete decisions
+                                </span>
+                            )}
                         </div>
                     </BaseCard>
                     <BaseCard className="flex w-1/2 flex-col space-y-4 p-5 dark:bg-neutralDark-300">
@@ -162,19 +180,25 @@ export const DecisionHistoryModal: FC<DecisionHistoryModalProps> = ({
                             Incomplete
                         </span>
                         <div className="flex h-[14rem] w-full flex-col space-y-4 overflow-y-scroll p-1.5">
-                            {inComplete.map((item, idx) => (
-                                <BaseCard
-                                    onClick={() => onHandleSelect(item)}
-                                    className="cursor-pointer !rounded-lg p-4"
-                                    key={`${item.id}-incomplete-item${idx}`}
-                                >
-                                    <span
-                                        className={`${bodyHeavy} text-neutral-700 dark:text-neutralDark-150`}
+                            {inComplete.length ? (
+                                inComplete.map((item, idx) => (
+                                    <BaseCard
+                                        onClick={() => onHandleSelect(item)}
+                                        className="cursor-pointer !rounded-lg p-4"
+                                        key={`${item.id}-incomplete-item${idx}`}
                                     >
-                                        {item.question}
-                                    </span>
-                                </BaseCard>
-                            ))}
+                                        <span
+                                            className={`${bodyHeavy} text-neutral-700 dark:text-neutralDark-150`}
+                                        >
+                                            {item.question}
+                                        </span>
+                                    </BaseCard>
+                                ))
+                            ) : (
+                                <span className="mx-auto text-center text-neutral-700 text-base dark:text-neutral-100">
+                                    No Incomplete decisions
+                                </span>
+                            )}
                         </div>
                     </BaseCard>
                 </div>

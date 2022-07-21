@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import {
     UilHistory,
     UilPlusCircle,
@@ -30,6 +31,7 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
     const { currentTab, decisionHistoryModal } = useAppSelector(
         state => state.decisionSlice
     )
+    const { user } = useUser()
 
     const handleInfoClick = () => {
         useAppDispatch(
@@ -49,26 +51,33 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
     const handleHistory = () => {
         useAppDispatch(setDecisionHistoryModal(!decisionHistoryModal))
     }
+
     return (
         <BaseCard
             className={`my-1 mx-auto flex items-center rounded-lg p-4 dark:bg-neutralDark-300  ${
                 isMobile ? 'w-[99%]' : 'w-[98%]'
             }`}
         >
-            <div
-                id={'question-bar-id'}
-                className="ml-auto flex cursor-pointer items-center space-x-2"
-                onClick={handleHistory}
-            >
-                <UilHistory className={'fill-neutral-700 dark:fill-white'} />
-                <span
-                    className={`${bodySmall} text-neutral-700 dark:text-white`}
+            {user && (
+                <div
+                    id={'question-bar-id'}
+                    className="ml-auto flex cursor-pointer items-center space-x-2"
+                    onClick={handleHistory}
                 >
-                    Decision History
-                </span>
-            </div>
+                    <UilHistory
+                        className={'fill-neutral-700 dark:fill-white'}
+                    />
+                    <span
+                        className={`${bodySmall} text-neutral-700 dark:text-white`}
+                    >
+                        Decision History
+                    </span>
+                </div>
+            )}
             <div
-                className="ml-3 flex cursor-pointer items-center space-x-2"
+                className={`${
+                    user ? 'ml-3' : 'ml-auto'
+                } flex cursor-pointer items-center space-x-2`}
                 onClick={handleReset}
             >
                 <UilPlusCircle className={'fill-neutral-700 dark:fill-white'} />
