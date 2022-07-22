@@ -34,7 +34,7 @@ export const DecisionHelperCard: FC<DecisionHelperCardProps> = ({
 
     return (
         <div
-            className={`custom-box-shadow dark:custom-box-shadow-dark mr-4 mb-4 flex flex-col rounded-2xl bg-white p-3 transition-all dark:bg-neutralDark-500 md:px-4 md:py-5 ${
+            className={`custom-box-shadow dark:custom-box-shadow-dark mb-4 flex flex-col rounded-2xl bg-white p-3 transition-all dark:bg-neutralDark-500 md:px-4 md:py-5 ${
                 className ? className : ''
             }`}
         >

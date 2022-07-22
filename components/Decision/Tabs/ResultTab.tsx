@@ -211,7 +211,7 @@ export const ResultTab: FC<ResultTabProps> = ({ deviceIp }: ResultTabProps) => {
             </div>
             <ResultChart />
             {isMobile ? <ScoreCard /> : ''}
-            <BaseCard className="my-2 p-3 md:mx-1 md:p-5">
+            <BaseCard className="mt-2 !mb-4 p-3 md:mx-1 md:p-5">
                 <span
                     className={`${bodyHeavy} w-full text-neutral-700 dark:text-white`}
                 >
