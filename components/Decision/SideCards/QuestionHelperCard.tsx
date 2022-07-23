@@ -28,7 +28,7 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
 }: QuestionHelperCardProps) => {
     const { reset } = useFormContext()
     const isMobile = useMediaQuery('(max-width: 965px)')
-    const { currentTab, decisionHistoryModal } = useAppSelector(
+    const { currentTab, decisionHistoryModal, matrixStep } = useAppSelector(
         state => state.decisionSlice
     )
     const { user } = useUser()
@@ -58,10 +58,10 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
                 isMobile ? 'w-[99%]' : 'w-[98%]'
             }`}
         >
-            {user && (
+            <div id={'question-bar-id'} className="ml-auto" />
+            {user && matrixStep < 2 && currentTab < 1 && (
                 <div
-                    id={'question-bar-id'}
-                    className="ml-auto flex cursor-pointer items-center space-x-2"
+                    className="ml-3 flex cursor-pointer items-center space-x-2"
                     onClick={handleHistory}
                 >
                     <UilHistory
@@ -75,9 +75,7 @@ export const QuestionHelperCard: FC<QuestionHelperCardProps> = ({
                 </div>
             )}
             <div
-                className={`${
-                    user ? 'ml-3' : 'ml-auto'
-                } flex cursor-pointer items-center space-x-2`}
+                className={'ml-3 flex cursor-pointer items-center space-x-2'}
                 onClick={handleReset}
             >
                 <UilPlusCircle className={'fill-neutral-700 dark:fill-white'} />

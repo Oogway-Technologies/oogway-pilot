@@ -35,7 +35,7 @@ export const decisionTitle = [
     'Your criteria',
     'Your options',
     'Your ratings',
-    '',
+    'Your result',
 ]
 
 export const decisionInfo = [

@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { Menu, Transition } from '@headlessui/react'
 import {
     UilEllipsisH,
@@ -26,7 +27,8 @@ export const WrapperTabMenu: FC<WrapperTabMenuProps> = ({
     title,
 }: WrapperTabMenuProps) => {
     const { reset } = useFormContext()
-    const { currentTab, decisionHistoryModal } = useAppSelector(
+    const { user } = useUser()
+    const { currentTab, decisionHistoryModal, matrixStep } = useAppSelector(
         state => state.decisionSlice
     )
 
@@ -81,23 +83,24 @@ export const WrapperTabMenu: FC<WrapperTabMenuProps> = ({
                                 'custom-box-shadow dark:custom-box-shadow-dark absolute top-9 z-50 w-48 space-y-1 rounded-2xl bg-white p-2 dark:bg-neutralDark-300'
                             }
                         >
-                            <Menu.Item
-                                onClick={() => handleHistory()}
-                                as="section"
-                                className={`flex cursor-pointer items-center rounded-lg py-2 pr-1 hover:bg-neutral-50 dark:hover:bg-primaryDark/80`}
-                            >
-                                <UilHistory
-                                    className={
-                                        'mx-1 h-4 w-4 fill-neutral-700 dark:fill-white'
-                                    }
-                                />
-                                <span
-                                    className={`${bodySmallHeavy} font-normal text-neutral-700 dark:text-white`}
+                            {user && matrixStep < 2 && currentTab < 1 && (
+                                <Menu.Item
+                                    onClick={() => handleHistory()}
+                                    as="section"
+                                    className={`flex cursor-pointer items-center rounded-lg py-2 pr-1 hover:bg-neutral-50 dark:hover:bg-primaryDark/80`}
                                 >
-                                    Decision History
-                                </span>
-                            </Menu.Item>
-
+                                    <UilHistory
+                                        className={
+                                            'mx-1 h-4 w-4 fill-neutral-700 dark:fill-white'
+                                        }
+                                    />
+                                    <span
+                                        className={`${bodySmallHeavy} font-normal text-neutral-700 dark:text-white`}
+                                    >
+                                        Decision History
+                                    </span>
+                                </Menu.Item>
+                            )}
                             <Menu.Item
                                 onClick={() => handleReset()}
                                 as="section"

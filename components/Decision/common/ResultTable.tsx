@@ -97,7 +97,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                                         '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none left-[16%]'
                                     }
                                     classForParent={'mb-8'}
-                                    classForBottomArrow="bg-primary dark:bg-primaryDark border-none relative left-[-20%]"
+                                    classForBottomArrow="hidden"
                                 >
                                     <b
                                         className={
@@ -194,7 +194,7 @@ export const ResultTable: FC<ResultTableProps> = ({
                                             '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none'
                                         }
                                         classForParent={'mb-8'}
-                                        classForBottomArrow="bg-primary dark:bg-primaryDark border-none"
+                                        classForBottomArrow="hidden"
                                     >
                                         <b className={'max-w-[10rem] truncate'}>
                                             {item.name}

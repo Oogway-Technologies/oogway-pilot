@@ -161,36 +161,36 @@ export const DecisionTabWrapper: FC<DecisionTabWrapperProps> = ({
             {!isMobile && currentTab !== 4 && (
                 <QuestionHelperCard title={title} />
             )}
-            {currentTab !== 5 ? (
-                <h3
-                    className={`${
-                        isMobile ? bodyHeavy : 'font-bold text-2xl'
-                    } flex items-center whitespace-nowrap capitalize text-neutral-800 dark:text-white ${
-                        [2, 3].includes(currentTab)
-                            ? `sticky top-[-2px] z-50 pb-2 ${
-                                  isMobile
-                                      ? 'bg-neutral-25 dark:bg-neutralDark-600'
-                                      : 'bg-white dark:bg-neutralDark-500'
-                              }`
-                            : ''
-                    } ${currentTab === 0 ? '!mt-6' : ''}`}
-                >
-                    {currentTab === 0 ? title.split('/')[matrixStep] : title}
-                    {isMobile && <WrapperTabMenu title={title} />}
-                    {!isMobile &&
-                        decisionMatrixHasResults &&
-                        currentTab === 0 &&
-                        matrixStep === 1 && (
-                            <button
-                                id={'automatedDecisionMatrix-RefineDecision'}
-                                className={`${feedToolbarClass.newPostButton} ml-auto !text-base`}
-                                onClick={handleRefineDecision}
-                            >
-                                Refine decision
-                            </button>
-                        )}
-                </h3>
-            ) : null}
+            {/* {currentTab !== 5 ? ( */}
+            <h3
+                className={`${
+                    isMobile ? bodyHeavy : 'font-bold text-2xl'
+                } flex items-center whitespace-nowrap capitalize text-neutral-800 dark:text-white ${
+                    [2, 3].includes(currentTab)
+                        ? `sticky top-[-2px] z-50 pb-2 ${
+                              isMobile
+                                  ? 'bg-neutral-25 dark:bg-neutralDark-600'
+                                  : 'bg-white dark:bg-neutralDark-500'
+                          }`
+                        : ''
+                } ${currentTab === 0 ? '!mt-6' : ''}`}
+            >
+                {currentTab === 0 ? title.split('/')[matrixStep] : title}
+                {isMobile && <WrapperTabMenu title={title} />}
+                {!isMobile &&
+                    decisionMatrixHasResults &&
+                    currentTab === 0 &&
+                    matrixStep === 1 && (
+                        <button
+                            id={'automatedDecisionMatrix-RefineDecision'}
+                            className={`${feedToolbarClass.newPostButton} ml-auto !text-base`}
+                            onClick={handleRefineDecision}
+                        >
+                            Refine decision
+                        </button>
+                    )}
+            </h3>
+            {/* ) : null} */}
             {children}
         </div>
     )

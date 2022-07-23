@@ -97,12 +97,12 @@ export const DecisionHistoryModal = () => {
         }
         // update current tab
         if (decision.currentTab && !decision.isComplete) {
-            if (!decision.currentTab) {
-                setCurrentTab(1)
-            }
             useAppDispatch(setCurrentTab(decision.currentTab))
             if (currentTab === 4) useAppDispatch(setDecisionRatingUpdate(true))
+        } else if (!decision.currentTab && !decision.isComplete) {
+            setCurrentTab(1)
         }
+
         if (decision.isComplete) {
             useAppDispatch(setPreviousIndex(4))
             useAppDispatch(setCurrentTab(5))
