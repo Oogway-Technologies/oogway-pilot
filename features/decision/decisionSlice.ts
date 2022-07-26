@@ -45,23 +45,52 @@ const initialState: DecisionSliceStates = {
     isQuestionSafeForAI: true,
     userIgnoredUnsafeWarning: false,
     decisionMatrixHasResults: true,
+    decisionHistoryModal: false,
 }
 
 export const decisionSlice = createSlice({
     name: 'decision',
     initialState,
     reducers: {
+        setDecisionHistoryModal: (
+            state,
+            { payload }: PayloadAction<boolean>
+        ) => {
+            state.decisionHistoryModal = payload
+        },
         handleResetState: state => {
             state.currentTab = 0
             state.matrixStep = 0
-            state.decisionQuestion = undefined
+            state.decisionEngineOptionTab = 0
+            state.decisionEngineBestOption = undefined
+            state.decisionRatingUpdate = true
+            state.loadingAiSuggestions = false
+            state.isSuggestionsEmpty = false
+            state.previousIndex = 1
+            state.ratingTabChecker = []
+            state.suggestions = {
+                optionsList: [],
+                criteriaList: [],
+                copyOptionsList: [],
+                copyCriteriaList: [],
+            }
+            state.formCopy = {
+                question: '',
+                context: '',
+                options: [],
+                criteria: [],
+            }
+            state.decisionCriteriaQueryKey = undefined
             state.decisionActivityId = undefined
+            state.decisionQuestion = undefined
+            state.criteriaMobileIndex = 0
             state.sideCardStep = 1
-            state.clickedConnect = false
             state.decisionFormState = {}
             state.isDecisionRehydrated = false
+            state.isThereATie = false
             state.isQuestionSafeForAI = true
             state.userIgnoredUnsafeWarning = false
+            state.decisionMatrixHasResults = true
         },
         setInfoModalDetails: (
             state,
@@ -323,6 +352,7 @@ export const {
     setIsQuestionSafeForAI,
     setUserIgnoredUnsafeWarning,
     setDecisionMatrixHasResults,
+    setDecisionHistoryModal,
 } = decisionSlice.actions
 
 export default decisionSlice.reducer

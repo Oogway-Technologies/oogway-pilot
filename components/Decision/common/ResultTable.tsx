@@ -90,14 +90,14 @@ export const ResultTable: FC<ResultTableProps> = ({
                             className={`${bodySmall} mr-4 flex w-1/3 flex-col items-start rounded-lg bg-primary/20 
                         py-1.5 px-2 text-primary dark:text-primaryDark`}
                         >
-                            {item.name.split('').length > 14 ? (
+                            {item.name.split('').length > 12 ? (
                                 <Tooltip
                                     toolTipText={item.name}
                                     classForToolTipBox={
                                         '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none left-[16%]'
                                     }
                                     classForParent={'mb-8'}
-                                    classForBottomArrow="bg-primary dark:bg-primaryDark border-none relative left-[-20%]"
+                                    classForBottomArrow="hidden"
                                 >
                                     <b
                                         className={
@@ -159,7 +159,7 @@ export const ResultTable: FC<ResultTableProps> = ({
             }}
         >
             <thead>
-                <tr>
+                <tr className="relative">
                     <td className={isMobile ? 'pr-2' : 'w-0 pr-4'}>
                         <span
                             className={`${body} flex flex-col items-start px-2 py-1.5 text-primary dark:text-primaryDark`}
@@ -169,14 +169,21 @@ export const ResultTable: FC<ResultTableProps> = ({
                         </span>
                     </td>
                     {rating.map((item: Ratings, index: number) => (
-                        <td
-                            key={`result-row-header-item-${index}`}
-                            className={`${bodyHeavy} h-10 bg-neutral-700 px-3 text-center text-white ${
-                                index === 0 ? 'rounded-l-lg' : ''
-                            } max-w-[5rem] truncate last:rounded-r-lg`}
-                        >
-                            {item.option}
-                        </td>
+                        <>
+                            <td
+                                key={`result-row-header-item-${index}`}
+                                className={`${bodyHeavy} h-10 bg-neutral-700 px-3 text-center text-white ${
+                                    index === 0 ? 'rounded-l-lg' : ''
+                                } group max-w-[5rem] truncate last:rounded-r-lg`}
+                            >
+                                {item.option.split('').length > 14 && (
+                                    <span className="absolute top-1 hidden rounded border-none bg-primary px-1 text-white shadow-none text-xs group-hover:flex dark:bg-primaryDark">
+                                        {item.option}
+                                    </span>
+                                )}
+                                {item.option}
+                            </td>
+                        </>
                     ))}
                 </tr>
             </thead>
@@ -187,14 +194,14 @@ export const ResultTable: FC<ResultTableProps> = ({
                             <span
                                 className={`${body} flex flex-col items-start rounded-lg bg-primary/20 px-2 py-1.5 text-primary dark:text-primaryDark`}
                             >
-                                {item.name.split('').length > 16 ? (
+                                {item.name.split('').length > 14 ? (
                                     <Tooltip
                                         toolTipText={item.name}
                                         classForToolTipBox={
                                             '!rounded bg-primary dark:bg-primaryDark text-white border-none shadow-none'
                                         }
                                         classForParent={'mb-8'}
-                                        classForBottomArrow="bg-primary dark:bg-primaryDark border-none"
+                                        classForBottomArrow="hidden"
                                     >
                                         <b className={'max-w-[10rem] truncate'}>
                                             {item.name}
@@ -205,7 +212,6 @@ export const ResultTable: FC<ResultTableProps> = ({
                                         {item.name}
                                     </b>
                                 )}
-
                                 {weightToString(item.weight)}
                             </span>
                         </td>

@@ -205,6 +205,27 @@ export interface FirebaseUnauthenticatedDecision {
     createdAt?: FieldValue
     updatedAt?: FieldValue
 }
+export interface Timestamp {
+    seconds: number
+    nanoseconds: number
+}
+
+export interface DecisionFirebase {
+    isComplete: boolean
+    id: string
+    question: string
+    criteria: Criteria[]
+    context: string
+    clickedConnect: boolean
+    options: Options[]
+    suggestedCriteria: Criteria[]
+    suggestedOptions: Options[]
+    ipAddress: string
+    ratings: Rating[]
+    timestamp: Timestamp
+    userId: string
+    currentTab: number
+}
 
 /**
  * Type guards
