@@ -7,6 +7,7 @@ interface TooltipProps {
     classForParent?: string
     classForToolTipBox?: string
     classForBottomArrow?: string
+    removeFlexFromParent?: boolean
 }
 
 export const Tooltip: FC<
@@ -18,10 +19,13 @@ export const Tooltip: FC<
     classForParent = '',
     classForToolTipBox = '',
     classForBottomArrow = '',
+    removeFlexFromParent = false,
 }: TooltipProps) => {
     return (
         <div
-            className={`group relative flex flex-col items-center ${className}`}
+            className={`group relative ${
+                !removeFlexFromParent ? 'flex flex-col items-center' : ''
+            } ${className}`}
         >
             {children}
             <div
