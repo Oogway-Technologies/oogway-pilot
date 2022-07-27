@@ -8,11 +8,18 @@ import { setUser } from '../features/user/userSlice'
 import { useAppDispatch } from '../hooks/useRedux'
 import { getOrCreateUserFromFirebase } from '../lib/userHelper'
 import { FirebaseProfile } from '../utils/types/firebase'
+import { Heap } from '../utils/types/global'
 import Header from './Header/Header'
 import DocumentData = firebase.firestore.DocumentData
 
 interface LayoutProps {
     children: React.ReactNode
+}
+
+declare global {
+    interface Window {
+        heap: Heap
+    }
 }
 
 const Layout = ({ children }: LayoutProps) => {
@@ -31,6 +38,11 @@ const Layout = ({ children }: LayoutProps) => {
             getOrCreateUserFromFirebase(user, ipAddress).then(
                 (data: FirebaseProfile | DocumentData | undefined) => {
                     useAppDispatch(setUser(data as FirebaseProfile))
+                    window.heap.identify(data?.email)
+                    window.heap.addUserProperties({
+                        Name: data?.name,
+                        Username: data?.username,
+                    })
                 }
             )
         }
