@@ -38,8 +38,10 @@ const Layout = ({ children }: LayoutProps) => {
             getOrCreateUserFromFirebase(user, ipAddress).then(
                 (data: FirebaseProfile | DocumentData | undefined) => {
                     useAppDispatch(setUser(data as FirebaseProfile))
-                    window.heap.identify(data?.email)
+                    window.heap.identify(data?.uid)
                     window.heap.addUserProperties({
+                        Type: 'Signed In',
+                        Email: data?.email,
                         Name: data?.name,
                         Username: data?.username,
                     })
