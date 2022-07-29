@@ -33,14 +33,14 @@ export const getOrCreateUserFromFirebase = async (
                 where('auth0', '==', user.sub)
             ).withConverter(userConverter)
         )
+        const userAuth: { email: string } = await fetcher(
+            `/api/registerEmail?userId=${user.sub}`
+        )
         // Create user if it doesn't already exist
         if (!checkIfUserExists.docs.length) {
             // The mapping is not present:
             // This is the first time ever the user logs into the app.
             // Create a new user
-            const userAuth: { email: string } = await fetcher(
-                `/api/registerEmail?userId=${user.sub}`
-            )
             const newUser: FirebaseUser = {
                 email: userAuth.email || '',
                 lastSeen: serverTimestamp(),
@@ -74,6 +74,7 @@ export const getOrCreateUserFromFirebase = async (
                 profilePic: user.picture || '',
                 username: user.nickname || '',
                 uid: newlyAddedUserRef.id, // store the user's id in profile so accessible in global state
+                email: userAuth.email,
             }
             await setDoc(doc(db, 'profiles', newlyAddedUserRef.id), newProfile)
 
@@ -111,7 +112,7 @@ export const getOrCreateUserFromFirebase = async (
         const profileId = checkIfUserExists.docs[0].id
         const userProfileDocRef = doc(db, 'profiles', profileId)
         const profileDocSnap = await getDoc(userProfileDocRef)
-        return profileDocSnap.data()
+        return { email: userAuth.email, ...profileDocSnap.data() }
     } catch (e) {
         console.log(e)
     }

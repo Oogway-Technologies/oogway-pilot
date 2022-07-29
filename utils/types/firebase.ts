@@ -95,6 +95,7 @@ export interface FirebaseProfile {
     resetProfile: boolean
     username: string
     uid: string
+    email?: string
 }
 
 export interface FirebaseFeed {

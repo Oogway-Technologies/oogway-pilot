@@ -121,3 +121,17 @@ export interface MatrixObject {
     ratings: MatrixRating
     weights: MatrixRating
 }
+
+export interface Heap {
+    track: (event: string, properties?: object) => void
+    identify: (identity: string) => void
+    resetIdentity: () => void
+    addUserProperties: (properties: object) => void
+    addEventProperties: (properties: object) => void
+    removeEventProperty: (property: string) => void
+    clearEventProperties: () => void
+    appid: string
+    userId: string
+    identity: string | null
+    config: any
+}
