@@ -36,7 +36,6 @@ import { bigContainer, decisionContainer } from '../styles/decision'
 import {
     decisionSideBarOptions,
     decisionTitle,
-    rehydrateDecisionForm,
 } from '../utils/constants/global'
 import { insertAtArray } from '../utils/helpers/common'
 
@@ -56,9 +55,7 @@ const DecisionEngine: FC = () => {
     const router = useRouter()
 
     // Instantiate form
-    const methods = useInstantiateDecisionForm({
-        rehydrate: rehydrateDecisionForm,
-    })
+    const methods = useInstantiateDecisionForm()
     const { control, getValues, setValue } = methods
     const watchQuestion = useWatch({ name: 'question', control })
     const optionList = getValues('options')

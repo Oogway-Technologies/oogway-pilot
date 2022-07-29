@@ -85,7 +85,7 @@ export const WrapperTabMenu: FC<WrapperTabMenuProps> = ({
                         >
                             {user && matrixStep < 2 && currentTab < 1 && (
                                 <Menu.Item
-                                    onClick={() => handleHistory()}
+                                    onClick={handleHistory}
                                     as="section"
                                     className={`flex cursor-pointer items-center rounded-lg py-2 pr-1 hover:bg-neutral-50 dark:hover:bg-primaryDark/80`}
                                 >

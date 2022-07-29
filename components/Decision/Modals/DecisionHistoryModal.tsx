@@ -1,5 +1,5 @@
 import { UilHistory } from '@iconscout/react-unicons'
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 import {
@@ -18,13 +18,15 @@ import {
     updateDecisionFormState,
     updateFormCopy,
 } from '../../../features/decision/decisionSlice'
+import useIntersectionObserver from '../../../hooks/useIntersectionObserver'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux'
-import { getDecisionHistory } from '../../../queries/getDecisionHistory'
+import { useInfiniteDecisionsQuery } from '../../../queries/decisionActivity'
 import { deepCopy } from '../../../utils/helpers/common'
+import { FirebaseDecisionActivity } from '../../../utils/types/firebase'
 import {
-    DecisionFirebase,
-    FirebaseDecisionActivity,
-} from '../../../utils/types/firebase'
+    GenerateNotificationLoaders,
+    NotificationLoader,
+} from '../../Header/Notifications/NotificationLoaders'
 import Modal from '../../Utils/Modal'
 import { BaseCard } from '../common/BaseCard'
 
@@ -36,19 +38,32 @@ export const DecisionHistoryModal = () => {
         user: { uid },
     } = useAppSelector(state => state.userSlice)
     const { setValue, getValues } = useFormContext()
-    const [completed, setCompleted] = useState<DecisionFirebase[]>([])
-    const [inComplete, setInComplete] = useState<DecisionFirebase[]>([])
+    const [showComplete, setShowComplete] = useState<boolean>(false)
 
-    useEffect(() => {
-        getDecisionHistory(uid).then(({ complete, inComplete }) => {
-            setCompleted(complete)
-            setInComplete(inComplete)
-        })
-    }, [])
+    const { status, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
+        useInfiniteDecisionsQuery(uid, showComplete, decisionHistoryModal)
 
-    const onHandleSelect = (decision: DecisionFirebase) => {
+    // Instantiate intersection observer
+    const loadMoreRef = useRef<HTMLDivElement>(null)
+    useIntersectionObserver({
+        threshold: 0.3,
+        target: loadMoreRef,
+        onIntersect: fetchNextPage,
+        enabled: !!hasNextPage,
+    })
+
+    // Handler functions
+    const showCompleteDecisions = () => {
+        setShowComplete(true)
+    }
+    const showIncompleteDecisions = () => {
+        setShowComplete(false)
+    }
+
+    const onHandleSelect = (decision: FirebaseDecisionActivity) => {
         // Create copies
         const decisionCopy = deepCopy(decision)
+
         // Set rehydration flags
         useAppDispatch(setIsDecisionRehydrated(true))
         // remove extra fields
@@ -97,10 +112,14 @@ export const DecisionHistoryModal = () => {
         }
         // update current tab
         if (decision.currentTab && !decision.isComplete) {
-            useAppDispatch(setCurrentTab(decision.currentTab))
+            // Needed for forward compatibility of decisions made prior to us
+            // switching the order of entering options and criteria.
+            if (!('criteria' in decision)) {
+                useAppDispatch(setCurrentTab(2))
+            } else {
+                useAppDispatch(setCurrentTab(decision.currentTab))
+            }
             if (currentTab === 4) useAppDispatch(setDecisionRatingUpdate(true))
-        } else if (!decision.currentTab && !decision.isComplete) {
-            setCurrentTab(1)
         }
 
         if (decision.isComplete) {
@@ -144,65 +163,93 @@ export const DecisionHistoryModal = () => {
                     incomplete decision.
                 </span>
                 <div className="flex w-full items-center space-x-2 md:space-x-4">
-                    <BaseCard className="flex w-1/2 flex-col space-y-4 p-2.5 dark:bg-neutralDark-300 md:p-5">
-                        <span
-                            className={`font-bold text-primary text-sm dark:text-primaryDark md:text-base`}
-                        >
-                            Complete
-                        </span>
-                        <div className="flex h-[23rem] w-full flex-col space-y-4 overflow-y-scroll p-1.5">
-                            {completed.length ? (
-                                completed.map((item, idx) => (
-                                    <BaseCard
-                                        onClick={() => onHandleSelect(item)}
-                                        className="cursor-pointer !rounded-lg p-2 md:p-4"
-                                        key={`${item.id}-complete-item${idx}`}
-                                    >
-                                        <span
-                                            className={
-                                                'break-words font-bold text-neutral-700 text-sm dark:text-neutralDark-150 md:text-base'
-                                            }
-                                        >
-                                            {item.question}
-                                        </span>
-                                    </BaseCard>
-                                ))
-                            ) : (
-                                <span className="mx-auto text-center text-neutral-700 text-base dark:text-neutral-100">
-                                    No Complete decisions
-                                </span>
-                            )}
+                    <BaseCard className="flex w-full flex-col space-y-4 p-2.5 dark:bg-neutralDark-300 md:p-5">
+                        <div className="inline-flex">
+                            <button
+                                onClick={showIncompleteDecisions}
+                                className={` ${
+                                    !showComplete
+                                        ? 'bg-tertiary '
+                                        : 'bg-transparent '
+                                } w-1/2 rounded-2xl px-md py-xs font-bold text-primary text-sm focus:outline-none dark:text-primaryDark md:px-lg md:py-sm md:text-base`}
+                            >
+                                Incomplete
+                            </button>
+                            <button
+                                onClick={showCompleteDecisions}
+                                className={` ${
+                                    showComplete
+                                        ? 'bg-tertiary '
+                                        : 'bg-transparent '
+                                } w-1/2 rounded-2xl px-md py-xs font-bold text-primary text-sm focus:outline-none dark:text-primaryDark md:px-lg md:py-sm md:text-base `}
+                            >
+                                Complete
+                            </button>
                         </div>
-                    </BaseCard>
-                    <BaseCard className="flex w-1/2 flex-col space-y-4 p-2.5 dark:bg-neutralDark-300 md:p-5">
-                        <span
+                        <div
                             className={
-                                'font-bold text-primary text-sm dark:text-primaryDark md:text-base'
+                                'flex h-[23rem] w-full flex-col space-y-4 overflow-y-auto px-3 snap-proximity ' +
+                                'scrollbar scrollbar-sm scrollbar-rounded scrollbar-thumb-tertiary ' +
+                                'scrollbar-track-neutral-50 dark:scrollbar-thumb-primaryDark dark:scrollbar-track-neutralDark-300'
                             }
                         >
-                            Incomplete
-                        </span>
-                        <div className="flex h-[23rem] w-full flex-col space-y-4 overflow-y-scroll p-1.5">
-                            {inComplete.length ? (
-                                inComplete.map((item, idx) => (
-                                    <BaseCard
-                                        onClick={() => onHandleSelect(item)}
-                                        className="cursor-pointer !rounded-lg p-2 md:p-4"
-                                        key={`${item.id}-incomplete-item${idx}`}
-                                    >
-                                        <span
-                                            className={
-                                                'text-clip break-words font-bold text-neutral-700 text-sm dark:text-neutralDark-150 md:text-base'
-                                            }
-                                        >
-                                            {item.question}
-                                        </span>
-                                    </BaseCard>
-                                ))
+                            {status === 'loading' ? (
+                                <GenerateNotificationLoaders n={3} />
+                            ) : status === 'error' ? (
+                                <div>Error loading decisions</div>
                             ) : (
-                                <span className="mx-auto text-center text-neutral-700 text-base dark:text-neutral-100">
-                                    No Incomplete decisions
-                                </span>
+                                <Fragment>
+                                    {/* Infinite scroller / lazy loader */}
+                                    {data?.pages.map(page => (
+                                        <Fragment
+                                            key={page?.lastTimestamp?.seconds}
+                                        >
+                                            {/* If notifications exist */}
+                                            {page.decisions?.length > 0 &&
+                                                page.decisions.map(
+                                                    (
+                                                        decision: FirebaseDecisionActivity
+                                                    ) => (
+                                                        <BaseCard
+                                                            onClick={() =>
+                                                                onHandleSelect(
+                                                                    decision
+                                                                )
+                                                            }
+                                                            className="cursor-pointer !rounded-lg p-2 md:p-4"
+                                                            key={decision.id}
+                                                        >
+                                                            <span
+                                                                className={
+                                                                    'text-clip break-words font-bold text-neutral-700 text-sm dark:text-neutralDark-150 md:text-base'
+                                                                }
+                                                            >
+                                                                {
+                                                                    decision.question
+                                                                }
+                                                            </span>
+                                                        </BaseCard>
+                                                    )
+                                                )}
+                                        </Fragment>
+                                    ))}
+
+                                    {/* Lazy loaader sentinel and end of decisions */}
+                                    {isFetchingNextPage || hasNextPage ? (
+                                        <NotificationLoader ref={loadMoreRef} />
+                                    ) : data?.pages[0].decisions &&
+                                      data?.pages[0].decisions.length === 0 ? (
+                                        <span className="mx-auto text-center text-neutral-700 text-base dark:text-neutral-100">
+                                            {`No ${
+                                                showComplete
+                                                    ? 'Complete'
+                                                    : 'Incomplete'
+                                            } decisions`}
+                                        </span>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Fragment>
                             )}
                         </div>
                     </BaseCard>

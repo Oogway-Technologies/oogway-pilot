@@ -1,35 +1,11 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
-import {
-    setClickedConnect,
-    setCurrentTab,
-    setDecisionActivityId,
-    setDecisionFormState,
-    setDecisionQuestion,
-    setDecisionRatingUpdate,
-    setIsDecisionRehydrated,
-    setIsQuestionSafeForAI,
-    setSideCardStep,
-    setUserIgnoredUnsafeWarning,
-    updateDecisionFormState,
-} from '../features/decision/decisionSlice'
-import { useInfiniteDecisionsQuery } from '../queries/decisionActivity'
-import { deepCopy } from '../utils/helpers/common'
-import { FirebaseDecisionActivity } from '../utils/types/firebase'
+import { handleResetState } from '../features/decision/decisionSlice'
 import { DecisionForm } from '../utils/types/global'
-import { useAppDispatch, useAppSelector } from './useRedux'
+import { useAppDispatch } from './useRedux'
 
-interface UseInstantiateDecisionFormProps {
-    rehydrate: boolean
-}
-
-const useInstantiateDecisionForm = ({
-    rehydrate,
-}: UseInstantiateDecisionFormProps) => {
-    const currentTab = useAppSelector(state => state.decisionSlice.currentTab)
-    const userProfile = useAppSelector(state => state.userSlice.user)
-
+const useInstantiateDecisionForm = () => {
     // Rehydrate form state from stored values
     const methods = useForm<DecisionForm>({
         defaultValues: {
@@ -47,109 +23,11 @@ const useInstantiateDecisionForm = ({
         },
     })
 
-    if (rehydrate) {
-        const { setValue } = methods
-        const { isFetched, isSuccess } = useInfiniteDecisionsQuery(
-            userProfile.uid,
-            undefined,
-            userProfile.uid !== '', // only enable the call if the userProfile.uid is defined
-            retrievedData => {
-                if (!retrievedData.pages[0].decisions[0].isComplete) {
-                    // Set rehydration flags
-                    useAppDispatch(setIsDecisionRehydrated(true))
-
-                    // Create copies
-                    const incompleteDecision = deepCopy(
-                        retrievedData.pages[0].decisions[0]
-                    )
-                    // remove extra fields
-                    const extraFields = [
-                        'timestamp',
-                        'currentTab',
-                        'id',
-                        'userId',
-                        'isComplete',
-                        'ipAddress',
-                    ]
-                    for (const field of extraFields) {
-                        delete incompleteDecision[field]
-                    }
-
-                    // set values
-                    const formState: FirebaseDecisionActivity = {
-                        id: retrievedData.pages[0].decisions[0].id,
-                    }
-                    for (const [key, value] of Object.entries(
-                        incompleteDecision as FirebaseDecisionActivity
-                    )) {
-                        if (key !== 'clickedConnect') {
-                            setValue(key, deepCopy(value), {
-                                shouldValidate: true,
-                                shouldDirty: true,
-                            })
-                        }
-                        formState[key] = deepCopy(value)
-                    }
-                    // Set form state in redux
-                    useAppDispatch(
-                        setDecisionActivityId(
-                            retrievedData.pages[0].decisions[0].id
-                        )
-                    )
-                    useAppDispatch(
-                        setDecisionQuestion(incompleteDecision.question)
-                    )
-                    useAppDispatch(
-                        setClickedConnect(incompleteDecision.clickedConnect)
-                    )
-                    useAppDispatch(
-                        setUserIgnoredUnsafeWarning(
-                            incompleteDecision.userIgnoredUnsafeWarning
-                        )
-                    )
-                    useAppDispatch(
-                        setIsQuestionSafeForAI(
-                            incompleteDecision.isQuestionSafeForAI
-                        )
-                    )
-                    if (incompleteDecision.clickedConnect)
-                        useAppDispatch(setSideCardStep(2))
-                    useAppDispatch(updateDecisionFormState(formState))
-
-                    // update current tab
-                    if (retrievedData.pages[0].decisions[0].currentTab) {
-                        useAppDispatch(
-                            setCurrentTab(
-                                retrievedData.pages[0].decisions[0].currentTab
-                            )
-                        )
-                        if (currentTab === 4)
-                            useAppDispatch(setDecisionRatingUpdate(true))
-                    }
-                }
-            }
-        )
-
-        // Update ratings when user navigates back to decision engine tab
-        // and form is rehydrated
-        useEffect(() => {
-            if (isFetched && isSuccess)
-                useAppDispatch(setDecisionRatingUpdate(true))
-        }, [])
-    }
-
     // Clear redux state on unmount
     useEffect(() => {
         return () => {
             // Wipe previous decision question and id
-            useAppDispatch(setDecisionQuestion(undefined))
-            useAppDispatch(setDecisionActivityId(undefined))
-            useAppDispatch(setSideCardStep(1))
-            useAppDispatch(setClickedConnect(false))
-            useAppDispatch(setDecisionFormState({}))
-            useAppDispatch(setIsDecisionRehydrated(false))
-            useAppDispatch(setIsQuestionSafeForAI(true))
-            useAppDispatch(setUserIgnoredUnsafeWarning(false))
+            useAppDispatch(handleResetState())
         }
     }, [])
 
